@@ -1,0 +1,17 @@
+# Dependencias
+node_modules/
+
+# Build / salida
+dist/
+.angular/
+coverage/
+
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Base de datos SQLite
+*.db
+*.sqlite
+*.db-journal
