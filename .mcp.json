@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "angular-cli": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@angular/cli@22.2.7", "mcp"]
+    },
+    "chrome-devtools": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "chrome-devtools-mcp@1.13.0"]
+    },
+    "context7": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@upstash/context7-mcp@4.7.3"],
+      "env": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY:-}"
+      }
+    }
+  }
+}
