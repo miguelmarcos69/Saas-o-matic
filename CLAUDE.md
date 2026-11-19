@@ -21,11 +21,14 @@ La constitución ya existe: @ai-workspace/docs/constitution.md
 - Mensajes de la API (errores/respuestas): dame opciones y elijo yo.
 
 ## Estructura
-- apps/api: backend · apps/web: frontend.
+- apps/api: backend (Node.js 24, Express 5, SQLite con better-sqlite3) · apps/web: frontend (Angular 22.3.0) · packages/pricing: cálculo por tramos compartido.
+- TypeScript 6.0.x en todo el repo (Angular 22.3 no admite la 7). Stack completo: ADR-009.
+- API con Clean Architecture (domain, infrastructure, presentation). Antes de crear o mover archivos, lee ai-workspace/docs/architecture.md.
 - ai-workspace/: docs (reto.md), specs, sessions, screenshots.
 
 ## Memoria
 @MEMORY.md
+- En MEMORY.md el estado se escribe como quedará tras el commit: sin "pendiente de commit" ni hashes (el commit que incluye MEMORY.md no puede citarse a sí mismo).
 
 ## Límites
 ✅ Siempre

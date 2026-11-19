@@ -1,6 +1,6 @@
 # Registro de decisiones (ADR)
 
-Solo decisiones de proceso. Un ADR no se borra: si cambia, se marca "Sustituido por ADR-NNN".
+Decisiones de proceso, convenciones y producto. Un ADR no se borra: si cambia, se marca "Sustituido por ADR-NNN".
 Criterio: un ADR es solo para una decisión con alternativa real, que afecta a la estructura o al proceso y que cuesta deshacer.
 Lo demás es una regla de CLAUDE.md o queda en el registro de la sesión.
 
@@ -78,3 +78,40 @@ Lo demás es una regla de CLAUDE.md o queda en el registro de la sesión.
   - Commits: permitir la atribución de la IA. También se descartó reescribir `aeff7b9`, que cambiaría hashes citados en `MEMORY.md` y los registros.
   - Saltos de línea: solo `* text=auto`, o no crear nada y aceptar los avisos.
 - **Consecuencias:** Un commit del historial incumple la regla de `Co-Authored-By`; el autor figura como único autor. Mismo contenido en cualquier máquina; `reto.md` no cambia (comprobado el 2026-11-19).
+
+## ADR-009 · Stack
+- **Fecha:** 2026-11-19
+- **Estado:** Aceptado
+- **Contexto:** El reto deja libre la tecnología y prefiere Node.js (TypeScript) o Python para el backend, con SQLite (§2.A), y deja libre el frontend (§2.B). Versiones consultadas en npm y en la documentación de Angular el 2026-11-19.
+- **Decisión:**
+
+  | Pieza | Elegida | Alternativa descartada | Motivo |
+  |---|---|---|---|
+  | Frontend | Angular 22.3.0 | — | Fijado por el autor; versión estable actual. No se comparó con otros |
+  | Lenguaje | TypeScript 6.0.x | TypeScript 7.0.2 | Angular 22.3 exige `>=6.0 <6.1`; una sola versión en todo el repositorio |
+  | Entorno del backend | Node.js 24 | Python | El reto prefiere Node.js (TypeScript) y comparte lenguaje con Angular |
+  | Backend HTTP | Express 5 | Fastify 5 | El más conocido y mínimo; la validación y los errores se escriben a mano y quedan visibles |
+  | Acceso a SQLite | `better-sqlite3`, SQL directo | Kysely | 2-3 tablas; una sola dependencia; el SQL queda visible (§3.2) |
+  | Validación en el borde | Zod 4 | Esquemas JSON de Fastify (Ajv) | Un esquema da el validador y el tipo; reutilizable en el frontend |
+  | Tests | Vitest 5 | `node:test` | Mismo ejecutor que Angular 22: uno solo en todo el repositorio |
+  | Monorepo | Workspaces de npm | Proyectos independientes | Una instalación, una versión de TypeScript, código compartido enlazado |
+  | Arquitectura de la API | Clean Architecture (domain, infrastructure, presentation) | Con capa `application` | Decisión del autor: los casos de uso viven en `domain`. Detalle en `architecture.md` |
+- **Alternativa descartada:** las de la tabla. Tampoco se eligió un ORM (Prisma, Drizzle): no se justifica para este esquema.
+- **Consecuencias:**
+  - Los motivos de Express y de la arquitectura sin capa `application` son del autor; el resto, de la comparación hecha en la fase 3.
+  - Con Express no hay `app.inject()`: pendiente de decidir si los tests de endpoints usan `supertest` o `fetch` nativo, y aprobar la lista de dependencias con su justificación (constitución, principio 4).
+  - `better-sqlite3` es un módulo nativo: se comprueba en Windows con Node 24 en la fase 6.
+  - Si Angular sube su rango de TypeScript, se revisa esta fila.
+
+## ADR-010 · Cálculo por tramos compartido
+- **Fecha:** 2026-11-19
+- **Estado:** Aceptado, condicionado a su validación en la fase 6
+- **Contexto:** El algoritmo de tramos lo necesita el backend, al guardar la simulación (§2.A), y el frontend, para el simulador en tiempo real (§2.B). Dos implementaciones podrían dar resultados distintos.
+- **Decisión:** Paquete `packages/pricing` en el workspace, TypeScript puro, con importes enteros, compilado a `dist` (JS y `.d.ts`). La API y la web lo consumen como un paquete normal. Un único cálculo y una forma estándar de consumirlo. Para evitar un `dist` obsoleto, los scripts de la raíz (`dev`, `test`, `build`) compilan `pricing` antes que las apps. Quedan fuera del paquete el IVA, que depende de decisiones abiertas, y la conversión de divisa, que es solo del frontend.
+- **Alternativa descartada:**
+  - Carpeta compartida sin build, con alias de `tsconfig`: descartada por el autor.
+  - Endpoint de previsualización en la API: añade un endpoint que el reto no pide y el slider dependería de la red, contra el tiempo real de §2.B.
+- **Consecuencias:**
+  - Condición: se valida en la fase 6. Si no funciona con Angular o con la API, se avisa al autor y se aplica la opción B: duplicar el cálculo en cada app y garantizar que coinciden con un fichero de casos de prueba común que ejecutan los tests de ambas.
+  - Hay un paso de compilación previo a probar o arrancar las apps, que los scripts de la raíz hacen solos.
+  - Los límites de los tramos (10/11 y 50/51) se prueban una sola vez, en el paquete (constitución, principios 3 y 6).
