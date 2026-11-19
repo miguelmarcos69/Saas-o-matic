@@ -115,3 +115,18 @@ Lo demás es una regla de CLAUDE.md o queda en el registro de la sesión.
   - Condición: se valida en la fase 6. Si no funciona con Angular o con la API, se avisa al autor y se aplica la opción B: duplicar el cálculo en cada app y garantizar que coinciden con un fichero de casos de prueba común que ejecutan los tests de ambas.
   - Hay un paso de compilación previo a probar o arrancar las apps, que los scripts de la raíz hacen solos.
   - Los límites de los tramos (10/11 y 50/51) se prueban una sola vez, en el paquete (constitución, principios 3 y 6).
+
+## ADR-011 · Qué se guarda de cada simulación
+- **Fecha:** 2026-11-19
+- **Estado:** Aceptado
+- **Contexto:** §2.A pide que el cálculo de `POST /simulations` se persista. El historial de simulaciones (§2.B) debe mostrar lo que se calculó en su día, y el reto no define la tabla de IVA, que puede cambiar.
+- **Decisión:** Cada simulación guarda los datos de entrada (`active_users`, `storage`, `api_calls`) y el resultado: `base_cost_cents`, `tax_rate_bps` (tipo de IVA aplicado, en puntos básicos), `tax_amount_cents` y `total_cents`. Importes en céntimos de euro, enteros (principio 6). Un `CHECK` impone `total_cents = base_cost_cents + tax_amount_cents`. Los tramos los calcula `packages/pricing` (ADR-010); dónde se calcula el IVA y el redondeo se decide en la spec de `POST /simulations`.
+- **Alternativa descartada:**
+  - Solo la entrada: no guarda el cálculo que pide §2.A, y el historial cambiaría si cambia el IVA o las tarifas.
+  - Entrada e importes sin el tipo de IVA: el historial no cambia, pero no se puede saber con qué tipo se calculó.
+- **Consecuencias:**
+  - Una simulación es una foto: si cambian las tarifas o el IVA, las anteriores no se recalculan.
+  - Tres columnas calculadas más que con la opción mínima, a cambio de poder auditar cada fila sola.
+  - El tipo de IVA por país, el redondeo y si `storage` y `api_calls` influyen en el coste quedan en "Dudas para las specs" de `database.md`.
+  - El autor eligió la opción recomendada en la fase 3; el resto de decisiones del esquema (id entero, migraciones, WAL, seed) están en `database.md`.
+- **Ver también:** ADR-010, `database.md`.

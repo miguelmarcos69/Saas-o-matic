@@ -23,7 +23,7 @@ La constitución ya existe: @ai-workspace/docs/constitution.md
 ## Estructura
 - apps/api: backend (Node.js 24, Express 5, SQLite con better-sqlite3) · apps/web: frontend (Angular 22.3.0) · packages/pricing: cálculo por tramos compartido.
 - TypeScript 6.0.x en todo el repo (Angular 22.3 no admite la 7). Stack completo: ADR-009.
-- API con Clean Architecture (domain, infrastructure, presentation). Antes de crear o mover archivos, lee ai-workspace/docs/architecture.md.
+- API con Clean Architecture (domain, infrastructure, presentation). Antes de crear o mover archivos, lee ai-workspace/docs/architecture.md; antes de tocar tablas o migraciones, ai-workspace/docs/database.md.
 - ai-workspace/: docs (reto.md), specs, sessions, screenshots.
 
 ## Memoria
