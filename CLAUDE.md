@@ -44,6 +44,7 @@ La constitución ya existe: @ai-workspace/docs/constitution.md
 - Leer .env ni poner claves en archivos versionados.
 - Resolver por tu cuenta un choque entre fuentes o un hueco del reto.
 - Hacer push --force.
+- Añadir Co-Authored-By en los mensajes de commit.
 
 ## Comandos
 pendiente

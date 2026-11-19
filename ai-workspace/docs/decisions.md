@@ -1,6 +1,8 @@
 # Registro de decisiones (ADR)
 
 Solo decisiones de proceso. Un ADR no se borra: si cambia, se marca "Sustituido por ADR-NNN".
+Criterio: un ADR es solo para una decisión con alternativa real, que afecta a la estructura o al proceso y que cuesta deshacer.
+Lo demás es una regla de CLAUDE.md o queda en el registro de la sesión.
 
 ## ADR-001 · El reto manda sobre todos los demás documentos
 - **Fecha:** 2026-11-18
@@ -26,6 +28,7 @@ Solo decisiones de proceso. Un ADR no se borra: si cambia, se marca "Sustituido 
 - **Decisión:** Un revisor (reviewer) distinto de quien implementa, sin permiso para editar, que lo cuestiona todo. Su veredicto queda en `review.md`. La aprobación final es del autor.
 - **Alternativa descartada:** Que quien implementa se revise a sí mismo.
 - **Consecuencias:** El revisor no puede corregir, solo señalar. Cada cambio pasa por una revisión antes de la aprobación del autor.
+- **Ampliado el 2026-11-19:** La definición del agente va en `.claude/agents/reviewer.md`, sin `Edit` ni `Write`. Se crea en la fase 5, junto con los demás agentes, y exige la aprobación del autor porque toca `.claude/`. `review.md` es su informe por spec, en `ai-workspace/specs/<spec>/review.md`.
 
 ## ADR-004 · Registro de cada sesión mientras ocurre, con capturas
 - **Fecha:** 2026-11-18
@@ -63,3 +66,15 @@ Solo decisiones de proceso. Un ADR no se borra: si cambia, se marca "Sustituido 
 - **Decisión:** Aceptar esos límites y no cerrarlos con más reglas ni con un hook. Motivo: las reglas deny de Bash dependen del patrón de texto y no son una frontera de seguridad; cerrar cada vía obligaría a mantener una lista que siempre quedará incompleta. La protección real de `reto.md` es doble: la regla "Nunca editar reto.md" de CLAUDE.md y git, donde cualquier cambio aparece en el diff y se revierte. Del `.env`, el proyecto aún no tiene claves, y la instrucción de no leerlo ni versionarlo sigue vigente.
 - **Alternativa descartada:** Un hook PreToolUse que bloquee esas vías. Añadiría complejidad en `.claude/` sin garantía completa.
 - **Consecuencias:** El bloqueo depende de la herramienta usada. Las reglas de PowerShell siguen sin probarse.
+
+## ADR-008 · Convenciones del repositorio
+- **Fecha:** 2026-11-19
+- **Estado:** Aceptado
+- **Contexto:** En la fase 0 se decidió quitar `Co-Authored-By`, pero no constaba en `CLAUDE.md` y el commit `aeff7b9` lo lleva. Además, Git avisa de la conversión LF a CRLF en `.gitignore` y `reto.md` (Windows), y pronto habrá código y scripts.
+- **Decisión:**
+  - Commits: ninguno lleva `Co-Authored-By`. Regla en "Nunca" de `CLAUDE.md` y ajuste `attribution` con `commit` y `pr` vacíos en `.claude/settings.json`. `aeff7b9` se mantiene como excepción conocida.
+  - Saltos de línea: `.gitattributes` con `* text=auto eol=lf`, antes de generar código.
+- **Alternativa descartada:**
+  - Commits: permitir la atribución de la IA. También se descartó reescribir `aeff7b9`, que cambiaría hashes citados en `MEMORY.md` y los registros.
+  - Saltos de línea: solo `* text=auto`, o no crear nada y aceptar los avisos.
+- **Consecuencias:** Un commit del historial incumple la regla de `Co-Authored-By`; el autor figura como único autor. Mismo contenido en cualquier máquina; `reto.md` no cambia (comprobado el 2026-11-19).
