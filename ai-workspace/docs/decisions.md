@@ -9,6 +9,7 @@ Solo decisiones de proceso. Un ADR no se borra: si cambia, se marca "Sustituido 
 - **Decisión:** Jerarquía reto.md > constitución > spec > plan > convenciones. Si dos fuentes chocan, la IA para y pregunta cuáles son y en qué punto chocan. `reto.md` está protegido contra edición con una regla `deny`. El bloqueo se probó en la sesión 01.
 - **Alternativa descartada:** Dejar que la IA elija la fuente más razonable en cada choque.
 - **Consecuencias:** Más preguntas durante el desarrollo. El enunciado (§1–§4) no se modifica nunca.
+- **Ver también:** ADR-007.
 
 ## ADR-002 · SDD con aprobación humana entre fases
 - **Fecha:** 2026-11-18
@@ -54,3 +55,11 @@ Solo decisiones de proceso. Un ADR no se borra: si cambia, se marca "Sustituido 
   - Los mensajes de la API los elige el autor entre opciones que propone la IA.
 - **Alternativa descartada:** Todo el proyecto en un solo idioma.
 - **Consecuencias:** Convive inglés y español en el repositorio. Hay que respetar la frontera en cada archivo.
+
+## ADR-007 · Límites aceptados de los permisos
+- **Fecha:** 2026-11-18
+- **Estado:** Aceptado
+- **Contexto:** Se probó la protección de `reto.md` y de `.env` con ficheros falsos (`prueba-reto.md`, `.env.prueba`), sin tocar los reales. `reto.md` queda protegido con `Edit` y 12 reglas deny de Bash (`rm`, `mv`, `cp`, `sed -i`, `tee`, `>`, `>>`, `Set-Content`, `Add-Content`, `Out-File`, `git checkout`, `git restore`). Hay huecos: no hay deny de `Write` sobre `reto.md`, las redirecciones `>` y `>>` no quedan cubiertas, y `.env` se puede leer con `cmd /c type` y `powershell Get-Content`, aunque `Read`, `cat` y `head` se deniegan.
+- **Decisión:** Aceptar esos límites y no cerrarlos con más reglas ni con un hook. Motivo: las reglas deny de Bash dependen del patrón de texto y no son una frontera de seguridad; cerrar cada vía obligaría a mantener una lista que siempre quedará incompleta. La protección real de `reto.md` es doble: la regla "Nunca editar reto.md" de CLAUDE.md y git, donde cualquier cambio aparece en el diff y se revierte. Del `.env`, el proyecto aún no tiene claves, y la instrucción de no leerlo ni versionarlo sigue vigente.
+- **Alternativa descartada:** Un hook PreToolUse que bloquee esas vías. Añadiría complejidad en `.claude/` sin garantía completa.
+- **Consecuencias:** El bloqueo depende de la herramienta usada. Las reglas de PowerShell siguen sin probarse.
