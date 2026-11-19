@@ -26,6 +26,12 @@ La constitución ya existe: @ai-workspace/docs/constitution.md
 - API con Clean Architecture (domain, infrastructure, presentation). Antes de crear o mover archivos, lee ai-workspace/docs/architecture.md; antes de tocar tablas o migraciones, ai-workspace/docs/database.md.
 - ai-workspace/: docs (reto.md), specs, sessions, screenshots.
 
+## Skills (.claude/skills/)
+- sdd: al trabajar en ai-workspace/specs/ (redactar, clarificar, planificar, tareas, revisar o cerrar una spec).
+- backend-conventions: al crear, cambiar o revisar código de apps/api.
+- frontend-conventions: al crear, cambiar o revisar código de apps/web.
+- Si una skill choca con architecture.md, database.md o la constitución: para y pregúntame.
+
 ## Memoria
 @MEMORY.md
 - En MEMORY.md el estado se escribe como quedará tras el commit: sin "pendiente de commit" ni hashes (el commit que incluye MEMORY.md no puede citarse a sí mismo).

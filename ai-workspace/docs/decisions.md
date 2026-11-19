@@ -130,3 +130,21 @@ Lo demás es una regla de CLAUDE.md o queda en el registro de la sesión.
   - El tipo de IVA por país, el redondeo y si `storage` y `api_calls` influyen en el coste quedan en "Dudas para las specs" de `database.md`.
   - El autor eligió la opción recomendada en la fase 3; el resto de decisiones del esquema (id entero, migraciones, WAL, seed) están en `database.md`.
 - **Ver también:** ADR-010, `database.md`.
+
+## ADR-012 · Reparto de specs y spec de esqueleto
+- **Fecha:** 2026-11-19
+- **Estado:** Aceptado
+- **Contexto:** MEMORY.md proponía cuatro specs (`POST /customers`, `POST /simulations`, lectura y frontend). El cálculo por tramos (§2.A) lo comparten API y web (ADR-010) y ninguna spec lo contenía; el frontend abarca tres vistas y la API de tipos de cambio (§2.B); y el esqueleto técnico de la fase 6 escribe código sin spec, contra el principio 1.
+- **Decisión:** Ocho specs, repartidas en `ai-workspace/specs/README.md`: 000 `skeleton` (fase 6), 001 `pricing-tiers`, 002 `customers-create`, 003 `simulations-create`, 004 `customers-read`, 005 `exchange-rates`, 006 `simulator-ui` y 007 `customers-ui`. Cada una declara de qué depende. Las 001 a 007 son la fase 7.
+- **Alternativa descartada:** Las cuatro de MEMORY.md; una excepción en la constitución para el esqueleto (debilita "sin spec, no hay código"); una spec por endpoint y por vista (unas 9, demasiado papeleo).
+- **Consecuencias:** Más documentos y una spec previa al código, pero el principio 1 se cumple sin excepciones. Renumerar después sería costoso.
+- **Ver también:** ADR-002, ADR-010.
+
+## ADR-013 · La API propia es de confianza en el frontend
+- **Fecha:** 2026-11-19
+- **Estado:** Aceptado
+- **Contexto:** El principio 5 dice "todo dato externo se valida en el borde". `architecture.md` solo valida con esquema la API de tipos de cambio.
+- **Decisión:** El frontend valida con esquema Zod solo la respuesta de la API de tipos de cambio. La respuesta de la API propia se considera de confianza y se tipa con interfaces; su contrato lo cubren los tests de integración de la API (principio 3) y la sección Contrato de cada spec. Es una interpretación del autor del principio 5, y el revisor no la marca como hallazgo.
+- **Alternativa descartada:** Validar también la API propia con Zod: añade `schemas/` a cada funcionalidad y duplica los esquemas del backend.
+- **Consecuencias:** Las interfaces del frontend se escriben a mano desde el Contrato de la spec y ningún test comprueba que coincidan: solo lo detecta el revisor al leer. Si aparece deriva, se reabre.
+- **Ver también:** principio 5 de la constitución, skill `frontend-conventions`.

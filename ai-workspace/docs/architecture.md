@@ -68,6 +68,7 @@ Clean Architecture en la API, sin capa `application` (decisión del autor): los 
 | config | Zod | el resto |
 | web: funcionalidad | shared, packages/pricing | otra funcionalidad, apps/api |
 | web: shared | packages/pricing | las funcionalidades |
+| web: app (`app.ts`, `app.routes.ts`, `app.config.ts`) | funcionalidades (solo sus páginas, para las rutas diferidas), shared | `components/` y `services/` de las funcionalidades, apps/api |
 | packages/pricing | nada | todo lo demás |
 Lo comprueba el revisor (fase 5).
 
