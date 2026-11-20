@@ -30,6 +30,7 @@ La constitución ya existe: @ai-workspace/docs/constitution.md
 - sdd: al trabajar en ai-workspace/specs/ (redactar, clarificar, planificar, tareas, revisar o cerrar una spec).
 - backend-conventions: al crear, cambiar o revisar código de apps/api.
 - frontend-conventions: al crear, cambiar o revisar código de apps/web.
+- Comandos (.claude/commands/): solo tú lanzas /sdd-flow <spec> [puerta] y sus atajos (/sdd-spec, /sdd-clarify, /sdd-plan, /sdd-tasks, /sdd-implement, /sdd-validate), /sdd-change y /sdd-session; /sdd-state es de consulta.
 - Si una skill choca con architecture.md, database.md o la constitución: para y pregúntame.
 
 ## Memoria

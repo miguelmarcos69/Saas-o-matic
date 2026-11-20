@@ -51,7 +51,7 @@ En cualquier puerta, cuando ocurra uno de estos cuatro momentos, termina esa res
 - `NNN` solo va cuando la captura es de una spec (fases 6 y 7): `N` es 6 para la spec 000 y 7 para las 001 a 007. En las demás fases el nombre es `fase-N-descripcion.png`, como hasta ahora (ADR-004). Las capturas existentes no se renombran.
 - La descripción, en minúsculas, sin tildes y con guiones.
 - Lleva la cuenta de las capturas anunciadas en la conversación; no se guarda en ningún archivo.
-- Al cerrar cualquier sesión, no solo una spec, y antes de pedirme `/sdd-session`, comprueba con Glob que cada captura anunciada existe en `ai-workspace/screenshots/` y dime por nombre cuáles faltan.
+- Al cerrar cualquier sesión, no solo una spec, `/sdd-session` comprueba que cada captura anunciada existe en `ai-workspace/screenshots/` y te dice por nombre cuáles faltan.
 
 ## Cierre de una spec
 1. Tareas hechas y tests en verde.
