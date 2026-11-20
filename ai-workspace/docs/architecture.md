@@ -19,6 +19,7 @@ apps/api/
    │  ├─ repository/               # customer.repository.ts, simulation.repository.ts
    │  └─ use-cases/{customer,simulation}/create-*.ts
    ├─ infrastructure/
+   │  ├─ sqlite-connection.ts      # abre la conexión (data); solo la compone presentation/routes.ts
    │  ├─ datasource/               # sqlite-customer.datasource.ts, sqlite-simulation.datasource.ts
    │  └─ repository/               # *.repository.imp.ts
    └─ presentation/
