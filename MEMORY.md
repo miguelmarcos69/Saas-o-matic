@@ -4,6 +4,7 @@ Memoria del proyecto. Se actualiza al cerrar una fase o una tarea de tasks.md, a
 
 ## Estado actual
 - Fases 0 a 4 cerradas y commiteadas. Fase 3: stack (ADR-009), cálculo compartido (ADR-010), `architecture.md`, esquema de datos (`database.md`) y ADR-011. Fase 4: skills `sdd`, `backend-conventions` y `frontend-conventions` (`.claude/skills/`), reparto de specs (ADR-012), principio 7 con WCAG 2.2 AA y fila `app` en `architecture.md`.
+- Comprobado en una sesión nueva (petición de redactar la spec 001): `sdd` se carga sola y `backend-conventions` y `frontend-conventions` no se cargan al no haber código en `apps/`.
 - Todavía no hay código ni specs redactadas; el reparto (000 a 007) está en `ai-workspace/specs/README.md`.
 
 ## Decisiones (el porqué completo está en decisions.md)
@@ -29,9 +30,10 @@ Memoria del proyecto. Se actualiza al cerrar una fase o una tarea de tasks.md, a
 - Si el sistema avisa de que un archivo ha cambiado en disco, comparar con `git diff` antes de darlo por bueno: `MEMORY.md` perdió pendientes de la fase 6 y no se vio a la primera.
 - Citar los § solo como figuran en CLAUDE.md (§4, no "§4.4") y comprobar en la documentación antes de afirmar que algo choca (`httpResource` sí podía vivir en `services/`).
 - En una skill, la `description` va entre comillas dobles: un `: ` dentro rompe la cabecera YAML.
+- Las fases numeradas del método (`sdd`, 1 a 6) y las del proyecto (0 a 7) colisionan: invocando `/sdd` a mano, la "fase 5 (implementación)" del método se confundió con la fase 5 del proyecto (agentes). Al nombrar una fase, decir siempre "del método" o "del proyecto". Sin renombrar nada hasta que decidas la nomenclatura.
 
 ## Próximos pasos
-- Fase 5: crear los agentes, incluido `.claude/agents/reviewer.md` (requiere tu aprobación); el revisor devuelve el informe y la sesión principal lo guarda en `review.md` sin cambiarlo. Revisar `/sdd-session` (que compruebe las capturas anunciadas). Probar en una sesión nueva que `sdd` se carga sola.
+- Fase 5: crear los agentes, incluido `.claude/agents/reviewer.md` (requiere tu aprobación); el revisor devuelve el informe y la sesión principal lo guarda en `review.md` sin cambiarlo. Revisar `/sdd-session` (que compruebe las capturas anunciadas).
 - Fase 6 (esqueleto técnico): rellenar "Comandos" de `CLAUDE.md`, resolver el conflicto de `.env.example` con `Read(**/.env.*)`, validar `packages/pricing` compilado con Angular y la API (condición del ADR-010), comprobar `better-sqlite3` en Windows con Node 24 y que su SQLite admita `STRICT` (3.37 o superior), decidir `supertest` o `fetch` nativo para los tests de endpoints (fila "Tests" del ADR-009) y aprobar la lista de dependencias con su justificación (principio 4).
 - Fase 6 (base de datos): ejecutor de migraciones en `data/sqlite/` con su test, quién lo invoca (`app.ts` solo importa `config` y `presentation`), cómo encuentra `migrations/` en la API compilada y ruta del fichero de la base en `config/envs.ts`.
 - Fase 6 (proxy de desarrollo): `apps/web/proxy.conf.json` y opción `proxyConfig` de `serve` en `angular.json`, para que el frontend llame a la API sin CORS. Puerto de la API y prefijo de rutas (el reto pide `/customers` y `/simulations`, sin prefijo): por decidir. Comprobar la sintaxis en "Proxying to a backend server" de angular.dev.
