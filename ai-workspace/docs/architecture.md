@@ -29,7 +29,7 @@ apps/web/src/
 ├─ styles.scss                     # solo importa los parciales de scss/
 ├─ scss/
 │  ├─ themes/_tokens.scss          # colores y medidas con nombre
-│  └─ _shared.scss · _customers.scss · _simulations.scss   # un parcial por funcionalidad
+│  └─ _shared.scss · _customers.scss · _simulations.scss · _health.scss   # un parcial por funcionalidad
 └─ app/
    ├─ app.ts · app.html · app.routes.ts · app.config.ts
    ├─ customers/                   # buscador, dashboard y detalle con historial (§2.B)
@@ -42,6 +42,10 @@ apps/web/src/
    │  ├─ components/simulation-form/
    │  ├─ interfaces/
    │  └─ services/simulations-api.ts
+   ├─ health/                      # estado de la API (spec 000)
+   │  ├─ pages/health-page/
+   │  ├─ interfaces/
+   │  └─ services/health-api.ts
    └─ shared/
       ├─ components/currency-selector/
       ├─ interfaces/customer.ts · simulation.ts
@@ -63,7 +67,7 @@ Clean Architecture en la API, sin capa `application` (decisión del autor): los 
 | domain | packages/pricing, Zod | data, infrastructure, presentation, Express, SQLite |
 | data | better-sqlite3 | el resto |
 | infrastructure | domain, data | presentation |
-| presentation | domain | infrastructure y data, salvo `<recurso>/routes.ts` (infrastructure, solo para componer) |
+| presentation | domain | infrastructure y data, salvo `routes.ts` y `<recurso>/routes.ts` (infrastructure, solo para componer) |
 | app.ts | config, presentation | — |
 | config | Zod | el resto |
 | web: funcionalidad | shared, packages/pricing | otra funcionalidad, apps/api |
