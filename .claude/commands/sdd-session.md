@@ -18,7 +18,8 @@ Si falta la fase o el tema, pregúntamelo antes de seguir.
 1. Toma la fecha de hoy (AAAA-MM-DD). Busca con Glob `ai-workspace/sessions/AAAA-MM-DD-*.md`.
    NN = mayor número existente + 1, con dos cifras (01 si no hay ninguno).
 2. El tema, en el nombre del fichero, va en español, en minúsculas, sin tildes y con guiones
-   (p. ej. `configuracion-entorno`).
+   (p. ej. `configuracion-entorno`). Si el tema es el nombre de una spec (`NNN-nombre`),
+   se usa tal cual, con su slug en inglés (p. ej. `000-skeleton`).
 3. Busca con Glob `ai-workspace/screenshots/*` e identifica las de esta fase
    (nombre `fase-<N>-<descripcion>.png`).
 4. Redacta el registro, en español, con esta plantilla:

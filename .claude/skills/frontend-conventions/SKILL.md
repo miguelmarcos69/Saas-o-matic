@@ -16,13 +16,13 @@ Fuentes: `ai-workspace/docs/architecture.md` y la constitución. Si una convenci
 | Páginas | Inyectan servicios con `inject()` y pasan datos a los componentes. | Lógica de datos en un único nivel |
 | Componentes | Presentacionales: reciben con `input()` y `model()`, emiten con `output()`. No inyectan servicios propios. | Reutilización y tests sencillos |
 | HTTP | `HttpClient` solo en `services/`. Servicios con `@Injectable({providedIn: 'root'})`. | Una frontera de red única |
-| Estados | Toda vista con datos remotos muestra carga, error y vacío. El servicio expone un `LoadState<T>` con señales (`loading`, `data` o `error`) en lecturas y escrituras; el vacío lo decide la vista. No se usa `httpResource`: un solo mecanismo (decisión del autor). En el buscador, cada búsqueda cancela la anterior: el servicio guarda la `Subscription` previa y la da de baja antes de lanzar la nueva. | Principio 7 y un resultado que corresponde a la última búsqueda |
+| Estados | Toda vista con datos remotos muestra carga y error y, si los datos pueden llegar vacíos, el de vacío. El servicio expone un `LoadState<T>` con señales (`loading`, `data` o `error`) en lecturas y escrituras; el vacío lo decide la vista. No se usa `httpResource`: un solo mecanismo (decisión del autor). En el buscador, cada búsqueda cancela la anterior: el servicio guarda la `Subscription` previa y la da de baja antes de lanzar la nueva. | Principio 7 y un resultado que corresponde a la última búsqueda |
 | Formularios | Reactive Forms tipados. En zoneless sus cambios no programan la detección: el componente convierte `value` y `status` en señales con `toSignal` (sobre `valueChanges` y `statusChanges`) y la plantilla lee esas señales; no `markForCheck()`. | Estado en señales y detección de cambios correcta |
 | Datos externos | La respuesta de la API de tipos de cambio pasa por un esquema Zod (`shared/schemas/`) antes de usarse. La respuesta de la API propia se considera de confianza y se tipa con interfaces: su contrato lo cubren los tests de integración de la API (principio 3) y la sección Contrato de cada spec. Es una interpretación del autor del principio 5. | Principio 5 |
 | `shared/` | Solo entra lo que usa una segunda funcionalidad. `LoadState<T>` nace en la funcionalidad que lo necesita. | Las funcionalidades no se importan entre sí |
 | Dependencias | Una funcionalidad importa `shared` y `packages/pricing`; nunca otra funcionalidad ni `apps/api`. `shared` no importa funcionalidades. `app` (`app.ts`, `app.routes.ts`, `app.config.ts`) importa solo las páginas de las funcionalidades, para las rutas diferidas, y `shared`. | Estructura de architecture.md |
 | Importes | Enteros en céntimos. La divisa elegida solo cambia lo que se muestra; los tramos los calcula `packages/pricing`. La conversión vive en una única función pura que redondea una sola vez, al mostrar. | Principios 6 y ADR-010 |
-| Tests | Vitest, `*.spec.ts` junto al archivo. Cubren carga, error y vacío. Los límites de los tramos no se repiten aquí (ADR-010). Mejor `await fixture.whenStable()` que `detectChanges()`. | Principio 3 |
+| Tests | Vitest, `*.spec.ts` junto al archivo. Cubren carga y error y, si aplica, vacío. Los límites de los tramos no se repiten aquí (ADR-010). Mejor `await fixture.whenStable()` que `detectChanges()`. | Principio 3 |
 | Accesibilidad | WCAG 2.2 AA (principio 7): teclado y foco visible, etiquetas, contraste y móvil. Se comprueba con la checklist y con una auditoría Lighthouse; sin dependencias nuevas. | Principio 7 |
 | Selectores | Prefijo `app` (`app-item-card`). | Coherencia con `ng new` |
 
@@ -41,7 +41,6 @@ Fuentes: `ai-workspace/docs/architecture.md` y la constitución. Si una convenci
 - Fase 6, sin comprobar: la guía de Angular con el workspace real (la consultada es la genérica reciente).
 - Fase 6: Zod en el frontend exige aprobación de la dependencia (principio 4).
 - Diferencias con la guía oficial, por decisión del autor: ésta desaconseja carpetas por tipo y propone estilos junto al componente y plantillas inline (se sigue architecture.md); recomienda `@Service()` (aquí `@Injectable`), Signal Forms (aquí Reactive Forms) y `httpResource` (aquí `LoadState<T>`).
-- El estado "vacío" lo exige esta skill por petición del autor; el principio 7 solo nombra carga y error.
 
 ## Ficheros de apoyo (léelos solo cuando toque)
 - [patterns.md](patterns.md): esqueleto de una funcionalidad neutra, al crear una nueva.

@@ -4,6 +4,8 @@
 - **Depende de:** <specs, o "ninguna">
 - **Cubre:** <§ del reto>
 
+Las siete secciones van siempre. Si una no aplica, se deja con `No aplica`; no se borra. En la sección 3, "API" e "Interfaz" siguen la misma regla.
+
 ## 1. Objetivo y alcance
 <Qué resuelve, en pocas líneas.>
 - **Dentro:** …
@@ -26,7 +28,7 @@ Una sola afirmación comprobable por requisito. Patrones EARS:
 
 ## 3. Contrato
 API: campos de entrada y salida, validaciones y errores con `code` estable (formato en architecture.md).
-Interfaz: estados de carga, error y vacío (constitución, principio 7).
+Interfaz: estados de carga y error y, si los datos pueden llegar vacíos, el de vacío (constitución, principio 7).
 
 ## 4. Casos de prueba
 Cada `R-nn` tiene al menos un caso. Incluye los límites.
@@ -41,7 +43,7 @@ Cada `R-nn` tiene al menos un caso. Incluye los límites.
 | AAAA-MM-DD #1 | Q-01 | … | `sessions/…` |
 
 ## 6. Dudas abiertas
-No se resuelven aquí: las decide el autor en la fase de clarificación.
+No se resuelven aquí: las decide el autor en la puerta 2 (clarificación).
 
 | Q | Duda | Origen | Estado |
 |---|---|---|---|

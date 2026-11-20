@@ -2,7 +2,7 @@
 
 Informe del revisor (ADR-003). Las rondas se añaden al final y no se editan. Lo guarda la sesión principal tal cual, tras enseñártelo.
 
-## Ronda 1 (AAAA-MM-DD) · Veredicto: Aprobada | Aprobada con reservas | Cambios requeridos
+## Ronda 1 (AAAA-MM-DD) · Veredicto: Conforme | Conforme con reservas | Cambios requeridos
 Un hallazgo bloqueante abierto implica "Cambios requeridos".
 
 **Alcance:** tareas T-01 a T-nn, commits <rango>.
@@ -13,7 +13,7 @@ Un hallazgo bloqueante abierto implica "Cambios requeridos".
 | H-01 | Bloqueante · Importante · Menor | ruta/archivo.ts:42 | R-03, o la regla incumplida | Qué falla y por qué |
 
 ### Checklists
-Resultado de las listas de revisión de backend y frontend, punto por punto.
+Resultado de las listas de revisión de backend y frontend, punto por punto, y de las comprobaciones de proceso de `sdd` (estado de la spec, justificación de tareas de más de 5 archivos).
 
 ### Seguimiento de la ronda anterior
 (Solo desde la ronda 2.)

@@ -17,7 +17,7 @@ Para el revisor (ADR-003). Cada casilla cita su fuente. Marca cada una como cump
 - [ ] Ninguna lógica de negocio ni de tramos en componentes o páginas: se llama a `packages/pricing`.
 
 ## Estados y datos (constitución, principios 5 y 7)
-- [ ] Toda vista con datos remotos muestra carga, error y vacío.
+- [ ] Toda vista con datos remotos muestra carga y error y, si los datos pueden llegar vacíos, el de vacío.
 - [ ] En el buscador, el servicio da de baja la suscripción anterior antes de lanzar una nueva búsqueda.
 - [ ] El error se muestra al usuario con un mensaje en español, no solo en consola.
 - [ ] La respuesta de la API de tipos de cambio pasa por el esquema Zod antes de usarse.
@@ -47,7 +47,7 @@ Para el revisor (ADR-003). Cada casilla cita su fuente. Marca cada una como cump
 - [ ] Los importes son enteros en céntimos; la conversión de divisa solo afecta a lo que se muestra.
 - [ ] La conversión está en una única función pura con un solo redondeo, al mostrar.
 - [ ] Ningún servicio usa `httpResource`; los estados salen de `LoadState<T>`.
-- [ ] Hay test de cada componente, página y servicio, incluidos carga, error y vacío.
+- [ ] Hay test de cada componente, página y servicio, incluidos carga y error y, si aplica, vacío.
 - [ ] Los tests no repiten los límites de los tramos (ADR-010).
 - [ ] Ningún test en rojo ni desactivado.
 
