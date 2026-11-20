@@ -29,6 +29,7 @@ Lo demás es una regla de CLAUDE.md o queda en el registro de la sesión.
 - **Alternativa descartada:** Que quien implementa se revise a sí mismo.
 - **Consecuencias:** El revisor no puede corregir, solo señalar. Cada cambio pasa por una revisión antes de la aprobación del autor.
 - **Ampliado el 2026-11-19:** La definición del agente va en `.claude/agents/reviewer.md`, sin `Edit` ni `Write`. Se crea en la fase 5, junto con los demás agentes, y exige la aprobación del autor porque toca `.claude/`. `review.md` es su informe por spec, en `ai-workspace/specs/<spec>/review.md`.
+- **Ampliado el 2026-11-20:** El revisor no tiene Bash (`tools: Read, Grep, Glob`), así que no puede escribir ni por redirección: el límite se fuerza, no se acepta como en ADR-007. La sesión principal le pasa literales los resultados de tests, build, git y Lighthouse. Usa un modelo distinto del de la sesión (`opus`). Los límites de escritura del planner y del implementer se piden por instrucción y se comprueban con `git status` y `git diff --stat` tras cada vuelta, sin hook (ADR-007). Descartado: Bash libre con el límite aceptado, y Bash filtrado con un hook (frágil y contrario a ADR-007).
 
 ## ADR-004 · Registro de cada sesión mientras ocurre, con capturas
 - **Fecha:** 2026-11-18

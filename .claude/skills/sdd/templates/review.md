@@ -2,8 +2,11 @@
 
 Informe del revisor (ADR-003). Las rondas se añaden al final y no se editan. Lo guarda la sesión principal tal cual, tras enseñártelo.
 
+## Gravedad y veredicto
+- **Bloqueante:** incumple un `R-nn`, un principio de la constitución, o deja un test o el build en rojo. **Importante:** incumple una convención de las skills, de `architecture.md` o de `database.md`, o una casilla de las checklists, sin romper un requisito. **Menor:** nombres, legibilidad u orden.
+- **Conforme:** sin hallazgos abiertos. **Conforme con reservas:** hay hallazgos abiertos, ninguno bloqueante. **Cambios requeridos:** al menos un bloqueante abierto.
+
 ## Ronda 1 (AAAA-MM-DD) · Veredicto: Conforme | Conforme con reservas | Cambios requeridos
-Un hallazgo bloqueante abierto implica "Cambios requeridos".
 
 **Alcance:** tareas T-01 a T-nn, commits <rango>.
 

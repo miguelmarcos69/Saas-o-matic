@@ -24,7 +24,7 @@ Una spec nace en `Borrador`.
 | Puerta | Producto | Pasa cuando | Estado al pasar |
 |---|---|---|---|
 | Puerta 1 · Spec | `spec.md` | todo requisito tiene origen | `En clarificación` |
-| Puerta 2 · Clarificación | "Dudas abiertas" decididas una a una | sin dudas abiertas ni requisitos PENDIENTE | `Aprobada` |
+| Puerta 2 · Clarificación | "Dudas abiertas" decididas una a una | sin dudas abiertas ni requisitos PENDIENTE, y última ronda del revisor `Conforme` (o `Conforme con reservas` aceptada por el autor) | `Aprobada` |
 | Puerta 3 · Plan | `plan.md`: el cómo, citando architecture.md y database.md | sin choque con fuentes superiores | sigue `Aprobada` |
 | Puerta 4 · Tareas | `tasks.md` | cada `R-nn` tiene tarea | `Planificada` |
 | Puerta 5 · Implementación | una tarea por parada | tests en verde (principio 3); MEMORY.md, diff y commit propuesto | `En implementación`, al empezar la primera tarea |
@@ -35,7 +35,8 @@ Una spec nace en `Borrador`.
 `Borrador` → `En clarificación` → `Aprobada` → `Planificada` → `En implementación` → `En revisión` → `Cerrada`. Además `Sustituida por spec-NNN`; una spec nunca se borra.
 - `Borrador` y `En clarificación`: ni plan ni código. `Aprobada`: solo plan y tareas. `Planificada`: plan y tareas aprobados.
 - Un cambio de requisitos no es un estado: la spec vuelve al estado de la primera puerta afectada.
-- Veredicto `Cambios requeridos`: la spec vuelve a `En implementación`; una ronda nueva la pasa a `En revisión`. Si el hallazgo apunta a un error de la spec, es un cambio de requisitos y se aplica la regla transversal.
+- Veredicto `Cambios requeridos` en la puerta 6: la spec vuelve a `En implementación`; una ronda nueva la pasa a `En revisión`. Si el hallazgo apunta a un error de la spec, es un cambio de requisitos y se aplica la regla transversal.
+- Veredicto `Cambios requeridos` en la puerta 2: la spec sigue en `En clarificación` hasta una ronda nueva `Conforme`, o `Conforme con reservas` que el autor acepte.
 
 ## review.md
 El revisor devuelve el informe en el chat. La sesión principal lo guarda tal cual, tras enseñártelo, y nunca edita rondas anteriores: cada ronda se añade al final.
