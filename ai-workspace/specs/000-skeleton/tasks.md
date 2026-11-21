@@ -200,14 +200,15 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-21 · Raíz: `.npmrc` sin scripts de instalación (ADR-014)
 - Cubre: R-18 (instalación en un clon limpio sin herramientas de compilación)
 - Depende de: T-13 · Se hace antes de T-14 (decisión del autor 2026-11-21)
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: `.npmrc` (raíz): `ignore-scripts=true` y `legacy-peer-deps=false`.
 - Sin test propio de Vitest: se comprueba con los comandos de abajo (Verif.).
+- Decisión del autor 2026-11-21: la casilla 1 se comprueba desde apps/api con `npm run env` en lugar de `npm config get`, que no admite workspaces (ENOWORKSPACES). Vale si sale npm_config_local_prefix=F:\saas-o-matic y npm_config_ignore_scripts=true, y no sale npm_config_legacy_peer_deps (npm solo exporta valores distintos del de por defecto; mi npm tiene true). Motivo: los comandos reales (run, install, test) suben a la raíz y leen su .npmrc; --workspaces=false no es representativo. No se añade .npmrc en apps/api.
 - Hecho cuando:
-  - [ ] En la raíz, `npm config get ignore-scripts` da `true` y `npm config get legacy-peer-deps` da `false`, aunque el npm del autor tenga `legacy-peer-deps=true`. Lo mismo desde `apps/api`; si allí no se aplica, se para y se avisa.
-  - [ ] `npm ci` en el repositorio termina bien sin compilar `better-sqlite3`; `npm ls --workspaces` sigue listando `apps/api` y `packages/pricing`.
-  - [ ] `npm run build` pasa y `npm test` da 51 passed.
-  - [ ] Clon limpio (manual, autor): `npm ci` y `npm install` instalan sin Visual Studio, y `npm run dev -w apps/api` responde `/health` en el 3000.
+  - [x] En la raíz, `npm config get ignore-scripts` da `true` y `npm config get legacy-peer-deps` da `false`, aunque el npm del autor tenga `legacy-peer-deps=true`. Lo mismo desde `apps/api`; si allí no se aplica, se para y se avisa.
+  - [x] `npm ci` en el repositorio termina bien sin compilar `better-sqlite3`; `npm ls --workspaces` sigue listando `apps/api` y `packages/pricing`.
+  - [x] `npm run build` pasa y `npm test` da 51 passed.
+  - [x] Clon limpio (manual, autor): `npm ci` y `npm install` instalan sin Visual Studio, y `npm run dev -w apps/api` responde `/health` en el 3000. Comprobado por el autor el 2026-11-21 tras el commit de T-21.
 
 ## T-14 · Web: proyecto Angular en `apps/web`
 - Cubre: R-01, R-17
