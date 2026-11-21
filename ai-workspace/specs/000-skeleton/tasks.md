@@ -81,16 +81,17 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-05 · API: andamio
 - Cubre: R-01, R-17
 - Depende de: T-03
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Parada: instalar `express` 5.3.0, `better-sqlite3` 13.2.0, `zod` 4.6.7, `@types/node` 24.19.2, `@types/express` 5.0.6, `@types/better-sqlite3` 9.6.0, `tsx` 4.23.15 y el enlace `@saas-o-matic/pricing` (D-12, D-13).
 - Archivos de producción: `apps/api/package.json` (scripts `dev` con `tsx watch`, `build` con `tsc` a `dist` y `start` con `node dist/app.js`; `type: module`; dependencias de la sección 4 del plan), `apps/api/tsconfig.json`, `apps/api/tsconfig.build.json` (sin `*.spec.ts`, `rootDir` `src`, `outDir` `dist`).
 - Convención del autor, 2026-11-21 (T-04): `apps/api/package.json` no tiene script `test`; los tests de la API los lanza el proyecto `api` de Vitest de la raíz, y con `npm run test --workspaces --if-present` correrían dos veces.
 - Orden fijado por el autor: va antes de `domain/pricing-check.spec.ts` porque ese test necesita `apps/api`. `env.example` y `migrations/.gitkeep` no van aquí: van en T-07 y T-09.
+- Decisión del autor 2026-11-21: se retira `apps/api/.gitkeep` (creado en T-01 para que Vitest cargara el proyecto `api`), porque la carpeta ya tiene ficheros, igual que con `packages/pricing` en T-03. Se mantienen `"types": ["node"]` en `apps/api/tsconfig.json` y el nombre `@saas-o-matic/api`, ambos propuestos por el implementer.
 - Sin test propio: se comprueba con los comandos de abajo.
 - Hecho cuando:
-  - [ ] `npm install` termina bien y `npm ls --workspaces` lista `apps/api` y `packages/pricing` (C-01 parcial).
-  - [ ] `apps/api/package.json` declara solo las dependencias aprobadas para la API; sin `supertest` (C-18, mitad API).
-  - [ ] El proyecto `apps/api` de `vitest.config.ts` (T-01) resuelve su carpeta.
+  - [x] `npm install` termina bien y `npm ls --workspaces` lista `apps/api` y `packages/pricing` (C-01 parcial).
+  - [x] `apps/api/package.json` declara solo las dependencias aprobadas para la API; sin `supertest` (C-18, mitad API).
+  - [x] El proyecto `apps/api` de `vitest.config.ts` (T-01) resuelve su carpeta.
 
 ## T-06 · API, `domain`: comprobar `packages/pricing` desde `dist`
 - Cubre: R-10, R-11, R-24
