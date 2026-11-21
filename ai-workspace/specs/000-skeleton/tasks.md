@@ -158,12 +158,13 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-11 · API, `infrastructure`: puente a la conexión
 - Cubre: R-08
 - Depende de: T-10
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: `apps/api/src/infrastructure/sqlite-connection.ts` (D-04, D-16: abre la conexión por `data/sqlite/index.ts` y devuelve el cierre; la línea ya está en `architecture.md`).
 - Sin test propio: el plan no le asigna spec; lo ejercen `routes.spec.ts` y `server.spec.ts` (T-12). Decisión del autor 2026-11-21 (Q-04): `sqlite-connection.ts` queda sin spec propio, porque lo ejercen `routes.spec.ts` y `server.spec.ts`. Se comprueba con los comandos de abajo.
+- Decisión del autor 2026-11-21 (dudas del implementer): "Duda 1: elijo la (A), { close: () => void }. Duda 2: elijo la (a), openSqliteConnection(databasePath: string). Mi motivo: el plan (D-16) pide solo devolver el cierre; así ningún tipo de better-sqlite3 llega a presentation, y si la spec 002 necesita la conexión se añade un campo sin cambiar la firma."
 - Hecho cuando:
-  - [ ] `npx tsc -p apps/api/tsconfig.build.json --noEmit` termina sin errores.
-  - [ ] Solo importa de `data` (regla de dependencias de `architecture.md`).
+  - [x] `npx tsc -p apps/api/tsconfig.build.json --noEmit` termina sin errores.
+  - [x] Solo importa de `data` (regla de dependencias de `architecture.md`).
 
 ## T-12 · API, `presentation`: servidor y `GET /health`
 - Cubre: R-02, R-03, R-04, R-08, R-30, R-31
