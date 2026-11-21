@@ -169,15 +169,20 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-12 · API, `presentation`: servidor y `GET /health`
 - Cubre: R-02, R-03, R-04, R-08, R-30, R-31
 - Depende de: T-11
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: `apps/api/src/presentation/routes.ts` (D-16: abre la conexión por `infrastructure`, monta `GET /health` sin prefijo y devuelve el router y el cierre), `apps/api/src/presentation/server.ts` (Express; recibe `{ port, databasePath }` de `app.ts`; abre la base antes de escuchar; arranque y parada).
 - Tests: `apps/api/src/presentation/routes.spec.ts` y `apps/api/src/presentation/server.spec.ts`, con `fetch` nativo, puerto 0 y `:memory:` por prueba (riesgo 10).
+- Decisiones del autor 2026-11-21 (encargo de T-12):
+  - "(1) Nombres: routes.ts exporta createRoutes(databasePath: string): { router: Router; close: () => void }. server.ts exporta class Server con constructor({ port, databasePath }), start(): Promise<number>, que abre la base con createRoutes, luego hace listen y resuelve con el puerto real (los tests usan puerto 0), y rechaza antes de listen si la base falla; y stop(): Promise<void>, que cierra el servidor HTTP y después la base. Motivo: D-16 pide una función que devuelve router y cierre, y un Server con arranque y parada; el puerto real hace falta con puerto 0."
+  - "(2) EBUSY: con :memory: no se puede reproducir, así que la decisión (a) de T-10 queda definitiva; anótalo en T-12. Si aun así aparece un fichero bloqueado, para."
+  - "(3) C-09 se reparte como en D-17: server.spec.ts comprueba que start() con :memory: y las migraciones reales resuelve y GET /health responde; user_version = 0 ya lo prueba index.spec.ts (T-10). Motivo: Server solo expone close (decisión de T-11) y se mantiene :memory: por prueba (riesgo 10)."
+- Decisión del autor 2026-11-21 (desviación 1 del implementer): "si listen falla, start() cierra la base y rechaza con el error de listen; motivo: R-30/R-31, un arranque fallido no deja nada abierto". Con su test en `server.spec.ts`: un segundo `Server` en el mismo puerto rechaza (`EADDRINUSE`) y su `stop()` no lanza.
 - Hecho cuando:
-  - [ ] Escritos primero y vistos en rojo. C-03: `GET /health` responde `200` con `{"status":"ok"}`.
-  - [ ] C-04: los tests usan `fetch` nativo y no hay `supertest` entre las dependencias.
-  - [ ] C-09: arrancar con `:memory:` y las migraciones reales deja `user_version` = 0.
-  - [ ] C-36, C-37 y C-38 (nivel servidor, D-17): con `vi.mock` de `migrations-dir` apuntando a una carpeta temporal con migraciones erróneas, el arranque rechaza y no hay nadie escuchando.
-  - [ ] `presentation/routes.ts` es el único archivo de `presentation` que importa `infrastructure` (Decisión #10).
+  - [x] Escritos primero y vistos en rojo. C-03: `GET /health` responde `200` con `{"status":"ok"}`.
+  - [x] C-04: los tests usan `fetch` nativo y no hay `supertest` entre las dependencias.
+  - [x] C-09: arrancar con `:memory:` y las migraciones reales deja `user_version` = 0.
+  - [x] C-36, C-37 y C-38 (nivel servidor, D-17): con `vi.mock` de `migrations-dir` apuntando a una carpeta temporal con migraciones erróneas, el arranque rechaza y no hay nadie escuchando.
+  - [x] `presentation/routes.ts` es el único archivo de `presentation` que importa `infrastructure` (Decisión #10).
 
 ## T-13 · API, `app`: arranque y errores de arranque
 - Cubre: R-02, R-29, R-30, R-31
