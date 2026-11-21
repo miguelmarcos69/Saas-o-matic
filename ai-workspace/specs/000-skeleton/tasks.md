@@ -69,12 +69,13 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-04 · Scripts de la raíz: `build:pricing`, `build` y `test`
 - Cubre: R-13, R-15
 - Depende de: T-03
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: `package.json` (raíz): `build:pricing`, `build` y `test`, con `pricing` compilado antes que las apps. `test` lanza Vitest y el ejecutor de la web si existe, y falla si falla uno (D-14), de modo que T-14 no vuelve a tocar este archivo. `dev` y `verify` llegan en T-19, cuando existen las dos apps.
+- Decisión del autor 2026-11-21: «el ejecutor de la web si existe» se expresa con `npm run test --workspaces --if-present` (convención para T-05 y T-14, abajo). Desviación aceptada por el autor, 2026-11-21: `build` compila `pricing` dos veces (`build:pricing` y de nuevo por `--workspaces`); es inocuo y garantiza `pricing` antes que las apps.
 - Sin test propio: se comprueba con los comandos de abajo.
 - Hecho cuando:
-  - [ ] C-14 parcial (solo existe `pricing`): con `packages\pricing\dist` borrado (`Remove-Item -Recurse -Force`), `npm run build` lo regenera y termina bien.
-  - [ ] C-23 parcial: con `dist` borrado, `npm test` compila `pricing` antes y pasa `index.spec.ts`.
+  - [x] C-14 parcial (solo existe `pricing`): con `packages\pricing\dist` borrado (`Remove-Item -Recurse -Force`), `npm run build` lo regenera y termina bien.
+  - [x] C-23 parcial: con `dist` borrado, `npm test` compila `pricing` antes y pasa `index.spec.ts`.
   - [ ] C-14 y C-23 se repiten completos en T-19.
 
 ## T-05 · API: andamio
@@ -83,6 +84,7 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 - Estado: [ ] pendiente
 - Parada: instalar `express` 5.3.0, `better-sqlite3` 13.2.0, `zod` 4.6.7, `@types/node` 24.19.2, `@types/express` 5.0.6, `@types/better-sqlite3` 9.6.0, `tsx` 4.23.15 y el enlace `@saas-o-matic/pricing` (D-12, D-13).
 - Archivos de producción: `apps/api/package.json` (scripts `dev` con `tsx watch`, `build` con `tsc` a `dist` y `start` con `node dist/app.js`; `type: module`; dependencias de la sección 4 del plan), `apps/api/tsconfig.json`, `apps/api/tsconfig.build.json` (sin `*.spec.ts`, `rootDir` `src`, `outDir` `dist`).
+- Convención del autor, 2026-11-21 (T-04): `apps/api/package.json` no tiene script `test`; los tests de la API los lanza el proyecto `api` de Vitest de la raíz, y con `npm run test --workspaces --if-present` correrían dos veces.
 - Orden fijado por el autor: va antes de `domain/pricing-check.spec.ts` porque ese test necesita `apps/api`. `env.example` y `migrations/.gitkeep` no van aquí: van en T-07 y T-09.
 - Sin test propio: se comprueba con los comandos de abajo.
 - Hecho cuando:
@@ -192,6 +194,7 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 - Excepción de tamaño: la salida de `ng new` de Angular 22.3 (`package.json`, `angular.json`, `tsconfig.json`, `tsconfig.app.json`, `tsconfig.spec.json`, `src/index.html`, `src/main.ts`, `src/app/app.ts`, `app.html`, `app.config.ts`, `app.routes.ts`, …) no se puede dividir sin dejar un proyecto que no compila. Se limita a los ficheros de la sección 2 del plan; sin funcionalidad. Las opciones de `ng new` se comprueban, no se dan por sabidas (riesgo 5).
 - Parada: instalar `@angular/core`, `common`, `compiler`, `platform-browser`, `router` 22.3.0, `rxjs` 7.8.2, `zod` 4.6.7, `@angular/build`, `cli`, `compiler-cli` 22.3.0, `jsdom` 31.0.1 y el enlace `@saas-o-matic/pricing` (D-09, D-10, D-12; `jsdom` es la única fuera de familia, aprobada).
 - Antes de escribir: con el MCP de Angular CLI, `list_projects` y `get_best_practices` sobre `apps/web` y revisar lo que `frontend-conventions` daba por supuesto (zoneless, standalone, `OnPush`, ejecutor de tests; riesgo 4). Si algo choca con `architecture.md` o la skill, se para y se pregunta.
+- Convención del autor, 2026-11-21 (T-04): el script `test` de `apps/web/package.json` se llama `test` (el de la raíz lo lanza con `npm run test --workspaces --if-present`).
 - Sin test propio de producción: el ejecutor de tests de la web (con `jsdom`, D-14) debe correr. Se comprueba con los comandos de abajo.
 - Hecho cuando:
   - [ ] `npm install` termina bien; `apps/web/package.json` declara solo la lista aprobada, sin `@angular/forms` ni `supertest` (C-18, mitad web).

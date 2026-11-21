@@ -6,6 +6,11 @@
     "apps/*",
     "packages/*"
   ],
+  "scripts": {
+    "build:pricing": "npm run build -w packages/pricing",
+    "build": "npm run build:pricing && npm run build --workspaces --if-present",
+    "test": "npm run build:pricing && vitest run && npm run test --workspaces --if-present"
+  },
   "devDependencies": {
     "concurrently": "10.0.7",
     "typescript": "6.0.3",
