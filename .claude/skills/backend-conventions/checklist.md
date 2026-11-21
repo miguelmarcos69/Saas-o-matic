@@ -4,7 +4,7 @@ Para el revisor (ADR-003). Cada casilla cita su fuente. Marca cada una como cump
 
 ## Capas (architecture.md, "Reglas de dependencia")
 - [ ] `domain` no importa `data`, `infrastructure`, `presentation`, Express ni SQLite.
-- [ ] `presentation` no importa `infrastructure` ni `data`, salvo `<recurso>/routes.ts` (solo `infrastructure`, para componer).
+- [ ] `presentation` no importa `infrastructure` ni `data`, salvo `routes.ts` y `<recurso>/routes.ts` (solo `infrastructure`, para componer).
 - [ ] `infrastructure` no importa `presentation`; `data` solo importa `better-sqlite3`.
 - [ ] `app.ts` solo importa `config` y `presentation`; `config` solo Zod.
 - [ ] `packages/pricing` no importa nada del resto.

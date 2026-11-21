@@ -18,7 +18,7 @@ Fuentes: `ai-workspace/docs/architecture.md`, `ai-workspace/docs/database.md` y 
 | Puertos | `domain/datasources/`, `domain/repository/` | Interfaces. Devuelven `Promise`. Una operación atómica es un único método. | `domain` independiente del driver síncrono |
 | Controlador | `presentation/<recurso>/controller.ts` | Recibe el repositorio por constructor, **crea el caso de uso en cada petición** y envía los errores a `handleError`. Sin lógica de negocio. | Capas finas; ninguna regla escondida en HTTP |
 | `handleError` | en cada controlador | `CustomError` lleva `code`, `message` y `details`, sin números HTTP. La tabla `code → estado` se exporta desde `presentation/middlewares/error-handler.ts`. Lo que no es `CustomError` sale como `INTERNAL_ERROR`, sin trazas. | `domain` no conoce HTTP; no se filtran detalles internos |
-| `routes.ts` | `presentation/<recurso>/` | Compone datasource, repositorio y controlador. Es la única excepción a las reglas de capas. Sin lógica. | Un único punto de composición, auditable |
+| `routes.ts` | `presentation/` y `presentation/<recurso>/` | Compone datasource, repositorio y controlador. Es la única excepción a las reglas de capas. Sin lógica. | Un único punto de composición, auditable |
 | Datasource | `infrastructure/datasource/sqlite-*.datasource.ts` | SQL con parámetros, nunca concatenado. Convierte la fila `snake_case` en entidad `camelCase` (único sitio). Traduce `SqliteError` por su `code` a `CustomError`; lo no reconocido se relanza. | Inyección SQL; un mapeo de nombres único |
 | Importes | todo el código | Enteros en céntimos, sin coma flotante. Un único punto de redondeo. | Principio 6 |
 | Config | `config/envs.ts` | `process.env` solo ahí, validado con Zod al arrancar. | Principio 5 |
