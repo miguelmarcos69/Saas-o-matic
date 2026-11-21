@@ -96,12 +96,12 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-06 · API, `domain`: comprobar `packages/pricing` desde `dist`
 - Cubre: R-10, R-11, R-24
 - Depende de: T-05
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: ninguno (solo test).
 - Tests: `apps/api/src/domain/pricing-check.spec.ts` (D-07): importa `@saas-o-matic/pricing` (resuelto a `dist` por su `exports`) y comprueba la constante.
 - Hecho cuando:
-  - [ ] C-27 (mitad API) y C-11 (mitad API): el test pasa contra `dist`. Para verlo en rojo primero, se ejecuta con `dist` borrado.
-  - [ ] Si falla porque la API no puede consumir el paquete compilado: se para y se avisa al autor y se aplica la opción B (R-11, C-12). No se elige otra cosa.
+  - [x] C-27 (mitad API) y C-11 (mitad API): el test pasa contra `dist`. Para verlo en rojo primero, se ejecuta con `dist` borrado.
+  - [x] Si falla porque la API no puede consumir el paquete compilado: se para y se avisa al autor y se aplica la opción B (R-11, C-12). No se elige otra cosa.
 
 ## T-07 · API, `config`: variables de entorno y `env.example`
 - Cubre: R-02, R-07, R-16, R-26, R-29
