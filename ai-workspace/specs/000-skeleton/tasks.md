@@ -146,13 +146,14 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-10 · API, `data`: abrir la base
 - Cubre: R-08, R-23, R-26
 - Depende de: T-07, T-08, T-09
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: `apps/api/src/data/sqlite/index.ts` (`openDatabase(databasePath)`, D-16: crea siempre la carpeta padre de la ruta resuelta si no existe, salvo `:memory:` (P-02); abre `better-sqlite3`; llama a `runMigrations` con la constante de `migrations-dir`; devuelve la conexión). Sin pragmas (P-04 (b)).
 - Tests: `apps/api/src/data/sqlite/index.spec.ts` (el plan no lo lista). Decisión del autor 2026-11-21 (Q-03): se mantiene, porque C-26 y C-30 necesitan test automático de `openDatabase`.
 - Hecho cuando:
-  - [ ] Escrito primero y visto en rojo. C-26: con una carpeta temporal inexistente, la crea y abre la base; también con una ruta distinta de la de por defecto, crea su carpeta padre (P-02).
-  - [ ] C-30: `openDatabase(':memory:')` no crea carpeta alguna ni `apps/api/:memory:`.
-  - [ ] Con las migraciones reales (0 ficheros) `user_version` queda en 0 (base de C-09).
+  - [x] Escrito primero y visto en rojo. C-26: con una carpeta temporal inexistente, la crea y abre la base; también con una ruta distinta de la de por defecto, crea su carpeta padre (P-02).
+  - [x] C-30: `openDatabase(':memory:')` no crea carpeta alguna ni `apps/api/:memory:`.
+  - [x] Con las migraciones reales (0 ficheros) `user_version` queda en 0 (base de C-09).
+- Decisión del autor 2026-11-21 (opción (a)): `openDatabase` no cierra la conexión si `runMigrations` lanza; ninguna fuente lo pide. Se decide en T-12 si su test de arranque fallido (C-36 a C-38) deja el fichero bloqueado en Windows.
 
 ## T-11 · API, `infrastructure`: puente a la conexión
 - Cubre: R-08
