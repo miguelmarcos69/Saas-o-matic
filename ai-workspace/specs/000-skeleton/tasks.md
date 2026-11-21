@@ -21,14 +21,14 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-00 · Comprobar `better-sqlite3` y sus tipos (R-09)
 - Cubre: R-09, R-20
 - Depende de: —
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Parada: instalar `better-sqlite3` 13.2.0, `@types/better-sqlite3` 9.6.0 y `typescript` 6.0.3 (aprobada su lista; condición del autor: comprobar `@types/better-sqlite3`), en una carpeta aislada fuera del repositorio.
 - Alcance: ningún archivo del repositorio. La evidencia (comandos y salida) se guarda en la sesión.
 - Hecho cuando:
-  - [ ] C-10: en Windows con Node 24, abrir una base, crear una tabla `STRICT`, insertar y leer sin error, y `sqlite_version()` es 3.37 o superior.
-  - [ ] `tsc` compila un fichero que use la API tipada (abrir, `prepare`, `run`, `get`) con `@types/better-sqlite3` 9.6.0 frente a `better-sqlite3` 13.2.0.
-  - [ ] Si algo falla (binario nativo, `STRICT` o tipos): se para y se avisa al autor (C-21, R-20). No se elige alternativa ni otro paquete; cambia el ADR-009.
-  - [ ] Hasta que T-00 esté en verde, no empieza T-01.
+  - [x] C-10: en Windows con Node 24, abrir una base, crear una tabla `STRICT`, insertar y leer sin error, y `sqlite_version()` es 3.37 o superior.
+  - [x] `tsc` compila un fichero que use la API tipada (abrir, `prepare`, `run`, `get`) con `@types/better-sqlite3` 9.6.0 frente a `better-sqlite3` 13.2.0.
+  - [x] Si algo falla (binario nativo, `STRICT` o tipos): se para y se avisa al autor (C-21, R-20). No se elige alternativa ni otro paquete; cambia el ADR-009.
+  - [x] Hasta que T-00 esté en verde, no empieza T-01.
 
 ## T-01 · Raíz: workspaces, TypeScript base y Vitest
 - Cubre: R-01, R-15, R-17
