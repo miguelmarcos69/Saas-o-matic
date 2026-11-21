@@ -135,13 +135,13 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-09 · API, `data`: localización de `migrations/` y carpeta versionada
 - Cubre: R-08, R-25
 - Depende de: T-02, T-05
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: `apps/api/src/data/sqlite/migrations-dir.ts` (constante con `import.meta.dirname` y `../../../migrations`), `apps/api/migrations/.gitkeep`.
 - Tests: `apps/api/src/data/sqlite/migrations-dir.spec.ts` (D-05): ejecuta `tsc -p tsconfig.build.json --outDir dist-test`, importa el módulo compilado de `apps/api/dist-test/data/sqlite/` y comprueba que la ruta es `apps/api/migrations` y que existe. Test lento, solo en este archivo.
 - Hecho cuando:
-  - [ ] Escrito primero y visto en rojo. La ruta compilada resuelve a `apps/api/migrations` (H-08, parte API compilada).
-  - [ ] C-28: `migrations/.gitkeep` existe, está versionado y no hay ningún `.sql`.
-  - [ ] `dist-test/` no aparece en `git status` (T-02).
+  - [x] Escrito primero y visto en rojo. La ruta compilada resuelve a `apps/api/migrations` (H-08, parte API compilada).
+  - [x] C-28: `migrations/.gitkeep` existe, está versionado y no hay ningún `.sql`.
+  - [x] `dist-test/` no aparece en `git status` (T-02).
 
 ## T-10 · API, `data`: abrir la base
 - Cubre: R-08, R-23, R-26
