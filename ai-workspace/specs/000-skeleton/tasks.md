@@ -187,13 +187,15 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-13 · API, `app`: arranque y errores de arranque
 - Cubre: R-02, R-29, R-30, R-31
 - Depende de: T-07, T-12
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: `apps/api/src/app.ts` (lee `config`, crea y arranca `Server`; solo importa `config` y `presentation`; si algo lanza, imprime el mensaje en `stderr` con `console.error` y termina con código 1; D-15).
 - Tests: `apps/api/src/app.spec.ts` (D-17): proceso real con `tsx src/app.ts` y `PORT=abc`.
+- Decisión del autor 2026-11-21 (desviación 1 del implementer): "al arrancar bien, app.ts imprime con console.log "API listening on http://localhost:<puerto>", usando el puerto que devuelve start(). Motivo: el proyecto se ejecuta en otro ordenador y quien lo arranque debe ver que la API escucha y en qué puerto. Sin test nuevo; se comprueba en la verificación."
+- Decisión del autor 2026-11-21 (desviación 2 del implementer): "acepto lanzar tsx/cli con process.execPath; equivale a D-17 y es portable."
 - Hecho cuando:
-  - [ ] Escrito primero y visto en rojo. C-33 (proceso real): código de salida distinto de 0 y mensaje en `stderr` que nombra `PORT`; no queda nada escuchando.
-  - [ ] Verif.: `npm run build -w apps/api` y `node apps\api\dist\app.js` arrancan y responden `GET /health` en el 3000, con la base creada en `apps/api/data/saas-o-matic.db` (R-23 de punta a punta).
-  - [ ] Verif.: con `npm run dev -w apps/api` responde igual.
+  - [x] Escrito primero y visto en rojo. C-33 (proceso real): código de salida distinto de 0 y mensaje en `stderr` que nombra `PORT`; no queda nada escuchando.
+  - [x] Verif.: `npm run build -w apps/api` y `node apps\api\dist\app.js` arrancan y responden `GET /health` en el 3000, con la base creada en `apps/api/data/saas-o-matic.db` (R-23 de punta a punta).
+  - [x] Verif.: con `npm run dev -w apps/api` responde igual.
 
 ## T-14 · Web: proyecto Angular en `apps/web`
 - Cubre: R-01, R-17
