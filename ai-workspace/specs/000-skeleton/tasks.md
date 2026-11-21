@@ -45,12 +45,12 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-02 · `.gitignore`: `dist-test/`
 - Cubre: R-08 (soporte del test compilado de D-05)
 - Depende de: —
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: `.gitignore` (una línea nueva, `dist-test/`).
 - Sin test propio: se comprueba con `git check-ignore`.
 - Hecho cuando:
-  - [ ] `git check-ignore -v apps/api/dist-test/data/sqlite/migrations-dir.js` muestra la regla nueva.
-  - [ ] `.gitignore` no ignora `.gitkeep` ni `env.example`.
+  - [x] `git check-ignore -v apps/api/dist-test/data/sqlite/migrations-dir.js` muestra la regla nueva.
+  - [x] `.gitignore` no ignora `.gitkeep` ni `env.example`.
 
 ## T-03 · `packages/pricing`: constante de comprobación y build
 - Cubre: R-10, R-15, R-17, R-24
