@@ -34,6 +34,7 @@ Qué se crea, en qué capa y por qué fuente. Los `*.spec.ts` van junto a su arc
 | `tsconfig.base.json` | opciones comunes de TypeScript 6.0.x para `packages/pricing` y `apps/api` (D-11) | ADR-009 |
 | `vitest.config.ts` | un único Vitest en la raíz con un proyecto por miembro (D-14) | R-15 |
 | `CLAUDE.md` (sección "Comandos") | scripts de la raíz y pasos de R-18 | R-19 |
+| `.npmrc` | `ignore-scripts=true` y `legacy-peer-deps=false`: la instalación no ejecuta scripts de paquetes y el npm del autor se comporta como uno limpio (decisión del autor 2026-11-21) | R-18; ADR-014 |
 
 `.gitignore` ya ignora `node_modules/`, `dist/`, `*.db`, `*.db-wal` y `*.db-shm`, y no ignora `.gitkeep` ni `env.example`. Se le añade `dist-test/` (salida del test compilado de D-05), en la tarea de la raíz.
 
@@ -263,6 +264,8 @@ TypeScript 6.0.3 cumple `>=6.0 <6.1` de Angular 22.3 (ADR-009).
 
 Decisión del autor 2026-11-21 (T-01): se añade `vite` 8.3.8 a la raíz, exacta y sin `^`, porque `npx vitest run` falla sin ella (`Cannot find package 'vite'`; en la máquina del autor npm no instala peers automáticamente). Motivo del autor: "es dependencia peer obligatoria de vitest 5.1.1, es la misma versión que usa @angular/build 22.3.0 y deja la lista reproducible con o sin legacy-peer-deps". No es un cambio de requisitos: R-17 ya incluye `vitest` y C-18 se mide contra esta lista. La raíz declara cuatro `devDependencies`.
 
+Decisión del autor 2026-11-21 (prueba de clon limpio): se añade `.npmrc` en la raíz con `ignore-scripts=true` y `legacy-peer-deps=false` (ADR-014). Motivo del autor: "el proyecto se evalúa en otro ordenador y debe instalarse con `npm ci` sin herramientas de compilación; ningún script de instalación actual hace falta". Sin paquetes nuevos: la lista aprobada de esta sección no cambia. No es un cambio de requisitos: R-18 y C-19 siguen con `npm install`, y T-21 comprueba `npm ci` y `npm install`.
+
 ### `apps/api`
 | Paquete | Versión | Tipo | Familia R-17 | Justificación | Aprobada |
 |---|---|---|---|---|---|
@@ -349,7 +352,7 @@ Tipos: **Auto** (test de Vitest), **Verif.** (comando que la tarea ejecuta y cuy
 2. **Raíz.** `package.json` con workspaces y scripts, `tsconfig.base.json`, `vitest.config.ts` e instalación de la lista aprobada (C-01).
 3. **`packages/pricing` y scripts.** Paquete con la constante y su build; script `build:pricing` y orden de los scripts `dev`, `test` y `build` (R-13). Primera comprobación de ADR-010 por la API (C-11, mitad API): test de `domain/pricing-check.spec.ts` contra `dist`.
 4. **API**, en este orden y con su test cada pieza: `config/envs.ts` y `apps/api/env.example` (P-01); `run-migrations.ts` (D-01 a D-03); `migrations-dir.ts` y su test compilado (D-05); `data/sqlite/index.ts` (crea la carpeta padre, P-02; sin pragmas, P-04); `infrastructure/sqlite-connection.ts` (la línea de `architecture.md` ya está, D-04); `presentation/server.ts`, `routes.ts` y `app.ts`; `GET /health`; `app.spec.ts`.
-5. **Web.** Proyecto Angular dentro de `apps/web` (la guía se comprueba con el workspace real: sección 7), `proxy.conf.json` con su test (D-06), `health/` con su servicio, página y estilos, constante de `pricing` en producción (D-08). Segunda comprobación de ADR-010 (C-11, mitad web y C-27): `ng build` de producción. Si falla: aviso al autor y opción B (R-11).
+5. **Web.** Proyecto Angular dentro de `apps/web` (la guía se comprueba con el workspace real: sección 7), `proxy.conf.json` con su test (D-06), `health/` con su servicio, página y estilos, constante de `pricing` en producción (D-08). Segunda comprobación de ADR-010 (C-11, mitad web y C-27): `ng build` de producción. Si falla: aviso al autor y opción B (R-11). Al terminar, segunda prueba de clon limpio (riesgo 20).
 6. **Scripts de extremo a extremo y documentación.** `dev`, `test`, `build` y `verify` con `dist` de `pricing` borrado (C-14, C-15, C-22, C-23); clon limpio (C-19); sección "Comandos" de `CLAUDE.md` (R-19, C-20).
 
 La puerta 4 convierte cada paso en tareas de un commit y como máximo 5 archivos de producción, una tarea por capa.
@@ -358,7 +361,7 @@ La puerta 4 convierte cada paso en tareas de un commit y como máximo 5 archivos
 
 | # | Riesgo o verificación | Qué se hace |
 |---|---|---|
-| 1 | `better-sqlite3` en Windows con Node 24 y `STRICT` (R-09, R-20) | Tarea 0. Si no hay binario precompilado, la compilación nativa exige herramientas de C++ de Windows; si falla, se para y decide el autor |
+| 1 | `better-sqlite3` en Windows con Node 24 y `STRICT` (R-09, R-20) | Tarea 0. Si no hay binario precompilado, la compilación nativa exige herramientas de C++ de Windows; si falla, se para y decide el autor. Hallazgo de la prueba de clon limpio (2026-11-21, ADR-014): aunque `better-sqlite3` 13.2.0 trae binario precompilado, al instalar desde el lockfile npm lanzaba `node-gyp rebuild` y pedía Visual Studio con C++. Resuelto con el ADR-014 (`.npmrc` con `ignore-scripts=true`, T-21) |
 | 2 | `@types/better-sqlite3` 9.6.0 puede no corresponder a `better-sqlite3` 13.2.0 (versiones distintas; no comprobado). Condición de la aprobación del autor | R-09 lo comprueba en la tarea 0 con `tsc` sobre un fichero que use la API; si no casa, se para y se avisa al autor (no se inventa otro paquete) |
 | 3 | `packages/pricing` compilado con la API y con Angular (ADR-010, R-11) | C-11 y C-27 en los pasos 3 y 5; si falla una app, aviso y opción B |
 | 4 | Guía de Angular con el workspace real (nota de "Fuera" de la spec; `frontend-conventions`, "Pendiente") | Antes de escribir la web: `list_projects` y `get_best_practices` del MCP de Angular CLI sobre `apps/web`, y revisar lo que la guía genérica daba por supuesto (zoneless, standalone, `OnPush`, ejecutor de tests) |
@@ -377,6 +380,8 @@ La puerta 4 convierte cada paso en tareas de un commit y como máximo 5 archivos
 | 17 | Rellenar "Comandos" de `CLAUDE.md` (R-19): el archivo tiene 60 de 60 líneas (límite del autor, sesión 2026-11-18-01) | Exige decidir qué recortar para dejar sitio. **Abierto:** el plan no decide qué; lo decide el autor antes de la tarea de R-19 |
 | 18 | **Abierto:** un único cambio en `.claude/` (D-04): `.claude/skills/backend-conventions/checklist.md:7` y, junto a él, la fila `routes.ts` de `.claude/skills/backend-conventions/SKILL.md:21` (dice solo `presentation/<recurso>/`; falta el `presentation/routes.ts` de la raíz, Decisión #10) | Dueño: el autor, antes de la puerta 6 (el implementer y el revisor leen esas convenciones). Hasta entonces el revisor podría marcar el `routes.ts` de la raíz como violación |
 | 19 | **Abierto:** `database.md` ("Cada conexión ejecuta `PRAGMA foreign_keys = ON` y `PRAGMA journal_mode = WAL`") queda sin cumplir hasta la spec 002, por P-04 (b) | Dueños: la spec 002 (incluye los pragmas con su test) y la puerta 4 de esta spec (dejarlo anotado en `tasks.md` para no olvidarlo). La sesión principal lo pasa a MEMORY.md como pendiente |
+| 20 | Angular 22.3 (T-14) puede traer paquetes con scripts de instalación que `ignore-scripts=true` deja sin ejecutar (ADR-014) | En T-14, tras `npm install`, se listan los paquetes del lockfile con scripts de instalación (`hasInstallScript`): es un aviso, no se decide nada. Se comprueba de verdad en la segunda prueba de clon limpio, tras T-18. Si algo falla, se para y decide el autor |
+| 21 | Consecuencia del ADR-014: ningún `package.json` del repositorio puede usar scripts `pre`/`post`, `prepare` ni `install`, porque no correrían con `ignore-scripts=true` | Hoy no hay ninguno |
 
 ## 8. Trazabilidad
 

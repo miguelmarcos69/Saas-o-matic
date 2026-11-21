@@ -1,6 +1,6 @@
 # Tareas · spec 000 · skeleton
 
-Spec: `ai-workspace/specs/000-skeleton/spec.md` · Plan: `ai-workspace/specs/000-skeleton/plan.md` (D-01 a D-18, P-01 a P-04). Las tareas siguen el orden de la sección 6 del plan: R-09, raíz, `packages/pricing` y scripts, API, web, scripts de extremo a extremo y documentación.
+Spec: `ai-workspace/specs/000-skeleton/spec.md` · Plan: `ai-workspace/specs/000-skeleton/plan.md` (D-01 a D-18, P-01 a P-04). Las tareas siguen el orden de la sección 6 del plan: R-09, raíz, `packages/pricing` y scripts, API, web, scripts de extremo a extremo y documentación. Excepción: T-21 (`.npmrc`, ADR-014) rompe ese orden por decisión del autor 2026-11-21: es una tarea de la raíz que se hace tras T-13 y antes de T-14, y conserva su id sin renumerar.
 
 Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo 5 archivos de producción, sin contar sus tests (`*.spec.ts`) ni los ficheros generados (solo el lockfile). Las migraciones son SQL escrito a mano y cuentan como producción. Si no cabe, se parte. Un recurso nuevo se divide por capa: en la API, una tarea por capa (`domain`, `infrastructure` y `presentation`); en la web, una tarea por servicio con su interfaz y una por página o componente (cuentan `.ts` y `.html`). Si una tarea necesita más de 5 archivos y no se puede dividir, lo justifica por escrito en una línea `Excepción de tamaño:` y el revisor lo comprueba. El test va dentro de la tarea que lo exige. Al cerrar una tarea: MEMORY.md, diff y commit propuesto.
 
@@ -197,9 +197,21 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
   - [x] Verif.: `npm run build -w apps/api` y `node apps\api\dist\app.js` arrancan y responden `GET /health` en el 3000, con la base creada en `apps/api/data/saas-o-matic.db` (R-23 de punta a punta).
   - [x] Verif.: con `npm run dev -w apps/api` responde igual.
 
+## T-21 · Raíz: `.npmrc` sin scripts de instalación (ADR-014)
+- Cubre: R-18 (instalación en un clon limpio sin herramientas de compilación)
+- Depende de: T-13 · Se hace antes de T-14 (decisión del autor 2026-11-21)
+- Estado: [ ] pendiente
+- Archivos de producción: `.npmrc` (raíz): `ignore-scripts=true` y `legacy-peer-deps=false`.
+- Sin test propio de Vitest: se comprueba con los comandos de abajo (Verif.).
+- Hecho cuando:
+  - [ ] En la raíz, `npm config get ignore-scripts` da `true` y `npm config get legacy-peer-deps` da `false`, aunque el npm del autor tenga `legacy-peer-deps=true`. Lo mismo desde `apps/api`; si allí no se aplica, se para y se avisa.
+  - [ ] `npm ci` en el repositorio termina bien sin compilar `better-sqlite3`; `npm ls --workspaces` sigue listando `apps/api` y `packages/pricing`.
+  - [ ] `npm run build` pasa y `npm test` da 51 passed.
+  - [ ] Clon limpio (manual, autor): `npm ci` y `npm install` instalan sin Visual Studio, y `npm run dev -w apps/api` responde `/health` en el 3000.
+
 ## T-14 · Web: proyecto Angular en `apps/web`
 - Cubre: R-01, R-17
-- Depende de: T-03
+- Depende de: T-03, T-21
 - Estado: [ ] pendiente
 - Excepción de tamaño: la salida de `ng new` de Angular 22.3 (`package.json`, `angular.json`, `tsconfig.json`, `tsconfig.app.json`, `tsconfig.spec.json`, `src/index.html`, `src/main.ts`, `src/app/app.ts`, `app.html`, `app.config.ts`, `app.routes.ts`, …) no se puede dividir sin dejar un proyecto que no compila. Se limita a los ficheros de la sección 2 del plan; sin funcionalidad. Las opciones de `ng new` se comprueban, no se dan por sabidas (riesgo 5).
 - Parada: instalar `@angular/core`, `common`, `compiler`, `platform-browser`, `router` 22.3.0, `rxjs` 7.8.2, `zod` 4.6.7, `@angular/build`, `cli`, `compiler-cli` 22.3.0, `jsdom` 31.0.1 y el enlace `@saas-o-matic/pricing` (D-09, D-10, D-12; `jsdom` es la única fuera de familia, aprobada).
@@ -211,6 +223,7 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
   - [ ] `npm ls --workspaces` lista los tres miembros enlazados (C-01 completo).
   - [ ] `ng build` (producción) termina bien y el ejecutor de tests de Angular arranca con `jsdom`.
   - [ ] `zod` está instalada y ningún fichero de `apps/web` la importa (riesgo 12).
+  - [ ] Aviso (riesgo 20, ADR-014): tras `npm install`, se listan los paquetes del lockfile con scripts de instalación (`hasInstallScript`) que trae Angular; no se decide nada, se anota para la segunda prueba de clon limpio (T-18).
 
 ## T-15 · Web: proxy de desarrollo
 - Cubre: R-12
@@ -257,6 +270,7 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
   - [ ] C-27 (mitad web) y C-11 (mitad web): `ng build` de producción termina bien y buscar el valor de la constante en la salida de `dist` lo encuentra (comando de verificación, PowerShell).
   - [ ] Si el build de la web no empaqueta o no resuelve el paquete compilado: se para y se avisa al autor y se aplica la opción B (R-11, C-12).
   - [ ] C-13 manual, a cargo del autor: con API y web arrancadas, sin CORS, aparece "Comprobando la API…" y luego "API: ok"; con la API parada, "API: no responde". Con teclado y en móvil (principio 7).
+  - [ ] Segunda prueba de clon limpio (riesgo 20, ADR-014): `npm ci` instala sin herramientas de compilación, `npm run build` y `npm test` pasan y la web arranca; se repasan los paquetes con scripts de instalación que trajo Angular.
 
 ## T-19 · Scripts de extremo a extremo: `dev` y `verify`
 - Cubre: R-13, R-14, R-15, R-18
@@ -307,7 +321,7 @@ Cada `R-nn` aparece en al menos una tarea.
 | R-15 | T-01, T-03, T-04, T-19 |
 | R-16 | T-07 |
 | R-17 | T-01, T-03, T-05, T-14 |
-| R-18 | T-19, T-20 |
+| R-18 | T-19, T-20, T-21 |
 | R-19 | T-20 |
 | R-20 | T-00 |
 | R-21 | T-16, T-17, T-18 |
