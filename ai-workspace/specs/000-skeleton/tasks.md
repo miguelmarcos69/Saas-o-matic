@@ -106,16 +106,16 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-07 · API, `config`: variables de entorno y `env.example`
 - Cubre: R-02, R-07, R-16, R-26, R-29
 - Depende de: T-05
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: `apps/api/src/config/envs.ts` (D-16: función que recibe el objeto de entorno, valida con Zod y lanza `Error` con el mensaje de D-15; `:memory:` tal cual; ruta resuelta respecto a la raíz de `apps/api`), `apps/api/env.example` (P-01: `PORT=3000`, `DATABASE_PATH=data/saas-o-matic.db`; la API no lo carga).
 - Tests: `apps/api/src/config/envs.spec.ts`.
 - Hecho cuando:
-  - [ ] Escrito primero y visto en rojo. C-02: sin `PORT`, 3000. C-29: `PORT=4000`.
-  - [ ] C-08: la ruta por defecto y la dada se resuelven respecto a `apps/api`; el test pasa lanzado desde la raíz y desde `apps/api` (Verif.), sin `apps/api/apps/api/...`.
-  - [ ] C-30 (parte de `envs`): `:memory:` se queda tal cual.
-  - [ ] C-33: `PORT` = `0`, `65536`, `abc`, `3000.5` y vacío fallan con un mensaje en inglés que nombra `PORT`. C-34: `1` y `65535` son válidos; no se abre ningún puerto (P-03).
-  - [ ] C-35: `DATABASE_PATH` vacío falla con un mensaje que nombra `DATABASE_PATH`.
-  - [ ] C-17: sin variables, los valores por defecto coinciden con los de `apps/api/env.example`; el fichero se llama `env.example`, sin punto, y `envs.ts` no lo lee.
+  - [x] Escrito primero y visto en rojo. C-02: sin `PORT`, 3000. C-29: `PORT=4000`.
+  - [x] C-08: la ruta por defecto y la dada se resuelven respecto a `apps/api`; el test pasa lanzado desde la raíz y desde `apps/api` (Verif.), sin `apps/api/apps/api/...`.
+  - [x] C-30 (parte de `envs`): `:memory:` se queda tal cual.
+  - [x] C-33: `PORT` = `0`, `65536`, `abc`, `3000.5` y vacío fallan con un mensaje en inglés que nombra `PORT`. C-34: `1` y `65535` son válidos; no se abre ningún puerto (P-03).
+  - [x] C-35: `DATABASE_PATH` vacío falla con un mensaje que nombra `DATABASE_PATH`.
+  - [x] C-17: sin variables, los valores por defecto coinciden con los de `apps/api/env.example`; el fichero se llama `env.example`, sin punto, y `envs.ts` no lo lee.
 
 ## T-08 · API, `data`: ejecutor de migraciones
 - Cubre: R-05, R-06, R-27, R-28, R-30, R-31 (más el test de H-32 y el de D-03)
