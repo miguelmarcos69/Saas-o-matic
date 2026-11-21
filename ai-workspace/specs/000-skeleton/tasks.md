@@ -55,16 +55,16 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-03 · `packages/pricing`: constante de comprobación y build
 - Cubre: R-10, R-15, R-17, R-24
 - Depende de: T-01
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Parada: instalar (enlazar el workspace `@saas-o-matic/pricing`, D-12).
 - Archivos de producción: `package.json` (nombre `@saas-o-matic/pricing`, `type: module`, `exports` a `dist` con JS y `.d.ts`, script `build`, sin dependencias), `tsconfig.json` (`src/` a `dist/` con declaraciones), `src/index.ts` (una constante, D-18). Además retira `packages/pricing/.gitkeep`, creado en T-01 para que Vitest cargara el proyecto `pricing` (decisión del autor 2026-11-21, Q-02); un fichero que se borra no cuenta como archivo de producción nuevo.
 - Tests: `src/index.spec.ts` (D-18).
 - Hecho cuando:
-  - [ ] `packages/pricing/.gitkeep` ya no existe y `vitest.config.ts` sigue cargando.
-  - [ ] `index.spec.ts` escrito primero y visto en rojo; después en verde: la constante existe y tiene su valor distintivo.
-  - [ ] `npm run build -w packages/pricing` genera `dist/index.js` e `index.d.ts`.
-  - [ ] `packages/pricing/package.json` no declara ninguna dependencia (C-18, mitad `pricing`).
-  - [ ] Cuenta como Vitest del proyecto `packages/pricing` de la raíz (C-16, mitad `pricing`).
+  - [x] `packages/pricing/.gitkeep` ya no existe y `vitest.config.ts` sigue cargando.
+  - [x] `index.spec.ts` escrito primero y visto en rojo; después en verde: la constante existe y tiene su valor distintivo.
+  - [x] `npm run build -w packages/pricing` genera `dist/index.js` e `index.d.ts`.
+  - [x] `packages/pricing/package.json` no declara ninguna dependencia (C-18, mitad `pricing`).
+  - [x] Cuenta como Vitest del proyecto `packages/pricing` de la raíz (C-16, mitad `pricing`).
 
 ## T-04 · Scripts de la raíz: `build:pricing`, `build` y `test`
 - Cubre: R-13, R-15
