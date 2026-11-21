@@ -37,6 +37,7 @@ Una spec nace en `Borrador`.
 - Un cambio de requisitos no es un estado: la spec vuelve al estado de la primera puerta afectada.
 - Veredicto `Cambios requeridos` en la puerta 6: la spec vuelve a `En implementación`; una ronda nueva la pasa a `En revisión`. Si el hallazgo apunta a un error de la spec, es un cambio de requisitos y se aplica la regla transversal.
 - Veredicto `Cambios requeridos` en la puerta 2: la spec sigue en `En clarificación` hasta una ronda nueva `Conforme`, o `Conforme con reservas` que el autor acepte.
+- Cada vez que cambia el `Estado:` de `spec.md`, se actualiza en el mismo paso la celda «Estado» de la fila de esa spec en `ai-workspace/specs/README.md`, con el mismo texto literal. El README es un índice: la fuente de verdad sigue siendo `spec.md`. Los dos cambios van en el mismo commit.
 
 ## review.md
 El revisor devuelve el informe en el chat. La sesión principal lo guarda tal cual, tras enseñártelo, y nunca edita rondas anteriores: cada ronda se añade al final.

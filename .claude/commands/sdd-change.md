@@ -27,7 +27,7 @@ Enséñame, en una tabla corta, y PARA:
 ## Tras mi aprobación explícita
 Un "sí" a la propuesta no aprueba el paso: pídeme la aprobación explícita.
 1. Añade a la sección 5 de `spec.md` la fila de la decisión, con "Registro de sesión" = `(pendiente de /sdd-session)`.
-2. Cambia el `Estado:` de `spec.md` al acordado. Es lo único que cambias además de esa fila.
+2. Cambia el `Estado:` de `spec.md` al acordado y, en el mismo paso, la celda «Estado» de su fila en `ai-workspace/specs/README.md` (regla de `sdd`, "Estados"). Además de la fila del paso 1, es lo único que cambias.
 3. No reescribas requisitos, plan ni tareas, y no toques `review.md`: lo invalidado se rehace en su puerta con `/sdd-flow <spec> <puerta>`. Las rondas anteriores de `review.md` no se editan nunca.
 4. Termina diciéndome la puerta con la que seguir.
 

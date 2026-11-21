@@ -162,6 +162,7 @@ Ninguna fuente fijaba estos puntos; el planner los propuso y el autor los aprob�
 **D-11 · Sistema de módulos de la API y de `pricing`**
 - Porqué del autor: el de arriba. Aprobada.
 - Propuesta aprobada: ESM con `module` y `moduleResolution` en `NodeNext`, `"type": "module"` en ambos paquetes.
+- Ampliación del autor 2026-11-21 (T-01): el `package.json` de la raíz también lleva `"type": "module"`, porque `vitest.config.ts` usa `import` y Vite avisaba en cada ejecución de ESM cargado como CommonJS. Motivo del autor: «es coherente con D-11 (ESM NodeNext) y evita el aviso en cada ejecución».
 - Opciones: (a) ESM NodeNext (propuesta); (b) CommonJS.
 - Pros de (a): Vitest 5 y Angular son ESM; `pricing` se consume desde el empaquetador de Angular sin avisos de CommonJS; `import.meta.dirname` (Node 24) resuelve `migrations/` (D-05).
 - Contras de (a): los imports relativos llevan extensión `.js` (`./envs.js`), y `tsx` la entiende. Esto no contradice la justificación de `tsx` (Decisión #4), que hablaba de la extensión `.ts`.
@@ -258,6 +259,9 @@ TypeScript 6.0.3 cumple `>=6.0 <6.1` de Angular 22.3 (ADR-009).
 | `typescript` | 6.0.3 | `typescript` 6.0.x | un solo compilador para el repositorio; Angular exige 6.0 (ADR-009) | sí |
 | `vitest` | 5.1.1 | `vitest` 5 | un único ejecutor de tests en el repositorio (ADR-009); R-15 | sí |
 | `concurrently` | 10.0.7 | `concurrently` (nombrado) | `dev` arranca API y web en un solo comando (R-18); Decisión #4 | sí |
+| `vite` | 8.3.8 | fuera de familia (peerDependency de `vitest`) | peerDependency obligatoria de `vitest` 5.1.1 (`^6.4.0 \|\| ^7.0.0 \|\| ^8.0.0`, no opcional); es la misma versión que usa `@angular/build` 22.3.0; con ella la lista queda reproducible con o sin `legacy-peer-deps` | sí (2026-11-21) |
+
+Decisión del autor 2026-11-21 (T-01): se añade `vite` 8.3.8 a la raíz, exacta y sin `^`, porque `npx vitest run` falla sin ella (`Cannot find package 'vite'`; en la máquina del autor npm no instala peers automáticamente). Motivo del autor: "es dependencia peer obligatoria de vitest 5.1.1, es la misma versión que usa @angular/build 22.3.0 y deja la lista reproducible con o sin legacy-peer-deps". No es un cambio de requisitos: R-17 ya incluye `vitest` y C-18 se mide contra esta lista. La raíz declara cuatro `devDependencies`.
 
 ### `apps/api`
 | Paquete | Versión | Tipo | Familia R-17 | Justificación | Aprobada |

@@ -33,14 +33,14 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-01 · Raíz: workspaces, TypeScript base y Vitest
 - Cubre: R-01, R-15, R-17
 - Depende de: T-00
-- Estado: [ ] pendiente
-- Parada: instalar `typescript` 6.0.3, `vitest` 5.1.1 y `concurrently` 10.0.7 (raíz, `devDependencies`).
-- Archivos de producción: `package.json` (workspaces `apps/*` y `packages/*`, solo `devDependencies`), `tsconfig.base.json` (D-11: ESM `NodeNext`), `vitest.config.ts` (D-14: proyectos `packages/pricing`, `apps/api` y herramientas para `apps/web/proxy.conf.spec.ts`).
+- Estado: [x] hecha
+- Parada: instalar `typescript` 6.0.3, `vitest` 5.1.1, `concurrently` 10.0.7 y `vite` 8.3.8 (raíz, `devDependencies`, todas exactas con `--save-exact`). Decisión del autor 2026-11-21: `vite` es peerDependency obligatoria de `vitest` 5.1.1 y la misma versión que usa `@angular/build` 22.3.0; se añade a la lista (plan, sección 4). La instala la sesión principal.
+- Archivos de producción: `package.json` (workspaces `apps/*` y `packages/*`, `"type": "module"` por decisión del autor 2026-11-21 (D-11 ampliada en el plan), solo `devDependencies`), `tsconfig.base.json` (D-11: ESM `NodeNext`), `vitest.config.ts` (D-14: proyectos `packages/pricing`, `apps/api` y herramientas para `apps/web/proxy.conf.spec.ts`), `packages/pricing/.gitkeep` (cuatro archivos de producción). Decisión del autor 2026-11-21 (Q-02, aplicada): Vitest 5.1.1 rechaza un proyecto cuya carpeta no existe (`Root path does not exist or is not a directory: F:/saas-o-matic/packages/pricing`); se crea `packages/pricing/.gitkeep` para mantener los tres proyectos desde T-01. Motivo del autor: «mantiene los tres proyectos desde T-01 como decidí en Q-02, y es lo más pequeño». T-03 retira ese `.gitkeep` al crear el paquete real.
 - Sin test propio: se comprueba con los comandos de abajo.
 - Hecho cuando:
-  - [ ] `npm install` termina bien y el lockfile queda creado.
-  - [ ] `package.json` de la raíz declara solo las tres `devDependencies` aprobadas (C-18, mitad raíz).
-  - [ ] `vitest.config.ts` carga sin error de configuración. Si Vitest rechaza proyectos cuya carpeta aún no existe, se para y se avisa al autor: no se elige solución. Decisión del autor 2026-11-21 (Q-02): `vitest.config.ts` queda como en el plan, con los tres proyectos desde T-01; si Vitest lo rechaza, el implementer para.
+  - [x] `npm install` termina bien y el lockfile queda creado.
+  - [x] `package.json` de la raíz declara solo las cuatro `devDependencies` aprobadas (`typescript`, `vitest`, `concurrently` y `vite`), con versión exacta (C-18, mitad raíz).
+  - [x] `packages/pricing/.gitkeep` existe y `vitest.config.ts` carga sin error de configuración, con los tres proyectos. Si Vitest rechaza proyectos cuya carpeta aún no existe, se para y se avisa al autor: no se elige solución. Decisión del autor 2026-11-21 (Q-02): `vitest.config.ts` queda como en el plan, con los tres proyectos desde T-01; si Vitest lo rechaza, el implementer para. Aplicada el 2026-11-21: Vitest lo rechazó por `packages/pricing` y el autor decidió crear `packages/pricing/.gitkeep` en esta tarea. `npx vitest run` ya no debe fallar al cargar la configuración; sin tests, «No test files found» no es un error de configuración.
 
 ## T-02 · `.gitignore`: `dist-test/`
 - Cubre: R-08 (soporte del test compilado de D-05)
@@ -57,9 +57,10 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 - Depende de: T-01
 - Estado: [ ] pendiente
 - Parada: instalar (enlazar el workspace `@saas-o-matic/pricing`, D-12).
-- Archivos de producción: `package.json` (nombre `@saas-o-matic/pricing`, `type: module`, `exports` a `dist` con JS y `.d.ts`, script `build`, sin dependencias), `tsconfig.json` (`src/` a `dist/` con declaraciones), `src/index.ts` (una constante, D-18).
+- Archivos de producción: `package.json` (nombre `@saas-o-matic/pricing`, `type: module`, `exports` a `dist` con JS y `.d.ts`, script `build`, sin dependencias), `tsconfig.json` (`src/` a `dist/` con declaraciones), `src/index.ts` (una constante, D-18). Además retira `packages/pricing/.gitkeep`, creado en T-01 para que Vitest cargara el proyecto `pricing` (decisión del autor 2026-11-21, Q-02); un fichero que se borra no cuenta como archivo de producción nuevo.
 - Tests: `src/index.spec.ts` (D-18).
 - Hecho cuando:
+  - [ ] `packages/pricing/.gitkeep` ya no existe y `vitest.config.ts` sigue cargando.
   - [ ] `index.spec.ts` escrito primero y visto en rojo; después en verde: la constante existe y tiene su valor distintivo.
   - [ ] `npm run build -w packages/pricing` genera `dist/index.js` e `index.d.ts`.
   - [ ] `packages/pricing/package.json` no declara ninguna dependencia (C-18, mitad `pricing`).

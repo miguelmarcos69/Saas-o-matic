@@ -26,7 +26,7 @@ Propón la puerta según la tabla "Estado al pasar" de `sdd` y espera mi respues
 2. Lanza el agente con ese encargo. No resumas ni corrijas mis palabras.
 3. Al volver, ejecuta `git status` y `git diff --stat` y enséñamelos. Comprueba que solo han cambiado los ficheros permitidos al agente (planner: solo `ai-workspace/specs/<NNN-nombre>/`; implementer: solo los de la tarea y su `tasks.md`; reviewer: ninguno). Si hay otros, dímelo: es un hallazgo mío, no lo arreglas tú.
 4. Enséñame el retorno del agente tal cual y PARA. Tras cada puerta, para: un "sí" a una propuesta no aprueba el paso, pídeme aprobación explícita.
-5. Solo tras mi aprobación explícita, cambia el `Estado:` de `spec.md` al de la columna "Estado al pasar" de `sdd`. Ningún agente lo cambia.
+5. Solo tras mi aprobación explícita, cambia el `Estado:` de `spec.md` al de la columna "Estado al pasar" de `sdd` y, en el mismo paso, la celda «Estado» de su fila en `ai-workspace/specs/README.md` (regla de `sdd`, "Estados"). Ningún agente lo cambia.
 6. Nunca relances un agente, ni hagas otra ronda del revisor, sin que yo lo pida.
 
 ## Plantilla del encargo
