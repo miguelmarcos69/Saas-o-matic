@@ -238,12 +238,16 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-15 · Web: proxy de desarrollo
 - Cubre: R-12
 - Depende de: T-14
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: `apps/web/proxy.conf.json` (`/api` a `http://localhost:3000`, reescribe `/api` a vacío; Decisión #2), `apps/web/angular.json` (`proxyConfig` de `serve`, sintaxis de angular.dev, riesgo 6).
 - Tests: `apps/web/proxy.conf.spec.ts` (D-06, D-14), bajo el proyecto de herramientas del Vitest de la raíz.
+- Desviaciones del implementer: (1) sintaxis tomada del schema de `dev-server` y de `load-proxy-config.js` de `@angular/build` 22.3.0, sin el MCP; (2) clave `"/api/**"` con `secure: false`; (3) el test reproduce `pathRewrite` en una función local; (4) sin arrancar `ng serve`. Aceptadas por el autor 2026-11-21 (literal): «Apruebo T-15 y acepto las desviaciones 1 a 4: "/api/**" con secure:false es el formato de angular.dev y no captura /apiary; la copia local de pathRewrite es la decisión que tomé (RegExp nativo), y el riesgo de que el builder cambie lo cubre C-13 en T-18.»
+- Consulta al MCP de Angular CLI (2026-11-21, `search_documentation` «Proxying to a backend server», versión 22): coinciden la clave `/api/**`, `target` `http://localhost:3000`, `secure: false` y `proxyConfig` en `serve.options`; según la guía, `/api/**` no captura `/api-docs`. Diferencias: `pathRewrite` no está en la guía (la búsqueda «proxy pathRewrite» no da resultados) y solo se comprobó con `load-proxy-config.js` de `@angular/build` 22.3.0; lo cubre C-13 en T-18. La guía crea el fichero en `src/`; aquí está en `apps/web/` por D-14.
+- Comprobación del autor 2026-11-21: con la API (npm run dev -w apps/api) y la web (npm start -w apps/web) arrancadas, GET http://localhost:4200/api/health responde {"status":"ok"} y GET http://localhost:3000/api/health da 404 (Cannot GET /api/health): pathRewrite funciona con el dev server real de @angular/build 22.3.0. ng serve arranca y vigila cambios con ignore-scripts=true (adelanta en parte el riesgo 20; la comprobación completa sigue en el clon limpio de T-18). C-13 completa, con la página y sin CORS, sigue en T-18.
+- `angular.json`, bloque `cli`: el `ng serve` de la comprobación del autor escribió en `cli.analytics` el identificador de datos de uso del Angular CLI y entró en el commit sin revisar; se corrigió con `--amend`. Decisión del autor 2026-11-21 (literal): "cli.analytics: false en angular.json, para que el CLI no pregunte ni envíe datos de uso de nadie que use este workspace (tampoco en la máquina de evaluación) y no vuelva a escribir en angular.json al arrancar ng serve".
 - Hecho cuando:
-  - [ ] Escrito primero y visto en rojo: lee `proxy.conf.json`, comprueba el destino y que `pathRewrite` convierte `/api/health` en `/health` (H-08, parte proxy).
-  - [ ] `npm test` en la raíz recoge el test del proxy.
+  - [x] Escrito primero y visto en rojo: lee `proxy.conf.json`, comprueba el destino y que `pathRewrite` convierte `/api/health` en `/health` (H-08, parte proxy).
+  - [x] `npm test` en la raíz recoge el test del proxy.
   - [ ] La integración real (sin CORS) es C-13, manual, y se hace en T-18.
 
 ## T-16 · Web, `health/`: servicio e interfaces
