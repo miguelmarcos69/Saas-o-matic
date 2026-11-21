@@ -213,18 +213,27 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-14 · Web: proyecto Angular en `apps/web`
 - Cubre: R-01, R-17
 - Depende de: T-03, T-21
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Excepción de tamaño: la salida de `ng new` de Angular 22.3 (`package.json`, `angular.json`, `tsconfig.json`, `tsconfig.app.json`, `tsconfig.spec.json`, `src/index.html`, `src/main.ts`, `src/app/app.ts`, `app.html`, `app.config.ts`, `app.routes.ts`, …) no se puede dividir sin dejar un proyecto que no compila. Se limita a los ficheros de la sección 2 del plan; sin funcionalidad. Las opciones de `ng new` se comprueban, no se dan por sabidas (riesgo 5).
 - Parada: instalar `@angular/core`, `common`, `compiler`, `platform-browser`, `router` 22.3.0, `rxjs` 7.8.2, `zod` 4.6.7, `@angular/build`, `cli`, `compiler-cli` 22.3.0, `jsdom` 31.0.1 y el enlace `@saas-o-matic/pricing` (D-09, D-10, D-12; `jsdom` es la única fuera de familia, aprobada).
 - Antes de escribir: con el MCP de Angular CLI, `list_projects` y `get_best_practices` sobre `apps/web` y revisar lo que `frontend-conventions` daba por supuesto (zoneless, standalone, `OnPush`, ejecutor de tests; riesgo 4). Si algo choca con `architecture.md` o la skill, se para y se pregunta.
 - Convención del autor, 2026-11-21 (T-04): el script `test` de `apps/web/package.json` se llama `test` (el de la raíz lo lanza con `npm run test --workspaces --if-present`).
+- Decisiones del autor 2026-11-21 para T-14 (a las dudas del implementer en la primera vuelta, literales):
+  1. (A): apps/web/package.json solo con la lista aprobada, versiones exactas; sin tslib, typescript, vitest, prettier, @angular/forms ni packageManager. tslib llega con @angular/* (probado en la réplica).
+  2. (A): se borran .prettierrc, .editorconfig, .gitignore, .vscode/, README.md y public/ con su entrada assets (y el <link> del favicon en index.html).
+  3. Se borran app.scss y styleUrl. En angular.json, schematics del componente con style: none; lo demás se deja. src/styles.scss vacío salvo un comentario en español; su contenido es de T-17.
+  4. (A): app.html solo con <router-outlet />, y app.spec.ts mínimo que comprueba que App se crea.
+  5. (A): ng new en carpeta temporal fuera del repositorio con npx @angular/cli@22.3.0 y --routing --style=scss --no-ssr --zoneless --ai-config=none --skip-git --skip-install --interactive=false (sin --test-runner); se mueve a apps/web y se retira apps/web/.gitkeep.
+  6. Paquete @saas-o-matic/web; proyecto web en angular.json; index.html con lang="es" y <title>SaaS-O-Matic</title>; se quedan los scripts generados (ng, start, build, watch, test).
+  - Acepto la desviación de instalar en la réplica temporal (fuera del repositorio); bórrala al terminar. Si npm da ERESOLVE, para: nada de --force ni --legacy-peer-deps.
+- Desviaciones del implementer aceptadas por el autor 2026-11-21 (literales): (1) los extraneous de npm ls son internos de @angular/build y no se arreglan desde nuestro package.json; se revisan en el clon limpio de T-18; (2) sin fase roja posible porque App la genera ng new, se registra así; (3) title retirado, bien; (4) borra también ngcli\, lock-before.json y los ficheros mcp del scratchpad.
 - Sin test propio de producción: el ejecutor de tests de la web (con `jsdom`, D-14) debe correr. Se comprueba con los comandos de abajo.
 - Hecho cuando:
-  - [ ] `npm install` termina bien; `apps/web/package.json` declara solo la lista aprobada, sin `@angular/forms` ni `supertest` (C-18, mitad web).
-  - [ ] `npm ls --workspaces` lista los tres miembros enlazados (C-01 completo).
-  - [ ] `ng build` (producción) termina bien y el ejecutor de tests de Angular arranca con `jsdom`.
-  - [ ] `zod` está instalada y ningún fichero de `apps/web` la importa (riesgo 12).
-  - [ ] Aviso (riesgo 20, ADR-014): tras `npm install`, se listan los paquetes del lockfile con scripts de instalación (`hasInstallScript`) que trae Angular; no se decide nada, se anota para la segunda prueba de clon limpio (T-18).
+  - [x] `npm install` termina bien; `apps/web/package.json` declara solo la lista aprobada, sin `@angular/forms` ni `supertest` (C-18, mitad web).
+  - [x] `npm ls --workspaces` lista los tres miembros enlazados (C-01 completo).
+  - [x] `ng build` (producción) termina bien y el ejecutor de tests de Angular arranca con `jsdom`.
+  - [x] `zod` está instalada y ningún fichero de `apps/web` la importa (riesgo 12).
+  - [x] Aviso (riesgo 20, ADR-014): tras `npm install`, se listan los paquetes del lockfile con scripts de instalación (`hasInstallScript`) que trae Angular; no se decide nada, se anota para la segunda prueba de clon limpio (T-18). Resultado: `@parcel/watcher` 2.6.0, `lmdb` 3.5.9 (opcional) y `msgpackr-extract` 3.0.7 (opcional) son nuevos; `esbuild` 0.28.2 y `fsevents` 2.3.3 (opcional) ya estaban.
 
 ## T-15 · Web: proxy de desarrollo
 - Cubre: R-12
