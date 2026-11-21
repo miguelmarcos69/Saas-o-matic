@@ -253,13 +253,16 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-16 · Web, `health/`: servicio e interfaces
 - Cubre: R-12, R-21
 - Depende de: T-15
-- Estado: [ ] pendiente
-- Archivos de producción: `apps/web/src/app/health/services/health-api.ts` (único sitio con `HttpClient`; expone un `LoadState` con señales), `apps/web/src/app/health/interfaces/health-status.ts`, `apps/web/src/app/health/interfaces/load-state.ts`, `apps/web/src/app/app.config.ts` (`provideHttpClient`).
+- Estado: [x] hecha
+- Archivos de producción: `apps/web/src/app/health/services/health-api.ts` (único sitio con `HttpClient`; expone un `LoadState` con señales), `apps/web/src/app/health/interfaces/health-status.ts`, `apps/web/src/app/health/interfaces/load-state.ts`, `apps/web/src/app/app.config.ts` (`provideHttpClient`) (no se toca: decisión del autor de la duda 1, abajo).
 - Tests: `apps/web/src/app/health/services/health-api.spec.ts` con `HttpTestingController`.
+- Decisión del autor 2026-11-21 (duda 1 de la sesión principal, `provideHttpClient`): "No se toca app.config.ts: en Angular 22 HttpClient se inyecta por defecto (angular.dev/guide/http/setup, consultado con el MCP), y provideHttpClient() sin argumentos sería una línea sin efecto (motivo de la #27: no crear código sin uso). Se añadirá cuando una spec necesite interceptores u otra función."
+- Decisión del autor 2026-11-21 (duda 2 de la sesión principal, `message` del estado de error): "En el estado de error, el servicio pone message: 'API: no responde' y la página lo muestra: es la forma de patterns.md, el texto lo fija la spec (R-22, #19) y el plan solo dice que la página muestra los tres textos."
+- Duda y desviación del implementer, decididas por el autor 2026-11-21 (literal): «1 (B), 2 acepto, 3 (b), 4 sí es mía; apruebo T-16». (1) (B): `load()` no guarda ni cancela la `Subscription` anterior; la sección 3 de `patterns.md` lo hace, pero `frontend-conventions` solo lo exige en el buscador (motivo de la recomendación del implementer y de la sesión principal, no del autor: en el esqueleto la página llama a `load()` una vez). (2) Aceptada: `health-api.spec.ts` usa solo `provideHttpClientTesting()`, sin `provideHttpClient()`, igual que `app.config.ts` (duda 1); comprobado por el implementer en `@angular/common` 22.3.0.
 - Hecho cuando:
-  - [ ] Escrito primero y visto en rojo. C-13 (servicio): estado de carga, de datos (`{"status":"ok"}`) y de error (principio 7; el de vacío no aplica).
-  - [ ] La llamada va a `/api/health` y `HttpClient` solo aparece en `services/`.
-  - [ ] `LoadState<T>` nace en `health/interfaces/` (`frontend-conventions`, `shared/`).
+  - [x] Escrito primero y visto en rojo. C-13 (servicio): estado de carga, de datos (`{"status":"ok"}`) y de error (principio 7; el de vacío no aplica).
+  - [x] La llamada va a `/api/health` y `HttpClient` solo aparece en `services/`.
+  - [x] `LoadState<T>` nace en `health/interfaces/` (`frontend-conventions`, `shared/`).
 
 ## T-17 · Web: estilos de `health/`
 - Cubre: R-21
