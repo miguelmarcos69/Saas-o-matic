@@ -158,3 +158,20 @@ Lo demás es una regla de CLAUDE.md o queda en el registro de la sesión.
 - **Alternativa descartada:** (a) Exigir Visual Studio con C++ en la máquina de evaluación: son varios GB y no se puede pedir al evaluador, y `better-sqlite3` ya trae binarios. (b) Documentar `npm ci --ignore-scripts` en «Comandos» sin `.npmrc`: depende de que el evaluador lo lea y lo copie; con `.npmrc` funciona sin saber nada.
 - **Consecuencias:** No se ejecuta ningún script de instalación de las dependencias, ni los `pre`/`post` de nuestros `package.json`; `npm test` y `npm run <script>` sí se ejecutan. Un paquete nuevo que necesite su script fallará sin aviso al instalar, así que cada instalación se comprueba (riesgo 20 del plan de la spec 000). Dentro del repositorio deja de valer `legacy-peer-deps=true` del npm del autor: las peers obligatorias se declaran (como `vite`).
 - **Ver también:** ADR-008, ADR-009; plan de la spec 000 (secciones 4 y 7).
+
+## ADR-015 · Guía de estilo
+- **Fecha:** 2026-11-21
+- **Estado:** Aceptado
+- **Contexto:** T-17 de la spec 000 (estilos de `health/`) necesita colores para el texto de estado, y ninguna fuente (reto, constitución, spec, plan ni `frontend-conventions`) los define. El autor aporta una guía de estilo, con su CSS base y un mapa de página.
+- **Decisión:** La guía de `style-guide.md`, con el mapa en `style-guide-mapa.png`, es la fuente de estilo de la interfaz.
+  - Está inspirada en roams.es/detras-de-roams en estilo, tipografía y estructura, con marca, textos, logo e imágenes propios. No se copia la marca Roams.
+  - Cada spec de interfaz decide qué componentes del mapa usa.
+  - Dónde viven los componentes comunes (`shared/` o una carpeta de layout) se decide en la primera spec que los use.
+- **Alternativa descartada:** Fijar solo los colores del texto de estado de la spec 000, con dos tokens neutros (A) o con un color por estado (B): las dos opciones que propuso la sesión principal en T-17. El autor no eligió ninguna.
+- **Consecuencias:**
+  - La guía se registra con cuatro ajustes por `frontend-conventions`: tokens `--color-…` y `--radius-…`, prefijo de componente en las clases genéricas, `.pill` con peso 500 o 700 y Montserrat con `<link>` de Google Fonts en `index.html`.
+  - La spec 000 solo aplica los tokens, la tipografía base y la tarjeta del texto de estado (decisión del autor en T-17); ningún componente del mapa se construye en ella.
+  - La web pide la fuente a Google Fonts al cargar; sin red, el navegador usa la `sans-serif` de reserva.
+  - Cargar la fuente desde Google Fonts envía a Google la IP de cada visitante; el autor lo acepta para esta herramienta interna. La alternativa es servir la fuente desde el repositorio.
+  - Decisión del autor 2026-11-21 (hallazgo de T-17): "El build de producción descarga la hoja de Google Fonts para incrustarla (fonts.inline de @angular/build, activada por defecto): necesita red, igual que npm ci, así que quien pueda instalar el proyecto puede compilarlo. Si en algún momento molesta, la alternativa es servir la fuente desde el repositorio (C)."
+- **Ver también:** `style-guide.md`; skill `frontend-conventions` (Estilos); principio 7 de la constitución; T-17 de la spec 000.

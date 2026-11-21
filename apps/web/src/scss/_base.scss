@@ -1,0 +1,10 @@
+// Tipografía y fondo base de la guía de estilo (ADR-015): Montserrat, fondo de página y color de texto.
+// Montserrat se carga con <link> de Google Fonts en index.html.
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}

@@ -1,0 +1,8 @@
+// Estilos de la funcionalidad health/ (spec 000, R-21).
+// Tarjeta blanca del texto de estado: la .card de la guía (ADR-015) con prefijo de componente.
+// Los estados se distinguen por su texto, no por el color: el texto hereda el color base.
+.health-page__card {
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-white);
+}

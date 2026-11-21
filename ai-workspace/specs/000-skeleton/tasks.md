@@ -267,12 +267,16 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-17 · Web: estilos de `health/`
 - Cubre: R-21
 - Depende de: T-14
-- Estado: [ ] pendiente
-- Archivos de producción: `apps/web/src/scss/themes/_tokens.scss` (las pocas variables `--color-…` del texto de estado), `apps/web/src/scss/_health.scss` (clases con prefijo `health-page__`), `apps/web/src/styles.scss` (solo importa parciales).
+- Estado: [x] hecha
+- Archivos de producción: `apps/web/src/scss/themes/_tokens.scss` (las pocas variables `--color-…` del texto de estado), `apps/web/src/scss/_health.scss` (clases con prefijo `health-page__`), `apps/web/src/styles.scss` (solo importa parciales), `apps/web/src/scss/_base.scss` y `apps/web/src/index.html` (estos dos, por la decisión del autor de abajo; cinco archivos de producción).
+- Decisión del autor 2026-11-21 (ADR-015; guía en `ai-workspace/docs/style-guide.md`), literal: "T-17 aplica de la guía (ADR-015) solo lo que usa la página de health: los tokens en _tokens.scss, la tipografía base (Montserrat, fondo #eef0f6, texto #4a4d56) en un parcial nuevo _base.scss y el texto de estado en una tarjeta blanca de radio 32px en _health.scss. Montserrat se carga con <link> de Google Fonts en index.html. styles.scss carga los parciales con @use, no @import. Los estados se distinguen por su texto, no por el color. Ningún componente del mapa se construye en la spec 000."
+- Decisiones del autor 2026-11-21 a las dudas de la sesión principal, antes de lanzar al implementer (literales): "P-1: (a). Solo los tokens que usa la página de health (motivo de la #27: no crear código sin uso); cada spec de interfaz añadirá los suyos desde style-guide.md." "P-2: (a). Las medidas que use T-17 van como tokens con los valores de la guía, para cumplir checklist.md («colores y medidas salen de los tokens») y architecture.md («colores y medidas con nombre»). Formato de los nombres: --font-family-base, --font-size-…, --line-height-… y --space-…; el implementer propone los nombres concretos dentro de ese formato y los lista en su retorno." "P-3: (a). Añade _base.scss al árbol de architecture.md («tipografía y fondo base (ADR-015)») y una fila src/scss/_base.scss a la sección 2 del plan. La frase de frontend-conventions («un parcial por funcionalidad») la ajustaré yo". `.pill`: "no lo fijes; lo decidirá la spec que use la píldora."
+- Hallazgo del implementer (`ng build` de producción falla sin red por `fonts.inline` de `@angular/build`) y decisión del autor 2026-11-21, opción (A), literal (también en el ADR-015): "El build de producción descarga la hoja de Google Fonts para incrustarla (fonts.inline de @angular/build, activada por defecto): necesita red, igual que npm ci, así que quien pueda instalar el proyecto puede compilarlo. Si en algún momento molesta, la alternativa es servir la fuente desde el repositorio (C)."
+- Desviaciones del implementer aceptadas por el autor 2026-11-21 (literal): "Puntos 2 a 6: los acepto todos (solo el peso 500, font-weight sin token, display=swap, una sola clase .health-page__card que T-18 debe usar, y sin contenedor: la maquetación llega con las specs de interfaz). Acepto también los nombres --font-size-base, --line-height-base y --space-lg." Tokens: `--color-bg`, `--color-text`, `--color-white`, `--radius-lg`, `--font-family-base`, `--font-size-base`, `--line-height-base` y `--space-lg`. Contraste del texto `#4a4d56`: 8,44:1 sobre la tarjeta `#ffffff` y 7,41:1 sobre el fondo `#eef0f6`.
 - Sin test propio: se comprueba con `ng build` y revisión.
 - Hecho cuando:
-  - [ ] `ng build` termina bien con `_health.scss` importado por `styles.scss` (parte de C-25).
-  - [ ] Ningún componente lleva `.scss` propio (`frontend-conventions`, Estilos).
+  - [x] `ng build` termina bien con `_health.scss` importado por `styles.scss` (parte de C-25).
+  - [x] Ningún componente lleva `.scss` propio (`frontend-conventions`, Estilos).
   - [ ] Contraste suficiente del texto de estado (principio 7); se revisa con Lighthouse en T-18.
 
 ## T-18 · Web, `health/`: página de inicio y ruta

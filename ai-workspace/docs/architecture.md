@@ -30,6 +30,7 @@ apps/web/src/
 ├─ styles.scss                     # solo importa los parciales de scss/
 ├─ scss/
 │  ├─ themes/_tokens.scss          # colores y medidas con nombre
+│  ├─ _base.scss                   # tipografía y fondo base (ADR-015)
 │  └─ _shared.scss · _customers.scss · _simulations.scss · _health.scss   # un parcial por funcionalidad
 └─ app/
    ├─ app.ts · app.html · app.routes.ts · app.config.ts

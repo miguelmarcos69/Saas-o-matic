@@ -1,0 +1,17 @@
+// Tokens de la guía de estilo (ADR-015, ai-workspace/docs/style-guide.md).
+// Solo los que usa la página de health (decisión del autor P-1); cada spec de interfaz añade los suyos desde la guía.
+:root {
+  // Colores
+  --color-bg: #eef0f6;
+  --color-text: #4a4d56;
+  --color-white: #fff;
+
+  // Tipografía
+  --font-family-base: 'Montserrat', sans-serif;
+  --font-size-base: 16px;
+  --line-height-base: 30px;
+
+  // Espaciado y radios
+  --space-lg: 32px;
+  --radius-lg: 32px;
+}

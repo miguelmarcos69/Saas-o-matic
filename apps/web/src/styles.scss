@@ -1,1 +1,4 @@
-// Estilos globales: solo importa los parciales de scss/ (se añaden en T-17).
+// Estilos globales: solo carga los parciales de scss/ con @use, en este orden: tokens, base y funcionalidades.
+@use 'scss/themes/tokens';
+@use 'scss/base';
+@use 'scss/health';
