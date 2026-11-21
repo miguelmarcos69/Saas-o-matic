@@ -120,17 +120,17 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-08 · API, `data`: ejecutor de migraciones
 - Cubre: R-05, R-06, R-27, R-28, R-30, R-31 (más el test de H-32 y el de D-03)
 - Depende de: T-05
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: `apps/api/src/data/sqlite/run-migrations.ts` (`runMigrations(db, directory)`: lista, ordena y valida toda la numeración antes de aplicar nada, D-01 y D-02; cada migración en su transacción; guarda `user_version`).
 - Tests: `apps/api/src/data/sqlite/run-migrations.spec.ts`, con migraciones de prueba propias en carpetas temporales y `:memory:`.
 - Hecho cuando:
-  - [ ] Escrito primero y visto en rojo. C-05: dos migraciones (una con tabla `STRICT`, que deja en regresión C-10), `user_version` = 2. C-06: segunda ejecución sin cambios. C-07: sobre `:memory:`.
-  - [ ] C-24: una migración que falla a medias en una base nueva se revierte y `user_version` no avanza.
-  - [ ] C-31: `.gitkeep`, un fichero que no sigue `NNNN_*.sql` y `0001_x.sql` dan `user_version` = 1. C-32: ruta inexistente, 0 migraciones sin error.
-  - [ ] C-36 (ejecutor): la migración que falla lanza un error en inglés que nombra su fichero.
-  - [ ] C-37 y C-38 (D-01 y D-02): `0001_a` + `0003_c` nombra `0003_c.sql`; solo `0002_b` nombra `0002_b.sql`; `0001_a` + `0001_b` nombra `0001_b.sql`. En los tres casos `user_version` no cambia. También `0001`, `0002`, `0004`: no se aplica ninguna.
-  - [ ] H-32 (test del plan, sin caso en la spec): con `user_version` = 1 y ficheros `0001` y `0002`, solo se aplica `0002` y queda en 2.
-  - [ ] D-03 (test del plan, sin `R-nn`): con `user_version` mayor que el número de ficheros, lanza un error en inglés que nombra `user_version` y los dos números.
+  - [x] Escrito primero y visto en rojo. C-05: dos migraciones (una con tabla `STRICT`, que deja en regresión C-10), `user_version` = 2. C-06: segunda ejecución sin cambios. C-07: sobre `:memory:`.
+  - [x] C-24: una migración que falla a medias en una base nueva se revierte y `user_version` no avanza.
+  - [x] C-31: `.gitkeep`, un fichero que no sigue `NNNN_*.sql` y `0001_x.sql` dan `user_version` = 1. C-32: ruta inexistente, 0 migraciones sin error.
+  - [x] C-36 (ejecutor): la migración que falla lanza un error en inglés que nombra su fichero.
+  - [x] C-37 y C-38 (D-01 y D-02): `0001_a` + `0003_c` nombra `0003_c.sql`; solo `0002_b` nombra `0002_b.sql`; `0001_a` + `0001_b` nombra `0001_b.sql`. En los tres casos `user_version` no cambia. También `0001`, `0002`, `0004`: no se aplica ninguna.
+  - [x] H-32 (test del plan, sin caso en la spec): con `user_version` = 1 y ficheros `0001` y `0002`, solo se aplica `0002` y queda en 2.
+  - [x] D-03 (test del plan, sin `R-nn`): con `user_version` mayor que el número de ficheros, lanza un error en inglés que nombra `user_version` y los dos números.
 
 ## T-09 · API, `data`: localización de `migrations/` y carpeta versionada
 - Cubre: R-08, R-25
