@@ -95,3 +95,157 @@ Puerta 2 (2026-11-22), texto literal del autor:
 cinco reservas de la ronda 2: H-08, decidida con la Decisión 2026-11-22 #13, y H-06, H-07, H-09 y
 H-10, corregidas después de la ronda sin que el revisor las haya visto, porque son anotaciones y casos
 que no cambian ninguna decisión; las verá el revisor de la puerta 6. No quedan reservas abiertas."
+
+## Ronda 3 (2026-11-22) · Veredicto: Conforme con reservas
+
+**Alcance:** tareas T-01 a T-04, commits 383daff (T-01), b8dc897 (T-02), fedcaab (T-03) y 665d207 (T-04); rango `145c9aa..665d207` sobre `packages/` y `apps/`. Incluye los casos que la puerta 4 deja al revisor (P-3 (a)): C-14, C-24 y la parte manual de C-26. También incluye el seguimiento de H-06 a H-10, corregidos tras la ronda 2 sin que el revisor los viera.
+
+### Hallazgos
+| ID | Gravedad | Archivo:línea | Requisito o regla | Hallazgo |
+|---|---|---|---|---|
+| H-11 | Menor | ai-workspace/specs/001-pricing-tiers/plan.md:95, :91; packages/pricing/src/base-cost.ts:24-26 | Plan, sección 3 («Cómo se calcula»); jerarquía spec > plan; trazabilidad | El plan afirma con una lista cerrada que «La función solo usa su argumento, `RangeError`, `Number.isInteger`, `Number.isSafeInteger` y constantes del módulo». El código también usa `Math.min` y `Math.max` (base-cost.ts:24-26). El autor lo aceptó en la aprobación de la T-01 (tasks.md:23), y con su lectura de la Decisión #13 el paréntesis de C-26 (spec.md:151) es una lista de ejemplos. Pero el plan no se ha puesto al día: la línea :95 dice hoy algo que el código no cumple, y la aceptación del autor solo consta en `tasks.md`. |
+| H-12 | Menor | apps/web/src/app/health/pages/health-page/health-page.ts:5 | Criterio del autor en la aprobación de la T-02 (tasks.md:46: «Ahora es ambiguo: la spec 001 también tiene R-10 y R-11») y en la de la T-03 (tasks.md:62, puntos 1 y 2) | El comentario de la clase dice «(R-12, R-22)» sin decir de qué spec son. Son de la spec 000, pero la spec 001 también tiene un R-12, el de los tests de los límites de los tramos (spec.md:78). Es la misma ambigüedad que el autor hizo corregir en `pricing-check.spec.ts:5` y en la línea 13 de este mismo fichero, y aquí se quedó. `health-page.spec.ts:9` tiene un caso parecido, más débil: «Decisiones del autor 2026-11-22 (T-18)». La spec 001 también tiene decisiones de esa fecha; solo el «T-18» indica que son de la 000. |
+| H-13 | Menor | apps/web/src/app/health/pages/health-page/health-page.spec.ts:83, :87, :95 | `frontend-conventions/checklist.md:51` («Los tests no repiten los límites de los tramos (ADR-010)») y spec.md:15, frente a R-15 y C-22 (spec.md:87, :147; Decisión 2026-11-22 #7) | El test de la web comprueba en tres puntos que el atributo vale `'1000'`, el coste de 1 usuario. Ese valor es uno de los límites de R-12 (spec.md:78) y ya lo prueba C-02 en el paquete. Leídas al pie de la letra, la casilla de la checklist y la frase de spec.md:15 («Los límites se prueban una sola vez, en el paquete») chocan con R-15 y C-22. El código sigue a la spec, que está por encima de la convención, y el test comprueba el cableado, no los tramos. Aun así, las fuentes están en tensión y ninguna aclara si esta comprobación de cableado cuenta como «repetir un límite». No lo resuelvo: lo decide el autor. |
+| H-14 | Menor | ai-workspace/specs/001-pricing-tiers/spec.md:25-33 | ADR-016, Consecuencias: «Cada spec anota qué ajustes de este ADR aplicó» (decisions.md:199); precedente: H-03 | La lista de ajustes llega hasta las puertas 3 y 4. En la puerta 5 se aplicaron dos ajustes más que la spec no anota. Punto 4: el encargo del implementer se lanzó sin enseñarlo (sessions/2026-11-22-17-001-pricing-tiers.md:18). Punto 6: el implementer trabajó con Sonnet 5.5 (misma línea). |
+
+### Checklists
+
+**Casos que corresponden al revisor (P-3 (a))**
+
+| Caso | Resultado | Nota |
+|---|---|---|
+| C-14 (R-02) | Cumple | `base-cost.ts` no tiene ninguna sentencia `import` ni `require` (búsqueda de `\b(import\|require)\b`: ninguna coincidencia; lectura de base-cost.ts:1-38). El reexport de `index.ts:1` apunta a un módulo del propio paquete (D-01) y no es una dependencia. |
+| C-24 (R-16, D-06) | Cumple | C-09, C-10, C-11, C-12 y C-19 (base-cost.spec.ts:59-77) y C-16 y C-18 (:81-91) usan todos `expectRangeError`. Esta función comprueba `error instanceof RangeError` con `toBe(true)` (:19) y `message` con `toBe` contra el literal (:20, constantes :4-5, que coinciden con R-07 a R-09 y R-11). Si la llamada no lanza, `captureError` lanza un `Error` (:14) y el test falla. No hay `toThrow` ni `toThrowError`. |
+| C-26, parte manual (R-20, Decisión #13 y aprobación de la T-01) | Cumple | La función solo usa `activeUsers` y los globales estándar `Number.isInteger` (:15), `RangeError` (:16, :34), `Math.min` y `Math.max` (:24-26) y `Number.isSafeInteger` (:33). `Math.min` y `Math.max` están aceptados por el autor (tasks.md:23). También usa constantes `const` del módulo (:4-11). No hay estado mutable, fecha, aleatorios ni entrada/salida. Las variables locales (`tier1Users`, `tier2Users`, `tier3Users`, `result`) son `const`. El desfase con el plan está en H-11. |
+| C-26, parte automática | Cumple | base-cost.spec.ts:109-120: dos llamadas con 15 y dos con -1, comprobadas con `instanceof` y `message` con `toBe` (D-06). |
+
+**Requisitos: tarea, código y test**
+
+| Requisito | Tarea | Código | Test o evidencia | Resultado |
+|---|---|---|---|---|
+| R-01 | T-01, T-04 | base-cost.ts:13; index.ts:1 | C-27 (spec.ts:122-124); C-21 (pricing-check.spec.ts:2, :8; el paquete se resuelve a `dist` por package.json:6-12, sin alias en vitest.config.ts) | Cumple |
+| R-02 | T-01 | base-cost.ts | C-14 (arriba) | Cumple |
+| R-03 a R-05 | T-01 | base-cost.ts:24-31 | C-01 a C-08 y C-17 (spec.ts:25-55, :85-87). Cuentas: 1000 → 10000 + 32000 + 950 × 500 = 517000 | Cumple |
+| R-06 | T-01 | base-cost.ts:20-22 | C-01 (:25-27) | Cumple |
+| R-07 a R-09 | T-01 | base-cost.ts:15-17 | C-09 a C-12 y C-19 | Cumple |
+| R-10 | T-01 | base-cost.ts:33 (solo rechaza un resultado no seguro) | C-08, C-17 | Cumple |
+| R-11 | T-01 | base-cost.ts:33-35 | C-16, C-18. Las cuentas siguen el razonamiento de plan.md:92: si el resultado real es ≤ 2^53 − 1, todos los valores intermedios son enteros exactos; si es ≥ 2^53, el valor calculado no baja de 2^53, que es representable; `Number.MAX_VALUE` da `Infinity` y también se rechaza | Cumple |
+| R-12 | T-01 | — | spec.ts:24-56 (0, 1, 10, 11, 50, 51 y 15) | Cumple |
+| R-13 | T-02, T-03, T-04 | index.ts:1 | C-20: búsqueda de `PRICING_PACKAGE_CHECK\|pricing-package-ok` en `packages/**/src` y `apps/**/src`, sin coincidencias; `index.spec.ts` no existe (Glob de `packages/pricing`) | Cumple |
+| R-14 | T-02 | — | pricing-check.spec.ts:2, :8 | Cumple |
+| R-15 | T-03 | health-page.ts:14; health-page.html:3 (sin cambios) | C-22 (health-page.spec.ts:83, :87, :95) | Cumple (ver H-13) |
+| R-16 | T-01 | — | C-24 (arriba) | Cumple |
+| R-17 | T-01 | base-cost.ts:28-37 | C-13 (spec.ts:99-107, con las entradas de C-01 a C-08, C-17 y C-25) | Cumple |
+| R-18 | T-03 | health-page.ts:2, :14 | C-23: el build termina sin error y la salida del comando de D-05 encuentra el mensaje en `chunk-RT2EFBFL.js`, el chunk diferido `health-page` del mismo build | Cumple |
+| R-19 | T-01 | base-cost.ts:15 (`-0 < 0` es falso), :20-21 (literal `0`) | C-25 (spec.ts:95-97, `Object.is`) | Cumple |
+| R-20 | T-01 | base-cost.ts | C-26 (arriba) | Cumple |
+
+**Backend (`backend-conventions/checklist.md`), sobre `packages/pricing` y `apps/api/src/domain/pricing-check.spec.ts`**
+
+| Casilla | Resultado | Nota |
+|---|---|---|
+| `domain` no importa `data`, `infrastructure`, `presentation`, Express, SQLite ni `node:*` | Cumple | pricing-check.spec.ts:1-2 solo importa `vitest` y `@saas-o-matic/pricing`. |
+| `presentation` sin `infrastructure` ni `data`, salvo `routes.ts` | No aplica | No se toca. |
+| `infrastructure` no importa `presentation`; `data` solo `better-sqlite3` y `node:*` | No aplica | No se toca. |
+| `app.ts` y `config` | No aplica | No se tocan. |
+| `packages/pricing` no importa nada del resto ni `node:*` | Cumple | base-cost.ts sin imports; index.ts:1 reexporta un módulo propio. |
+| Todo dato externo pasa por Zod | No aplica | Sin borde; la validación de la entrada del usuario es de la spec 003 (spec.md:21). |
+| DTO `[error, dto]` con `CustomError` | No aplica | |
+| `details[].code` del conjunto estable | No aplica | |
+| El `input` de Zod no sale | No aplica | |
+| Controlador sin lógica | No aplica | |
+| Errores por `handleError` | No aplica | |
+| `CustomError` sin números HTTP | No aplica | |
+| No `CustomError` → `INTERNAL_ERROR` | No aplica | |
+| JSON `camelCase`, mensajes en español | No aplica | Los mensajes del `RangeError` van en inglés por la Decisión #10 y no son de la API. |
+| SQL con parámetros | No aplica | |
+| Importes enteros en céntimos, sin coma flotante | Cumple | Solo operaciones con enteros (base-cost.ts:4-8, :24-31). |
+| Redondeo en un único punto | No aplica | No hay redondeo (Decisión #2); el IVA y el redondeo son de la spec 003. |
+| Puertos `Promise` y mapeo `snake_case` | No aplica | |
+| Traducción de `SqliteError` | No aplica | |
+| Migración nueva y numerada | No aplica | |
+| Cada regla de negocio con test, incluidos errores y límites | Cumple | Ver la tabla de requisitos. |
+| Unitarios de `domain` sin base de datos ni Express | Cumple | pricing-check.spec.ts. |
+| Integración con `:memory:` | No aplica | |
+| Ejecutor de migraciones con test propio | No aplica | No cambia. |
+| Ningún test en rojo ni desactivado | Cumple | Salida del encargo: 75/75 y 14/14. No hay `.skip` ni `.only` en los ficheros cambiados. |
+| Cada cambio cubre un `R-nn` de una spec aprobada | Cumple | Ver la tabla de requisitos. |
+| Nombres y sufijos; inglés y español | Cumple | `base-cost.ts` en kebab-case; identificadores en inglés y comentarios en español. |
+| Una responsabilidad por archivo | Cumple | `index.ts` de una línea; `base-cost.ts` de 38. |
+
+**Frontend (`frontend-conventions/checklist.md`), solo `health/`**
+
+| Casilla | Resultado | Nota |
+|---|---|---|
+| Carpetas que usa; página con `.ts`, `.html` y `.spec.ts` | Cumple | `health/pages/health-page/` con los tres ficheros. |
+| Ninguna funcionalidad importa otra ni `apps/api` | Cumple | health-page.ts:1-3 importa `@angular/core`, `@saas-o-matic/pricing` y `../../services/health-api`. |
+| `app.*` solo páginas y `shared` | No aplica | No cambia. |
+| `shared/` | No aplica | |
+| Kebab-case, sin sufijos; inglés y español | Cumple | Con el comentario ambiguo de H-12. |
+| Un concepto por archivo | Cumple | |
+| Páginas inyectan servicios; componentes presentacionales | Cumple | health-page.ts:11 (`inject`). |
+| `HttpClient` solo en `services/` | Cumple | No aparece en los ficheros cambiados. |
+| Servicios `@Injectable` e `inject()` | No aplica | `health-api` no cambia. |
+| Sin lógica de tramos en páginas; se llama a `packages/pricing` | Cumple | health-page.ts:14. |
+| Carga y error (vacío si aplica) | Cumple | health-page.html:5-12, sin cambios; no puede llegar vacío. |
+| Buscador | No aplica | |
+| Error en español al usuario | Cumple | Sin cambios (health-page.spec.ts:73). |
+| Zod sobre tipos de cambio | No aplica | |
+| API propia tipada sin `any` | No aplica | El servicio no cambia (ADR-013). |
+| Sin `.scss` ni `styles` en componentes | Cumple | health-page.ts:6-9. |
+| Tokens | No aplica | Sin cambios de estilos. |
+| Prefijo de clases | Cumple | `health-page__card`. |
+| Teclado y foco | No aplica | No cambia nada visible (Decisión #11). |
+| Etiquetas, contraste y móvil | No aplica | Ídem. |
+| Lighthouse | No aplica | Según el encargo, la spec no tiene vistas (spec.md:108) y solo cambia el valor de un atributo `data-`, que no se ve. |
+| `role="status"` y `role="alert"` | Cumple | health-page.html:4, :11, sin cambios. |
+| Formularios (dos casillas) | No aplica | |
+| Sin `standalone`, `changeDetection`, `CommonModule`, `ngClass`, `ngStyle` ni `@HostBinding` | Cumple | health-page.ts:6-9. |
+| Sin zone.js | No aplica | Fuera de los ficheros del alcance. |
+| Control flow nativo; `@for` con `track` | Cumple | `@switch` y `@if` (html:5, :10); no hay `@for`. |
+| Señales; sin `mutate` | Cumple | `state` es la señal del servicio. |
+| `protected` y `readonly` | Cumple | health-page.ts:11-14. |
+| Importes enteros en céntimos | Cumple | `pricingCheck` vale 1000. |
+| Conversión en una función pura | No aplica | |
+| Sin `httpResource` | Cumple | No aparece. |
+| Test de la página con carga y error | Cumple | health-page.spec.ts:47-98. |
+| Los tests no repiten los límites de los tramos | Cumple, con la tensión de H-13 | Comprueba `'1000'` (1 usuario) porque lo exigen R-15 y C-22. |
+| Ningún test en rojo ni desactivado | Cumple | 14/14. |
+| Cada cambio cubre un `R-nn` | Cumple | R-13, R-15 y R-18. |
+
+**Proceso (`sdd` y encargo)**
+
+| Comprobación | Resultado | Nota |
+|---|---|---|
+| Tests y build en verde | Cumple | Build: pricing, api y web sin error. Tests: raíz 10 ficheros con 75 tests y web 3 ficheros con 14. La salida del encargo está resumida por la sesión principal (separadores «·»), no es la salida cruda. Los recuentos cuadran con lo leído: 21 `it` en base-cost.spec.ts, 76 − 1 por el `index.spec.ts` borrado y 6 tests en health-page.spec.ts. |
+| `Estado:` frente al trabajo real | Cumple | spec.md:3 y README.md:9 dicen `En revisión`. T-01 a T-04 están en `[x]` con sus casillas y la aprobación literal del autor. El plan está aprobado (plan.md:5). |
+| Tareas de más de 5 archivos de producción | Cumple | T-01 tiene 2, T-02 ninguno, T-03 1 y T-04 1. Ninguna necesita `Excepción de tamaño:`. |
+| Ficheros cambiados frente a las tareas | Cumple | El `git diff --stat 145c9aa HEAD -- packages apps` da 7 ficheros, que coinciden con las secciones de ficheros de T-01 a T-04. `health-page.html` no cambia, como dice tasks.md:57. Las líneas también cuadran: base-cost.ts tiene 38 y base-cost.spec.ts 126. Antes del cambio de `Estado:`, el árbol estaba limpio; después, solo cambian `spec.md` y `README.md`. |
+| Rojo de T-01 y T-03 (P-4) | Cumple | Sesión 14: `Cannot find module './base-cost.js'`. Sesión 16: `expected 'pricing-package-ok' to be '1000'`. Al rojo de la T-03 le falta una parte intermedia; el autor lo aceptó (tasks.md:62, punto 3). |
+| C-23 con el comando literal de D-05 | Cumple | Comando idéntico al de plan.md:78. La salida corresponde al build del `verify` (chunk `health-page`). |
+| Ajustes del ADR-016 anotados | No cumple (H-14) | Faltan los de la puerta 5. |
+| Plan frente a código | No cumple (H-11) | plan.md:95. |
+
+### Seguimiento de la ronda anterior
+| ID | Estado | Nota |
+|---|---|---|
+| H-01 | Resuelto | En la ronda 2 (definición de «entrada válida», spec.md:43). |
+| H-02 | Resuelto | En la ronda 2 (R-17, R-18 y R-20). |
+| H-03 | Resuelto | En la ronda 2. Ahora hay un defecto del mismo tipo en la puerta 5 (H-14). |
+| H-04 | Resuelto | En la ronda 2 (Decisión #12, R-19 y C-25). La implementación lo cumple (base-cost.ts:20-21; spec.ts:95-97). |
+| H-05 | Resuelto | En la ronda 2. |
+| H-06 | Resuelto | La cabecera de la función pública (spec.md:110) cita «R-01 a R-11, R-13, R-17, R-19 y R-20». |
+| H-07 | Resuelto | La fila #9 (spec.md:165) cita «la definición de «entrada válida» de la sección 2». |
+| H-08 | Resuelto | Con la Decisión #13 (spec.md:169), aplicada en el origen de R-20 (:103) y en C-26 (:151). La aprobación de la T-01 la amplía a `Math.min` y `Math.max`; el plan no lo recoge (H-11). |
+| H-09 | Resuelto | C-26 (spec.md:151) fija el test en `packages/pricing`, con una entrada válida y otra que lanza error. C-15 (:140) incluye C-13 y C-25 a C-27. |
+| H-10 | Resuelto | C-27 (spec.md:152) pide `calculateBaseCostCents.length === 1`; el test está en base-cost.spec.ts:122-124. |
+
+## Aprobación del autor
+Aprobación del autor 2026-11-22, puerta 6 (cierre de la spec 001-pricing-tiers), tras la ronda 3, texto literal (puntos 2 y 3 de su respuesta):
+
+> "2. Reservas:
+> - H-11, aceptada como reserva. Motivo: la desviación está decidida y anotada literal en la aprobación de la T-01 (tasks.md:23), y C-26 cumple; plan.md:95 describe la implementación prevista, y corregirlo ahora exigiría una puerta 4 ampliada y otra ronda por una línea de documentación.
+> - H-12, aceptada como reserva. Motivo: es un comentario heredado de la spec 000, sin efecto en el comportamiento; se califica por spec la próxima vez que otra spec toque health/.
+> - H-13, decisión del autor: no se cambia nada. La comprobación de '1000' en health/ verifica el cableado que piden R-15 y C-22; no repite los límites de los tramos, que se prueban una sola vez en packages/pricing (C-01 a C-08). Manda la spec, por encima de la convención. Criterio para las specs siguientes: la web puede comprobar un importe concreto para verificar que muestra lo que calcula packages/pricing; lo que no repite es la batería de límites de los tramos.
+> - H-14, aceptada como reserva. Motivo: la propia reserva deja constancia de los ajustes de la puerta 5 (punto 4, encargos del implementer sin enseñar; punto 6, implementer con Sonnet 5.5), y anotarlo ahora en spec.md exigiría otra ronda.
+> 3. Apruebo el cierre de la spec 001-pricing-tiers con las reservas H-11, H-12 y H-14 y la decisión sobre H-13. Pon Estado: Cerrada en spec.md y en el README, añade a review.md la aprobación del autor de la puerta 6 con este texto literal y actualiza MEMORY.md (máximo 50 líneas): las tres reservas como pendientes y el criterio de H-13 para las specs 005 y 004. Después te lanzo /sdd-session 7 001-pricing-tiers. Enséñame el diff y propón el commit, sin Co-Authored-By. NO hagas el commit: espera mi aprobación."

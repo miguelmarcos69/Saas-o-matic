@@ -1,6 +1,6 @@
 # Spec 001 · pricing-tiers
 
-- **Estado:** En implementación
+- **Estado:** Cerrada
 - **Depende de:** 000
 - **Cubre:** §2.A
 
