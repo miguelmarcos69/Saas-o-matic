@@ -321,14 +321,17 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-20 · Documentación: sección "Comandos" de `CLAUDE.md`
 - Cubre: R-18, R-19
 - Depende de: T-19
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Parada previa: `CLAUDE.md` está en 60 de 60 líneas. Antes de editar, el implementer pregunta al autor qué líneas recortar para dejar sitio (riesgo 17). No lo decide él.
 - Archivos de producción: `CLAUDE.md` (solo la sección "Comandos").
 - Sin test propio: se comprueba con C-20 y C-19.
+- Decisiones del autor 2026-11-22 a la parada previa, preguntadas por la sesión principal antes de lanzar al implementer (literales): «Unir 45-46 y fundir 8-9»; línea 8: «Ruta al final (Recomendada)», que deja `reto.md > constitución > spec > plan > convenciones. Constitución: @ai-workspace/docs/constitution.md`; «Al fundir las líneas 8 y 9, deja @ai-workspace/docs/constitution.md sin comillas invertidas: dentro de `código` Claude Code no lo importa.» Por eso `CLAUDE.md` cambia también en sus líneas 8-9 y 45-46 (la viñeta de MEMORY.md pasa a una línea, sin cambiar el texto); «Comandos» queda con el título y 3 líneas y el archivo, en 60. La sesión principal descartó la ruta entre paréntesis del primer ejemplo: Claude Code solo reconoce `@ruta` al principio de línea o tras un espacio (sin comprobar en la documentación).
+- Scripts: «Comandos» lista los cinco de la raíz (también `build:pricing`), porque R-19 dice «los scripts de la raíz» y la casilla de C-20 nombra cuatro; plan de la sesión principal aprobado por el autor el 2026-11-22.
+- Aprobación del autor 2026-11-22 (literal): «Apruebo T-20. (1) Acepto la frase añadida sobre PORT y DATABASE_PATH: es cierta y útil; anótala como desviación aceptada. (2) Pon entre comillas invertidas pricing y packages/pricing en «Comandos», para que el formato sea uniforme (te autorizo ese cambio de formato; no cambia el texto). (3) La importación de la constitución la compruebo yo con /context en la sesión nueva que abriré al cerrar la spec; anótalo como pendiente en MEMORY.md.» Desviación 1 del implementer, aceptada: la línea de `env.example` añade «documenta `PORT` y `DATABASE_PATH` con sus valores por defecto». El formato de (2) lo aplicó la sesión principal.
 - Hecho cuando:
-  - [ ] El autor ha indicado qué se recorta y solo se recorta eso.
-  - [ ] C-20: "Comandos" lista los scripts de la raíz (`dev`, `test`, `build`, `verify`) y los pasos de R-18, y ya no dice "pendiente". Si menciona `env.example`, dice que está en `apps/api/` y que la API arranca sin copiarlo (P-01 frente a R-18). Decisión del autor 2026-11-21 (Q-01): `env.example` se menciona como opcional, en `apps/api/`, y la API arranca sin copiarlo; la spec manda sobre el plan.
-  - [ ] C-19 (manual): en un clon limpio del repositorio, `npm install` y `npm run dev` dejan API y web respondiendo, sin copiar ficheros ni crear carpetas a mano.
+  - [x] El autor ha indicado qué se recorta y solo se recorta eso.
+  - [x] C-20: "Comandos" lista los scripts de la raíz (`dev`, `test`, `build`, `verify`) y los pasos de R-18, y ya no dice "pendiente". Si menciona `env.example`, dice que está en `apps/api/` y que la API arranca sin copiarlo (P-01 frente a R-18). Decisión del autor 2026-11-21 (Q-01): `env.example` se menciona como opcional, en `apps/api/`, y la API arranca sin copiarlo; la spec manda sobre el plan.
+  - [x] C-19 (manual): en un clon limpio del repositorio, `npm install` y `npm run dev` dejan API y web respondiendo, sin copiar ficheros ni crear carpetas a mano. Decisión del autor 2026-11-22: «Tú, tras el commit (Recomendada)»; en la aprobación: «C-19 queda para mi clon limpio tras el commit (--amend)». Hecha por el autor el 2026-11-22 (literal): «C-19 hecha tras 6090139: en un clon limpio, siguiendo «Comandos», npm install instala sin cambiar el lockfile (git status vacío) y npm run dev deja la API en el 3000 y la web en el 4200 con «API: ok», sin copiar ficheros ni crear carpetas; tras Ctrl+C no queda nada escuchando.» Captura: `fase-6-000-t20-clon-limpio.png`.
   - [ ] C-18: revisión de los `package.json` frente a la lista aprobada (revisor, puerta 6).
 
 ## Cobertura

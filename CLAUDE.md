@@ -5,8 +5,7 @@ Backend REST + SQLite (apps/api) y dashboard web (apps/web) que consume una API 
 Se evalúa el proceso de ingeniería, no solo el código: todo queda documentado en ai-workspace/ (§3).
 
 ## Jerarquía de fuentes
-reto.md > constitución > spec > plan > convenciones.
-La constitución ya existe: @ai-workspace/docs/constitution.md
+reto.md > constitución > spec > plan > convenciones. Constitución: @ai-workspace/docs/constitution.md
 - Si dos fuentes chocan, PARA y pregúntame: cuáles son y en qué punto chocan. No elijas tú.
 - Cita el enunciado por § (§1, §2.A, §2.B, §3, §3.1–§3.3, §4).
 
@@ -42,8 +41,7 @@ La constitución ya existe: @ai-workspace/docs/constitution.md
 - Leer reto.md y la spec antes de proponer cambios.
 - Proponer antes de implementar y esperar mi aprobación en cada fase.
 - Módulos pequeños, una responsabilidad por archivo.
-- Al cerrar una fase o una tarea de tasks.md, antes de proponer el commit, actualiza
-  MEMORY.md y enséñame el diff.
+- Al cerrar una fase o una tarea de tasks.md, antes de proponer el commit, actualiza MEMORY.md y enséñame el diff.
 - Orden de cierre de cada fase: MEMORY.md → /sdd-session → commit.
 ⚠ Pregunta antes
 - Instalar dependencias, hacer commit o push.
@@ -57,4 +55,6 @@ La constitución ya existe: @ai-workspace/docs/constitution.md
 - Añadir Co-Authored-By en los mensajes de commit.
 
 ## Comandos
-pendiente
+- Tras clonar: `npm install` y `npm run dev`; API en http://localhost:3000 y web en http://localhost:4200, sin copiar ficheros ni crear carpetas a mano.
+- Scripts de la raíz: `dev` (compila `pricing` y arranca API y web), `build` (compila `pricing` y las apps), `test` (compila `pricing` y lanza todos los tests), `verify` (`build` y `test`) y `build:pricing` (solo `packages/pricing`).
+- `apps/api/env.example` es opcional: documenta `PORT` y `DATABASE_PATH` con sus valores por defecto, y la API arranca sin copiarlo.
