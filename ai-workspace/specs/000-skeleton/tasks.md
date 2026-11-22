@@ -76,7 +76,7 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 - Hecho cuando:
   - [x] C-14 parcial (solo existe `pricing`): con `packages\pricing\dist` borrado (`Remove-Item -Recurse -Force`), `npm run build` lo regenera y termina bien.
   - [x] C-23 parcial: con `dist` borrado, `npm test` compila `pricing` antes y pasa `index.spec.ts`.
-  - [ ] C-14 y C-23 se repiten completos en T-19.
+  - [x] C-14 y C-23 se repiten completos en T-19.
 
 ## T-05 · API: andamio
 - Cubre: R-01, R-17
@@ -305,16 +305,18 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-19 · Scripts de extremo a extremo: `dev` y `verify`
 - Cubre: R-13, R-14, R-15, R-18
 - Depende de: T-13, T-18
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: `package.json` (raíz): `dev` (con `concurrently`: API y web en un solo comando, `pricing` compilado antes) y `verify` (`build` y `test`).
+- Decisiones del autor 2026-11-22 (dudas de la sesión principal, literales): «--kill-others-on-fail (Recomendada)» (si un proceso termina con código ≠ 0, concurrently para el otro y `npm run dev` sale con error), «-n api,web (Recomendada)» (prefijos [api] y [web]) y C-22 «Tú, a mano» (la comprueba el autor; el implementer no lanza `npm run dev`).
+- Desviación 1 del implementer, aceptada por el autor 2026-11-22 (literal): «Acepto la desviación 1 (rm -rf en Bash tras comprobar con git check-ignore; los scripts corren con cmd.exe igual).» El clasificador de permisos denegó lanzar `powershell.exe` desde Bash, así que en C-14 y C-23 `dist` se borró con `rm -rf` en lugar de `Remove-Item`.
 - Sin test propio: se comprueba con los comandos de abajo y con las pruebas de las tareas anteriores.
 - Hecho cuando:
-  - [ ] C-14: con `packages\pricing\dist` borrado, `npm run build` desde la raíz compila `pricing` antes que las apps y termina bien.
-  - [ ] C-22: con `dist` borrado, `npm run dev` compila `pricing` antes de arrancar las apps.
-  - [ ] C-23: con `dist` borrado, `npm test` compila `pricing` antes y pasan todos los tests.
-  - [ ] C-15: `npm run verify` termina en verde.
-  - [ ] C-16: `npm test` pasa los tests de los tres miembros (Vitest de la raíz y ejecutor de la web; riesgo 7).
-  - [ ] Sin tests en rojo (principio 3).
+  - [x] C-14: con `packages\pricing\dist` borrado, `npm run build` desde la raíz compila `pricing` antes que las apps y termina bien.
+  - [x] C-22: con `dist` borrado, `npm run dev` compila `pricing` antes de arrancar las apps. Comprobada por el autor a mano en PowerShell el 2026-11-22 (literal): «con packages\pricing\dist borrado, npm run dev compila pricing antes de las líneas [api] y [web]; /health responde en el 3000 y la página muestra «API: ok» en el 4200; tras Ctrl+C, netstat no muestra nada escuchando en el 3000 ni en el 4200.»
+  - [x] C-23: con `dist` borrado, `npm test` compila `pricing` antes y pasan todos los tests.
+  - [x] C-15: `npm run verify` termina en verde.
+  - [x] C-16: `npm test` pasa los tests de los tres miembros (Vitest de la raíz y ejecutor de la web; riesgo 7).
+  - [x] Sin tests en rojo (principio 3).
 
 ## T-20 · Documentación: sección "Comandos" de `CLAUDE.md`
 - Cubre: R-18, R-19
