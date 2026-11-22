@@ -136,7 +136,7 @@ describe('runMigrations', () => {
     });
   });
 
-  it('lanza un error en inglés si user_version es mayor que el número de ficheros (D-03)', () => {
+  it('lanza un error en inglés si user_version es mayor que el número de ficheros (C-39)', () => {
     writeMigration('0001_create_a.sql', 'CREATE TABLE a (id INTEGER PRIMARY KEY) STRICT;');
     db.pragma('user_version = 3');
 
@@ -145,5 +145,31 @@ describe('runMigrations', () => {
     );
     expect(userVersion()).toBe(3);
     expect(tableExists('a')).toBe(false);
+  });
+
+  // Test de comportamiento existente: el código de T-08 ya lo cumple (Decisión 2026-11-22 #3).
+  it('con la carpeta ausente cuenta 0 ficheros y sigue aplicando R-32 (C-40)', () => {
+    const missing = path.join(directory, 'does-not-exist');
+    db.pragma('user_version = 1');
+
+    expect(() => runMigrations(db, missing)).toThrowError(
+      'Invalid database state: user_version 1 is greater than the 0 migration files found',
+    );
+    expect(userVersion()).toBe(1);
+  });
+
+  // Test de comportamiento existente: la numeración se valida antes que user_version (Decisión 2026-11-22 #4).
+  it('con numeración inválida y user_version mayor, manda el error de R-31 (C-41)', () => {
+    writeMigration('0001_a.sql', 'CREATE TABLE a (id INTEGER PRIMARY KEY) STRICT;');
+    writeMigration('0003_c.sql', 'CREATE TABLE c (id INTEGER PRIMARY KEY) STRICT;');
+    db.pragma('user_version = 5');
+
+    expect(() => runMigrations(db, directory)).toThrowError(
+      'Invalid migration numbering: 0003_c.sql breaks the sequence (expected 0002)',
+    );
+    expect(() => runMigrations(db, directory)).not.toThrowError('Invalid database state');
+    expect(userVersion()).toBe(5);
+    expect(tableExists('a')).toBe(false);
+    expect(tableExists('c')).toBe(false);
   });
 });

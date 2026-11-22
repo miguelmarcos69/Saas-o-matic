@@ -350,18 +350,19 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 ## T-22 · API, `data`: tests de C-40 y C-41 y nombre del test de C-39
 - Cubre: R-28, R-31, R-32
 - Depende de: T-08 · Se hace tras T-20, con T-00 a T-21 hechas, y antes de la puerta 6 (segunda excepción de la cabecera).
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: ninguno (solo test). `run-migrations.ts` no se toca: el código ya cumple C-39 a C-41 (Decisión 2026-11-22 #1, «no hace falta código nuevo»; plan, D-03). Su comentario «(D-03)» de la línea 44 sigue siendo cierto: D-03 sigue en el plan, ahora con R-32.
 - Tests: `apps/api/src/data/sqlite/run-migrations.spec.ts`, con las carpetas temporales y la base `:memory:` por prueba del propio fichero (R-06): un test nuevo para C-40, otro para C-41 y el título del test «(D-03)» con «(C-39)». Cada título cita su caso, como los demás tests del fichero. `server.spec.ts` no los repite: «sin escuchar» y el código de salida los da el camino de D-17, el mismo `throw` antes de `listen` y el mismo `catch` de `app.ts` (plan, D-03 y D-17).
 - Indicación del autor al aprobar la puerta 3 (2026-11-22), literal: "la tarea nueva lleva C-40 y C-41 en run-migrations.spec.ts, declara que no pueden verse en rojo (Decisión 2026-11-22 #3, tests de comportamiento existente) y renombra el test «(D-03)» a C-39".
 - Excepción a «Tests primero» (reglas comunes): C-40 y C-41 son tests de comportamiento existente y no pueden verse en rojo, porque el código ya los cumple. Decisión 2026-11-22 #3 (C-40), literal: "El test no podrá verse en rojo, porque el código ya lo cumple: se declara como test de comportamiento existente." Decisión del autor 2026-11-22 (puerta 3, para C-40 y C-41; plan, D-03), literal: "Los dos son tests de comportamiento existente." El implementer lo declara así en su retorno; el cambio de título de C-39 tampoco tiene fase roja.
+- Aprobación del autor 2026-11-22 (literal): «Apruebo T-22. La segunda llamada de C-41 se queda: es redundante, pero deja explícito que no sale el error de R-32, que es justo lo que decide la #4.»
 - Hecho cuando:
-  - [ ] C-40 (R-28, R-32): con una ruta de `migrations/` inexistente (como en C-32) y `user_version` = 1, `runMigrations` lanza el mensaje de D-15 con 1 y 0: `Invalid database state: user_version 1 is greater than the 0 migration files found`.
-  - [ ] C-41 (R-31, R-32): con `0001_a.sql` y `0003_c.sql` y `user_version` = 5, lanza el mensaje de R-31 que nombra `0003_c.sql` (D-01, D-15), `Invalid migration numbering: 0003_c.sql breaks the sequence (expected 0002)`, y no el de R-32 (`Invalid database state: …`).
-  - [ ] C-39 (R-32): en el título del test, «(D-03)» pasa a «(C-39)» y no cambia nada más: `user_version` = 3, un único `0001_*.sql`, el mensaje con 3 y 1, `user_version` en 3 y la tabla sin crear.
-  - [ ] Si C-40 o C-41 fallan contra el código actual, se para y se avisa al autor: no se cambia `run-migrations.ts` (Decisión 2026-11-22 #1) ni el mensaje esperado de D-15.
-  - [ ] De `apps/` solo cambia `run-migrations.spec.ts`; `run-migrations.ts` y `server.spec.ts` siguen igual (`git diff --stat`).
-  - [ ] `npm test` en la raíz, en verde (principio 3): 55 + 14, con `run-migrations.spec.ts` de 13 a 15 tests.
+  - [x] C-40 (R-28, R-32): con una ruta de `migrations/` inexistente (como en C-32) y `user_version` = 1, `runMigrations` lanza el mensaje de D-15 con 1 y 0: `Invalid database state: user_version 1 is greater than the 0 migration files found`.
+  - [x] C-41 (R-31, R-32): con `0001_a.sql` y `0003_c.sql` y `user_version` = 5, lanza el mensaje de R-31 que nombra `0003_c.sql` (D-01, D-15), `Invalid migration numbering: 0003_c.sql breaks the sequence (expected 0002)`, y no el de R-32 (`Invalid database state: …`).
+  - [x] C-39 (R-32): en el título del test, «(D-03)» pasa a «(C-39)» y no cambia nada más: `user_version` = 3, un único `0001_*.sql`, el mensaje con 3 y 1, `user_version` en 3 y la tabla sin crear.
+  - [x] Si C-40 o C-41 fallan contra el código actual, se para y se avisa al autor: no se cambia `run-migrations.ts` (Decisión 2026-11-22 #1) ni el mensaje esperado de D-15.
+  - [x] De `apps/` solo cambia `run-migrations.spec.ts`; `run-migrations.ts` y `server.spec.ts` siguen igual (`git diff --stat`).
+  - [x] `npm test` en la raíz, en verde (principio 3): 55 + 14, con `run-migrations.spec.ts` de 13 a 15 tests.
 
 ## Cobertura
 Cada `R-nn` aparece en al menos una tarea.
