@@ -42,14 +42,16 @@ export class ItemsApi {
   load(): void {
     this.subscription?.unsubscribe(); // cancela la petición anterior: solo vale la última
     this.stateSignal.set({ status: 'loading' });
-    this.subscription = this.http.get<Item[]>('/items').subscribe({
+    this.subscription = this.http.get<Item[]>('/api/items').subscribe({
       next: (data) => this.stateSignal.set({ status: 'data', data }),
       error: () => this.stateSignal.set({ status: 'error', message: MENSAJE_ERROR }), // texto en español, por decidir
     });
   }
 }
 ```
-La URL real y el prefijo de rutas están por decidir (fase 6, proxy de desarrollo). Los datos de la API propia se tipan con interfaces; solo los de una API externa pasan por esquema Zod:
+Cancelar la petición anterior solo hace falta cuando `load()` puede lanzarse varias veces seguidas (el buscador, `SKILL.md`, «Estados»); si la vista lo llama una vez al crearse, se omite (`health/`, T-16).
+
+Las URL del servicio llevan el prefijo `/api`, que el proxy de desarrollo reescribe a vacío; la API no tiene prefijo (Decisión #2 de la spec 000). Los datos de la API propia se tipan con interfaces; solo los de una API externa pasan por esquema Zod:
 ```ts
 // shared/schemas/<api-externa>.ts
 export const responseSchema = z.object({ /* campos que se usan */ });
@@ -87,6 +89,8 @@ export class ItemsPage {
 }
 ```
 (`items()` sería un `computed` que extrae los datos cuando `status === 'data'`. Los textos los fija la spec.)
+
+Si el dato es en sí un mensaje de estado (como en `health/`), la carga y el dato comparten un único `role="status"`, siempre en el DOM, que solo cambia su texto (WCAG 4.1.3); el error va aparte con `role="alert"`.
 
 ## 5. Componente presentacional (`components/item-card/item-card.ts`)
 ```ts

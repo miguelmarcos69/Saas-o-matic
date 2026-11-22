@@ -1,6 +1,6 @@
 ---
 name: implementer
-description: "Implementa una sola tarea de tasks.md de una spec (puerta 5 de la skill sdd), con los tests primero, y se para al terminar. Úsalo con la spec en Planificada o En implementación y la tarea ya elegida. No hace commit, no instala dependencias ni toca MEMORY.md. Encargo obligatorio: puerta, ruta de la spec y su línea Estado literal, petición del autor literal, decisiones aplicables, rutas a leer, resultado de la puerta anterior, id de la tarea T-nn y los comandos de tests y de build que existan en esa tarea con su salida literal antes de empezar. Sin alguno de ellos devuelve 'Encargo incompleto'."
+description: "Implementa una sola tarea de tasks.md de una spec (puerta 5 de la skill sdd), con los tests primero, y se para al terminar. Úsalo con la spec en Planificada o En implementación y la tarea ya elegida. No hace commit, no instala dependencias ni toca MEMORY.md. Encargo obligatorio: puerta, ruta de la spec y su línea Estado literal, petición del autor literal, decisiones aplicables, rutas a leer, resultado de la puerta anterior, id de la tarea T-nn, la fila literal de la tarea de tasks.md con todos sus «Hecho cuando» y los comandos de tests y de build que existan en esa tarea con su salida literal antes de empezar. Sin alguno de ellos devuelve 'Encargo incompleto'."
 tools: Read, Grep, Glob, Edit, Write, Bash
 skills:
   - sdd
@@ -38,7 +38,8 @@ Si falta algo de esto, no trabajas y devuelves `Encargo incompleto: falta X`:
 5. Rutas de los ficheros que debes leer.
 6. Resultado de la puerta anterior.
 7. Id de la tarea (T-nn).
-8. Los comandos de tests y de build que existan en esa tarea (la sección "Comandos" de `CLAUDE.md` está pendiente hasta la fase 6), con su salida literal antes de empezar, para distinguir lo que rompes tú de lo que ya estaba roto. Si el encargo dice que en esa tarea aún no existe alguno (spec 000), no se exige y lo anotas en el retorno; no lo inventas.
+8. La fila literal de la tarea de `tasks.md`, con todos sus «Hecho cuando».
+9. Los comandos de tests y de build que existan en esa tarea (la sección "Comandos" de `CLAUDE.md` está pendiente hasta la fase 6), con su salida literal antes de empezar, para distinguir lo que rompes tú de lo que ya estaba roto. Si el encargo dice que en esa tarea aún no existe alguno (spec 000), no se exige y lo anotas en el retorno; no lo inventas.
 
 ## Qué devuelves
 Solo esto:

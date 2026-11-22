@@ -42,7 +42,7 @@ Resultado de la puerta anterior: <qué devolvió y qué aprobé>
 ```
 Extras:
 - **planner:** si el plan toca código, qué `SKILL.md` de convenciones leer. Para `plan.md`, su formato. Al pasar decisiones a la sección 5 de `spec.md`, la columna "Registro de sesión" lleva el marcador literal `(pendiente de /sdd-session)`: no inventa una ruta.
-- **implementer:** id de la tarea (T-nn); comandos de tests y build de esa tarea con su salida literal, ejecutados por ti antes de empezar. Si aún no existe alguno (spec 000), dilo en el encargo; no lo inventes.
+- **implementer:** id de la tarea (T-nn); fila literal de la tarea de `tasks.md`, con todos sus «Hecho cuando» (obligatoria); comandos de tests y build de esa tarea con su salida literal, ejecutados por ti antes de empezar. Si aún no existe alguno (spec 000), dilo en el encargo; no lo inventes.
 - **reviewer, puerta 6:** tareas y commits revisados; salida literal de tests y de build, `git status` y `git diff --stat`, ejecutados por ti ese día; y la auditoría Lighthouse si hay vistas. Incluye `review.md` en las rutas a leer si existe.
 
 ## Por puerta

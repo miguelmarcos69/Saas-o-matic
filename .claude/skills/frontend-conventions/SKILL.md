@@ -12,7 +12,7 @@ Fuentes: `ai-workspace/docs/architecture.md` y la constitución. Si una convenci
 |---|---|---|
 | Estructura | `<funcionalidad>/{pages,components,interfaces,services}`. Un componente o página es una carpeta con `.ts`, `.html` y `.spec.ts`. | Módulos pequeños (§3.2) |
 | Nombres | Sin sufijos, en kebab-case: `customer-card.ts` → `CustomerCard`; `customers-api.ts` → `CustomersApi`. | Coherencia con la guía de estilo de Angular |
-| Estilos | Solo en `src/scss`; `styles.scss` importa los parciales (uno por funcionalidad). Sin `.scss` en componentes. Tokens como variables CSS (`--color-…`) en `:root`, dentro de `themes/_tokens.scss`. Clases con prefijo de componente (`customer-card__title`): todo el CSS es global y los nombres podrían colisionar. | Principio 7 (contraste y medidas en un solo sitio) |
+| Estilos | Solo en `src/scss`; `styles.scss` carga con `@use` los parciales: `themes/_tokens.scss`, `_base.scss` (tipografía y fondo base, ADR-015) y uno por funcionalidad. Sin `.scss` en componentes. Tokens como variables CSS (`--color-…`) en `:root`, dentro de `themes/_tokens.scss`. Clases con prefijo de componente (`customer-card__title`): todo el CSS es global y los nombres podrían colisionar. | Principio 7 (contraste y medidas en un solo sitio) |
 | Páginas | Inyectan servicios con `inject()` y pasan datos a los componentes. | Lógica de datos en un único nivel |
 | Componentes | Presentacionales: reciben con `input()` y `model()`, emiten con `output()`. No inyectan servicios propios. | Reutilización y tests sencillos |
 | HTTP | `HttpClient` solo en `services/`. Servicios con `@Injectable({providedIn: 'root'})`. | Una frontera de red única |
