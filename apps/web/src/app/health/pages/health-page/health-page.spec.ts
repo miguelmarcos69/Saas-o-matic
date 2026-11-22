@@ -2,11 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { PRICING_PACKAGE_CHECK } from '@saas-o-matic/pricing';
 import { routes } from '../../../app.routes';
 import { HealthPage } from './health-page';
 
-// C-13 (textos, R-22), R-24 (D-08) y C-25 (ruta) de la página de inicio de health/.
+// C-13 (textos, R-22) y C-25 (ruta), de la spec 000; C-22 (spec 001, R-15), de la página de inicio de health/.
 // Decisiones del autor 2026-11-22 (T-18): un único role="status", siempre en el DOM, para la carga y «API: ok»;
 // el error, aparte, en role="alert"; y data-pricing-check en el contenedor común .health-page__card.
 describe('HealthPage', () => {
@@ -78,14 +77,14 @@ describe('HealthPage', () => {
       expect(page.textContent?.match(/API: no responde/g)).toHaveLength(1);
     });
 
-    it('lleva la constante de packages/pricing en data-pricing-check del contenedor .health-page__card en los tres estados', async () => {
+    it('lleva el coste base de 1 usuario (1000) en data-pricing-check del contenedor .health-page__card en los tres estados', async () => {
       // Carga: el contenedor común envuelve el role="status".
       expect(page.querySelectorAll('[data-pricing-check]')).toHaveLength(1);
-      expect(card()?.getAttribute('data-pricing-check')).toBe(PRICING_PACKAGE_CHECK);
+      expect(card()?.getAttribute('data-pricing-check')).toBe('1000');
       expect(card()?.contains(status())).toBe(true);
 
       await reply('ok');
-      expect(card()?.getAttribute('data-pricing-check')).toBe(PRICING_PACKAGE_CHECK);
+      expect(card()?.getAttribute('data-pricing-check')).toBe('1000');
       expect(card()?.contains(status())).toBe(true);
     });
 
@@ -93,7 +92,7 @@ describe('HealthPage', () => {
       await reply('network-error');
 
       expect(page.querySelectorAll('[data-pricing-check]')).toHaveLength(1);
-      expect(card()?.getAttribute('data-pricing-check')).toBe(PRICING_PACKAGE_CHECK);
+      expect(card()?.getAttribute('data-pricing-check')).toBe('1000');
       expect(card()?.contains(alert())).toBe(true);
       expect(card()?.contains(status())).toBe(true);
     });

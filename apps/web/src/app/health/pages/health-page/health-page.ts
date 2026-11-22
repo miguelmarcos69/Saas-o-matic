@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { PRICING_PACKAGE_CHECK } from '@saas-o-matic/pricing';
+import { calculateBaseCostCents } from '@saas-o-matic/pricing';
 import { HealthApi } from '../../services/health-api';
 
 // Página de inicio: muestra el estado de la API (R-12, R-22).
@@ -10,8 +10,8 @@ import { HealthApi } from '../../services/health-api';
 export class HealthPage {
   private readonly api = inject(HealthApi);
   protected readonly state = this.api.state;
-  // Constante de packages/pricing enlazada en la plantilla, para que el build de producción la empaquete (R-24, D-08).
-  protected readonly pricingCheck = PRICING_PACKAGE_CHECK;
+  // Coste base de 1 usuario (1000 céntimos) con packages/pricing, enlazado en la plantilla para que el build de producción empaquete la función (spec 001: R-15 y R-18).
+  protected readonly pricingCheck = calculateBaseCostCents(1);
 
   constructor() {
     this.api.load();

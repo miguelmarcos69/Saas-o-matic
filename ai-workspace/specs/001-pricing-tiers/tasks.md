@@ -53,20 +53,21 @@ Reglas comunes de esta spec:
 ## T-03 · web, `health/`: `data-pricing-check` con `calculateBaseCostCents(1)` y build de producción
 - Cubre: R-13 (el uso de la web), R-15, R-18
 - Depende de: T-01
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción (1): `apps/web/src/app/health/pages/health-page/health-page.ts`: importa `calculateBaseCostCents` de `@saas-o-matic/pricing` y queda `protected readonly pricingCheck = calculateBaseCostCents(1);` (D-04); comentario al día, sin nombrar la constante (lo exige la búsqueda de C-20 en T-04). `health-page.html` no cambia: sigue `[attr.data-pricing-check]="pricingCheck"` (plan, sección 2; Decisión 2026-11-22 #11).
 - Tests: `apps/web/src/app/health/pages/health-page/health-page.spec.ts`: las tres aserciones de `data-pricing-check` comparan con `'1000'` y el fichero deja de importar la constante.
 - Fase roja (P-4): `health-page.spec.ts` se cambia antes que `health-page.ts` y falla porque espera `'1000'` mientras `health-page.ts` aún pone la constante. El implementer da en su retorno la salida literal del rojo, y la sesión principal la copia al registro de la sesión.
 - Comprobación del build (P-2 (a), D-05): el implementer ejecuta `npm run build` desde la raíz. Después, la sesión principal ejecuta el comando literal de D-05; si no le dejan, lo ejecuta el autor. Su salida literal va al registro de la sesión:
   `Get-ChildItem -Path apps\web\dist\web -Recurse -File | Select-String -Pattern 'activeUsers must be a non-negative integer' | Select-Object Path, LineNumber, @{n='Match';e={$_.Matches[0].Value}} | Format-List`
+- Aprobación del autor 2026-11-22 (literal): «Apruebo la T-03. 1. Sí: en health-page.ts:13, «(spec 001: R-15 y R-18)». 2. Sí: en health-page.spec.ts:8, «C-13 (textos, R-22) y C-25 (ruta), de la spec 000; C-22 (spec 001, R-15)». 3. (a): acepto la salida del rojo así, con la nota del implementer. La captura fase-7-001-t03-rojo.png muestra además los dos fallos en cascada. 4. Crea el registro que falta de la sesión 15 (T-02): el commit b8dc897 lo cita y no existe. Con el retorno literal del implementer y mi aprobación literal de la T-02. Los cambios 1 y 2 hazlos tú (solo son comentarios) y anótalos con esta aprobación en la T-03.» (Punto 1: el comentario de `health-page.ts` citaba «(R-15, R-18)» sin decir de qué spec; punto 2: la cabecera de `health-page.spec.ts` mezclaba casos de la spec 000 y de la 001 sin nombrarlas; la sesión principal cambió los dos comentarios tras la aprobación. Punto 3: la salida del rojo del registro de la sesión 16 no incluye la parte intermedia con el detalle del segundo fallo en cascada.)
 - Hecho cuando:
-  - [ ] Fase roja: con `health-page.spec.ts` ya cambiado y `health-page.ts` sin cambiar, el test de `health/` falla porque el atributo no vale `'1000'`; salida literal en el registro de la sesión.
-  - [ ] C-22: el atributo `data-pricing-check` de `.health-page__card` vale `'1000'` en los tres estados que comprueba `health-page.spec.ts`; pasa.
-  - [ ] `health-page.ts` y `health-page.spec.ts` no contienen `PRICING_PACKAGE_CHECK`; `health-page.ts` importa `calculateBaseCostCents` en su código de producción (R-18).
-  - [ ] `npm test` desde la raíz, en verde (principio 3); el implementer da los recuentos en su retorno.
-  - [ ] C-23, build: `npm run build` desde la raíz termina sin error (lo ejecuta el implementer).
-  - [ ] C-23, empaquetado: el comando de D-05, ejecutado por la sesión principal (o por el autor si a ella no la dejan), encuentra `activeUsers must be a non-negative integer` en `apps\web\dist\web`; salida literal en el registro de la sesión. Esta casilla no la marca el implementer.
-  - [ ] De `packages/` y `apps/` solo cambian `health-page.ts` y `health-page.spec.ts`; `health-page.html` sigue igual (`git status` y `git diff --stat`).
+  - [x] Fase roja: con `health-page.spec.ts` ya cambiado y `health-page.ts` sin cambiar, el test de `health/` falla porque el atributo no vale `'1000'`; salida literal en el registro de la sesión.
+  - [x] C-22: el atributo `data-pricing-check` de `.health-page__card` vale `'1000'` en los tres estados que comprueba `health-page.spec.ts`; pasa.
+  - [x] `health-page.ts` y `health-page.spec.ts` no contienen `PRICING_PACKAGE_CHECK`; `health-page.ts` importa `calculateBaseCostCents` en su código de producción (R-18).
+  - [x] `npm test` desde la raíz, en verde (principio 3); el implementer da los recuentos en su retorno.
+  - [x] C-23, build: `npm run build` desde la raíz termina sin error (lo ejecuta el implementer).
+  - [x] C-23, empaquetado: el comando de D-05, ejecutado por la sesión principal (o por el autor si a ella no la dejan), encuentra `activeUsers must be a non-negative integer` en `apps\web\dist\web`; salida literal en el registro de la sesión. Esta casilla no la marca el implementer.
+  - [x] De `packages/` y `apps/` solo cambian `health-page.ts` y `health-page.spec.ts`; `health-page.html` sigue igual (`git status` y `git diff --stat`).
 
 ## T-04 · pricing: retirar `PRICING_PACKAGE_CHECK`
 - Cubre: R-01 (el reexport final), R-13
