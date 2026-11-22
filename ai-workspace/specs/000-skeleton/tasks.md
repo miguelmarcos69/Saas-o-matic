@@ -1,6 +1,15 @@
 # Tareas · spec 000 · skeleton
 
-Spec: `ai-workspace/specs/000-skeleton/spec.md` · Plan: `ai-workspace/specs/000-skeleton/plan.md` (D-01 a D-18, P-01 a P-04). Las tareas siguen el orden de la sección 6 del plan: R-09, raíz, `packages/pricing` y scripts, API, web, scripts de extremo a extremo y documentación. Excepción: T-21 (`.npmrc`, ADR-014) rompe ese orden por decisión del autor 2026-11-21: es una tarea de la raíz que se hace tras T-13 y antes de T-14, y conserva su id sin renumerar. Segunda excepción: T-22 (tests de C-39 a C-41, tras las Decisiones 2026-11-22 #1, #3 y #4) es una tarea de la API, capa `data`, que llega con T-00 a T-21 ya hechas: va al final, tras T-20 y antes de la puerta 6, y solo depende de T-08.
+Spec: `ai-workspace/specs/000-skeleton/spec.md` · Plan: `ai-workspace/specs/000-skeleton/plan.md` (D-01 a D-18, P-01 a P-04). Las tareas siguen el orden de la sección 6 del plan: R-09, raíz, `packages/pricing` y scripts, API, web, scripts de extremo a extremo y documentación. Excepción: T-21 (`.npmrc`, ADR-014) rompe ese orden por decisión del autor 2026-11-21: es una tarea de la raíz que se hace tras T-13 y antes de T-14, y conserva su id sin renumerar. Segunda excepción: T-22 (tests de C-39 a C-41, tras las Decisiones 2026-11-22 #1, #3 y #4) es una tarea de la API, capa `data`, que llega con T-00 a T-21 ya hechas: va al final, tras T-20 y antes de la puerta 6, y solo depende de T-08. Tercera excepción: T-23 (el test de D-15 en `envs.spec.ts`, tras la ronda 7 de la puerta 6, H-41) es una tarea de la API, capa `config`, que nace en la puerta 6 con T-00 a T-22 ya hechas: va tras T-22 y antes de la ronda 8 del revisor, que se limita a T-23, y solo depende de T-07.
+
+**Cambios tras la ronda 7 (2026-11-22)** (revisión del 2026-11-22, puerta 4, con la spec en `En implementación`, como cuando se añadió T-21)
+- Motivo: la ronda 7 de la puerta 6 (`review.md`, `Conforme con reservas`). El autor decidió corregir H-41 antes de cerrar, con una tarea nueva solo de test, y aceptar H-38, H-39 y H-40 como reservas (la decisión sobre H-41, literal, en T-23; el motivo de las reservas, en «Anotaciones sin tarea propia»). No es un cambio de requisitos: `spec.md` no cambia. No se renumera ninguna tarea.
+- Cabecera: orden de T-23 (tercera excepción).
+- «Anotaciones sin tarea propia»: las reservas, al día con H-38, H-39 y H-40; H-41 no es reserva, porque la corrige T-23.
+- T-23, nueva: el test «el mensaje no incluye otras variables de entorno» de `envs.spec.ts` captura el error y comprueba su `message` (D-15, H-41).
+- Cobertura: T-23 en la fila de R-29.
+- Fuera de este fichero, `plan.md:3`: sin «(Estado: Aprobada)», solo con la ruta de la spec. Respuesta del autor 2026-11-22 (el «paso 1» es esta revisión de la puerta 4), literal: "plan.md:3 lo corrige el planner en el paso 1: quita «(Estado: Aprobada)» y deja solo la ruta de la spec; el Estado solo vive en spec.md:3." Va en el commit de T-23; el plan no cambia en nada más ni lleva nota de cambios.
+- Sin cambios: las reglas comunes, la anotación de los pragmas (P-04 (b)), la tabla de tests del plan sin caso y T-00 a T-22, con sus casillas.
 
 **Cambios tras las Decisiones 2026-11-22 #1 a #6** (revisión del 2026-11-22, puerta 4; como la nota de `plan.md`)
 - Motivo: el cambio de requisitos de la spec (R-32 y C-39, #1; R-28 y C-40, #3; R-32 solo con la numeración válida y C-41, #4) y las indicaciones del autor al aprobar la puerta 3. La #2 solo cambia texto de `spec.md`; aquí, H-28 sale de las reservas. La #5 solo afecta a `spec.md`. La #6 (C-32 con base nueva) no cambia ninguna tarea: el test de C-32 de T-08 ya usa una base `:memory:` nueva (`run-migrations.spec.ts:112-117`). No se renumera ninguna tarea, y el estado y las casillas de T-00 a T-21 no cambian.
@@ -28,7 +37,7 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 - **Un único cambio en `.claude/` (D-04, riesgo 18), a cargo del autor:** `.claude/skills/backend-conventions/checklist.md:7` y la fila `routes.ts` de `.claude/skills/backend-conventions/SKILL.md:21` omitían el `presentation/routes.ts` de la raíz (Decisión #10); debía aplicarse antes de la puerta 6, o el revisor podría marcar `presentation/routes.ts` (T-12) como violación. **Resuelto:** lo aplicó el autor en el commit `a3da2fb` (2026-11-21), y las dos líneas recogen ya el `routes.ts` de la raíz (plan, D-04 y riesgo 18). Ninguna tarea toca `.claude/`.
 - **Qué se recorta de `CLAUDE.md` (riesgo 17):** el archivo estaba en 60 de 60 líneas y lo decidía el autor antes de T-20. **Resuelto en T-20 (2026-11-22):** el autor decidió fundir las líneas 8 y 9 y unir en una la viñeta de las líneas 45 y 46; `CLAUDE.md` sigue en 60 líneas (decisiones literales en T-20).
 - **D-03 ya tiene requisito (R-32):** hasta el 2026-11-22 esta nota decía que D-03 (`user_version` mayor que el número de ficheros) no tenía `R-nn` y que su test estaba en T-08. El autor lo pasó a requisito con `/sdd-change` (Decisión 2026-11-22 #1: R-32 y C-39) y fijó sus cruces con R-28 (#3: C-40) y con R-31 (#4: C-41). El código y el test de C-39 son de T-08 (nota 2026-11-22 de T-08); T-22 renombra ese test y añade los de C-40 y C-41. Estas tareas siguen sin tocar `spec.md`.
-- **Reservas que siguen abiertas** (aceptadas por el autor al aprobar la puerta 2 el 2026-11-22, tras la ronda 6): H-08 (la atienden T-09, D-05, y T-15, D-06), H-12 («siete secciones»; dueño: el autor), H-26 (P-02, en T-10), H-27 (P-03, en T-07), H-29 y H-30 (D-01 y D-02, en T-08), H-32 (su test, en T-08) y H-37 (trazabilidad de la fila 2026-11-20 #25 de `spec.md`; ninguna tarea la toca). H-28 quedó resuelta con la Decisión 2026-11-22 #2 (ronda 5).
+- **Reservas que siguen abiertas** (aceptadas por el autor al aprobar la puerta 2 el 2026-11-22, tras la ronda 6): H-08 (la atienden T-09, D-05, y T-15, D-06), H-12 («siete secciones»; dueño: el autor), H-26 (P-02, en T-10), H-27 (P-03, en T-07), H-29 y H-30 (D-01 y D-02, en T-08), H-32 (su test, en T-08) y H-37 (trazabilidad de la fila 2026-11-20 #25 de `spec.md`; ninguna tarea la toca). H-28 quedó resuelta con la Decisión 2026-11-22 #2 (ronda 5). Tras la ronda 7 (puerta 6), el autor aceptó el 2026-11-22 como reservas H-38 (la casilla «Todo SQL usa parámetros» frente al `PRAGMA user_version` de R-05), H-39 (los módulos `node:*` en las reglas de dependencia de `architecture.md`) y H-40 (`health/` sin `components/`). Motivo del autor, literal: "el código cumple la spec, y el fallo está en el texto de las convenciones y de architecture.md, que están por debajo de la spec". Dueño: el autor; esos textos se corrigen en un commit aparte, autorizado por él, tras cerrar la spec 000 y antes de la fase 7. Ninguna tarea toca `.claude/` ni `architecture.md`. H-41 no es reserva: la corrige T-23.
 
 ## T-00 · Comprobar `better-sqlite3` y sus tipos (R-09)
 - Cubre: R-09, R-20
@@ -364,6 +373,26 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
   - [x] De `apps/` solo cambia `run-migrations.spec.ts`; `run-migrations.ts` y `server.spec.ts` siguen igual (`git diff --stat`).
   - [x] `npm test` en la raíz, en verde (principio 3): 55 + 14, con `run-migrations.spec.ts` de 13 a 15 tests.
 
+## T-23 · API, `config`: el test de D-15 comprueba el `message` del error
+- Cubre: R-29 (D-15: «El mensaje nunca incluye otras variables de entorno»; sin caso en la spec)
+- Depende de: T-07, donde nació `envs.spec.ts` · Se hace tras T-22, con T-00 a T-22 hechas, y antes de la ronda 8 del revisor, limitada a T-23 (tercera excepción de la cabecera).
+- Estado: [x] hecha
+- Hallazgo (ronda 7 de la puerta 6, `review.md`, H-41, `Menor`): el test de `envs.spec.ts:55-59` pasa `expect.not.stringContaining('topsecret')` a `toThrowError`, que en Vitest 5.1.1 lo aplica al objeto `Error` y no a su `message`, así que no puede fallar mientras `readEnvs` lance. El código sí cumple D-15: `envs.ts:31` solo interpola el valor de `PORT`.
+- Decisión del autor 2026-11-22 (ronda 7, H-41), literal: "H-41 se corrige antes de cerrar: el test de envs.spec.ts:55-59 debe comprobar de verdad que el mensaje no incluye otras variables (capturar el error y mirar su message), y el implementer demuestra que ahora sí falla con un cambio temporal en el código que haga que el mensaje incluya 'topsecret', y luego lo deshace. Es una tarea nueva, T-23, solo de test; la spec vuelve a En implementación para hacerla, y después una ronda 8 del revisor limitada a T-23. Corrige también con ella la nota de plan.md:3."
+- Respuesta del autor 2026-11-22 (pregunta 3 de la sesión principal), literal: "Sí, añade a «Hecho cuando» de T-23 que el test falle también si readEnvs no lanza."
+- Archivos de producción: ninguno (solo test). `apps/api/src/config/envs.ts` no se toca, salvo el cambio temporal de la demostración, que se deshace.
+- Tests: `apps/api/src/config/envs.spec.ts`. El test «el mensaje no incluye otras variables de entorno» (líneas 55-59) pasa a capturar el error y comprobar su `message`. Se sustituye, no se añade, y el resto del fichero no cambia.
+- Excepción a «Tests primero» (reglas comunes): con el código actual el test no puede verse en rojo, porque D-15 ya se cumple. El rojo se demuestra con el cambio temporal en `envs.ts` que fija el autor (decisión de arriba). Como en T-22, la excepción se declara en la tarea y la regla común no cambia.
+- Commit, decisión del autor 2026-11-22 sobre el proceso (la parte que afecta a esta tarea), literal: "Haz un solo commit para T-23 (tasks.md, plan.md y el test), con un solo /sdd-session." De `plan.md` entra solo su línea 3, que corrigió el planner al añadir esta tarea (nota «Cambios tras la ronda 7», al principio).
+- Aprobación del autor 2026-11-22 (literal): «Apruebo T-23. La casilla 2 la acepto sin demostrarla con un segundo cambio: es evidente por el código (si readEnvs no lanza, thrown queda en undefined y toBeInstanceOf(Error) falla) y no compensa otra vuelta del implementer.»
+- Hecho cuando:
+  - [x] El test captura el error que lanza `readEnvs` con la misma entrada que ahora (`{ PORT: 'abc', SECRET: 'topsecret' }`) y comprueba que su `message` no contiene `topsecret` (D-15).
+  - [x] Si `readEnvs` no lanza, el test falla (respuesta 3 del autor): no puede pasar sin un error que comprobar.
+  - [x] Demostración en rojo: con un cambio temporal en `envs.ts` que haga que el mensaje incluya `topsecret`, el test falla; deshecho el cambio, vuelve a verde. El implementer da en su retorno el cambio temporal y las dos salidas del test.
+  - [x] Si el test nuevo falla contra el código actual, se para y se avisa al autor: `envs.ts` no se cambia (tarea solo de test).
+  - [x] De `apps/` solo cambia `envs.spec.ts`; `envs.ts` queda como estaba, sin el cambio temporal (`git diff --stat`).
+  - [x] `npm test` en la raíz, en verde (principio 3): 55 + 14, porque el test se sustituye y no se añade (`envs.spec.ts` sigue con 16 tests).
+
 ## Cobertura
 Cada `R-nn` aparece en al menos una tarea.
 
@@ -397,7 +426,7 @@ Cada `R-nn` aparece en al menos una tarea.
 | R-26 | T-07, T-10 |
 | R-27 | T-08 |
 | R-28 | T-08, T-22 |
-| R-29 | T-07, T-13 |
+| R-29 | T-07, T-13, T-23 |
 | R-30 | T-08, T-12, T-13 |
 | R-31 | T-08, T-12, T-13, T-22 |
 | R-32 | T-08, T-12, T-13, T-22 |

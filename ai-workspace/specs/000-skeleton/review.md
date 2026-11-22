@@ -321,3 +321,161 @@ Comprobaciones de la puerta 2 (`sdd` y encargo):
 Puerta 2, tras la ronda 6 (2026-11-22). Texto literal del autor:
 
 "Acepto como reservas H-08, H-12, H-26, H-27, H-29, H-30 y H-32 (las de la ronda 4, que este cambio no afecta) y H-37 (ronda 6), y apruebo la puerta 2 de la spec 000-skeleton. Mi motivo: las de la ronda 4 siguen con el motivo que di entonces (cada ronda con correcciones añadía requisitos nuevos que traían hallazgos nuevos; todas son Menor salvo H-08 y H-12, y las decisiones las fija el plan, que apruebo yo); H-37 es Menor, solo afecta a la trazabilidad de la fila #25 y no cambia ningún requisito ni caso, porque R-28 y C-40 ya dicen qué hacer."
+
+## Ronda 7 (2026-11-22) · Veredicto: Conforme con reservas
+
+**Alcance:** tareas T-00 a T-22 (puerta 6). Commits de tarea: 0bc2f69, 9bc7f73, 5142052, 1c8957f, 80b3d5f, 4f591bf, 13a2ef4, 2d841a8, fce0f37, 9e3b3b8, 30944d0, 91f36ea, c8dd43c, 355c669, e46f389, c09521f, e4d78b2, 851d1ac, 1099950, aa11809, 9411cb9, c9e4dcb y 608231e. Commits del intervalo que no son de tarea, según el encargo: a3da2fb, 16f19f1, 0e41edd, 0d4176a, ffb192e, 6d0b260 y ad44294. No puedo ejecutar `git`, así que he leído en disco los 57 ficheros del alcance. Para los tests, el build, `git status` y Lighthouse me baso en la salida literal del encargo. El `dist` de la web que dejó el `verify` de hoy sí lo he consultado.
+
+### Hallazgos
+No reabro las reservas aceptadas (H-08, H-12, H-26, H-27, H-29, H-30, H-32 y H-37) ni las decisiones de `tasks.md`, del plan y de los ADR. He comprobado que el código no las contradice: lo detallo en «Checklists» y en «Seguimiento». Que la respuesta de la API propia no pase por Zod no es un hallazgo (ADR-013). Ningún hallazgo es Bloqueante: cada `R-nn` tiene código y test o verificación, y el build y los tests están en verde.
+
+| ID | Gravedad | Archivo:línea | Requisito o regla | Hallazgo |
+|---|---|---|---|---|
+| H-38 | Importante | apps/api/src/data/sqlite/run-migrations.ts:57 · .claude/skills/backend-conventions/checklist.md:26 · .claude/skills/backend-conventions/SKILL.md:22 · ai-workspace/specs/000-skeleton/spec.md:47 · ai-workspace/docs/database.md:40 | Checklist de backend: «Todo SQL usa parámetros; no hay concatenación ni plantillas con valores». R-05 | El ejecutor escribe la versión con una plantilla que lleva un valor: `` db.pragma(`user_version = ${migration.number}`) `` (línea 57). La casilla prohíbe las plantillas con valores en todo el SQL. En cambio, R-05 (spec.md:47) y database.md:40 obligan a guardar la versión en `PRAGMA user_version`, y SQLite no admite parámetros enlazados en un `PRAGMA`. Esto último lo sé por mi conocimiento y no lo he podido comprobar ejecutando. El valor no viene de fuera: sale de `Number()` sobre los cuatro dígitos que captura la expresión de run-migrations.ts:6, así que no veo riesgo de inyección. Aun así, tal como está escrita, la casilla no se puede cumplir a la vez que R-05. Además, las dos convenciones no tienen el mismo alcance: la fila «Datasource» de SKILL.md:22 limita la regla al datasource, y la casilla la extiende a «todo SQL». Es un choque de fuentes y no lo resuelvo. |
+| H-39 | Menor | apps/api/src/config/envs.ts:1 · apps/api/src/data/sqlite/index.ts:1-2 · run-migrations.ts:1-2 · migrations-dir.ts:1 · ai-workspace/docs/architecture.md:70 · architecture.md:74 · .claude/skills/backend-conventions/checklist.md:8-9 | `architecture.md` (reglas de dependencia): `config` solo Zod y `data` solo `better-sqlite3`, y los dos «no puede importar: el resto» | `config/envs.ts` importa `node:path`, y los tres ficheros de `data/sqlite/` importan `node:fs` y `node:path`. La tabla no dice si los módulos de Node cuentan como «el resto». Sin ellos no se pueden cumplir R-07 (resolver la ruta en `config/envs.ts`, spec.md:53), R-23 (crear la carpeta, spec.md:101), ni R-27 y R-28 (leer `migrations/`, spec.md:113 y 116). Ni el plan (D-05, D-16) ni ninguna decisión lo aclaran. Si se lee la regla al pie de la letra, el código incumple las casillas 8 y 9. Si se lee como «capas y paquetes de npm», las cumple. Es un hueco de `architecture.md` y no lo resuelvo. Lo califico de Menor porque el código hace lo que piden los requisitos. |
+| H-40 | Menor | apps/web/src/app/health/ · .claude/skills/frontend-conventions/checklist.md:6 · ai-workspace/docs/architecture.md:64 · architecture.md:47-50 · .claude/skills/frontend-conventions/SKILL.md:13 · spec.md:95 | Checklist de frontend: «Cada funcionalidad tiene `pages/`, `components/`, `interfaces/` y `services/`» | `health/` tiene `pages/`, `interfaces/` y `services/`, pero no `components/`. La casilla, architecture.md:64 y SKILL.md:13 piden las cuatro carpetas en cada funcionalidad. El árbol de architecture.md:47-50 (Decisión 2026-11-20 #12) y R-21 (spec.md:95) describen `health/` sin `components/`, y la funcionalidad no tiene ningún componente. Dentro de `architecture.md`, la regla general y el árbol de `health/` no coinciden. El código sigue el árbol. No lo resuelvo. Afectará también a las specs 001 a 007 si alguna funcionalidad no tiene componentes. |
+| H-41 | Menor | apps/api/src/config/envs.spec.ts:55-59 · node_modules/vitest/dist/chunks/index.DNcttN5a.js:2034-2036 · index.DNcttN5a.js:1383-1385 · ai-workspace/specs/000-skeleton/plan.md:217 | D-15 («El mensaje nunca incluye otras variables de entorno»); principio 3 (el test debe comprobar lo que afirma) | El test «el mensaje no incluye otras variables de entorno» no puede fallar mientras `readEnvs` lance un error. Pasa `expect.not.stringContaining('topsecret')` a `toThrowError` y lo fuerza con `as unknown as string`. En Vitest 5.1.1, `toThrowError` aplica un matcher asimétrico al objeto `Error` y no a su `message` (index.DNcttN5a.js:2034-2036). `StringContaining` da `false` con un valor que no es texto, y la versión negada lo convierte en `true` (líneas 1383-1385). Por eso el test pasaría aunque el mensaje incluyera `topsecret`. El código sí cumple D-15: envs.ts:31 solo interpola el valor de `PORT`. Lo que falla es el test, que no comprueba lo que dice su título. |
+
+### Checklists
+
+#### Backend (`.claude/skills/backend-conventions/checklist.md`)
+| Casilla | Resultado | Evidencia |
+|---|---|---|
+| `domain` no importa `data`, `infrastructure`, `presentation`, Express ni SQLite | Cumple | En `domain/` solo está `pricing-check.spec.ts`, que importa `vitest` y `@saas-o-matic/pricing` (líneas 1-2). |
+| `presentation` no importa `infrastructure` ni `data`, salvo `routes.ts` | Cumple | Solo `presentation/routes.ts:2` importa `infrastructure`, y `server.ts:4` importa `routes.ts`. El `vi.mock` de `server.spec.ts:13` nombra un módulo de `data`; D-17 deja los `*.spec.ts` fuera de las reglas (plan.md:232). |
+| `infrastructure` no importa `presentation`; `data` solo `better-sqlite3` | Cumple en `infrastructure`; dudosa en `data` (H-39) | `sqlite-connection.ts:1` solo importa `data`. `data` importa `better-sqlite3` (index.ts:3, run-migrations.ts:3), sus propios ficheros, `node:fs` y `node:path`. |
+| `app.ts` solo `config` y `presentation`; `config` solo Zod | Cumple en `app.ts`; dudosa en `config` (H-39) | app.ts:1-2. `envs.ts:1-2` importa `node:path` y `zod`. |
+| `packages/pricing` no importa nada | Cumple | `src/index.ts` no tiene imports, y `package.json` no declara dependencias. |
+| Todo dato externo pasa por Zod | Cumple | `PORT` y `DATABASE_PATH` pasan por `envs.ts:12-17`, `29` y `37`. `GET /health` no tiene entrada (spec.md:133). |
+| DTO con `[error, dto]` y `CustomError` | No aplica | No hay DTO ni `CustomError` (Decisión 2026-11-20 #18). |
+| `details[].code` del conjunto estable | No aplica | Ídem. |
+| El `input` de Zod no aparece en respuestas ni en logs | Cumple | No se usa `reportInput`. El mensaje de envs.ts:31 lleva el valor de `PORT`, como fija D-15 (plan.md:212), y ninguna otra variable. |
+| Controlador sin lógica; caso de uso por petición | No aplica | No hay controladores (#18). |
+| Errores por `handleError`; `error-handler.ts` | No aplica | Ídem. |
+| `CustomError` sin números HTTP | No aplica | Ídem. |
+| Error no `CustomError` → `INTERNAL_ERROR` | No aplica | Ídem. |
+| JSON en `camelCase`; `message` en español | Cumple | routes.ts:12 responde `{ status: 'ok' }`. No hay respuestas de error propias (#18). |
+| Todo SQL usa parámetros | No cumple (H-38) | run-migrations.ts:57. La consulta del test (run-migrations.spec.ts:22) sí usa `?`. El `db.exec(sql)` de la línea 56 ejecuta el fichero de migración del repositorio. |
+| Importes enteros en céntimos | No aplica | No hay importes. |
+| Redondeo en un único punto | No aplica | Ídem. |
+| Puertos con `Promise`; `snake_case` → `camelCase` en el datasource | No aplica | No hay puertos ni datasource. |
+| `SqliteError` traducido por `code` | No aplica | Ídem. |
+| Cambio de esquema = migración nueva; `STRICT` y `CHECK` | No aplica | `migrations/` solo tiene `.gitkeep` (migrations-dir.spec.ts:36-41). |
+| Cada regla y endpoint con test, incluidos errores y límites | Cumple, con H-41 | `GET /health`: routes.spec.ts:42-59 y server.spec.ts:76-85. Límites de `PORT`: envs.spec.ts:39-47 (0, 1, 65535 y 65536). Errores de arranque: run-migrations.spec.ts:94-174, server.spec.ts:97-139 y app.spec.ts:40-47. |
+| Unitarios de `domain` sin base ni Express | Cumple | `pricing-check.spec.ts`. |
+| Integración con `:memory:` y tablas vaciadas | Cumple | routes.spec.ts:17 y server.spec.ts:56 y 77 abren una `:memory:` nueva por prueba, y no hay tablas. Que no sea una conexión singleton (SKILL.md:26) lo decide el plan (riesgo 10, plan.md:392). |
+| El ejecutor de migraciones tiene test propio | Cumple | `run-migrations.spec.ts`: 15 tests con carpeta temporal y `:memory:` (líneas 26-34). |
+| Ningún test en rojo ni desactivado | Cumple | La salida da 55 y 14 passed. En los `*.spec.ts` no hay `.skip`, `.only`, `.todo`, `xit` ni `fit`. |
+| Cada cambio cubre un `R-nn` | Cumple | Ver «Trazabilidad». Las dos piezas sin `R-nn` propio son decisiones registradas del autor: el log de arranque (app.ts:11, T-13) y el cierre de la base si `listen` falla (server.ts:36-41, T-12). |
+| Nombres, sufijos e idioma | Cumple | Todo en kebab-case. `sqlite-connection.ts` va sin sufijo de datasource (D-04). Comentarios en español y mensajes de arranque en inglés (Decisión #26). |
+| Una responsabilidad por archivo | Cumple | El fichero de producción más largo es `run-migrations.ts`, con 64 líneas. |
+
+#### Frontend (`.claude/skills/frontend-conventions/checklist.md`)
+| Casilla | Resultado | Evidencia |
+|---|---|---|
+| Cada funcionalidad con `pages/`, `components/`, `interfaces/`, `services/`; página = carpeta con `.ts`, `.html` y `.spec.ts` | No cumple al pie de la letra (H-40) | `health/` no tiene `components/`. `health-page/` sí tiene sus tres ficheros. |
+| Ninguna funcionalidad importa otra ni `apps/api` | Cumple | health-page.ts:1-3 y health-api.ts:1-4 solo importan `@angular/*`, `@saas-o-matic/pricing` y ficheros de `health/`. |
+| `app.*` solo importa páginas y `shared` | Cumple | app.routes.ts:7 carga la página de forma diferida. app.ts:2 importa `RouterOutlet` y app.config.ts:3 importa las rutas. |
+| `shared/` | No aplica | No existe. |
+| kebab-case sin sufijos; idioma | Cumple | `health-page.ts` exporta `HealthPage`, `health-api.ts` exporta `HealthApi` y `load-state.ts` exporta `LoadState`. Comentarios en español. |
+| Un concepto por archivo | Cumple | — |
+| Páginas inyectan servicios; componentes presentacionales | Cumple | health-page.ts:11. No hay componentes. |
+| `HttpClient` solo en `services/` | Cumple | health-api.ts:1 y 12. Los tests solo usan `provideHttpClientTesting()`. |
+| `@Injectable({providedIn: 'root'})` e `inject()` | Cumple | health-api.ts:10-12. |
+| Sin lógica de negocio en páginas | Cumple | — |
+| Carga, error y, si aplica, vacío | Cumple | health-page.html:4-12. El estado vacío no aplica (spec.md:138). |
+| Buscador cancela la búsqueda anterior | No aplica | No hay buscador. `load()` no cancela, por decisión (B) del autor en T-16. |
+| Error en español visible | Cumple | health-api.ts:7 y 20, y health-page.html:11. |
+| Zod sobre la API de tipos de cambio | No aplica | — |
+| API propia tipada sin `any` | Cumple | health-status.ts:3-5 y `get<HealthStatus>` (health-api.ts:18). No hay ningún `any` en `apps/web`. |
+| Sin `.scss` ni `styles` en componentes | Cumple | No hay `styleUrl` ni `styles` en `apps/web/src`. angular.json:13-15 fija `style: none`. |
+| Colores y medidas desde tokens | Cumple, con la decisión de T-17 | _health.scss:5-7 y _base.scss:4-9 usan `var(--…)`. El `font-weight: 500` de _base.scss:6 es una desviación aceptada (tasks.md:288). |
+| Clases con prefijo | Cumple | `.health-page__card` (_health.scss:4). `_base.scss` solo da estilo a `body`. |
+| Teclado y foco visible | Cumple | No hay elementos interactivos. El autor hizo la C-13 manual con teclado (tasks.md:315). |
+| Etiquetas, contraste y móvil | Cumple | No hay campos. Contraste de 8,44:1 y 7,41:1 (tasks.md:293). Meta `viewport` en index.html:7. Lighthouse móvil: 100 en accesibilidad. |
+| Lighthouse sin fallos sin justificar | Cumple | Accesibilidad 100 y Buenas prácticas 100 en escritorio y en móvil. Solo falla `meta-description` (SEO), que el autor decidió no añadir (tasks.md:309). |
+| `role="status"` y `role="alert"` | Cumple | health-page.html:4 y 11, comprobados en health-page.spec.ts:48-79. |
+| Reactive Forms con `toSignal` | No aplica | No hay formularios. |
+| Etiqueta y error en cada campo | No aplica | Ídem. |
+| Sin `standalone: true`, `changeDetection`, `CommonModule`, `ngClass`, `ngStyle`, `@HostBinding` ni `@HostListener` | Cumple | Ninguna aparición en `apps/web`. |
+| Sin zone.js ni `provideZoneChangeDetection` | Cumple | app.config.ts:5-10. `zone.js` no está en package-lock.json. |
+| Control flow nativo; `@for` con `track` | Cumple | `@let`, `@switch` e `@if` (health-page.html:2-12). No hay `@for`. |
+| Señales; `computed()`; sin `mutate` | Cumple | health-api.ts:13-14 usa `signal` y `asReadonly()`. |
+| Manejadores con nombre de acción; `protected` y `readonly` | Cumple | No hay manejadores en la plantilla. health-page.ts:11-14. |
+| Importes en céntimos; conversión única | No aplica | — |
+| Sin `httpResource`; `LoadState<T>` | Cumple | load-state.ts:3-6 y health-api.ts:13. |
+| Test de cada componente, página y servicio | Cumple | app.spec.ts, health-page.spec.ts y health-api.spec.ts. Los estados de carga y error están en health-api.spec.ts:22-59 y en health-page.spec.ts:48-79. |
+| No se repiten los límites de los tramos | No aplica | — |
+| Ningún test en rojo ni desactivado | Cumple | 3 ficheros y 14 passed. |
+| Cada cambio cubre un `R-nn` | Cumple | R-12, R-21, R-22 y R-24. Los estilos base, la fuente y el favicon vacío son decisiones del autor en T-17 y T-18 (ADR-015). |
+
+#### Casillas asignadas al revisor
+| Casilla | Resultado | Evidencia |
+|---|---|---|
+| C-25 (T-18, tasks.md:312; R-21) | Cumple | Existen `health/pages/health-page/` (`.ts`, `.html` y `.spec.ts`), `health/services/health-api.ts` e `health/interfaces/` (`health-status.ts` y `load-state.ts`). app.routes.ts:5-8 carga `HealthPage` con `loadComponent`. `scss/_health.scss` existe y lo importa `styles.scss:4` (`@use 'scss/health'`). La parte automática está en health-page.spec.ts:108-118. En el build de hoy, la página sale en el chunk diferido `health-page` (`chunk-FQV3V7TH.js`). |
+| C-18 (T-20, tasks.md:348; R-17) | Cumple | Raíz, package.json:16-21: las cuatro `devDependencies` de plan.md:277-280. `apps/api/package.json:11-22`: las de plan.md:289-296. `apps/web/package.json:12-27`: las de plan.md:301-312. `packages/pricing/package.json` no declara dependencias (plan.md:315). Todas las versiones son exactas, sin `^`. El lockfile coincide (package-lock.json:6-54 y 8092-8095) y no contiene `supertest`, `@angular/forms` ni `zone.js`. Las únicas fuera de familia son `vite` y `jsdom`, las dos aprobadas. Ningún `package.json` usa `pre`/`post`, `prepare` ni `install` (ADR-014, riesgo 21). |
+
+#### Proceso (`sdd` y encargo)
+| Punto | Resultado | Evidencia |
+|---|---|---|
+| Cada `R-nn` tiene tarea, código y test o verificación | Cumple | Tabla «Trazabilidad», abajo. La cobertura de tasks.md:370-403 coincide. |
+| Tests y build en verde, según la salida literal | Cumple | `npm run verify` termina con código 0. Compilan `pricing`, la API (`tsc`) y la web («Application bundle generation complete»). Vitest: 10 ficheros y 55 passed. `ng test`: 3 ficheros y 14 passed. He contado los tests en los ficheros y cuadran (pricing 1, api 52 y web-tools 2; web 14). |
+| `Estado:` frente al trabajo real | Cumple | spec.md:3 y README.md:8 dicen `En revisión`. T-00 a T-22 están en `[x]`, el plan está aprobado (plan.md:5) y los tests, en verde. Solo quedan abiertas C-25 y C-18, que son del revisor, y las doy por cumplidas. Con este veredicto, la spec sigue `En revisión` hasta que el autor la apruebe por escrito nombrando cada reserva (`sdd`, «Cierre de una spec», punto 2). |
+| Tareas de más de 5 archivos con `Excepción de tamaño:` | Cumple, con una limitación | Solo T-14 pasa de 5 y lleva su línea (tasks.md:230). T-17 y T-18 declaran exactamente cinco (tasks.md:284 y 299), y las demás, menos. Lo he contado en `tasks.md`, no en los commits: no puedo ejecutar `git` y el encargo no trae un `--stat` por commit. |
+| `git status` frente al alcance | Cumple | Solo cambian `spec.md` y `README.md`, una línea cada uno (`Estado:`). Es el cambio que pide `sdd` al empezar la puerta 6, en el mismo paso para los dos ficheros. |
+| Lighthouse | Cumple | Escritorio y móvil sobre `http://localhost:4200/`, con la API respondiendo: Accesibilidad 100 y Buenas prácticas 100. Solo falla `meta-description`, justificado por el autor. |
+| Decisiones registradas frente al código | El código no las contradice | Lo he comprobado en: `openDatabase` sin cierre si fallan las migraciones (index.ts:17-19; T-10 y T-12), `listen` fallido (server.ts:36-41), log de arranque (app.ts:11), `cli.analytics: false` (angular.json:6), proxy `"/api/**"` (proxy.conf.json:2), `load()` sin cancelar (health-api.ts:16-22), un `role="status"` siempre presente y un `role="alert"` aparte (health-page.html:4-12), `data-pricing-check` en la tarjeta (health-page.html:3), `<main>` (app.html:2-4), favicon `data:,` (index.html:9), sin `meta description`, y `app.config.ts` sin `provideHttpClient`. |
+| P-04 (b): pragmas de la conexión | Sin hallazgo nuevo | `openDatabase` no ejecuta `foreign_keys` ni `journal_mode` (index.ts:10 y 17), aunque database.md:6 los exige. Es una decisión del autor registrada (plan.md:263-266, riesgo 19 abierto, tasks.md:27). Sigue pendiente para la spec 002. |
+| R-09 y R-20 | Cumple | La evidencia de T-00 está en sessions/2026-11-21-02-000-skeleton.md:17 y 28 (SQLite 3.54.1, `STRICT` y `tsc` con `@types/better-sqlite3`). La regresión de `STRICT` está en run-migrations.spec.ts:38 y 46. R-20 no se activó. |
+| Notas sin hallazgo | — | (1) plan.md:3 sigue diciendo «(Estado: Aprobada)». Es la cabecera de cuando se escribió el plan, y según `sdd` la única fuente del estado es spec.md:3. (2) backend-conventions/SKILL.md:34-35 y frontend-conventions/SKILL.md:41-42 siguen dando como «Pendiente» puntos que la spec 000 ya decidió (Decisiones 2026-11-20 #3, #6 y #4; T-14). Están en `.claude/`, fuera del alcance de esta revisión, y su dueño es el autor. |
+
+Trazabilidad (`R-nn` → tarea → código → test o verificación):
+
+| R | Tareas | Código | Test o verificación |
+|---|---|---|---|
+| R-01 | T-01, T-05, T-14 | package.json:5-8 | C-01 (Verif. de T-05 y T-14); package-lock.json:8-10 |
+| R-02 | T-07, T-12, T-13 | envs.ts:8 y 26-34; app.ts:7-9 | envs.spec.ts:10-16; Verif. de T-13 en el 3000 |
+| R-03 | T-12 | routes.ts:11-13 | routes.spec.ts:42-51; server.spec.ts:76-85 |
+| R-04 | T-12 | — | routes.spec.ts:46 y 67-75 (`fetch` nativo y sin `supertest`) |
+| R-05 | T-08 | run-migrations.ts:39-64 | run-migrations.spec.ts:37-92 (C-05, C-06, H-32 y C-24) |
+| R-06 | T-08 | — | run-migrations.spec.ts (migraciones propias en una carpeta temporal) |
+| R-07 | T-07 | envs.ts:6 y 36-41 | envs.spec.ts:18-28 |
+| R-08 | T-09 a T-12 | index.ts:11-20; migrations-dir.ts:5; sqlite-connection.ts:6-13; routes.ts:6-7; app.ts:7-8 | migrations-dir.spec.ts:27-32; index.spec.ts:72-82; server.spec.ts:76-85 |
+| R-09 | T-00 | Fuera del repositorio | Sesión 2026-11-21-02 |
+| R-10 | T-03, T-06, T-18 | packages/pricing/package.json:8-13; `"*"` en las dos apps | pricing-check.spec.ts; health-page.spec.ts:81-99; `dist` de la web |
+| R-11 | T-06, T-18 | No se activó | C-11 pasa |
+| R-12 | T-15, T-16, T-18 | proxy.conf.json; angular.json:58; health-api.ts:18; health-page.html | proxy.conf.spec.ts:30-44; health-api.spec.ts; health-page.spec.ts; C-13 manual del autor |
+| R-13 | T-04, T-19 | package.json:10-13 | C-14, C-22 y C-23 (Verif.); en la salida de hoy, `build:pricing` va primero |
+| R-14 | T-19 | package.json:14 | Salida de `verify` |
+| R-15 | T-01, T-03, T-04, T-19 | vitest.config.ts:5-32; package.json:12 | 55 + 14 passed |
+| R-16 | T-07 | apps/api/env.example | envs.spec.ts:61-80 |
+| R-17 | T-01, T-03, T-05, T-14 | Los cuatro `package.json` | C-18 (esta ronda) |
+| R-18 | T-19, T-20, T-21 | .npmrc; package.json:13; CLAUDE.md:58 | C-19 manual del autor (tasks.md:347) |
+| R-19 | T-20 | CLAUDE.md:57-60 | C-20: cinco scripts y los pasos de R-18, sin «pendiente» |
+| R-20 | T-00 | — | No se activó |
+| R-21 | T-16, T-17, T-18 | Árbol de `health/`; app.routes.ts:5-8; styles.scss:4 | C-25 (esta ronda); health-page.spec.ts:108-118 |
+| R-22 | T-18 | health-page.html:6-7 y 11; health-api.ts:7 | health-page.spec.ts:48-79 |
+| R-23 | T-10 | index.ts:13-15 | index.spec.ts:30-50 |
+| R-24 | T-03, T-06, T-18 | pricing/src/index.ts:2; health-page.ts:14; health-page.html:3 | pricing/src/index.spec.ts; pricing-check.spec.ts; health-page.spec.ts:81-99; el valor aparece en `dist/web/browser/chunk-FQV3V7TH.js` |
+| R-25 | T-09 | apps/api/migrations/.gitkeep | migrations-dir.spec.ts:36-41 |
+| R-26 | T-07, T-10 | envs.ts:41; index.ts:13 | envs.spec.ts:35-37; index.spec.ts:60-70 |
+| R-27 | T-08 | run-migrations.ts:6 y 18-22 | run-migrations.spec.ts:101-110 |
+| R-28 | T-08, T-22 | run-migrations.ts:15-17 | run-migrations.spec.ts:112-117 y 151-159 |
+| R-29 | T-07, T-13 | envs.ts:28-39; app.ts:14-17 | envs.spec.ts:39-53; app.spec.ts:40-47 |
+| R-30 | T-08, T-12, T-13 | run-migrations.ts:59-62; server.ts:21; app.ts:14-17 | run-migrations.spec.ts:94-99; server.spec.ts:97-102 |
+| R-31 | T-08, T-12, T-13, T-22 | run-migrations.ts:26-35 y 41 | run-migrations.spec.ts:119-137 y 162-174; server.spec.ts:104-125 |
+| R-32 | T-08, T-22 | run-migrations.ts:43-49 | run-migrations.spec.ts:139-174 (C-39 a C-41); «sin escuchar», por el camino de D-17 |
+
+### Seguimiento de la ronda anterior
+| ID | Estado | Nota |
+|---|---|---|
+| H-08 | Abierto | Es una reserva aceptada. R-08 y R-12 siguen siendo compuestos (spec.md:56 y 68). El plan añade sus pruebas y están hechas: D-05 en migrations-dir.spec.ts:16-33 y D-06 en proxy.conf.spec.ts:30-44. |
+| H-12 | Abierto | Es una reserva aceptada (MEMORY.md, pendiente (a)). spec.md:7 sigue diciendo «siete secciones», y hay seis. |
+| H-26 | Abierto | Es una reserva aceptada. El código sigue P-02: crea la carpeta padre de cualquier ruta (index.ts:13-15; index.spec.ts:42-50). |
+| H-27 | Abierto | Es una reserva aceptada. El código sigue P-03: los límites 1 y 65535 solo se validan (envs.spec.ts:45-47) y no se abre el puerto. |
+| H-29 | Abierto | Es una reserva aceptada. El código sigue D-01: nombra el primer fichero que rompe la secuencia (run-migrations.ts:26-35; run-migrations.spec.ts:119-137). |
+| H-30 | Abierto | Es una reserva aceptada. El código sigue D-02: valida la numeración (línea 41) antes de la primera transacción (línea 51), y los tests comprueban que `user_version` queda en 0 (run-migrations.spec.ts:133). |
+| H-32 | Abierto | Es una reserva aceptada. La spec sigue sin caso, pero el test existe y pasa (run-migrations.spec.ts:61-72). |
+| H-37 | Abierto | Es una reserva aceptada. La fila 2026-11-20 #25 (spec.md:214) no ha cambiado, y ninguna tarea la toca. |
+| H-05 | Rechazado por el autor | Se rechazó en la ronda 2. .gitignore:16 ignora `*.db`. |
+| H-01 a H-04, H-06, H-07, H-09 a H-11, H-13 a H-25, H-28, H-31 y H-33 a H-36 | Resuelto | Se resolvieron en las rondas 2 a 6, como consta en sus tablas de seguimiento. |

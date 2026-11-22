@@ -53,9 +53,15 @@ describe('readEnvs', () => {
   });
 
   it('el mensaje no incluye otras variables de entorno', () => {
-    expect(() => readEnvs({ PORT: 'abc', SECRET: 'topsecret' })).toThrowError(
-      expect.not.stringContaining('topsecret') as unknown as string,
-    );
+    // Se captura el error para mirar su message; si readEnvs no lanza, el test falla (D-15).
+    let thrown: unknown;
+    try {
+      readEnvs({ PORT: 'abc', SECRET: 'topsecret' });
+    } catch (error) {
+      thrown = error;
+    }
+    expect(thrown).toBeInstanceOf(Error);
+    expect((thrown as Error).message).not.toContain('topsecret');
   });
 
   it('env.example coincide con los valores por defecto y la API no lo lee (C-17)', () => {

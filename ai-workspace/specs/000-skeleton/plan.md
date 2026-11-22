@@ -1,6 +1,6 @@
 # Plan · spec 000 · skeleton
 
-- **Spec:** `ai-workspace/specs/000-skeleton/spec.md` (Estado: Aprobada)
+- **Spec:** `ai-workspace/specs/000-skeleton/spec.md`
 - **Puerta:** 3 (plan). Solo plan y tareas; sin código.
 - **Estado del plan:** decisiones aprobadas por el autor el 2026-11-20; puerta 3 aprobada (commit 4b24117). Revisión del 2026-11-22 tras las Decisiones 2026-11-22 #1 a #6 (nota de cambios, abajo): aprobada por el autor el 2026-11-22.
 
