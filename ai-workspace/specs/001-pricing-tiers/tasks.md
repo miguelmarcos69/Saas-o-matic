@@ -16,23 +16,24 @@ Reglas comunes de esta spec:
 ## T-01 · pricing: `calculateBaseCostCents` en `base-cost.ts` y sus tests
 - Cubre: R-01, R-02, R-03, R-04, R-05, R-06, R-07, R-08, R-09, R-10, R-11, R-12, R-16, R-17, R-19, R-20
 - Depende de: —
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción (2): `packages/pricing/src/base-cost.ts` (nuevo: la función y sus constantes de tramo y de mensaje, sin exportar las constantes; D-01; orden de cálculo de la sección 3 del plan) y `packages/pricing/src/index.ts` (añade `export { calculateBaseCostCents } from './base-cost.js';` y sigue exportando `PRICING_PACKAGE_CHECK`; P-1 (a)).
 - Tests: `packages/pricing/src/base-cost.spec.ts` (nuevo), que importa desde `./base-cost.js` (plan, sección 5). `index.spec.ts` no se toca en esta tarea.
 - Fase roja (P-4): `base-cost.spec.ts` se escribe antes que `base-cost.ts`, y falla porque `base-cost.ts` aún no existe. El implementer da en su retorno la salida literal del rojo, y la sesión principal la copia al registro de la sesión.
+- Aprobación del autor 2026-11-22 (literal): «Apruebo la T-01. Punto 2: (a). Math.min y Math.max entran en «los globales estándar e inmutables del lenguaje» de mi Decisión #13: el paréntesis daba ejemplos, no una lista cerrada. Lo que la #13 excluye es el estado mutable, la fecha, los aleatorios y la entrada/salida, y Math.min y Math.max no son nada de eso.» (Punto 2: `base-cost.ts` usa `Math.min` y `Math.max` para repartir los usuarios por tramos, y la sección 3 del plan y C-26 citan solo `RangeError`, `Number.isInteger` y `Number.isSafeInteger`; criterio para la parte manual de C-26 en la puerta 6.)
 - Hecho cuando:
-  - [ ] Fase roja: `base-cost.spec.ts` existe antes que `base-cost.ts` y su ejecución falla porque `base-cost.ts` no existe; salida literal en el registro de la sesión.
-  - [ ] Los casos C-01 a C-08 de la spec pasan (un `it` por entrada: 0, 1, 10, 11, 50, 51, 15 y 1000).
-  - [ ] Los casos C-09 a C-12 y C-19 pasan: el error capturado es `instanceof RangeError` y su `message` es, con `toBe`, `activeUsers must be a non-negative integer`; si la llamada no lanza, el test falla; sin `toThrow` ni `toThrowError` con texto (D-06).
-  - [ ] Los casos C-16 y C-18 pasan, con la misma forma de D-06 y el mensaje `base cost exceeds the safe integer range`.
-  - [ ] El caso C-17 pasa: 18014398509447 da 9007199254740500.
-  - [ ] El caso C-25 pasa: `Object.is(calculateBaseCostCents(-0), 0)` es `true`.
-  - [ ] El caso C-13 pasa: los resultados de C-01 a C-08, C-17 y C-25 son `number` y `Number.isInteger` da `true`.
-  - [ ] La parte automática de C-26 pasa: dos llamadas con 15 dan el mismo resultado y dos con -1 lanzan el mismo `RangeError` con el mismo mensaje, comprobado con la forma de D-06.
-  - [ ] El caso C-27 pasa: `calculateBaseCostCents.length === 1`.
-  - [ ] `index.ts` reexporta la función y sigue exportando `PRICING_PACKAGE_CHECK`, así que `index.spec.ts`, el test de la API y `health/` siguen en verde sin cambios.
-  - [ ] C-15: `npm test` desde la raíz, en verde (principio 3), con los tests de C-01 a C-13, C-16 a C-19 y C-25 a C-27 en `packages/pricing`; el implementer da los recuentos en su retorno.
-  - [ ] De `packages/` y `apps/` solo cambian `base-cost.ts`, `base-cost.spec.ts` e `index.ts` (`git status` y `git diff --stat`).
+  - [x] Fase roja: `base-cost.spec.ts` existe antes que `base-cost.ts` y su ejecución falla porque `base-cost.ts` no existe; salida literal en el registro de la sesión.
+  - [x] Los casos C-01 a C-08 de la spec pasan (un `it` por entrada: 0, 1, 10, 11, 50, 51, 15 y 1000).
+  - [x] Los casos C-09 a C-12 y C-19 pasan: el error capturado es `instanceof RangeError` y su `message` es, con `toBe`, `activeUsers must be a non-negative integer`; si la llamada no lanza, el test falla; sin `toThrow` ni `toThrowError` con texto (D-06).
+  - [x] Los casos C-16 y C-18 pasan, con la misma forma de D-06 y el mensaje `base cost exceeds the safe integer range`.
+  - [x] El caso C-17 pasa: 18014398509447 da 9007199254740500.
+  - [x] El caso C-25 pasa: `Object.is(calculateBaseCostCents(-0), 0)` es `true`.
+  - [x] El caso C-13 pasa: los resultados de C-01 a C-08, C-17 y C-25 son `number` y `Number.isInteger` da `true`.
+  - [x] La parte automática de C-26 pasa: dos llamadas con 15 dan el mismo resultado y dos con -1 lanzan el mismo `RangeError` con el mismo mensaje, comprobado con la forma de D-06.
+  - [x] El caso C-27 pasa: `calculateBaseCostCents.length === 1`.
+  - [x] `index.ts` reexporta la función y sigue exportando `PRICING_PACKAGE_CHECK`, así que `index.spec.ts`, el test de la API y `health/` siguen en verde sin cambios.
+  - [x] C-15: `npm test` desde la raíz, en verde (principio 3), con los tests de C-01 a C-13, C-16 a C-19 y C-25 a C-27 en `packages/pricing`; el implementer da los recuentos en su retorno.
+  - [x] De `packages/` y `apps/` solo cambian `base-cost.ts`, `base-cost.spec.ts` e `index.ts` (`git status` y `git diff --stat`).
   - C-14 (R-02) y la parte manual de C-26 (R-20, criterio de la Decisión 2026-11-22 #13) los comprueba el revisor en la puerta 6, sobre `base-cost.ts` (P-3 (a)); C-24 (R-16), sobre los tests de C-09 a C-12, C-16, C-18 y C-19. No se marcan aquí.
 
 ## T-02 · api: `pricing-check.spec.ts` prueba la función desde `dist`
