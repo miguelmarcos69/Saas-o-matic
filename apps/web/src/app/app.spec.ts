@@ -13,4 +13,14 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     expect(fixture.componentInstance).toBeTruthy();
   });
+
+  // Lighthouse landmark-one-main: un único <main> en la carcasa envuelve las rutas (decisión del autor 2026-11-22, T-18).
+  it('envuelve <router-outlet> en un único <main>', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+
+    const mains = (fixture.nativeElement as HTMLElement).querySelectorAll('main');
+    expect(mains).toHaveLength(1);
+    expect(mains[0].querySelector('router-outlet')).not.toBeNull();
+  });
 });

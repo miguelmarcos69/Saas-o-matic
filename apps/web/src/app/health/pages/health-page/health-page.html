@@ -1,0 +1,13 @@
+<!-- Estado de la API (R-22). El role="status" está siempre en el DOM y solo cambia su texto; el error va aparte, en role="alert" (decisión del autor 2026-11-22). -->
+@let current = state();
+<div class="health-page__card" [attr.data-pricing-check]="pricingCheck">
+  <p role="status">
+    @switch (current.status) {
+      @case ('loading') {Comprobando la API…}
+      @case ('data') {API: ok}
+    }
+  </p>
+  @if (current.status === 'error') {
+    <p role="alert">{{ current.message }}</p>
+  }
+</div>

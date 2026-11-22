@@ -248,7 +248,7 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 - Hecho cuando:
   - [x] Escrito primero y visto en rojo: lee `proxy.conf.json`, comprueba el destino y que `pathRewrite` convierte `/api/health` en `/health` (H-08, parte proxy).
   - [x] `npm test` en la raíz recoge el test del proxy.
-  - [ ] La integración real (sin CORS) es C-13, manual, y se hace en T-18.
+  - [x] La integración real (sin CORS) es C-13, manual, y se hace en T-18. Hecha por el autor el 2026-11-22 en T-18 (casilla 5): «API: ok» por el 4200, sin errores de CORS en la consola.
 
 ## T-16 · Web, `health/`: servicio e interfaces
 - Cubre: R-12, R-21
@@ -277,21 +277,30 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 - Hecho cuando:
   - [x] `ng build` termina bien con `_health.scss` importado por `styles.scss` (parte de C-25).
   - [x] Ningún componente lleva `.scss` propio (`frontend-conventions`, Estilos).
-  - [ ] Contraste suficiente del texto de estado (principio 7); se revisa con Lighthouse en T-18.
+  - [x] Contraste suficiente del texto de estado (principio 7); se revisa con Lighthouse en T-18. Sesión principal, 2026-11-22: `color-contrast` pasa en escritorio y en móvil (`ng serve` en el 4200); medido en la página, 8,44:1 sobre la tarjeta y 7,41:1 sobre el fondo.
 
 ## T-18 · Web, `health/`: página de inicio y ruta
 - Cubre: R-10, R-11, R-12, R-21, R-22, R-24
 - Depende de: T-16, T-17
-- Estado: [ ] pendiente
-- Archivos de producción: `apps/web/src/app/health/pages/health-page/health-page.ts` (inyecta `HealthApi`; importa la constante de `pricing` y la enlaza al atributo `data-pricing-check` del elemento de estado, D-08), `apps/web/src/app/health/pages/health-page/health-page.html` (tres textos), `apps/web/src/app/app.routes.ts` (carga diferida de la página).
-- Tests: `apps/web/src/app/health/pages/health-page/health-page.spec.ts`.
+- Estado: [x] hecha
+- Archivos de producción: `apps/web/src/app/health/pages/health-page/health-page.ts` (inyecta `HealthApi`; importa la constante de `pricing` y la enlaza al atributo `data-pricing-check` del elemento de estado, D-08), `apps/web/src/app/health/pages/health-page/health-page.html` (tres textos), `apps/web/src/app/app.routes.ts` (carga diferida de la página), `apps/web/src/app/app.html` (`<main>`) y `apps/web/src/index.html` (favicon vacío) (estos dos, por las decisiones del autor del 2026-11-22 tras Lighthouse, abajo; cinco archivos de producción).
+- Tests: `apps/web/src/app/health/pages/health-page/health-page.spec.ts` y `apps/web/src/app/app.spec.ts` (un único `<main>` envuelve `<router-outlet>`; añadido en la segunda vuelta, aprobado por el autor 2026-11-22). El favicon vacío no tiene test (TestBed no carga `index.html`): se comprueba con el `index.html` de `dist` y con `errors-in-console` de Lighthouse (aceptado por el autor).
+- Decisión del autor 2026-11-22 (literal): "El atributo data-pricing-check (D-08) va en el contenedor común del estado, el de .health-page__card, para que sirva en los tres estados con un solo atributo."
+- Decisión del autor 2026-11-22 (literal): "La carga y «API: ok» comparten un único elemento role="status", siempre en el DOM, que solo cambia su texto; el error es un elemento aparte con role="alert". Se aparta del ejemplo de patterns.md §4 (allí el status solo existe en la carga) porque en health el dato es en sí un mensaje de estado (WCAG 4.1.3): para que el lector de pantalla lo anuncie, el role="status" tiene que existir antes del cambio. Cumple checklist.md:33."
+- Decisión del autor 2026-11-22, duda (b) de la sesión principal (literal): "Vacío: en el estado de error, el elemento role="status" queda vacío y solo se ve y se anuncia «API: no responde», una vez, por el role="alert"."
+- Desviación 1 del implementer, decidida por el autor 2026-11-22, opción (A) (literal): "el test de la ruta va en health-page.spec.ts porque el plan asigna ahí la parte automática de C-25 («health-page.spec.ts carga la página») y, por mi confirmación de D-17, las reglas de dependencia son del código de producción, no de los *.spec.ts".
+- Desviaciones 2 a 5 del implementer aceptadas por el autor 2026-11-22: `@let current = state();` en la plantilla; `fixture.whenStable()` sin `detectChanges()`; solo la ruta `''`, sin comodín ni `title` («ninguna fuente pide más»); sin consulta al MCP de Angular.
+- Lighthouse de accesibilidad (sesión principal, 2026-11-22, `ng serve` en el 4200, escritorio y móvil): Accesibilidad 96; `color-contrast` pasa (8,44:1 sobre la tarjeta y 7,41:1 sobre el fondo); fallan `landmark-one-main` (accesibilidad), `errors-in-console` (404 de `/favicon.ico`) y `meta-description` (SEO).
+- Decisión del autor 2026-11-22 sobre `landmark-one-main`, opción (A) (literal): "<main> en app.html, envolviendo <router-outlet />: es la carcasa de la aplicación y todas las páginas quedan dentro sin repetirlo; es semántica, no maquetación."
+- Decisión del autor 2026-11-22 sobre el favicon (literal): "Favicon: en index.html, <link rel="icon" href="data:,"> para que el navegador no pida /favicon.ico y la consola quede limpia; el favicon real llegará con el logo (ADR-015). T-18 queda en cinco archivos."
+- Nota para el revisor, decisión del autor 2026-11-22 (literal): "Meta description: no se añade (herramienta interna, sin SEO)".
 - Hecho cuando:
-  - [ ] Escrito primero y visto en rojo. C-13 de textos (R-22): "Comprobando la API…", "API: ok" y "API: no responde" con `HttpTestingController`; el elemento lleva el atributo `data-` con la constante.
+  - [x] Escrito primero y visto en rojo. C-13 de textos (R-22): "Comprobando la API…", "API: ok" y "API: no responde" con `HttpTestingController`; el elemento lleva el atributo `data-` con la constante.
   - [ ] C-25: existe `health/` con `pages/`, `services/health-api.ts` e `interfaces/`, `app.routes.ts` carga su página y `_health.scss` está importado (revisor).
-  - [ ] C-27 (mitad web) y C-11 (mitad web): `ng build` de producción termina bien y buscar el valor de la constante en la salida de `dist` lo encuentra (comando de verificación, PowerShell).
-  - [ ] Si el build de la web no empaqueta o no resuelve el paquete compilado: se para y se avisa al autor y se aplica la opción B (R-11, C-12).
-  - [ ] C-13 manual, a cargo del autor: con API y web arrancadas, sin CORS, aparece "Comprobando la API…" y luego "API: ok"; con la API parada, "API: no responde". Con teclado y en móvil (principio 7).
-  - [ ] Segunda prueba de clon limpio (riesgo 20, ADR-014): `npm ci` instala sin herramientas de compilación, `npm run build` y `npm test` pasan y la web arranca; se repasan los paquetes con scripts de instalación que trajo Angular.
+  - [x] C-27 (mitad web) y C-11 (mitad web): `ng build` de producción termina bien y buscar el valor de la constante en la salida de `dist` lo encuentra (comando de verificación, PowerShell). Comando: `Get-ChildItem -Path apps\web\dist\web -Recurse -File | Select-String -Pattern 'pricing-package-ok' | Select-Object Path, LineNumber, @{n='Match';e={$_.Matches[0].Value}} | Format-List` (sin `-SimpleMatch`: en Windows PowerShell 5.1 deja `Matches` vacío); lo encuentra en el chunk diferido de `health-page`.
+  - [x] Si el build de la web no empaqueta o no resuelve el paquete compilado: se para y se avisa al autor y se aplica la opción B (R-11, C-12). No se activó: la web resuelve el paquete compilado en el build y en el test.
+  - [x] C-13 manual, a cargo del autor: con API y web arrancadas, sin CORS, aparece "Comprobando la API…" y luego "API: ok"; con la API parada, "API: no responde". Con teclado y en móvil (principio 7). Hecha por el autor el 2026-11-22: «API: ok» por el 4200 sin errores de CORS (solo el 404 de `favicon.ico`, ya corregido); con la API parada, «API: no responde»; teclado y móvil, bien. Segundo Lighthouse (sesión principal, tras `<main>` y el favicon): Accesibilidad 100 y Buenas prácticas 100 en escritorio y en móvil; solo falla `meta-description` (SEO), que no se añade por decisión del autor.
+  - [x] Segunda prueba de clon limpio (riesgo 20, ADR-014): `npm ci` instala sin herramientas de compilación, `npm run build` y `npm test` pasan y la web arranca; se repasan los paquetes con scripts de instalación que trajo Angular. Hecha por el autor el 2026-11-22, tras el commit de T-18: `npm ci` terminó bien, sin `gyp ERR!` y sin Visual Studio ni herramientas de compilación, como en T-21; `npm run build` y `npm test` (53 + 14) en verde, y la web arrancó con «API: ok». Repaso de la sesión principal sobre el `package-lock.json` commiteado: `hasInstallScript` en `@parcel/watcher` 2.6.0, `esbuild` 0.28.2, `fsevents` 2.3.3 (opcional), `lmdb` 3.5.9 (opcional) y `msgpackr-extract` 3.0.7 (opcional), los cinco de T-14 y ninguno nuevo; todos de desarrollo y, con `ignore-scripts=true`, ninguno ejecuta su script.
 
 ## T-19 · Scripts de extremo a extremo: `dev` y `verify`
 - Cubre: R-13, R-14, R-15, R-18
