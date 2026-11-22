@@ -39,15 +39,16 @@ Reglas comunes de esta spec:
 ## T-02 · api: `pricing-check.spec.ts` prueba la función desde `dist`
 - Cubre: R-13 (el uso de la API), R-14
 - Depende de: T-01
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción: ninguno (solo test).
 - Tests: `apps/api/src/domain/pricing-check.spec.ts`, mismo nombre (D-03): importa `calculateBaseCostCents` de `@saas-o-matic/pricing` (`dist`) en lugar de `PRICING_PACKAGE_CHECK` y comprueba que 15 usuarios dan 14000. El fichero no nombra la constante, ni en código ni en comentarios (lo exige la búsqueda de C-20 en T-04).
 - Sin fase roja (P-4): "T-02 prueba desde dist una función que ya existe tras T-01". Como la T-22 de la spec 000, la excepción se declara en la tarea y el implementer lo dice en su retorno.
+- Aprobación del autor 2026-11-22 (literal): «Apruebo la T-02. Sobre el comentario: cámbialo. Ahora es ambiguo: la spec 001 también tiene R-10 y R-11 (los del rango seguro), y el R-24 de la 000 es justo la constante que retira esta spec. Que la línea 5 quede así: «// no por una ruta relativa a src/ (spec 000: R-10 y R-11; spec 001: R-14).» Hazlo tú, es solo un comentario, y anótalo con esta aprobación en la T-02.» (El comentario de `pricing-check.spec.ts` citaba «R-10, R-11, R-24», de la spec 000; la sesión principal lo cambió tras la aprobación.)
 - Hecho cuando:
-  - [ ] C-21: el test de la API importa `calculateBaseCostCents` de `@saas-o-matic/pricing` y comprueba que 15 usuarios dan 14000; pasa.
-  - [ ] `pricing-check.spec.ts` no contiene `PRICING_PACKAGE_CHECK`.
-  - [ ] `npm test` desde la raíz, en verde (principio 3); el implementer da los recuentos en su retorno.
-  - [ ] De `packages/` y `apps/` solo cambia `pricing-check.spec.ts` (`git status` y `git diff --stat`).
+  - [x] C-21: el test de la API importa `calculateBaseCostCents` de `@saas-o-matic/pricing` y comprueba que 15 usuarios dan 14000; pasa.
+  - [x] `pricing-check.spec.ts` no contiene `PRICING_PACKAGE_CHECK`.
+  - [x] `npm test` desde la raíz, en verde (principio 3); el implementer da los recuentos en su retorno.
+  - [x] De `packages/` y `apps/` solo cambia `pricing-check.spec.ts` (`git status` y `git diff --stat`).
 
 ## T-03 · web, `health/`: `data-pricing-check` con `calculateBaseCostCents(1)` y build de producción
 - Cubre: R-13 (el uso de la web), R-15, R-18
