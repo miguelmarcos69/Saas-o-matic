@@ -479,3 +479,90 @@ Trazabilidad (`R-nn` → tarea → código → test o verificación):
 | H-37 | Abierto | Es una reserva aceptada. La fila 2026-11-20 #25 (spec.md:214) no ha cambiado, y ninguna tarea la toca. |
 | H-05 | Rechazado por el autor | Se rechazó en la ronda 2. .gitignore:16 ignora `*.db`. |
 | H-01 a H-04, H-06, H-07, H-09 a H-11, H-13 a H-25, H-28, H-31 y H-33 a H-36 | Resuelto | Se resolvieron en las rondas 2 a 6, como consta en sus tablas de seguimiento. |
+
+## Ronda 8 (2026-11-22) · Veredicto: Conforme con reservas
+
+**Alcance:** T-23 (puerta 6, ronda limitada a T-23 por decisión del autor). Commit 8c8288b, solo en lo que es de T-23: `apps/api/src/config/envs.spec.ts`, `ai-workspace/specs/000-skeleton/plan.md` (línea 3) y `ai-workspace/specs/000-skeleton/tasks.md` (nota «Cambios tras la ronda 7», cabecera, reservas, T-23 y cobertura). El resto del commit queda fuera del alcance, según el encargo: la ronda 7 de `review.md`, `MEMORY.md`, el registro de la sesión 09 y las capturas. No puedo ejecutar `git`, así que he leído los ficheros en disco y los he comparado con el diff literal del encargo. Para los tests, el build, `git status` y `git diff --stat` me baso en la salida literal del encargo.
+
+### Hallazgos
+No reabro las reservas aceptadas: H-08, H-12, H-26, H-27, H-29, H-30, H-32, H-37, H-38, H-39 y H-40. Ningún hallazgo es Bloqueante. El código de T-23 cumple D-15 y el test comprueba lo que dice su título.
+
+| ID | Gravedad | Archivo:línea | Requisito o regla | Hallazgo |
+|---|---|---|---|---|
+| H-42 | Menor | ai-workspace/specs/000-skeleton/tasks.md:391 · ai-workspace/screenshots/fase-6-000-t23-rojo-demostrado.png · ai-workspace/sessions/2026-11-22-09-000-skeleton.md:72 y 99 | Casilla 3 de T-23 («El implementer da en su retorno el cambio temporal y las dos salidas del test»); ADR-004 (la captura debe mostrar el momento que nombra); regla del revisor: lo que no se ve no está comprobado | La casilla está en `[x]`, pero en el repositorio no hay prueba de que el test se viera en rojo. (1) El registro de la sesión solo lo resume («rojo con un cambio temporal en `envs.ts`, ya deshecho, y vuelta a verde», línea 72). No da cuál fue el cambio temporal ni ninguna de las dos salidas: `topsecret` solo aparece en la cita de la decisión. (2) La captura `fase-6-000-t23-rojo-demostrado.png`, enlazada en la línea 99 como «Rojo de T-23 demostrado», no muestra ningún rojo. Muestra el `npm test` que la sesión principal lanzó a las 18:00 «para meter la salida en el encargo del implementer», en verde (`EXIT=0`, 55 passed y 14 passed). Es la salida de antes de T-23, no la demostración. El nombre y el pie de la captura no corresponden a lo que se ve. Leyendo el código sí veo que el test puede fallar: envs.spec.ts:64 aplica `not.toContain('topsecret')` al `message`, así que un mensaje con `topsecret` lo pondría en rojo. Pero el rojo concreto que pide la casilla 3 no lo he visto. Lo califico de Menor porque solo afecta a la evidencia: el test es correcto. |
+
+### Checklists
+
+#### Backend (`.claude/skills/backend-conventions/checklist.md`), sobre el cambio de T-23
+| Casilla | Resultado | Evidencia |
+|---|---|---|
+| `domain` no importa `data`, `infrastructure`, `presentation`, Express ni SQLite | No aplica | T-23 no toca `domain`. |
+| `presentation` no importa `infrastructure` ni `data`, salvo `routes.ts` | No aplica | T-23 no toca `presentation`. |
+| `infrastructure` no importa `presentation`; `data` solo `better-sqlite3` | No aplica | T-23 no toca esas capas. |
+| `app.ts` solo `config` y `presentation`; `config` solo Zod | Sin cambios (H-39, reserva) | envs.ts:1-2 sigue igual: el diff no toca `envs.ts`. envs.spec.ts:1-4 importa `node:fs`, `node:path`, `vitest` y `./envs.js`. Es un `*.spec.ts`, fuera de las reglas (D-17), y estos imports ya estaban antes de T-23. |
+| `packages/pricing` no importa nada | No aplica | T-23 no lo toca. |
+| Todo dato externo pasa por Zod | Cumple | envs.ts:12-17, 29 y 37, sin cambios. |
+| DTO con `[error, dto]` y `CustomError` | No aplica | No hay DTO (Decisión 2026-11-20 #18). |
+| `details[].code` del conjunto estable | No aplica | Ídem. |
+| El `input` de Zod no aparece en respuestas ni en logs | Cumple | envs.ts:31 solo interpola `rawPort`. El test de envs.spec.ts:55-65 lo comprueba ahora sobre el `message`. |
+| Controlador sin lógica; caso de uso por petición | No aplica | No hay controladores. |
+| Errores por `handleError`; `error-handler.ts` | No aplica | Ídem. |
+| `CustomError` sin números HTTP | No aplica | Ídem. |
+| Error no `CustomError` → `INTERNAL_ERROR` | No aplica | Ídem. |
+| JSON en `camelCase`; `message` en español | No aplica | T-23 no toca respuestas HTTP. |
+| Todo SQL usa parámetros | No aplica (H-38, reserva) | T-23 no tiene SQL. |
+| Importes enteros en céntimos | No aplica | No hay importes. |
+| Redondeo en un único punto | No aplica | Ídem. |
+| Puertos con `Promise`; `snake_case` → `camelCase` | No aplica | No hay puertos ni datasource. |
+| `SqliteError` traducido por `code` | No aplica | Ídem. |
+| Cambio de esquema = migración nueva | No aplica | T-23 no toca el esquema. |
+| Cada regla y endpoint con test, incluidos errores y límites | Cumple | La regla de D-15 («El mensaje nunca incluye otras variables de entorno», plan.md:217) tiene ahora un test que puede fallar. envs.spec.ts:57-62 captura el error. La línea 63 exige que `readEnvs` lance (con `thrown` en `undefined`, `toBeInstanceOf(Error)` falla), y la línea 64 mira el `message`. Así quedan cubiertas las casillas 1 y 2 de T-23 (tasks.md:389-390). La entrada `{ PORT: 'abc', SECRET: 'topsecret' }` es la misma que antes (línea 59). |
+| Unitarios de `domain` sin base ni Express | No aplica | — |
+| Integración con `:memory:` y tablas vaciadas | No aplica | — |
+| El ejecutor de migraciones tiene test propio | No aplica | T-23 no lo toca. |
+| Ningún test en rojo ni desactivado | Cumple | La salida de `verify` da 10 ficheros y 55 passed, más 3 ficheros y 14 passed, con `EXIT=0`. En envs.spec.ts no hay `.skip`, `.only`, `.todo`, `xit` ni `fit`. El fichero tiene 16 tests (6 sueltos, 5 + 2 de los `it.each` y 3 más), como pide tasks.md:394. |
+| Cada cambio cubre un `R-nn` | Cumple | R-29 (tasks.md:377) y D-15. La fila de cobertura dice «R-29 \| T-07, T-13, T-23» (tasks.md:429). |
+| Nombres, sufijos e idioma | Cumple | Identificadores en inglés (`thrown`, `error`). El comentario de envs.spec.ts:56 y el título del test están en español. |
+| Una responsabilidad por archivo | Cumple | Solo se sustituye un test: el diff cambia +9/−3 líneas y el resto del fichero no cambia. |
+
+#### Frontend (`.claude/skills/frontend-conventions/checklist.md`)
+| Casilla | Resultado | Evidencia |
+|---|---|---|
+| Las 34 casillas de la lista (estructura, páginas y servicios, estados y datos, estilos y accesibilidad, formularios, Angular 22, importes y tests, origen) | No aplica | T-23 no cambia nada en `apps/web`: el `--stat` de 8c8288b no tiene ficheros de `apps/web`. La evaluación de la ronda 7 sigue vigente, y también H-40 como reserva. Según la salida de hoy, `ng test` sigue con 14 passed y `ng build` termina en «Application bundle generation complete». |
+
+#### Proceso (`sdd` y encargo)
+| Punto | Resultado | Evidencia |
+|---|---|---|
+| Cada `R-nn` tiene tarea, código y test | Cumple, en el alcance | R-29: T-07, T-13 y T-23; envs.ts:26-39; envs.spec.ts:39-65. |
+| Tests y build en verde, según la salida literal | Cumple | `npm run verify` con `EXIT=0`: `pricing` compilado, `ng build` correcto, Vitest con 10 ficheros y 55 passed, `ng test` con 3 ficheros y 14 passed. Son 55 + 14, como pide tasks.md:394. |
+| `Estado:` frente al trabajo real | Cumple | spec.md:3 y README.md:8 dicen `En revisión`. T-23 está en `[x]` (tasks.md:379) con sus seis casillas marcadas (tasks.md:389-394), y T-00 a T-22 ya lo estaban (ronda 7). Los tests están en verde. Con este veredicto, la spec sigue `En revisión` hasta que el autor la apruebe por escrito nombrando cada reserva (`sdd`, «Cierre de una spec», punto 2). |
+| Tareas de más de 5 archivos con `Excepción de tamaño:` | No aplica | T-23 no tiene archivos de producción (tasks.md:383): solo cambia `envs.spec.ts`. |
+| `git status` frente al alcance | Cumple | Solo cambian spec.md y README.md, una línea cada uno: el paso a `En revisión` al empezar la puerta 6, en el mismo paso para los dos ficheros, como pide `sdd`. `envs.ts` no está en el `--stat` de 8c8288b, así que el cambio temporal de la demostración no llegó al commit (casilla 5, tasks.md:393). |
+| Diff de T-23 frente a lo decidido | Cumple | plan.md:3 dice ya solo «- **Spec:** `ai-workspace/specs/000-skeleton/spec.md`», como pidió el autor, y el resto del plan no cambia (diff de una línea). En `tasks.md`: la nota «Cambios tras la ronda 7» (líneas 5-12), la tercera excepción en la cabecera (línea 3), las reservas al día con H-38 a H-40 y H-41 fuera de la lista (línea 40), T-23 con la decisión, la respuesta 3, la decisión del commit y la aprobación literales (líneas 381-387), y la cobertura de R-29 (línea 429). |
+| Excepción a «Tests primero» | Cumple | La excepción está declarada en la propia tarea (tasks.md:385), como en T-22, y la regla común de tasks.md:29 no cambia. |
+| Demostración en rojo (casilla 3 de T-23) | Sin evidencia en el repositorio (H-42) | Ver H-42. La casilla 2 (fallo si `readEnvs` no lanza) la aceptó el autor sin demostración (tasks.md:387). Lo confirmo leyendo el código: envs.spec.ts:57 y 63. |
+| Lighthouse | No aplica | T-23 no toca `apps/web` (decisión del autor). Sigue valiendo la auditoría de la ronda 7. |
+| Notas sin hallazgo | — | Están fuera del alcance de T-23, pero afectan al cierre (`sdd`, «Cierre de una spec», punto 3). Según el registro de la sesión 09, tres capturas anunciadas no existen: `fase-6-000-puerta-6-estado-en-revision.png`, `fase-6-000-puerta-6-choque-sql-pragma.png` y `fase-6-000-t23-un-solo-commit.png`. El autor las da por descartadas («Capturas: doy por descartadas las tres que faltan», línea 81), sin motivo registrado. La nota (1) de la ronda 7 sobre plan.md:3 queda resuelta por T-23. |
+
+### Seguimiento de la ronda anterior
+| ID | Estado | Nota |
+|---|---|---|
+| H-41 | Resuelto | En 8c8288b (T-23), envs.spec.ts:55-65 ya no pasa un matcher asimétrico a `toThrowError`. Ahora captura el error, exige que sea un `Error` (línea 63) y comprueba que su `message` no contiene `topsecret` (línea 64). La demostración del rojo no tiene evidencia en el repositorio (H-42). |
+| H-38 | Abierto | Reserva aceptada por el autor tras la ronda 7. run-migrations.ts:57 no cambia. El texto de la casilla lo corrige un commit aparte del autor, tras cerrar la spec. |
+| H-39 | Abierto | Reserva aceptada tras la ronda 7. envs.ts:1 sigue importando `node:path`. Corrección prevista en `architecture.md`, en el mismo commit aparte. |
+| H-40 | Abierto | Reserva aceptada tras la ronda 7. `health/` sigue sin `components/`, y T-23 no toca la web. |
+| H-08 | Abierto | Reserva aceptada. Sin cambios en esta ronda. |
+| H-12 | Abierto | Reserva aceptada. Sin cambios. |
+| H-26 | Abierto | Reserva aceptada. Sin cambios. |
+| H-27 | Abierto | Reserva aceptada. Los límites siguen en envs.spec.ts:45-47, sin cambios. |
+| H-29 | Abierto | Reserva aceptada. Sin cambios. |
+| H-30 | Abierto | Reserva aceptada. Sin cambios. |
+| H-32 | Abierto | Reserva aceptada. Sin cambios. |
+| H-37 | Abierto | Reserva aceptada. spec.md no cambia salvo la línea `Estado:`. |
+| H-05 | Rechazado por el autor | Igual que en la ronda 7. |
+| H-01 a H-04, H-06, H-07, H-09 a H-11, H-13 a H-25, H-28, H-31 y H-33 a H-36 | Resuelto | Según las tablas de seguimiento de las rondas 2 a 7. |
+
+## Aprobación del autor
+Aprobación del autor 2026-11-22, puerta 6 (cierre de la spec 000-skeleton), literal:
+
+> "Acepto como reservas H-08, H-12, H-26, H-27, H-29, H-30, H-32, H-37, H-38, H-39, H-40 y H-42, y apruebo el cierre de la spec 000-skeleton. Mi motivo: las de la ronda 4 y H-37 siguen con el motivo que di al aprobar la puerta 2; H-38, H-39 y H-40 no son fallos del código, que cumple la spec, sino del texto de las convenciones y de architecture.md, y los corrijo en un commit aparte antes de la fase 7; H-42 es Menor, solo afecta a la evidencia, y la completo en este cierre."

@@ -1,6 +1,6 @@
 # Spec 000 · skeleton
 
-- **Estado:** En implementación
+- **Estado:** Cerrada
 - **Depende de:** ninguna
 - **Cubre:** §4 (criterio 4, README y despliegue), §3.2 (estructura limpia y modular)
 
