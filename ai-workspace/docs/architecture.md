@@ -61,7 +61,7 @@ Clean Architecture en la API, sin capa `application` (decisión del autor): los 
 - **domain**: entidades, DTO (validan con Zod y devuelven `[error, dto]`), casos de uso, errores y puertos (`datasources/`, `repository/`).
 - **data** e **infrastructure**: conexión SQLite e implementación de los puertos con SQL directo.
 - **presentation**: Express; controladores (con `handleError`), rutas y middleware de errores; traduce HTTP a casos de uso.
-- **web**: una carpeta por funcionalidad, cada una con `pages/`, `interfaces/`, `components/` y `services/`; lo que usan varias va a `shared/`. `services/` es el único lugar con `HttpClient`; sin `.scss` en componentes.
+- **web**: una carpeta por funcionalidad, con `pages/`, `interfaces/`, `components/` y `services/`, de las que se crean solo las que la funcionalidad usa; lo que usan varias va a `shared/`. `services/` es el único lugar con `HttpClient`; sin `.scss` en componentes.
 
 ## Reglas de dependencia
 | Capa | Puede importar | No puede importar |
@@ -76,6 +76,8 @@ Clean Architecture en la API, sin capa `application` (decisión del autor): los 
 | web: shared | packages/pricing | las funcionalidades |
 | web: app (`app.ts`, `app.routes.ts`, `app.config.ts`) | funcionalidades (solo sus páginas, para las rutas diferidas), shared | `components/` y `services/` de las funcionalidades, apps/api |
 | packages/pricing | nada | todo lo demás |
+
+Módulos de Node (`node:*`): se permiten en `config`, `data`, `infrastructure`, `presentation` y `app.ts`, y no cuentan como «el resto» de la tabla; `domain` y `packages/pricing` no importan ninguno.
 Lo comprueba el revisor (fase 5).
 
 ## Formato único de errores

@@ -3,7 +3,7 @@
 Para el revisor (ADR-003). Cada casilla cita su fuente. Marca cada una como cumple, no cumple o no aplica, y cita `archivo:línea` en cada incumplimiento.
 
 ## Estructura y dependencias (architecture.md)
-- [ ] Cada funcionalidad tiene `pages/`, `components/`, `interfaces/` y `services/`; cada página o componente es una carpeta con `.ts`, `.html` y `.spec.ts`.
+- [ ] De `pages/`, `components/`, `interfaces/` y `services/`, cada funcionalidad crea solo las que usa; cada página o componente es una carpeta con `.ts`, `.html` y `.spec.ts`.
 - [ ] Ninguna funcionalidad importa otra funcionalidad ni `apps/api`.
 - [ ] `app.*` solo importa páginas de las funcionalidades (rutas diferidas) y `shared`.
 - [ ] `shared/` solo contiene lo que usan al menos dos funcionalidades y no importa ninguna.

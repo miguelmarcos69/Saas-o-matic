@@ -17,7 +17,7 @@ Un subagente no puede lanzar otros: los lanzas tú, desde la sesión principal. 
 Propón la puerta según la tabla "Estado al pasar" de `sdd` y espera mi respuesta. No empieces por tu cuenta.
 - `Borrador` → 1. `En clarificación` → 2. `Planificada` → 5. `En revisión` → 6.
 - `Aprobada` → 3 o 4, según exista `plan.md` aprobado: si no está claro, consúltame.
-- `En implementación` → 5 (siguiente tarea) o 6 si todas las tareas están `[x]`: si no está claro, consúltame.
+- `En implementación` → 5 (siguiente tarea) o 6 si todas las tareas están `[x]`: si no está claro, consúltame. Con este estado también caben la puerta 3 o la 4 ampliadas (cambio de plan o de tareas sin cambio de requisitos, regla de `sdd`, "Estados"), solo si yo las pido.
 - `Cerrada` o `Sustituida`: no hay puerta; dímelo.
 - Si el `Estado:` no permite la puerta pedida (p. ej. plan con la spec en `En clarificación`), no la lances: dime por qué.
 
@@ -49,9 +49,9 @@ Extras:
 - **1 · Spec (planner).** Crea `spec.md` en `Borrador`. Tras mi aprobación, `Estado:` pasa a `En clarificación`.
 - **2 · Clarificación (tú, conmigo).** La conduces tú: una duda `Q-nn` cada vez, con opciones, pros, contras y tu recomendación. No decides ningún hueco del reto. Con mis decisiones, lanza al planner para pasarlas a la sección 5 (encargo con mis decisiones literales). Después, el reviewer en modo puerta 2. Guarda su informe (ver abajo), enséñamelo y PARA. Solo con `Conforme` (o `Conforme con reservas` que yo acepte) y sin dudas abiertas ni requisitos PENDIENTE, `Estado:` pasa a `Aprobada`. Con `Cambios requeridos` se queda en `En clarificación`.
 - **3 · Plan (planner).** `plan.md` no tiene plantilla: antes de lanzar, pregúntame el formato y ponlo en el encargo. No lo inventes.
-- **4 · Tareas (planner).** `tasks.md`, con cada `R-nn` cubierto. Tras mi aprobación, `Estado:` pasa a `Planificada`.
+- **4 · Tareas (planner).** `tasks.md`, con cada `R-nn` cubierto. Tras mi aprobación, `Estado:` pasa a `Planificada`. Excepciones (`sdd`, "Estados"): en una puerta 4 ampliada, sigue en `En implementación`; si una puerta 4 rehecha tras un cambio de requisitos no trae tareas nuevas, pasa a `En implementación` con todas en `[x]` y la siguiente es la 6.
 - **5 · Implementación (implementer).** Propón la tarea T-nn a hacer y espera mi confirmación. Si es la primera, `Estado:` pasa a `En implementación` al empezar. El implementer deja la tarea en `[~]`. Tras mi aprobación, y antes del commit, marca `[x]` y las casillas de "Hecho cuando". Luego: actualiza `MEMORY.md`, enséñame el diff y propón el commit (sin `Co-Authored-By`). No hagas commit.
-- **6 · Validación (reviewer, modo puerta 6).** `Estado:` pasa a `En revisión` al empezar. Guarda el informe y enséñamelo. `Cambios requeridos`: la spec vuelve a `En implementación`; si el hallazgo es de la spec, es un cambio de requisitos (`/sdd-change`). Cierre solo con `Conforme` y mi aprobación escrita, según "Cierre de una spec" de `sdd`.
+- **6 · Validación (reviewer, modo puerta 6).** `Estado:` pasa a `En revisión` al empezar. Guarda el informe y enséñamelo. `Cambios requeridos`: la spec vuelve a `En implementación`; si el hallazgo es de la spec, es un cambio de requisitos (`/sdd-change`). Cierre solo con `Conforme` y mi aprobación escrita, según "Cierre de una spec" de `sdd`. Con `Conforme con reservas`, si decido corregir una antes de cerrar: la spec vuelve a `En implementación`, lanzas al planner en una puerta 4 ampliada para la tarea nueva y, hecha, la ronda siguiente del revisor se limita a ella (encargo con esa tarea y sus commits).
 
 ## Guardar review.md (el informe del revisor, literal)
 - Enséñame el informe tal cual y espera mi OK. Después, añádelo al final de `ai-workspace/specs/<NNN-nombre>/review.md`. Nunca edites rondas anteriores.

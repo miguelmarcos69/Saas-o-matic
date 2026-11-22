@@ -4,7 +4,7 @@
 - **Depende de:** <specs, o "ninguna">
 - **Cubre:** <§ del reto>
 
-Las siete secciones van siempre. Si una no aplica, se deja con `No aplica`; no se borra. En la sección 3, "API" e "Interfaz" siguen la misma regla.
+Las seis secciones van siempre. Si una no aplica, se deja con `No aplica`; no se borra. En la sección 3, "API" e "Interfaz" siguen la misma regla.
 
 ## 1. Objetivo y alcance
 <Qué resuelve, en pocas líneas.>

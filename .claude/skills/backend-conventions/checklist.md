@@ -3,11 +3,11 @@
 Para el revisor (ADR-003). Cada casilla cita su fuente. Marca cada una como cumple, no cumple o no aplica, y cita `archivo:línea` en cada incumplimiento.
 
 ## Capas (architecture.md, "Reglas de dependencia")
-- [ ] `domain` no importa `data`, `infrastructure`, `presentation`, Express ni SQLite.
+- [ ] `domain` no importa `data`, `infrastructure`, `presentation`, Express, SQLite ni módulos `node:*`.
 - [ ] `presentation` no importa `infrastructure` ni `data`, salvo `routes.ts` y `<recurso>/routes.ts` (solo `infrastructure`, para componer).
-- [ ] `infrastructure` no importa `presentation`; `data` solo importa `better-sqlite3`.
-- [ ] `app.ts` solo importa `config` y `presentation`; `config` solo Zod.
-- [ ] `packages/pricing` no importa nada del resto.
+- [ ] `infrastructure` no importa `presentation`; `data` solo importa `better-sqlite3` y módulos `node:*`.
+- [ ] `app.ts` solo importa `config`, `presentation` y módulos `node:*`; `config` solo Zod y módulos `node:*`.
+- [ ] `packages/pricing` no importa nada del resto ni módulos `node:*`.
 
 ## Borde (constitución, principio 5)
 - [ ] Todo dato externo (body, params, query, variables de entorno) pasa por Zod antes de usarse.
@@ -23,7 +23,7 @@ Para el revisor (ADR-003). Cada casilla cita su fuente. Marca cada una como cump
 - [ ] El JSON usa `camelCase`; `code` y `field` en inglés estable; `message` en español.
 
 ## Datos (database.md, principio 6)
-- [ ] Todo SQL usa parámetros; no hay concatenación ni plantillas con valores.
+- [ ] Todo SQL con datos usa parámetros; no hay concatenación ni plantillas con valores (como la fila «Datasource» de SKILL.md). Excepción: los `PRAGMA`, que SQLite no admite con parámetros, con valores generados por el código.
 - [ ] Los importes son enteros en céntimos; no hay coma flotante en ningún importe.
 - [ ] El redondeo ocurre en un único punto, el que fija la spec.
 - [ ] Los puertos devuelven `Promise` y la fila `snake_case` se convierte a entidad `camelCase` solo en el datasource.

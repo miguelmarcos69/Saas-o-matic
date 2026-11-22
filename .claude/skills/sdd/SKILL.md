@@ -37,6 +37,9 @@ Una spec nace en `Borrador`.
 - Un cambio de requisitos no es un estado: la spec vuelve al estado de la primera puerta afectada.
 - Veredicto `Cambios requeridos` en la puerta 6: la spec vuelve a `En implementación`; una ronda nueva la pasa a `En revisión`. Si el hallazgo apunta a un error de la spec, es un cambio de requisitos y se aplica la regla transversal.
 - Veredicto `Cambios requeridos` en la puerta 2: la spec sigue en `En clarificación` hasta una ronda nueva `Conforme`, o `Conforme con reservas` que el autor acepte.
+- Cambio de plan o de tareas sin cambio de requisitos, con la spec en `En implementación` y por decisión del autor: se rehacen la puerta 3 o la 4 (puerta ampliada) con la spec en `En implementación`, sin pasar por `Aprobada` ni `Planificada`. Las tareas nuevas se añaden sin renumerar.
+- Si una puerta 4 rehecha (tras un cambio de requisitos) no trae ninguna tarea nueva, tras la aprobación del autor la spec pasa a `En implementación`, no a `Planificada`, con todas las tareas en `[x]`, y se sigue con la puerta 6.
+- Veredicto `Conforme con reservas` en la puerta 6 y el autor decide corregir una reserva antes de cerrar: la spec vuelve de `En revisión` a `En implementación`, la tarea nueva se añade en una puerta 4 ampliada (como arriba) y, hecha, la ronda siguiente del revisor se limita a esa tarea.
 - Cada vez que cambia el `Estado:` de `spec.md`, se actualiza en el mismo paso la celda «Estado» de la fila de esa spec en `ai-workspace/specs/README.md`, con el mismo texto literal. El README es un índice: la fuente de verdad sigue siendo `spec.md`. Los dos cambios van en el mismo commit.
 
 ## review.md
