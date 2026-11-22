@@ -2,7 +2,20 @@
 
 - **Spec:** `ai-workspace/specs/000-skeleton/spec.md` (Estado: Aprobada)
 - **Puerta:** 3 (plan). Solo plan y tareas; sin código.
-- **Estado del plan:** decisiones aprobadas por el autor el 2026-11-20; pendiente la aprobación explícita de la puerta 3.
+- **Estado del plan:** decisiones aprobadas por el autor el 2026-11-20; puerta 3 aprobada (commit 4b24117). Revisión del 2026-11-22 tras las Decisiones 2026-11-22 #1 a #6 (nota de cambios, abajo): aprobada por el autor el 2026-11-22.
+
+**Cambios tras las Decisiones 2026-11-22 #1 a #6** (revisión del 2026-11-22; elecciones del autor: «Mismo formato + nota de cambios» y «Cambio y las cuatro notas»)
+- Motivo: el cambio de requisitos de la spec (R-32 y C-39, #1; H-28 resuelta, #2; R-28 y C-40, #3; R-32 solo con la numeración válida y C-41, #4; C-32 con base nueva, #6; la #5 solo afecta a `spec.md`) y cuatro estados de hecho que el plan aún daba por pendientes (cabecera, D-04 y riesgos 17 y 18). No se renumera ninguna D-nn ni P-nn: el Contrato de la spec remite a D-15. Sin código nuevo (Decisión 2026-11-22 #1).
+- Decisión del autor 2026-11-22 (puerta 3, dónde se prueban C-40 y C-41), literal: "C-40 y C-41 se prueban en run-migrations.spec.ts, en el ejecutor, como C-39; server.spec.ts no los repite, porque «sin escuchar» lo cubre el camino de D-17 (el mismo throw antes de listen y el mismo catch de app.ts). Los dos son tests de comportamiento existente." Anotada en D-03.
+- Cabecera: «Estado del plan».
+- Sección 1: la spec que se cita (R-32, C-41 y las Decisiones 2026-11-22), las reservas (H-28 y H-31, resueltas en la ronda 5; H-33 a H-36, en la ronda 6; H-37, reserva nueva) y la comprobación de choques (D-03 ya tiene requisito).
+- Sección 2: filas de `app.ts`, `run-migrations.ts` y `server.ts` (R-32).
+- Sección 3: D-03 (origen, «Cómo se aplica»; el aviso «Este plan no crea R-32» pasa a «Requisito», y se añade «Dónde se prueba»), D-04 (el cambio en `.claude/` está hecho), D-15 (qué fija la spec y que la spec remite aquí), D-16 (C-40 y R-32) y D-17 (C-39 a C-41 y los cuatro caminos de error).
+- Sección 5: C-32 (base nueva), filas nuevas de C-39, C-40 y C-41, y se retira la fila «(sin caso) | D-03»: su test es ahora el de C-39.
+- Sección 7: riesgos 17 (resuelto en T-20) y 18 (resuelto).
+- Sección 8: filas de R-28 y R-31, y fila nueva de R-32.
+- Sin cambios: secciones 4 y 6 y el resto de decisiones.
+- Correcciones de hecho de la sesión principal, autorizadas por el autor al aprobar la puerta 3 (2026-11-22): fila C-09 de la sección 5 (`user_version` = 0 se comprueba en `index.spec.ts` desde T-12, no en `server.spec.ts`) y commit `a3da2fb` (2026-11-21) en D-04 y en el riesgo 18.
 
 ## 1. Contexto y fuentes
 
@@ -11,14 +24,15 @@ Este plan dice el cómo de la spec 000. No cambia ningún requisito ni decide po
 Fuentes, por orden de la jerarquía (reto > constitución > spec > plan > convenciones):
 - Reto: §3.2 (estructura limpia y modular) y §4 (criterio 4, README y despliegue), como cita la spec.
 - Constitución: principios 1 (sin spec no hay código), 2, 3 (tests; nada cerrado en rojo), 4 (dependencias aprobadas con justificación), 5 (validar en el borde), 7 (la vista de estado: carga y error; el de vacío no aplica) y 8 (idioma).
-- Spec 000: R-01 a R-31, C-01 a C-38 y las Decisiones 2026-11-20 #1 a #32.
+- Spec 000: R-01 a R-32, C-01 a C-41 y las Decisiones 2026-11-20 #1 a #32 y 2026-11-22 #1 a #6.
 - `architecture.md` (carpetas y reglas de dependencia), `database.md` ("Creación y migración"), ADR-009 (stack), ADR-010 (`packages/pricing` compilado), ADR-011 y ADR-013.
 - Convenciones, solo como método: `backend-conventions` y `frontend-conventions`.
 
-Reservas de la ronda 4 que fija este plan: H-29, H-30 y H-31 (D-01, D-02 y D-03). Reserva que atiende en parte: H-08 (D-04 a D-06). Las decisiones del autor P-02 y P-03 fijan cómo el plan trata H-26 y H-27, sin cambiar la spec. H-12, H-28 y H-32 siguen como reservas del autor; el plan no las resuelve (H-32 tiene su test en la sección 5).
+Reservas de la ronda 4 que fija este plan: H-29 y H-30 (D-01 y D-02). H-31, que fijaba D-03, quedó resuelta en la spec con R-32 (Decisión 2026-11-22 #1, ronda 5). Reserva que atiende en parte: H-08 (D-04 a D-06). Las decisiones del autor P-02 y P-03 fijan cómo el plan trata H-26 y H-27, sin cambiar la spec. H-12 y H-32 siguen como reservas del autor; el plan no las resuelve (H-32 tiene su test en la sección 5). H-28 quedó resuelta con la Decisión 2026-11-22 #2 (ronda 5), y H-33 a H-36 (ronda 5), con las #3 a #5 (ronda 6). H-37 (ronda 6) es una reserva nueva, aceptada por el autor el 2026-11-22: es trazabilidad de la fila 2026-11-20 #25 de `spec.md` y el plan no la toca. Reservas vigentes tras la aprobación de la puerta 2 del 2026-11-22: H-08, H-12, H-26, H-27, H-29, H-30, H-32 y H-37.
 
 Comprobación de choques con las fuentes superiores:
 - D-04 añade un fichero a `infrastructure/` que `architecture.md` no lista. No choca con las reglas de dependencia (infrastructure → data está permitido; `presentation/routes.ts` → infrastructure lo ampara la Decisión #10), pero cambia la estructura: la línea de `architecture.md` (línea 22, `sqlite-connection.ts`) ya está aplicada por la sesión principal con el diff aprobado por el autor; el planner no edita ese documento.
+- D-03 ya no añade un comportamiento sin requisito: lo pide R-32 (Decisión 2026-11-22 #1). Su orden (la numeración antes que `user_version`) y la carpeta ausente tienen respaldo en la spec (Decisiones 2026-11-22 #4 y #3; C-41 y C-40), con lo que queda resuelto el choque de la spec con el plan que señalaba H-34 (ronda 5).
 - Ninguna otra decisión choca con la spec, con la constitución ni con `architecture.md`.
 
 Qué no se sabe de este entorno: el planner no ejecuta comandos. Las versiones de la sección 4 las aporta el encargo (npm, 2026-11-20) y no se han podido comprobar aquí.
@@ -52,13 +66,13 @@ Qué se crea, en qué capa y por qué fuente. Los `*.spec.ts` van junto a su arc
 | `package.json`, `tsconfig.json`, `tsconfig.build.json` | — | scripts `dev` (`tsx watch`), `build` (`tsc` a `dist`, sin `*.spec.ts`) y `start` (`node dist/app.js`) | R-17 |
 | `env.example` | — | plantilla documental, sin punto, con `PORT=3000` y `DATABASE_PATH=data/saas-o-matic.db`; en `apps/api/` (P-01) | R-16 |
 | `migrations/.gitkeep` | — | carpeta versionada sin migraciones de negocio | R-25, C-28 |
-| `src/app.ts` | app | lee `config`, crea `Server` de `presentation`, lo arranca y, si algo lanza, imprime el mensaje en `stderr` y termina con código 1. Solo importa `config` y `presentation` | R-02, R-29, R-30, R-31; `architecture.md` |
+| `src/app.ts` | app | lee `config`, crea `Server` de `presentation`, lo arranca y, si algo lanza, imprime el mensaje en `stderr` y termina con código 1. Solo importa `config` y `presentation` | R-02, R-29 a R-32; `architecture.md` |
 | `src/config/envs.ts` + `envs.spec.ts` | config | `PORT` y `DATABASE_PATH` desde `process.env`, validados con Zod; resuelve la ruta respecto a la raíz de `apps/api`; `:memory:` tal cual | R-02, R-07, R-26, R-29; `backend-conventions` (Config) |
 | `src/data/sqlite/index.ts` | data | abre la base (crea siempre la carpeta padre de la ruta resuelta si no existe, salvo `:memory:`; P-02) y llama al ejecutor. Sin pragmas `foreign_keys` ni `journal_mode` (P-04 (b)): los trae la spec 002 (riesgo 19) | R-08, R-23, R-26; `database.md` |
-| `src/data/sqlite/run-migrations.ts` + `run-migrations.spec.ts` | data | ejecutor de migraciones: valida la numeración, aplica cada migración en su transacción y guarda `user_version` | R-05, R-06, R-27 a R-31; D-01 a D-03; D-16 |
+| `src/data/sqlite/run-migrations.ts` + `run-migrations.spec.ts` | data | ejecutor de migraciones: valida la numeración, comprueba que `user_version` no supera el número de ficheros, aplica cada migración en su transacción y guarda `user_version` | R-05, R-06, R-27 a R-32; D-01 a D-03; D-16 |
 | `src/data/sqlite/migrations-dir.ts` + `migrations-dir.spec.ts` | data | constante con la ruta de `migrations/`, relativa al fichero (`import.meta.dirname`, `../../../migrations`: vale igual desde `src/` que desde la salida compilada). La salida de test y su carpeta se explican en D-05, no aquí | R-08, R-28; D-05 |
 | `src/infrastructure/sqlite-connection.ts` | infrastructure | puente `routes.ts` → `infrastructure` → `data`; abre la conexión y devuelve el cierre (D-04, D-16) | R-08; Decisión #6, #10 |
-| `src/presentation/server.ts` + `server.spec.ts` | presentation | crea la app Express, compone las rutas antes de escuchar y expone arranque y parada | R-02, R-30, R-31 |
+| `src/presentation/server.ts` + `server.spec.ts` | presentation | crea la app Express, compone las rutas antes de escuchar y expone arranque y parada | R-02, R-30 a R-32 |
 | `src/presentation/routes.ts` + `routes.spec.ts` | presentation | única excepción de composición (Decisión #10): abre la conexión por `infrastructure` y monta `GET /health` (sin prefijo) | R-03, R-04, R-08 |
 | `src/domain/pricing-check.spec.ts` | domain (test) | importa la constante de `packages/pricing` desde `dist` (D-07) | R-24, C-27 |
 | `src/app.spec.ts` | app (test) | proceso real con `PORT` inválido: código distinto de 0 y mensaje (D-17) | R-29 |
@@ -103,12 +117,13 @@ Cada decisión indica la duda, su origen y la elección literal del autor. Las o
 - Cómo se aplica: el ejecutor lista, ordena y valida la numeración completa antes de la primera transacción. Con `0001`, `0002` y `0004`, no se aplica ninguna y `user_version` no cambia. Los casos C-37 y C-38 comprueban además que la base queda sin cambios (`user_version` igual que antes).
 
 **D-03 · `user_version` mayor que el número de ficheros**
-- Origen: H-31, R-05, R-30.
+- Origen: H-31, R-05, R-30. Desde el 2026-11-22, R-32 (Decisiones 2026-11-22 #1 y #4), con R-28 (Decisión 2026-11-22 #3).
 - Opciones (H-31): arrancar sin aplicar nada; o terminar con código distinto de 0 y mensaje en inglés.
 - Elegida: "Terminar con código != 0 y mensaje en inglés (Recomendada)".
 - Porqué del autor: "mismo patrón que R-30 y R-31; es peor arrancar en silencio con un esquema que el código no conoce."
-- Cómo se aplica: tras validar la numeración y antes de aplicar, si `user_version` > número de ficheros, el ejecutor lanza un error y la API no escucha. El mensaje nombra `user_version` y los dos números (no hay fichero que nombrar). La spec no tiene caso para esto: el plan añade un test del ejecutor (sección 5), sin cambiar la spec.
-- Aviso: añade un comportamiento que ningún R-nn pide. Si el autor lo quiere como requisito, sería un posible R-32 (cambio de requisitos, `/sdd-change`). Este plan no crea R-32 ni toca `spec.md`.
+- Cómo se aplica: tras validar la numeración y antes de aplicar, si `user_version` > número de ficheros, el ejecutor lanza un error y la API no escucha. El mensaje nombra `user_version` y los dos números (no hay fichero que nombrar; redacción en D-15). Con `migrations/` ausente se cuentan 0 ficheros y la comprobación se aplica igual (R-28, C-40). Si la numeración es inválida, manda R-31: se valida antes y sale su mensaje (R-32, C-41). Sin código nuevo: es el `run-migrations.ts` de T-08 (Decisión 2026-11-22 #1).
+- Requisito: R-32 (Decisión 2026-11-22 #1). Hasta el 2026-11-22 este punto avisaba de que D-03 añadía un comportamiento que ningún R-nn pedía y de que el plan no creaba R-32; el autor lo pasó a requisito con `/sdd-change`.
+- Dónde se prueba: C-39, C-40 y C-41, en `run-migrations.spec.ts` (sección 5). C-39 es el test del ejecutor de T-08 (Decisión 2026-11-22 #1). Decisión del autor 2026-11-22 (puerta 3), literal: "C-40 y C-41 se prueban en run-migrations.spec.ts, en el ejecutor, como C-39; server.spec.ts no los repite, porque «sin escuchar» lo cubre el camino de D-17 (el mismo throw antes de listen y el mismo catch de app.ts). Los dos son tests de comportamiento existente."
 
 **D-04 · Fichero de `infrastructure` para la cadena `routes.ts` → `infrastructure` → `data` (H-08)**
 - Origen: H-08, R-08, Decisiones #6 y #10.
@@ -116,10 +131,10 @@ Cada decisión indica la duda, su origen y la elección literal del autor. Las o
 - Porqué del autor: "no es un datasource ni un repositorio y no quiero ensuciar datasource/, donde backend-conventions espera sqlite-*.datasource.ts."
 - Cómo se aplica: `presentation/routes.ts` importa `infrastructure/sqlite-connection.ts`, que importa `data/sqlite/index.ts`. Cumple la tabla de dependencias (infrastructure puede importar data; `routes.ts` puede componer con infrastructure).
 - Cambio de estructura aprobado por el autor: la línea `sqlite-connection.ts` ya está en `architecture.md` (línea 22, bloque `infrastructure/`), aplicada por la sesión principal. Ya no bloquea la tarea de implementación.
-- **Abierto: un único cambio en `.claude/` que aplica el autor** (el planner no edita `.claude/`). Las dos convenciones omiten el `presentation/routes.ts` de la raíz (Decisión #10, `architecture.md:70`):
-  - `.claude/skills/backend-conventions/checklist.md:7` dice "salvo `<recurso>/routes.ts`". Texto propuesto: "`presentation` no importa `infrastructure` ni `data`, salvo `routes.ts` y `<recurso>/routes.ts` (solo `infrastructure`, para componer)."
-  - `.claude/skills/backend-conventions/SKILL.md:21` (fila `routes.ts`) dice en la ubicación solo `presentation/<recurso>/`. Debe recoger también el `presentation/routes.ts` de la raíz (Decisión #10). Texto propuesto para la ubicación: "`presentation/<recurso>/` y `presentation/routes.ts` (raíz; Decisión #10)".
-  - Hasta que se apliquen, el revisor podría marcar el `routes.ts` de la raíz como violación (riesgo 18).
+- **Resuelto: el cambio en `.claude/` está aplicado** (lo aplicó el autor en el commit `a3da2fb`, 2026-11-21; el planner no edita `.claude/`). Las dos convenciones omitían el `presentation/routes.ts` de la raíz (Decisión #10, `architecture.md:72`):
+  - `.claude/skills/backend-conventions/checklist.md:7` decía "salvo `<recurso>/routes.ts`". Ahora dice el texto propuesto: "`presentation` no importa `infrastructure` ni `data`, salvo `routes.ts` y `<recurso>/routes.ts` (solo `infrastructure`, para componer)."
+  - `.claude/skills/backend-conventions/SKILL.md:21` (fila `routes.ts`) decía en la ubicación solo `presentation/<recurso>/`. Ahora dice "`presentation/` y `presentation/<recurso>/`": recoge el `presentation/routes.ts` de la raíz, con otra redacción que la propuesta ("`presentation/<recurso>/` y `presentation/routes.ts` (raíz; Decisión #10)").
+  - El riesgo 18 queda cerrado.
 
 **D-05 · Cómo se prueba que `migrations/` se localiza en la API compilada (H-08)**
 - Origen: H-08, R-08, R-28.
@@ -193,7 +208,7 @@ Ninguna fuente fijaba estos puntos; el planner los propuso y el autor los aprob�
 
 **D-15 · Redacción de los mensajes de error de arranque**
 - Porqué del autor: el de arriba. Aprobada.
-- La spec fija inglés y que nombren la variable o el fichero (Decisión #26, #32); la redacción exacta no está fijada. No son mensajes de la API HTTP. Propuesta, con el sufijo de la causa tomado del error original donde lo haya:
+- La spec fija inglés y que nombren la variable o el fichero (Decisión #26, #32), o `user_version` y los dos números (R-32, Decisión 2026-11-22 #1); la redacción exacta no está fijada: la spec remite a esta decisión (Contrato, «Errores de arranque»; precisión aceptada en la Decisión 2026-11-22 #4), y por eso D-15 no se renumera. No son mensajes de la API HTTP. Propuesta, con el sufijo de la causa tomado del error original donde lo haya:
   - `Invalid PORT: expected an integer from 1 to 65535, received "<valor>"`
   - `Invalid DATABASE_PATH: expected a non-empty string`
   - `Migration failed: <fichero>: <causa>`
@@ -205,9 +220,9 @@ Ninguna fuente fijaba estos puntos; el planner los propuso y el autor los aprob�
 **D-16 · Forma de las piezas de la API** (añadida por el planner)
 - Porqué del autor: el de arriba. Aprobada.
 - `data/sqlite/index.ts` exporta `openDatabase(databasePath)`: crea siempre la carpeta padre de la ruta resuelta si no existe (P-02), abre `better-sqlite3` (sin pragmas: P-04), llama a `runMigrations(db, MIGRATIONS_DIR)` y devuelve la conexión. R-08 dice que `index.ts` "abre la base y aplica las migraciones"; el ejecutor vive en `run-migrations.ts` para que cada archivo tenga una responsabilidad y su propio test (R-06).
-- `runMigrations(db, directory)` recibe la carpeta: así el test usa carpetas temporales y `:memory:` (R-06) y C-32 pasa una ruta inexistente.
+- `runMigrations(db, directory)` recibe la carpeta: así el test usa carpetas temporales y `:memory:` (R-06), y C-32 y C-40 pasan una ruta inexistente.
 - `presentation/server.ts` no importa `config`: recibe `{ port, databasePath }` de `app.ts` (regla `presentation` solo importa `domain`).
-- `presentation/routes.ts` exporta una función que recibe la ruta de la base y devuelve el router y una función de cierre; `Server` abre la base antes de escuchar, de modo que un error de migración o de numeración ocurre antes de `listen` (R-30, R-31) y los tests pueden cerrar el servidor y la base.
+- `presentation/routes.ts` exporta una función que recibe la ruta de la base y devuelve el router y una función de cierre; `Server` abre la base antes de escuchar, de modo que un error de migración, de numeración o de `user_version` ocurre antes de `listen` (R-30 a R-32) y los tests pueden cerrar el servidor y la base.
 - `GET /health` se define dentro de `presentation/routes.ts`: una ruta de una línea, sin controlador ni recurso nuevos (no hay lógica). Su test es `routes.spec.ts` con `fetch` nativo y puerto 0 (R-04).
 - `config/envs.ts` exporta una función que recibe el objeto de entorno (por defecto `process.env`) y devuelve los valores o lanza un `Error` con el mensaje de D-15; así `envs.spec.ts` no toca `process.env`.
 - Errores de arranque: `Error` normal de JavaScript, sin `CustomError` (llega con la spec 002, Decisión #18).
@@ -216,7 +231,8 @@ Ninguna fuente fijaba estos puntos; el planner los propuso y el autor los aprob�
 **D-17 · Niveles de prueba de los errores de arranque** (añadida por el planner)
 - Porqué del autor: el de arriba. Aprobada. Confirmación del autor: "las reglas de dependencia son del código de producción, no de los *.spec.ts".
 - C-36 a C-38 se prueban en el ejecutor (nombre del fichero y estado de la base: `run-migrations.spec.ts`) y en `server.spec.ts` (el arranque rechaza y no hay nadie escuchando). Para esto último, `server.spec.ts` sustituye con `vi.mock` el módulo `migrations-dir` por una carpeta temporal con migraciones erróneas: no hace falta una variable de entorno nueva ni un parámetro solo para tests.
-- C-33 y C-35 se prueban en `envs.spec.ts` (mensaje y variable) y una vez con un proceso real en `app.spec.ts` (`tsx src/app.ts` con `PORT=abc`): código de salida distinto de 0 y mensaje en `stderr`. Como los tres caminos de error pasan por el mismo `catch` de `app.ts`, un solo caso de proceso cubre el código de salida.
+- C-39 a C-41 (R-32) se prueban solo en el ejecutor (`run-migrations.spec.ts`): `server.spec.ts` no los repite, porque el error sale por el mismo `throw` antes de `listen` que C-36 a C-38 (Decisión 2026-11-22 #1 para C-39; decisión del autor 2026-11-22 para C-40 y C-41, literal en D-03).
+- C-33 y C-35 se prueban en `envs.spec.ts` (mensaje y variable) y una vez con un proceso real en `app.spec.ts` (`tsx src/app.ts` con `PORT=abc`): código de salida distinto de 0 y mensaje en `stderr`. Como los cuatro caminos de error (R-29 a R-32) pasan por el mismo `catch` de `app.ts`, un solo caso de proceso cubre el código de salida.
 - Nota: `architecture.md` no dice si las reglas de dependencia se aplican a los `*.spec.ts`; el `vi.mock` de `server.spec.ts` nombra un módulo de `data`. El autor confirma que las reglas son del código de producción, no de los `*.spec.ts` (D-07 ya evitaba el caso en `domain/`).
 - Recomendación: la propuesta.
 
@@ -314,7 +330,7 @@ Tipos: **Auto** (test de Vitest), **Verif.** (comando que la tarea ejecuta y cuy
 | C-06 | R-05 | `run-migrations.spec.ts`: segunda ejecución sin cambios | Auto |
 | C-07 | R-06 | el propio `run-migrations.spec.ts` sobre `:memory:` | Auto |
 | C-08 | R-07 | `envs.spec.ts`: la ruta por defecto y la dada se resuelven respecto a `apps/api`, sin depender del directorio de trabajo (se ejecuta el test desde la raíz y desde `apps/api`) | Auto + Verif. |
-| C-09 | R-08 | `server.spec.ts`: arrancar con `:memory:` y las migraciones reales (0 ficheros) deja `user_version` = 0 | Auto |
+| C-09 | R-08 | `server.spec.ts`: arrancar con `:memory:` y las migraciones reales (0 ficheros); `user_version` = 0 se comprueba en `data/sqlite/index.spec.ts` desde T-12, no en `server.spec.ts` | Auto |
 | C-10 | R-09 | tarea 0: tabla `STRICT` creada y leída con `better-sqlite3` en Windows con Node 24, con `sqlite_version()` ≥ 3.37. Queda en regresión con la tabla `STRICT` de C-05 | Verif. |
 | C-11 | R-10 | API: `domain/pricing-check.spec.ts`; web: `ng build` y el test de `health-page` resuelven el paquete desde `dist` | Auto + Verif. |
 | C-12 | R-11 | solo si falla C-11: aviso al autor y opción B | Manual |
@@ -337,15 +353,17 @@ Tipos: **Auto** (test de Vitest), **Verif.** (comando que la tarea ejecuta y cuy
 | C-29 | R-02 | `envs.spec.ts`: `PORT=4000` | Auto |
 | C-30 | R-26 | `envs.spec.ts` (se queda `:memory:`) y `openDatabase(':memory:')` sin carpetas ni `apps/api/:memory:` | Auto |
 | C-31 | R-27 | `run-migrations.spec.ts`: `.gitkeep`, un fichero que no sigue el patrón y `0001_x.sql` → `user_version` = 1 | Auto |
-| C-32 | R-28 | `run-migrations.spec.ts`: ruta inexistente → 0 migraciones, sin error | Auto |
+| C-32 | R-28 | `run-migrations.spec.ts`: ruta inexistente y base nueva (`user_version` = 0) → 0 migraciones, sin error (Decisión 2026-11-22 #6) | Auto |
 | C-33 | R-29 | `envs.spec.ts` (`0`, `65536`, `abc`, `3000.5`, vacío: mensaje con `PORT`) y `app.spec.ts` (proceso real con `PORT=abc`: código ≠ 0) | Auto |
 | C-34 | R-29 | `envs.spec.ts`: `1` y `65535` son válidos. No se abre el puerto (P-03) | Auto |
 | C-35 | R-29 | `envs.spec.ts`: `DATABASE_PATH` vacío → error con `DATABASE_PATH` | Auto |
 | C-36 | R-30 | `run-migrations.spec.ts` (nombra el fichero) y `server.spec.ts` (rechaza y no escucha; D-17) | Auto |
 | C-37 | R-31 | `run-migrations.spec.ts`: `0001_a` + `0003_c` nombra `0003_c.sql`; solo `0002_b` nombra `0002_b.sql`; la base no cambia (D-01, D-02); `server.spec.ts` no escucha | Auto |
 | C-38 | R-31 | `run-migrations.spec.ts`: `0001_a` + `0001_b` nombra `0001_b.sql`; la base no cambia | Auto |
+| C-39 | R-32 | `run-migrations.spec.ts` (el test de D-03 de T-08): `user_version` = 3 y un único `0001_*.sql` → error con el mensaje de D-15 que nombra `user_version`, 3 y 1; `user_version` sigue en 3 y no se aplica nada. «Sin escuchar» y el código de salida, por el camino de D-17, sin test en `server.spec.ts` (Decisión 2026-11-22 #1) | Auto |
+| C-40 | R-28, R-32 | `run-migrations.spec.ts`: ruta inexistente y base con `user_version` = 1 → error con el mensaje de D-15 que nombra `user_version`, 1 y 0. Test de comportamiento existente (Decisión 2026-11-22 #3); sin test en `server.spec.ts` (D-03) | Auto |
+| C-41 | R-31, R-32 | `run-migrations.spec.ts`: `0001_a` + `0003_c` y base con `user_version` = 5 → mensaje de R-31 que nombra `0003_c.sql` (D-01), no el de R-32 (Decisión 2026-11-22 #4). Test de comportamiento existente; sin test en `server.spec.ts` (D-03) | Auto |
 | (sin caso) | R-05 | H-32 (reserva del autor): base migrada en parte (`user_version` = 1, ficheros `0001` y `0002`; solo se aplica `0002`; queda en 2). El plan añade este test sin tocar la spec | Auto |
-| (sin caso) | D-03 | `user_version` mayor que el número de ficheros: error con código distinto de 0 y mensaje. El plan añade este test sin tocar la spec | Auto |
 
 ## 6. Orden de construcción
 
@@ -378,8 +396,8 @@ La puerta 4 convierte cada paso en tareas de un commit y como máximo 5 archivos
 | 14 | Reglas de dependencia y `*.spec.ts` | `architecture.md` no lo dice; el autor confirma (D-17) que son del código de producción. No se edita ningún documento por esto |
 | 15 | H-12: «siete secciones» en `templates/spec.md` y `reviewer.md` frente a las seis de la plantilla (reserva aceptada) | Dueño: el autor (pendiente (a) de MEMORY.md). El plan no lo toca |
 | 16 | H-32: falta el caso de una base migrada en parte (reserva aceptada) | Dueño: la puerta 4 (`tasks.md`). El plan ya lista el test en la sección 5 |
-| 17 | Rellenar "Comandos" de `CLAUDE.md` (R-19): el archivo tiene 60 de 60 líneas (límite del autor, sesión 2026-11-18-01) | Exige decidir qué recortar para dejar sitio. **Abierto:** el plan no decide qué; lo decide el autor antes de la tarea de R-19 |
-| 18 | **Abierto:** un único cambio en `.claude/` (D-04): `.claude/skills/backend-conventions/checklist.md:7` y, junto a él, la fila `routes.ts` de `.claude/skills/backend-conventions/SKILL.md:21` (dice solo `presentation/<recurso>/`; falta el `presentation/routes.ts` de la raíz, Decisión #10) | Dueño: el autor, antes de la puerta 6 (el implementer y el revisor leen esas convenciones). Hasta entonces el revisor podría marcar el `routes.ts` de la raíz como violación |
+| 17 | Rellenar "Comandos" de `CLAUDE.md` (R-19): el archivo tenía 60 de 60 líneas (límite del autor, sesión 2026-11-18-01) | Exigía decidir qué recortar para dejar sitio; el plan no lo decidía. **Resuelto en T-20 (2026-11-22):** el autor decidió fundir las líneas 8 y 9 y unir en una la viñeta de las líneas 45 y 46, sin cambiar su texto; «Comandos» quedó con su título y tres líneas, y `CLAUDE.md` sigue en 60 (decisiones literales en T-20 de `tasks.md`) |
+| 18 | Un único cambio en `.claude/` (D-04): `.claude/skills/backend-conventions/checklist.md:7` y, junto a él, la fila `routes.ts` de `.claude/skills/backend-conventions/SKILL.md:21` omitían el `presentation/routes.ts` de la raíz (Decisión #10) | **Resuelto:** el autor aplicó el cambio en el commit `a3da2fb` (2026-11-21), antes de la puerta 6; las dos líneas recogen ya el `routes.ts` de la raíz (texto actual en D-04) |
 | 19 | **Abierto:** `database.md` ("Cada conexión ejecuta `PRAGMA foreign_keys = ON` y `PRAGMA journal_mode = WAL`") queda sin cumplir hasta la spec 002, por P-04 (b) | Dueños: la spec 002 (incluye los pragmas con su test) y la puerta 4 de esta spec (dejarlo anotado en `tasks.md` para no olvidarlo). La sesión principal lo pasa a MEMORY.md como pendiente |
 | 20 | Angular 22.3 (T-14) puede traer paquetes con scripts de instalación que `ignore-scripts=true` deja sin ejecutar (ADR-014) | En T-14, tras `npm install`, se listan los paquetes del lockfile con scripts de instalación (`hasInstallScript`): es un aviso, no se decide nada. Se comprueba de verdad en la segunda prueba de clon limpio, tras T-18. Si algo falla, se para y decide el autor |
 | 21 | Consecuencia del ADR-014: ningún `package.json` del repositorio puede usar scripts `pre`/`post`, `prepare` ni `install`, porque no correrían con `ignore-scripts=true` | Hoy no hay ninguno |
@@ -415,7 +433,8 @@ La puerta 4 convierte cada paso en tareas de un commit y como máximo 5 archivos
 | R-25 | 2 (`migrations/.gitkeep`), 5 (C-28) | carpeta versionada |
 | R-26 | 2, 5 (C-30) | `:memory:` tal cual |
 | R-27 | 2, 5 (C-31) | patrón `NNNN_*.sql` |
-| R-28 | 2 (`migrations-dir.ts`), 5 (C-32) | carpeta ausente = 0 |
+| R-28 | 2 (`run-migrations.ts`, `migrations-dir.ts`), 3 (D-03), 5 (C-32, C-40) | carpeta ausente = 0; R-32 se sigue aplicando |
 | R-29 | 2, 3 (D-15, P-03), 5 (C-33, C-34, C-35) | `envs.ts` y `app.ts` |
 | R-30 | 2, 3 (D-15, D-17), 5 (C-36) | `run-migrations.ts` y `server.ts` |
-| R-31 | 3 (D-01, D-02), 5 (C-37, C-38) | `run-migrations.ts` |
+| R-31 | 3 (D-01, D-02), 5 (C-37, C-38, C-41) | `run-migrations.ts` |
+| R-32 | 2 (`run-migrations.ts`, `server.ts`, `app.ts`), 3 (D-03, D-15, D-17), 5 (C-39, C-40, C-41) | `run-migrations.ts`; «sin escuchar» y el código de salida, por el camino de D-17 (`server.ts` y `app.ts`) |
