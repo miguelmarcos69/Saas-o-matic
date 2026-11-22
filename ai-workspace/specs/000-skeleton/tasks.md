@@ -1,6 +1,18 @@
 # Tareas · spec 000 · skeleton
 
-Spec: `ai-workspace/specs/000-skeleton/spec.md` · Plan: `ai-workspace/specs/000-skeleton/plan.md` (D-01 a D-18, P-01 a P-04). Las tareas siguen el orden de la sección 6 del plan: R-09, raíz, `packages/pricing` y scripts, API, web, scripts de extremo a extremo y documentación. Excepción: T-21 (`.npmrc`, ADR-014) rompe ese orden por decisión del autor 2026-11-21: es una tarea de la raíz que se hace tras T-13 y antes de T-14, y conserva su id sin renumerar.
+Spec: `ai-workspace/specs/000-skeleton/spec.md` · Plan: `ai-workspace/specs/000-skeleton/plan.md` (D-01 a D-18, P-01 a P-04). Las tareas siguen el orden de la sección 6 del plan: R-09, raíz, `packages/pricing` y scripts, API, web, scripts de extremo a extremo y documentación. Excepción: T-21 (`.npmrc`, ADR-014) rompe ese orden por decisión del autor 2026-11-21: es una tarea de la raíz que se hace tras T-13 y antes de T-14, y conserva su id sin renumerar. Segunda excepción: T-22 (tests de C-39 a C-41, tras las Decisiones 2026-11-22 #1, #3 y #4) es una tarea de la API, capa `data`, que llega con T-00 a T-21 ya hechas: va al final, tras T-20 y antes de la puerta 6, y solo depende de T-08.
+
+**Cambios tras las Decisiones 2026-11-22 #1 a #6** (revisión del 2026-11-22, puerta 4; como la nota de `plan.md`)
+- Motivo: el cambio de requisitos de la spec (R-32 y C-39, #1; R-28 y C-40, #3; R-32 solo con la numeración válida y C-41, #4) y las indicaciones del autor al aprobar la puerta 3. La #2 solo cambia texto de `spec.md`; aquí, H-28 sale de las reservas. La #5 solo afecta a `spec.md`. La #6 (C-32 con base nueva) no cambia ninguna tarea: el test de C-32 de T-08 ya usa una base `:memory:` nueva (`run-migrations.spec.ts:112-117`). No se renumera ninguna tarea, y el estado y las casillas de T-00 a T-21 no cambian.
+- Indicaciones del autor al aprobar la puerta 3 (2026-11-22), literal: "Para la puerta 4 (/sdd-tasks): la tarea nueva lleva C-40 y C-41 en run-migrations.spec.ts, declara que no pueden verse en rojo (Decisión 2026-11-22 #3, tests de comportamiento existente) y renombra el test «(D-03)» a C-39; además, las notas de tasks.md:16-19, la cobertura de R-32 y la tabla de tests sin R-nn."
+- Decisiones del autor 2026-11-22 (puerta 4), literales: «1. T-08 no se reescribe, porque es una tarea hecha: se le añade una nota con fecha, por ejemplo "Nota 2026-11-22: el test de D-03 es ahora el de C-39 (R-32, Decisión 2026-11-22 #1); lo renombra T-22". Sus casillas y su texto original no cambian. Así el planner no tiene que parar con una Q-nn.» "2. Al principio de tasks.md, una nota «Cambios tras las Decisiones 2026-11-22 #1 a #6», como en plan.md, con lo que cambia: T-22 nueva, la nota de T-08, las notas iniciales, la cobertura y la tabla de tests sin R-nn."
+- Cabecera: orden de T-22 (segunda excepción).
+- «Anotaciones sin tarea propia»: el cambio en `.claude/` (D-04, riesgo 18) y el recorte de `CLAUDE.md` (riesgo 17) pasan a resueltos; D-03 ya tiene requisito (R-32); las reservas son las vigentes tras la aprobación de la puerta 2 del 2026-11-22, y H-28 sale de la lista (resuelta).
+- T-08: nota con fecha (decisión 1); sus casillas y su texto no cambian.
+- T-22, nueva: tests de C-40 y C-41 en `run-migrations.spec.ts` (comportamiento existente) y el test «(D-03)» renombrado a C-39.
+- Cobertura: T-22 en R-28 y R-31, fila nueva de R-32 y su nota.
+- Tabla de tests del plan sin caso: se retira la fila de D-03 (su test es ahora el de C-39) y el título deja de decir «sin `R-nn`», porque H-32 cita R-05.
+- Sin cambios: las reglas comunes, la anotación de los pragmas (P-04 (b)) y T-00 a T-21, salvo la nota de T-08.
 
 Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo 5 archivos de producción, sin contar sus tests (`*.spec.ts`) ni los ficheros generados (solo el lockfile). Las migraciones son SQL escrito a mano y cuentan como producción. Si no cabe, se parte. Un recurso nuevo se divide por capa: en la API, una tarea por capa (`domain`, `infrastructure` y `presentation`); en la web, una tarea por servicio con su interfaz y una por página o componente (cuentan `.ts` y `.html`). Si una tarea necesita más de 5 archivos y no se puede dividir, lo justifica por escrito en una línea `Excepción de tamaño:` y el revisor lo comprueba. El test va dentro de la tarea que lo exige. Al cerrar una tarea: MEMORY.md, diff y commit propuesto.
 
@@ -13,10 +25,10 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 
 ## Anotaciones sin tarea propia
 - **Pragmas de la conexión (P-04 (b), riesgo 19 del plan):** `database.md` exige `PRAGMA foreign_keys = ON` y `PRAGMA journal_mode = WAL` en cada conexión. Esta spec no los incluye ni los prueba (`openDatabase` queda sin pragmas, T-10). Los trae la spec 002, la primera con tablas, con su test. La sesión principal lo pasa a MEMORY.md como pendiente.
-- **Un único cambio en `.claude/` (D-04, riesgo 18), a cargo del autor:** `.claude/skills/backend-conventions/checklist.md:7` y la fila `routes.ts` de `.claude/skills/backend-conventions/SKILL.md:21` omiten el `presentation/routes.ts` de la raíz (Decisión #10). Debe aplicarse antes de la puerta 6, o el revisor podría marcar `presentation/routes.ts` (T-12) como violación. Ninguna tarea toca `.claude/`.
-- **Qué se recorta de `CLAUDE.md` (riesgo 17):** el archivo está en 60 de 60 líneas; lo decide el autor antes de T-20. T-20 se detiene a preguntárselo.
-- **D-03 sin `R-nn`:** `user_version` mayor que el número de ficheros añade un comportamiento que ningún requisito pide; su test está en T-08. Si el autor lo quiere como requisito (posible R-32), es un cambio de requisitos (`/sdd-change`); estas tareas no tocan `spec.md`.
-- **Reservas que siguen abiertas:** H-12 («siete secciones»; dueño: el autor) y H-28 (la fila #23 atribuye un motivo que el autor no dio; es texto de `spec.md`, ninguna tarea lo corrige). H-08 la atienden T-09 (D-05) y T-15 (D-06); H-32, T-08.
+- **Un único cambio en `.claude/` (D-04, riesgo 18), a cargo del autor:** `.claude/skills/backend-conventions/checklist.md:7` y la fila `routes.ts` de `.claude/skills/backend-conventions/SKILL.md:21` omitían el `presentation/routes.ts` de la raíz (Decisión #10); debía aplicarse antes de la puerta 6, o el revisor podría marcar `presentation/routes.ts` (T-12) como violación. **Resuelto:** lo aplicó el autor en el commit `a3da2fb` (2026-11-21), y las dos líneas recogen ya el `routes.ts` de la raíz (plan, D-04 y riesgo 18). Ninguna tarea toca `.claude/`.
+- **Qué se recorta de `CLAUDE.md` (riesgo 17):** el archivo estaba en 60 de 60 líneas y lo decidía el autor antes de T-20. **Resuelto en T-20 (2026-11-22):** el autor decidió fundir las líneas 8 y 9 y unir en una la viñeta de las líneas 45 y 46; `CLAUDE.md` sigue en 60 líneas (decisiones literales en T-20).
+- **D-03 ya tiene requisito (R-32):** hasta el 2026-11-22 esta nota decía que D-03 (`user_version` mayor que el número de ficheros) no tenía `R-nn` y que su test estaba en T-08. El autor lo pasó a requisito con `/sdd-change` (Decisión 2026-11-22 #1: R-32 y C-39) y fijó sus cruces con R-28 (#3: C-40) y con R-31 (#4: C-41). El código y el test de C-39 son de T-08 (nota 2026-11-22 de T-08); T-22 renombra ese test y añade los de C-40 y C-41. Estas tareas siguen sin tocar `spec.md`.
+- **Reservas que siguen abiertas** (aceptadas por el autor al aprobar la puerta 2 el 2026-11-22, tras la ronda 6): H-08 (la atienden T-09, D-05, y T-15, D-06), H-12 («siete secciones»; dueño: el autor), H-26 (P-02, en T-10), H-27 (P-03, en T-07), H-29 y H-30 (D-01 y D-02, en T-08), H-32 (su test, en T-08) y H-37 (trazabilidad de la fila 2026-11-20 #25 de `spec.md`; ninguna tarea la toca). H-28 quedó resuelta con la Decisión 2026-11-22 #2 (ronda 5).
 
 ## T-00 · Comprobar `better-sqlite3` y sus tipos (R-09)
 - Cubre: R-09, R-20
@@ -131,6 +143,7 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
   - [x] C-37 y C-38 (D-01 y D-02): `0001_a` + `0003_c` nombra `0003_c.sql`; solo `0002_b` nombra `0002_b.sql`; `0001_a` + `0001_b` nombra `0001_b.sql`. En los tres casos `user_version` no cambia. También `0001`, `0002`, `0004`: no se aplica ninguna.
   - [x] H-32 (test del plan, sin caso en la spec): con `user_version` = 1 y ficheros `0001` y `0002`, solo se aplica `0002` y queda en 2.
   - [x] D-03 (test del plan, sin `R-nn`): con `user_version` mayor que el número de ficheros, lanza un error en inglés que nombra `user_version` y los dos números.
+- Nota 2026-11-22: el test de D-03 es ahora el de C-39 (R-32, Decisión 2026-11-22 #1); lo renombra T-22, que añade también los de C-40 y C-41 (Decisiones 2026-11-22 #3 y #4). Las casillas y el texto de esta tarea no cambian (decisión del autor de la puerta 4, 2026-11-22).
 
 ## T-09 · API, `data`: localización de `migrations/` y carpeta versionada
 - Cubre: R-08, R-25
@@ -334,6 +347,22 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
   - [x] C-19 (manual): en un clon limpio del repositorio, `npm install` y `npm run dev` dejan API y web respondiendo, sin copiar ficheros ni crear carpetas a mano. Decisión del autor 2026-11-22: «Tú, tras el commit (Recomendada)»; en la aprobación: «C-19 queda para mi clon limpio tras el commit (--amend)». Hecha por el autor el 2026-11-22 (literal): «C-19 hecha tras 6090139: en un clon limpio, siguiendo «Comandos», npm install instala sin cambiar el lockfile (git status vacío) y npm run dev deja la API en el 3000 y la web en el 4200 con «API: ok», sin copiar ficheros ni crear carpetas; tras Ctrl+C no queda nada escuchando.» Captura: `fase-6-000-t20-clon-limpio.png`.
   - [ ] C-18: revisión de los `package.json` frente a la lista aprobada (revisor, puerta 6).
 
+## T-22 · API, `data`: tests de C-40 y C-41 y nombre del test de C-39
+- Cubre: R-28, R-31, R-32
+- Depende de: T-08 · Se hace tras T-20, con T-00 a T-21 hechas, y antes de la puerta 6 (segunda excepción de la cabecera).
+- Estado: [ ] pendiente
+- Archivos de producción: ninguno (solo test). `run-migrations.ts` no se toca: el código ya cumple C-39 a C-41 (Decisión 2026-11-22 #1, «no hace falta código nuevo»; plan, D-03). Su comentario «(D-03)» de la línea 44 sigue siendo cierto: D-03 sigue en el plan, ahora con R-32.
+- Tests: `apps/api/src/data/sqlite/run-migrations.spec.ts`, con las carpetas temporales y la base `:memory:` por prueba del propio fichero (R-06): un test nuevo para C-40, otro para C-41 y el título del test «(D-03)» con «(C-39)». Cada título cita su caso, como los demás tests del fichero. `server.spec.ts` no los repite: «sin escuchar» y el código de salida los da el camino de D-17, el mismo `throw` antes de `listen` y el mismo `catch` de `app.ts` (plan, D-03 y D-17).
+- Indicación del autor al aprobar la puerta 3 (2026-11-22), literal: "la tarea nueva lleva C-40 y C-41 en run-migrations.spec.ts, declara que no pueden verse en rojo (Decisión 2026-11-22 #3, tests de comportamiento existente) y renombra el test «(D-03)» a C-39".
+- Excepción a «Tests primero» (reglas comunes): C-40 y C-41 son tests de comportamiento existente y no pueden verse en rojo, porque el código ya los cumple. Decisión 2026-11-22 #3 (C-40), literal: "El test no podrá verse en rojo, porque el código ya lo cumple: se declara como test de comportamiento existente." Decisión del autor 2026-11-22 (puerta 3, para C-40 y C-41; plan, D-03), literal: "Los dos son tests de comportamiento existente." El implementer lo declara así en su retorno; el cambio de título de C-39 tampoco tiene fase roja.
+- Hecho cuando:
+  - [ ] C-40 (R-28, R-32): con una ruta de `migrations/` inexistente (como en C-32) y `user_version` = 1, `runMigrations` lanza el mensaje de D-15 con 1 y 0: `Invalid database state: user_version 1 is greater than the 0 migration files found`.
+  - [ ] C-41 (R-31, R-32): con `0001_a.sql` y `0003_c.sql` y `user_version` = 5, lanza el mensaje de R-31 que nombra `0003_c.sql` (D-01, D-15), `Invalid migration numbering: 0003_c.sql breaks the sequence (expected 0002)`, y no el de R-32 (`Invalid database state: …`).
+  - [ ] C-39 (R-32): en el título del test, «(D-03)» pasa a «(C-39)» y no cambia nada más: `user_version` = 3, un único `0001_*.sql`, el mensaje con 3 y 1, `user_version` en 3 y la tabla sin crear.
+  - [ ] Si C-40 o C-41 fallan contra el código actual, se para y se avisa al autor: no se cambia `run-migrations.ts` (Decisión 2026-11-22 #1) ni el mensaje esperado de D-15.
+  - [ ] De `apps/` solo cambia `run-migrations.spec.ts`; `run-migrations.ts` y `server.spec.ts` siguen igual (`git diff --stat`).
+  - [ ] `npm test` en la raíz, en verde (principio 3): 55 + 14, con `run-migrations.spec.ts` de 13 a 15 tests.
+
 ## Cobertura
 Cada `R-nn` aparece en al menos una tarea.
 
@@ -366,14 +395,18 @@ Cada `R-nn` aparece en al menos una tarea.
 | R-25 | T-09 |
 | R-26 | T-07, T-10 |
 | R-27 | T-08 |
-| R-28 | T-08 |
+| R-28 | T-08, T-22 |
 | R-29 | T-07, T-13 |
 | R-30 | T-08, T-12, T-13 |
-| R-31 | T-08, T-12, T-13 |
+| R-31 | T-08, T-12, T-13, T-22 |
+| R-32 | T-08, T-12, T-13, T-22 |
 
-Tests del plan sin `R-nn` ni caso en la spec:
+R-32 (Decisiones 2026-11-22 #1, #3 y #4): T-08 trae el código (`run-migrations.ts`) y el test de C-39 (nota 2026-11-22 de T-08); T-12 y T-13, el camino de D-17 que da «sin escuchar» y el código de salida, sin test propio de R-32 (Decisión 2026-11-22 #1; decisión del autor de la puerta 3, en D-03); T-22, los tests de C-40 y C-41 y el título del de C-39. El «Cubre» de T-08, T-12 y T-13 no se reescribe: son tareas hechas, como dice para T-08 la decisión del autor de la puerta 4.
+
+Tests del plan sin caso en la spec:
 
 | Test | Tarea |
 |---|---|
 | H-32 (base migrada en parte, R-05) | T-08 |
-| D-03 (`user_version` mayor que los ficheros) | T-08 |
+
+Hasta el 2026-11-22 esta tabla se titulaba «sin `R-nn` ni caso en la spec» y tenía también la fila de D-03 (`user_version` mayor que los ficheros, T-08): su test es ahora el de C-39 (R-32, Decisión 2026-11-22 #1) y lo renombra T-22. H-32 cita R-05; por eso el título solo dice «sin caso».
