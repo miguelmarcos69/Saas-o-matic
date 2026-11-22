@@ -1,6 +1,6 @@
 # Spec 000 · skeleton
 
-- **Estado:** En implementación
+- **Estado:** En clarificación
 - **Depende de:** ninguna
 - **Cubre:** §4 (criterio 4, README y despliegue), §3.2 (estructura limpia y modular)
 
@@ -213,6 +213,8 @@ Cada `R-nn` tiene al menos un caso. Incluye los límites.
 | 2026-11-20 #30 | — (review.md ronda 2, H-23) | `_health.scss` añadido a la lista de parciales de `architecture.md` (aplicado por la sesión principal con OK del autor); R-21 lo recoge (C-25). Porqué del autor, en bloque: "coherencia con la spec y con la skill". | `sessions/2026-11-20-06-000-skeleton.md` |
 | 2026-11-20 #31 | Q-24 (review.md ronda 3, H-24) | "Quitar la regla global del Contrato y usar siempre rutas completas: `apps/api/data/` para la carpeta de la base y `apps/api/src/data/` para la capa, también en R-08" (opción recomendada, elegida por el autor). Desaparece del Contrato la frase "En este documento, `data/` significa `apps/api/data/` (no `src/data/`)". No cambia la #6 ni la #23. | `sessions/2026-11-20-06-000-skeleton.md` |
 | 2026-11-20 #32 | Q-25 (review.md ronda 3, H-25) | "`user_version` es el número de migraciones aplicadas. Los `NNNN` deben ser consecutivos desde `0001` y sin repetir. Si no, el proceso termina con código distinto de 0 y mensaje en inglés que nombra el fichero (como R-30). Requisito y caso nuevo" (opción recomendada, elegida por el autor). Aplicada en R-05, R-31, C-37 y C-38. | `sessions/2026-11-20-06-000-skeleton.md` |
+| 2026-11-22 #1 | — (plan.md, D-03; review.md ronda 4, H-31) | Cambio de requisitos del autor (`/sdd-change`), literal: "D-03 pasa a requisito: R-32, en el estilo de R-30 y R-31: si user_version de la base es mayor que el número de ficheros de migración encontrados, el sistema termina con código distinto de 0, sin dejar la API escuchando, con un mensaje de error en inglés que nombre user_version y los dos números. Su caso es C-39: se prueba en el ejecutor (run-migrations.spec.ts, desde T-08), y «sin escuchar» queda cubierto por el camino de D-17 (el mismo throw antes de listen y el mismo catch de app.ts); no hace falta código nuevo." | `sessions/2026-11-22-04-000-skeleton.md` |
+| 2026-11-22 #2 | — (review.md rondas 3 y 4, H-28) | Cambio de requisitos del autor (`/sdd-change`), literal: "H-28: en la fila de la Decisión 2026-11-20 #23 sobra «(excepción del autor a "una duda cada vez" por falta de tiempo)»: no lo dije en esa aprobación; debe quedar «Aprobada en bloque»." | `sessions/2026-11-22-04-000-skeleton.md` |
 
 ## 6. Dudas abiertas
 No se resuelven aquí: las decide el autor en la puerta 2 (clarificación).
