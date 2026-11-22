@@ -72,16 +72,17 @@ Reglas comunes de esta spec:
 ## T-04 · pricing: retirar `PRICING_PACKAGE_CHECK`
 - Cubre: R-01 (el reexport final), R-13
 - Depende de: T-02, T-03
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción (1): `packages/pricing/src/index.ts`, que queda en una sola línea, `export { calculateBaseCostCents } from './base-cost.js';` (D-01).
 - Tests: se borra `packages/pricing/src/index.spec.ts`, que solo probaba la constante (D-01).
 - Sin fase roja (P-4): "T-04 solo retira la constante (lo comprueba la búsqueda de C-20)". Como la T-22 de la spec 000, la excepción se declara en la tarea y el implementer lo dice en su retorno.
+- Aprobación del autor 2026-11-22 (literal): «Apruebo la T-04. No hace falta la salida completa de npm run verify: la casilla pide los recuentos, y la salida literal de tests y build irá en el encargo del revisor de la Puerta 6, como pide /sdd-flow.» (El borrado de `index.spec.ts` lo autorizó el autor al confirmar la tarea: «Confirmo la T-04; el implementer puede borrar index.spec.ts».)
 - Hecho cuando:
-  - [ ] `index.ts` solo contiene el reexport de D-01 y ya no exporta `PRICING_PACKAGE_CHECK`.
-  - [ ] `index.spec.ts` no existe.
-  - [ ] C-20: `git grep PRICING_PACKAGE_CHECK -- packages apps` no da ningún resultado (plan, sección 5); el implementer da en su retorno el comando y su salida.
-  - [ ] `npm run verify` desde la raíz, en verde (`build` y `test`; principio 3); el implementer da los recuentos en su retorno.
-  - [ ] De `packages/` y `apps/` solo cambian `index.ts` y el borrado de `index.spec.ts` (`git status` y `git diff --stat`).
+  - [x] `index.ts` solo contiene el reexport de D-01 y ya no exporta `PRICING_PACKAGE_CHECK`.
+  - [x] `index.spec.ts` no existe.
+  - [x] C-20: `git grep PRICING_PACKAGE_CHECK -- packages apps` no da ningún resultado (plan, sección 5); el implementer da en su retorno el comando y su salida.
+  - [x] `npm run verify` desde la raíz, en verde (`build` y `test`; principio 3); el implementer da los recuentos en su retorno.
+  - [x] De `packages/` y `apps/` solo cambian `index.ts` y el borrado de `index.spec.ts` (`git status` y `git diff --stat`).
 
 ## Cobertura
 Cada `R-nn` aparece en al menos una tarea.
