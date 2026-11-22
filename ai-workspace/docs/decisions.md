@@ -140,6 +140,7 @@ Lo demás es una regla de CLAUDE.md o queda en el registro de la sesión.
 - **Alternativa descartada:** Las cuatro de MEMORY.md; una excepción en la constitución para el esqueleto (debilita "sin spec, no hay código"); una spec por endpoint y por vista (unas 9, demasiado papeleo).
 - **Consecuencias:** Más documentos y una spec previa al código, pero el principio 1 se cumple sin excepciones. Renumerar después sería costoso.
 - **Ver también:** ADR-002, ADR-010.
+- **Modificado por el ADR-016 (punto 7):** la 004 absorbe la 007 y la 005 absorbe la 006.
 
 ## ADR-013 · La API propia es de confianza en el frontend
 - **Fecha:** 2026-11-19
@@ -175,3 +176,26 @@ Lo demás es una regla de CLAUDE.md o queda en el registro de la sesión.
   - Cargar la fuente desde Google Fonts envía a Google la IP de cada visitante; el autor lo acepta para esta herramienta interna. La alternativa es servir la fuente desde el repositorio.
   - Decisión del autor 2026-11-21 (hallazgo de T-17): "El build de producción descarga la hoja de Google Fonts para incrustarla (fonts.inline de @angular/build, activada por defecto): necesita red, igual que npm ci, así que quien pueda instalar el proyecto puede compilarlo. Si en algún momento molesta, la alternativa es servir la fuente desde el repositorio (C)."
 - **Ver también:** `style-guide.md`; skill `frontend-conventions` (Estilos); principio 7 de la constitución; T-17 de la spec 000.
+
+## ADR-016 · Ajustes del método para la fase 7 por el plazo
+- **Fecha:** 2026-11-22
+- **Estado:** Aceptado
+- **Contexto:** la spec 000 se cerró el 2026-11-22 tras unas 20 horas reales: puertas 1 a 4 ≈ 6 h; puerta 5 ≈ 10 h 50 min (24 tareas); cambio de requisitos y puerta 6 ≈ 3 h 20 min; 8 rondas del revisor. La entrega es el miércoles 2026-11-25 y quedan las specs de la fase 7 y el README. A ese ritmo no caben. El método probado en la spec 000 se mantiene (seis puertas, aprobación del autor, revisor independiente y trazabilidad), pero se ajusta su coste.
+- **Decisión:**
+  1. Una ronda del revisor por puerta (2 y 6). Lo Menor se acepta como reserva en la misma aprobación del autor, con su motivo. Solo se repite la ronda si hay algo Bloqueante o Importante.
+  2. Dudas en bloque: la sesión principal presenta todas las dudas de una puerta a la vez, cada una con sus opciones y una recomendada (ya se hizo como excepción en la Decisión 2026-11-20 #13 de la spec 000).
+  3. Decisiones previsibles en el encargo: si un hueco tiene una respuesta clara según las fuentes (convenciones, architecture.md, decisiones anteriores), la sesión principal la propone como decisión del autor antes de lanzar al agente, para que no pare.
+  4. Encargos: los del planner y del implementer se lanzan sin enseñarlos antes, salvo que el autor lo pida; el autor revisa y aprueba el resultado. Los del revisor se siguen enseñando.
+  5. Lecturas acotadas: las «Rutas a leer» de cada encargo citan secciones o requisitos concretos, no ficheros enteros, cuando baste.
+  6. Modelos: implementer con Sonnet 5.5 en las tareas sencillas; spec, plan y decisiones con Opus 5.5; el revisor sigue fijado en Opus. Effort «High».
+  7. Reparto de specs (modifica el ADR-012): la 004 absorbe la 007 y pasa a customers (lectura de clientes, buscador, dashboard, tarjetas de detalle e historial), y la 005 absorbe la 006 y pasa a simulator (tipos de cambio, selector de divisa y formulario de simulación). De 7 specs se pasa a 5, cada una de punta a punta (API y vista). Orden de trabajo: 001, 002, 003, 005 y 004 (la 004 muestra importes en la divisa elegida, que trae la 005).
+- **Alternativas descartadas:**
+  - Mantener el método completo: no llega al plazo.
+  - Saltarse puertas (por ejemplo, sin revisor en la puerta 2): se pierde lo que evalúa el reto (§3.1 y §3.3).
+  - Mantener las 7 specs: dos ciclos completos de puertas más, sin código nuevo a cambio.
+- **Consecuencias:**
+  - Más reservas aceptadas como Menor en cada spec; quedan en MEMORY.md y en review.md.
+  - El control humano se mantiene en las aprobaciones de cada puerta.
+  - Cada spec anota qué ajustes de este ADR aplicó.
+  - ai-workspace/specs/README.md refleja el nuevo reparto; las filas 006 y 007 se conservan como «Fusionada en …» para no perder la trazabilidad.
+- **Ver también:** ADR-002, ADR-003, ADR-012; spec 000 (review.md, rondas 1 a 8).

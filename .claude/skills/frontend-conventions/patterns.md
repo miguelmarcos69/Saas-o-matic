@@ -128,7 +128,7 @@ export class ItemSearch {
   <button type="button" [disabled]="!canSearch()">Buscar</button>
 </form>
 ```
-Sin comprobar con la versión instalada (primera spec con formulario, 006-simulator-ui): el tipado de `toSignal` con `valueChanges`.
+Sin comprobar con la versión instalada (primera spec con formulario, 005-simulator): el tipado de `toSignal` con `valueChanges`.
 
 ## 7. Test de la página
 ```ts

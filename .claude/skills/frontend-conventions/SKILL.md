@@ -36,8 +36,8 @@ Fuentes: `ai-workspace/docs/architecture.md` y la constitución. Si una convenci
 - Rutas con carga diferida por funcionalidad.
 
 ## Pendiente (no lo decidas tú)
-- Decimales, modo de redondeo y formato del importe al convertir divisa: Dudas abiertas de las specs de tipos de cambio (005) y de simulador (006).
-- Primera spec con formulario (006-simulator-ui), sin comprobar: `toSignal` con Reactive Forms tipados.
+- Decimales, modo de redondeo y formato del importe al convertir divisa: Dudas abiertas de la spec 005 (simulator).
+- Primera spec con formulario (005-simulator), sin comprobar: `toSignal` con Reactive Forms tipados.
 - Diferencias con la guía oficial, por decisión del autor: ésta desaconseja carpetas por tipo y propone estilos junto al componente y plantillas inline (se sigue architecture.md); recomienda `@Service()` (aquí `@Injectable`), Signal Forms (aquí Reactive Forms) y `httpResource` (aquí `LoadState<T>`).
 
 ## Ficheros de apoyo (léelos solo cuando toque)

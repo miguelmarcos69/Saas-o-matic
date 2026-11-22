@@ -52,7 +52,7 @@ En cualquier puerta, cuando ocurra uno de estos cuatro momentos, termina esa res
 `CAPTURA: fase-N-NNN-descripcion.png — qué debe verse`
 - Momentos: una pregunta con opciones y mi elección, una corrección mía a una propuesta, el veredicto del revisor y un choque entre fuentes.
 - En el resto de momentos no avises.
-- `NNN` solo va cuando la captura es de una spec (fases 6 y 7): `N` es 6 para la spec 000 y 7 para las 001 a 007. En las demás fases el nombre es `fase-N-descripcion.png`, como hasta ahora (ADR-004). Las capturas existentes no se renombran.
+- `NNN` solo va cuando la captura es de una spec (fases 6 y 7): `N` es 6 para la spec 000 y 7 para las 001 a 005 (ADR-016). En las demás fases el nombre es `fase-N-descripcion.png`, como hasta ahora (ADR-004). Las capturas existentes no se renombran.
 - La descripción, en minúsculas, sin tildes y con guiones.
 - Lleva la cuenta de las capturas anunciadas en la conversación; no se guarda en ningún archivo.
 - Al cerrar cualquier sesión, no solo una spec, `/sdd-session` comprueba que cada captura anunciada existe en `ai-workspace/screenshots/` y te dice por nombre cuáles faltan.
