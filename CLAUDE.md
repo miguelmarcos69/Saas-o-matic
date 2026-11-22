@@ -34,7 +34,7 @@ reto.md > constitución > spec > plan > convenciones. Constitución: @ai-workspa
 
 ## Memoria
 @MEMORY.md
-- En MEMORY.md el estado se escribe como quedará tras el commit: sin "pendiente de commit" ni hashes (el commit que incluye MEMORY.md no puede citarse a sí mismo).
+- En MEMORY.md el estado se escribe como quedará tras el commit: sin "pendiente de commit" ni hashes (el commit que incluye MEMORY.md no puede citarse a sí mismo); máximo 50 líneas; al añadir, fusiona o quita lo resuelto.
 
 ## Límites
 ✅ Siempre

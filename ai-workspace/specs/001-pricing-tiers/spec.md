@@ -1,6 +1,6 @@
 # Spec 001 · pricing-tiers
 
-- **Estado:** Aprobada
+- **Estado:** Planificada
 - **Depende de:** 000
 - **Cubre:** §2.A
 
@@ -30,6 +30,7 @@ El coste base mensual de un cliente según el algoritmo acumulativo por tramos d
   - Punto 4: encargo del planner lanzado sin enseñarlo antes.
   - Punto 5: «Rutas a leer» acotadas a secciones y líneas.
   - Punto 6: planner con Opus 5.5.
+  - Puertas 3 y 4, punto 3: en la 3, D-01 a D-04 (formato, ubicación, test de la API y campo de la web), propuestas por la sesión principal antes de lanzar al planner, constan en plan.md; en la 4, P-1 a P-3, propuestas igual, y P-4, del autor, constan literales en tasks.md.
 
 ## 2. Requisitos
 Una sola afirmación comprobable por requisito. Patrones EARS:
