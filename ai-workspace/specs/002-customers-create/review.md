@@ -242,3 +242,95 @@ Puerta 2 (2026-11-23), tras la ronda 2, texto literal del autor (puntos 2 y 3 de
 | H-07 | Resuelto | Ronda 2. El `PRIMARY KEY` está en `0001_init.sql:2` y C-31 lo prueba (`schema.spec.ts:55-57`). |
 | H-08 | Resuelto | `spec.md:254` con `K1234567D` y la precisión de los dos algoritmos. Recalculado y probado en tres ficheros (arriba). |
 | H-09 | Resuelto | `spec.md:33`: «cuatro vueltas». |
+
+## Ronda 4 (2026-11-23) · Veredicto: Conforme con reservas
+
+**Alcance:** la tarea T-07, en el commit `3de8558` (base `5729d0b`), y los dos bloques nuevos de la sección 1 de `spec.md` (líneas 51 a 55). Sigo H-10, H-11 y H-12 de la ronda 3; el resto de esa ronda no lo vuelvo a revisar. He leído estos ficheros:
+- los cinco de `apps/` que toca la T-07;
+- de `tasks.md`, «Reglas comunes», la T-07 y «Cobertura»;
+- de `spec.md`, la sección 1, R-06, R-07, R-35, C-07 y C-08;
+- la ronda 3 de `review.md`;
+- las citas de la tabla de H-11 en `000-skeleton/spec.md`, `000-skeleton/plan.md`, `000-skeleton/tasks.md:186` y el `plan.md` de la 002;
+- `ai-workspace/screenshots/` y el ADR-016;
+- `backend-conventions/checklist.md` y `frontend-conventions/checklist.md`;
+- para comprobar la sección 1, `ai-workspace/sessions/2026-11-23-03` y `-09`.
+
+### Hallazgos
+| ID | Gravedad | Archivo:línea | Requisito o regla | Hallazgo |
+|---|---|---|---|---|
+| H-13 | Menor | ai-workspace/specs/002-customers-create/tasks.md:174 y :255; apps/api/src/domain/dtos/customers/create-customer.dto.spec.ts:115-116; ai-workspace/specs/002-customers-create/spec.md:128 (R-35) | Trazabilidad (principio 1); texto de R-35; H-04 (b) de la ronda 1 | La T-07 dice que cubre «R-35 (prioridad `REQUIRED` sobre `INVALID_FORMAT` en el esquema real)», y el comentario del test atribuye a «R-07 y R-35» la prioridad de `REQUIRED` sobre `INVALID_FORMAT` e `INVALID_VALUE`. Pero R-35 se excluye a sí misma en este caso: «Las prioridades ya decididas mandan sobre esta regla: la #18 (`REQUIRED` para `null`, vacío o solo blancos)». Los nueve casos nuevos (`""`, `"   "` y `"\t\n"`) son justo los de la #18 y R-06. La ronda 1 (H-04 (b)) ya señaló esta misma confusión en C-48. Además, en `country` y `plan` el `INVALID_VALUE` viene de R-08 y R-09, no de R-07, que solo trata el email. El código y los tests están bien: el fallo está solo en las citas. |
+| H-14 | Menor | apps/api/src/data/sqlite/migrations-dir.spec.ts:11, :15 y :27, frente a :36-39 | Trazabilidad (principio 1); mismo defecto que H-11 | `migrations-dir.spec.ts` también es un fichero que toca esta spec (T-01, ampliación autorizada en `tasks.md:23`), pero no está en la tabla de la T-07. Sus líneas 36 a 39 ya citan «Spec 000» y «Spec 002». En cambio, las líneas 11 y 15 dicen «(D-05)» y «(D-05, H-08)», y la 27 dice «(R-08, H-08)», sin calificar. Las tres citas son de la 000: D-05 de su plan (`000-skeleton/plan.md:139`), R-08 de su spec y H-08 de su revisión. En la 002 los mismos números significan otra cosa: D-05 es el parser del cuerpo (`002/plan.md:115`), R-08 es el país y H-08 es la reserva de C-25. La ronda 3 no incluyó este fichero en H-11, así que la T-07 lo dejó fuera de forma coherente con su encargo. Aun así, el defecto que describe H-11 sigue presente aquí. |
+| H-15 | Menor | ai-workspace/specs/002-customers-create/spec.md:46-50, :53 y :55 | ADR-016, «Consecuencias»: «Cada spec anota qué ajustes de este ADR aplicó» | La sección 1 no anota los ajustes de la puerta 4 ampliada de la T-07. Según `sessions/2026-11-23-09…md`, en esa puerta se aplicaron cuatro puntos del ADR-016: el 3 (la fase roja se decidió antes de lanzar al planner, :62), el 4 (el encargo del planner se lanzó sin enseñarlo, :63), el 6 (planner con Opus 5.5, :63) y el 2 (la Q-01, con opciones y una recomendada, :66). Además, el bloque de la puerta 4 (:47) dice «Punto 3: ninguna decisión previsible nueva en esta puerta», y eso deja de ser cierto si se lee como la puerta 4 de toda la spec. El bloque de la puerta 6 (:55) solo anota el punto 1. Por último, la línea 53 da como fuentes los registros «`-03` a `-08`», pero la T-07 está en el `-09`; aun así, `tasks.md:203` sí lo dice. El autor pidió estos bloques para no repetir la H-14 de la 001 (`-09`:90), y esa omisión queda a medias. |
+
+### Checklists
+
+**Backend (`backend-conventions/checklist.md`), sobre los cinco ficheros de la T-07**
+
+*Capas*
+- `domain`: **cumple**. No hay ningún cambio en `domain` fuera de su test, y `create-customer.dto.spec.ts:1-3` solo importa `vitest` y ficheros de `domain`.
+- `presentation`: **cumple**. `presentation/routes.ts:1-4` tiene los mismos `import` que en la ronda 3.
+- `infrastructure` y `data`: **cumple**. Los `import` de `sqlite-connection.ts:1-2` e `index.ts:1-5` no cambian.
+- `app.ts`, `config` y `packages/pricing`: **no aplica**. No cambian.
+
+*Borde*, *Controladores y errores* y *Datos*: **no aplica**, todas las casillas. La T-07 no cambia código: el `--stat` de `index.ts`, `sqlite-connection.ts` y `presentation/routes.ts` coincide, línea a línea, con las citas de la tabla. Lo compruebo así:
+- `index.ts` tiene 3 líneas cambiadas, que son las 9, 10 y 13, todas `//`.
+- `sqlite-connection.ts` tiene 2, las 5 y 13, ambas `//`.
+- `routes.ts` tiene 3, las 6, 12 y 21, todas `//`.
+- `create-customer.dto.ts` no se toca.
+
+*Tests*
+- Cada regla con test, incluidos errores y límites: **cumple**. Lo que faltaba en H-10 está ahora en `create-customer.dto.spec.ts:117-129`: nueve entradas `""`, `"   "` y `"\t\n"` en `email`, `country` y `plan`, cada una con el resto del cuerpo válido (`withField`). Todas usan `expectSingle`, que es `toEqual([detail(field, code)])` (`:52-54`): exige el código exacto `REQUIRED`, el texto M-03 y un único elemento. Además, `detailsOf` (`:41-49`) comprueba `VALIDATION_ERROR` y M-11. En los `it` nuevos no hay ni `toContain` ni `arrayContaining`; el único `arrayContaining` está en el `expectDetails` de siempre (`:60`), que no usan.
+- Unitarios de `domain` sin base ni Express: **cumple**.
+- Integración con `:memory:`: **no aplica**. La T-07 no añade tests de integración. En `index.spec.ts` solo cambian títulos.
+- Test del ejecutor de migraciones: **no aplica**, no cambia.
+- Ningún test en rojo ni desactivado: **cumple**. La salida literal da «Test Files 20 passed (20) · Tests 470 passed (470)» y «3 passed (3) · 14 passed (14)», con exit 0: son 461 + 9, como pide `tasks.md:213`. En los dos ficheros de test no hay `.skip`, `.todo` ni `.only`.
+
+*Formato y origen*
+- Cada cambio cubre un `R-nn` o una decisión: **cumple**, con la reserva de H-13 en las citas. Los tests vienen de R-06 y H-10, y los comentarios, de H-11 y la Q-01 (`tasks.md:201`).
+- Nombres e idioma: **cumple**. Comentarios y títulos en español. El comentario del DTO ya no lleva «H-10», como pidió el autor (`tasks.md:204`).
+- Una responsabilidad por archivo: **cumple**.
+
+**Frontend (`frontend-conventions/checklist.md`):** **no aplica**, ninguna casilla. El `--stat -- apps packages` solo toca `apps/api`. La web compila y pasa sus 14 tests. No hay Lighthouse porque no hay vistas (Decisión 2026-11-23 #1).
+
+**Tabla de H-11 frente a las fuentes (`tasks.md:182-200`)**
+- `index.ts:9`: dice «spec 000: R-08, D-16». Encaja con R-08 (`000/spec.md:56`) y D-16 (`000/plan.md:220-222`, `openDatabase`). Correcto.
+- `index.ts:10`: dice «spec 002: R-26, R-27». Son los PRAGMA de la 002. Correcto.
+- `index.ts:13`: dice «spec 000: R-26» y «spec 000: R-23, P-02». Encaja con `000/spec.md:110` (`:memory:`), `:101` (crear `apps/api/data/`) y `000/plan.md:253` (P-02). Correcto.
+- `index.spec.ts:8`, `:30`, `:42`, `:60` y `:72`: las citas a C-30, C-26, R-23, P-02, R-26 y «base de C-09» son de la 000 (`000/spec.md:153`, `:170`, `:174`). Correcto.
+- `index.spec.ts:84` y `:93`: C-34, R-26, C-35 y R-27 llevan un solo «spec 002:» delante, como pidió el autor (`tasks.md:204`). Correcto.
+- `sqlite-connection.ts:5`: «spec 000: decisión del autor 2026-11-21» corresponde a `000/tasks.md:186`, la T-11, «ningún tipo de better-sqlite3 llega a presentation». Correcto.
+- `sqlite-connection.ts:13`: dice «spec 000: R-08, D-04, D-16». Encaja con `000/plan.md:74` y `:128`. Correcto.
+- `presentation/routes.ts:6` y `:12`: la «spec 000» con las Decisiones #10, #2 y #8 encaja con `000/spec.md:199`, `:191` y `:197`, y con D-16. Correcto.
+- `presentation/routes.ts:21`: dice «spec 002: D-14». Encaja con `002/plan.md:184`, ruta inexistente. Correcto.
+- `sqlite-connection.ts:26` y `routes.ts:17` no cambian, como decía la tabla.
+- Una observación sin hallazgo: las citas mezclan «spec 002, D-06» (`sqlite-connection.ts:5` y `:26`, `routes.ts:17`) con «spec 002: D-14» (`routes.ts:21`). La tabla dejó las primeras sin cambios a propósito.
+
+**Proceso (`sdd`)**
+- Cada `R-nn` tiene tarea, código y test: **cumple**. Para R-06 y R-07, «Cobertura» (`tasks.md:226-227`) añade la T-07 y los tests están en `:117-129`. Para R-35, ver H-13.
+- Tests y build en verde, según la salida literal: **cumple**. El build de `pricing`, `api` y `web` sale sin errores, con 470 y 14 tests.
+- `Estado:` frente al trabajo real: **cumple**. `En revisión` figura en `spec.md:3` y en `README.md:10` con el mismo texto. T-01 a T-07 están en `[x]`, y con H-10 y H-11 corregidas no queda trabajo pendiente.
+- Tareas de más de 5 archivos de producción: **cumple**. La T-07 tiene 3, solo comentarios (`tasks.md:177`), así que no necesita `Excepción de tamaño:`. Que una tarea toque tres capas lo justifica la decisión del autor («en la misma T-07»).
+- Ficheros cambiados frente a la tarea: **cumple**. El `--stat 5729d0b HEAD -- apps packages` da cinco ficheros, que son exactamente los de `tasks.md:214`. Las cuentas cuadran: `index.spec.ts` 7+/7- (las 7 citas de la tabla), `create-customer.dto.spec.ts` 16+/0- (las líneas 114-129, sin borrar nada, así que los `it` anteriores no cambian). El `git diff` de cada fichero que dio el implementer no venía en el encargo. Lo doy por comprobado con el `--stat` y el contenido actual.
+- Sin fase roja: **cumple** con la excepción declarada en `tasks.md:202`, por decisión literal del autor.
+- Observación sin hallazgo: el `git status` del inicio de la sesión muestra además `ai-workspace/sessions/2026-11-23-09-002-customers-create.md` modificado. No aparece en el `git status` del encargo. No es de `apps/` ni de `packages/`, y el registro de la sesión se escribe mientras ocurre (ADR-004).
+
+**Sección 1, bloques nuevos (`spec.md:51-55`)**
+- Puerta 5: los modelos de cada tarea coinciden con `tasks.md` y con los registros. T-01 y T-05 con Sonnet (`-03`:15 y :35; `-07`:25). T-02 y T-04 con Opus (`-04`:27; `-06`:26). La T-03 empezó con Sonnet y el autor la corrigió a Opus (`-05`:38). La T-06 con Opus y su cambio con Sonnet (`-08`:32 y :43). La T-07 con Sonnet (`tasks.md:203`). Cumple, salvo lo que señala H-15.
+- Puerta 6: punto 1 correcto. La ronda 4 está justificada porque H-10 es `Importante` (ADR-016, punto 1). Faltan los demás ajustes (H-15).
+
+### Seguimiento de la ronda anterior
+| ID | Estado | Nota |
+|---|---|---|
+| H-10 | Resuelto | `create-customer.dto.spec.ts:117-129`: nueve `it` sobre el esquema real. Cada uno compara con `toEqual` contra un único `REQUIRED` con M-03, así que fallaría si ganara `INVALID_FORMAT` o `INVALID_VALUE`, o si salieran dos elementos. Pasan: 470 tests en verde. C-08 y los requisitos no cambian, por decisión del autor. Hay que corregir la cita a R-35 (H-13). |
+| H-11 | Resuelto | Las 15 citas de la tabla están calificadas y coinciden con sus fuentes (arriba), y en los tres ficheros de producción solo cambian líneas `//`. El mismo defecto sigue en `migrations-dir.spec.ts`, que la ronda 3 no incluyó (H-14). |
+| H-12 | Resuelto | En `ai-workspace/screenshots/` están `fase-7-002-validar-encargo.png` y `fase-7-002-validar-veredicto.png`, y ya no queda ningún fichero terminado en `.png .png`. `spec.md:55` solo nombra la primera, aunque se renombraron las dos (`-09`:62). |
+
+## Aprobación del autor
+Aprobación del autor 2026-11-23, puerta 6 (cierre de la spec 002-customers-create), tras la ronda 4, texto literal (puntos 2 y 3 de su respuesta):
+
+> "2. (a). Acepto H-13, H-14 y H-15 como reservas:
+> - H-13: solo afecta a citas (un comentario del test y tasks.md); el comportamiento y los tests son correctos. Se corrige si otra spec vuelve a tocar ese DTO.
+> - H-14: son citas de la spec 000 en comentarios de migrations-dir.spec.ts, sin efecto en el comportamiento; se califican la próxima vez que una spec toque ese fichero.
+> - H-15: la propia reserva deja constancia de los ajustes del ADR-016 que faltan (puerta 4 ampliada: puntos 2, 3, 4 y 6; puerta 6: el resto), como la H-14 de la 001.
+> Motivo general: son Menor, sin efecto en el comportamiento, y otra tarea con su puerta 4 ampliada cuesta más de lo que aporta con el plazo.
+> 3. Apruebo el cierre de la spec 002-customers-create con las reservas H-05, H-13, H-14 y H-15. Pon Estado: Cerrada en spec.md y en el README, añade a review.md mi aprobación literal y actualiza MEMORY.md (máximo 50 líneas, con las reservas como pendientes)."

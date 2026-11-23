@@ -48,4 +48,6 @@ Si el tema tiene forma `NNN-nombre` y no existe `ai-workspace/specs/NNN-nombre/`
 
 6. Muéstrame el registro completo en el chat y pregunta: "¿Lo guardo en <ruta>?". Espera mi respuesta.
 7. Solo si digo que sí, guárdalo con Write en `ai-workspace/sessions/AAAA-MM-DD-NN-tema.md`.
-   Si el fichero ya existe, no lo sobrescribas: recalcula NN.
+   Si el fichero ya existe, no lo sobrescribas: recalcula NN. Excepción: si el registro de la
+   sesión ya existe porque la sesión principal lo abrió al llegar la fase roja (regla de
+   tasks.md), complétalo en ese mismo fichero en lugar de crear otro con otro número.
