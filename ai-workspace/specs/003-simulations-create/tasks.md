@@ -101,8 +101,10 @@ Reglas comunes de esta spec:
 ## T-04 · domain: DTO, entidad, puertos y caso de uso de la simulación
 - Cubre: R-03 (DTO y caso de uso), R-04, R-08, R-09, R-10 (`apps/api` las usa sin reimplementarlas), R-11 a R-22, R-24, R-27 (un solo elemento por campo, por construcción del DTO), R-28 (el caso de uso lanza `NOT_FOUND`), R-30 (el caso de uso deja salir el `RangeError`), R-34, R-35 (validación), R-36
 - Depende de: T-01, T-03
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Opus 5.5, confirmado por el autor (orden a mano «rango antes que tipo» con `z.unknown()` y `-0`).
+- Aprobación del autor 2026-11-23 (literal): «Apruebo la T-04.» `npm run verify` en verde: 631 tests en la raíz y 14 en la web (antes, 537 + 14), relanzado por la sesión principal.
+- Decisión del autor 2026-11-23 (literal), sobre las tres desviaciones declaradas por el implementer: «Las tres desviaciones: aceptadas (vi.mock con importOriginal, textos literales en detailsOf y campos pasados uno a uno a create).»
 - Archivos de producción (5), en `apps/api/src/domain/`:
   - `dtos/simulations/create-simulation.dto.ts` (nuevo): `z.strictObject` de los cuatro campos, cada uno `z.unknown()` con un `superRefine` en el orden de D-08 y un `transform` que deja el literal 0; `CreateSimulationDto.create(body)` con `safeParse(body, { reportInput: true })` y `toDetails`;
   - `entities/simulation.entity.ts` (nuevo): `SimulationEntity` (los diez campos de R-02) y `NewSimulation`;
@@ -112,28 +114,28 @@ Reglas comunes de esta spec:
 - Tests (nuevos): `dtos/simulations/create-simulation.dto.spec.ts` (valores JS, un `it` por entrada) y `use-cases/simulation/create-simulation.spec.ts` (repositorio falso).
 - Fase roja: los dos tests se escriben antes que los cinco ficheros y fallan porque no existen.
 - Hecho cuando:
-  - [ ] Fase roja: salida literal en el registro de la sesión.
-  - [ ] C-09 pasa (R-11, R-24): `{}` da cuatro `REQUIRED`; sin cada campo, un `REQUIRED` en ese campo.
-  - [ ] C-10 pasa (R-12): `true`, `{}` y `[]` en cada campo dan un `INVALID_TYPE` en ese campo.
-  - [ ] C-11 pasa (R-13): `null` en cada campo da un `REQUIRED`.
-  - [ ] C-12 pasa (R-14): `"15"`, `" 15 "`, `""` y `"abc"` en cada campo dan un `INVALID_TYPE`.
-  - [ ] C-13 a C-16 pasan (R-15 a R-18, R-20): -1 da `TOO_SMALL` y el máximo + 1 da `TOO_BIG`, en `activeUsers`, `storage` y `apiCalls`; `customerId` 0 y -1 dan `TOO_SMALL`; 0, los máximos y `customerId` 1 son válidos.
-  - [ ] C-17 pasa (R-19): `1.5` en cada campo da un `INVALID_TYPE`.
-  - [ ] C-18, parte del DTO (R-20): `activeUsers` 100 es válido.
-  - [ ] C-19 pasa (R-21): `extra` da un `UNKNOWN_FIELD`; `id`, `createdAt` y `baseCostCents` dan tres.
-  - [ ] C-20 (1) y (2), parte del DTO (R-22): `undefined`, `null`, `[]`, `"texto"` y `42` dan un único `INVALID_TYPE` sin `field`.
-  - [ ] C-22 pasa (R-24): `activeUsers: -1` y sin `customerId` dan dos elementos, uno por campo, con `field`, `code` y `message`.
-  - [ ] C-24 pasa (R-15 a R-18, R-27, R-34): `activeUsers: -1.5` → `TOO_SMALL`; `storage: 1000000.5` → `TOO_BIG`; `customerId: 0.5` → `TOO_SMALL`; `Infinity` → `TOO_BIG` y `-Infinity` → `TOO_SMALL` en los cuatro. Siempre un solo elemento, sin `INVALID_TYPE`.
-  - [ ] C-35, parte del DTO (R-34): `customerId` 9007199254740992 da un `TOO_BIG`; `Number.MAX_SAFE_INTEGER` es válido (C-37).
-  - [ ] C-36, parte del DTO (R-35): `-0` en `activeUsers`, `storage` y `apiCalls` es válido y el DTO lleva 0 (`Object.is(value, 0)`); `customerId: -0` da `TOO_SMALL`.
-  - [ ] Los textos de `details[]` son los literales (M-03, M-04, M-09, D-04 y D-05).
-  - [ ] Caso de uso (R-36, R-28, R-03): `findCustomerCountry` se llama antes de calcular; si da `undefined`, lanza el `CustomError` `NOT_FOUND` de T-03 y `create` no se llama.
-  - [ ] Caso de uso (R-30, R-03): con `'DE'`, sale el `RangeError` `unknown country` y `create` no se llama.
-  - [ ] Caso de uso (R-04 a R-08): con `ES` y 15 usuarios, `create` recibe base 14000, 2100, 2940 y 16940, y `storage` y `apiCalls` tal como llegan. Con `PT`, `FR` e `IT`, los importes de C-02. Con 0 y con 100000 usuarios, los de C-03 y C-04. Con `storage`/`apiCalls` 0 y en el máximo, los mismos importes (C-06). Devuelve la entidad de `create`.
-  - [ ] R-09: el caso de uso no lee el plan del cliente (el puerto solo devuelve el país).
-  - [ ] Los cinco ficheros solo importan Zod, `@saas-o-matic/pricing` o ficheros de `domain` (sin `node:*`, Express ni `better-sqlite3`).
-  - [ ] `npm run verify` desde la raíz, en verde.
-  - [ ] De `apps/` solo cambian los cinco ficheros de producción y los dos tests.
+  - [x] Fase roja: salida literal en el registro de la sesión.
+  - [x] C-09 pasa (R-11, R-24): `{}` da cuatro `REQUIRED`; sin cada campo, un `REQUIRED` en ese campo.
+  - [x] C-10 pasa (R-12): `true`, `{}` y `[]` en cada campo dan un `INVALID_TYPE` en ese campo.
+  - [x] C-11 pasa (R-13): `null` en cada campo da un `REQUIRED`.
+  - [x] C-12 pasa (R-14): `"15"`, `" 15 "`, `""` y `"abc"` en cada campo dan un `INVALID_TYPE`.
+  - [x] C-13 a C-16 pasan (R-15 a R-18, R-20): -1 da `TOO_SMALL` y el máximo + 1 da `TOO_BIG`, en `activeUsers`, `storage` y `apiCalls`; `customerId` 0 y -1 dan `TOO_SMALL`; 0, los máximos y `customerId` 1 son válidos.
+  - [x] C-17 pasa (R-19): `1.5` en cada campo da un `INVALID_TYPE`.
+  - [x] C-18, parte del DTO (R-20): `activeUsers` 100 es válido.
+  - [x] C-19 pasa (R-21): `extra` da un `UNKNOWN_FIELD`; `id`, `createdAt` y `baseCostCents` dan tres.
+  - [x] C-20 (1) y (2), parte del DTO (R-22): `undefined`, `null`, `[]`, `"texto"` y `42` dan un único `INVALID_TYPE` sin `field`.
+  - [x] C-22 pasa (R-24): `activeUsers: -1` y sin `customerId` dan dos elementos, uno por campo, con `field`, `code` y `message`.
+  - [x] C-24 pasa (R-15 a R-18, R-27, R-34): `activeUsers: -1.5` → `TOO_SMALL`; `storage: 1000000.5` → `TOO_BIG`; `customerId: 0.5` → `TOO_SMALL`; `Infinity` → `TOO_BIG` y `-Infinity` → `TOO_SMALL` en los cuatro. Siempre un solo elemento, sin `INVALID_TYPE`.
+  - [x] C-35, parte del DTO (R-34): `customerId` 9007199254740992 da un `TOO_BIG`; `Number.MAX_SAFE_INTEGER` es válido (C-37).
+  - [x] C-36, parte del DTO (R-35): `-0` en `activeUsers`, `storage` y `apiCalls` es válido y el DTO lleva 0 (`Object.is(value, 0)`); `customerId: -0` da `TOO_SMALL`.
+  - [x] Los textos de `details[]` son los literales (M-03, M-04, M-09, D-04 y D-05).
+  - [x] Caso de uso (R-36, R-28, R-03): `findCustomerCountry` se llama antes de calcular; si da `undefined`, lanza el `CustomError` `NOT_FOUND` de T-03 y `create` no se llama.
+  - [x] Caso de uso (R-30, R-03): con `'DE'`, sale el `RangeError` `unknown country` y `create` no se llama.
+  - [x] Caso de uso (R-04 a R-08): con `ES` y 15 usuarios, `create` recibe base 14000, 2100, 2940 y 16940, y `storage` y `apiCalls` tal como llegan. Con `PT`, `FR` e `IT`, los importes de C-02. Con 0 y con 100000 usuarios, los de C-03 y C-04. Con `storage`/`apiCalls` 0 y en el máximo, los mismos importes (C-06). Devuelve la entidad de `create`.
+  - [x] R-09: el caso de uso no lee el plan del cliente (el puerto solo devuelve el país).
+  - [x] Los cinco ficheros solo importan Zod, `@saas-o-matic/pricing` o ficheros de `domain` (sin `node:*`, Express ni `better-sqlite3`).
+  - [x] `npm run verify` desde la raíz, en verde.
+  - [x] De `apps/` solo cambian los cinco ficheros de producción y los dos tests.
 
 ## T-05 · infrastructure: datasource y repositorio de simulaciones
 - Cubre: R-01, R-02 (fila → entidad), R-03 y R-26 (sin fila, con base real), R-28 (sin fila), R-29 (traducción de la clave foránea y su prueba en el datasource), R-30 (sin fila), R-33 (enteros desde la base), R-35 (`-0` guardado como 0), R-36 (`SELECT country`)
