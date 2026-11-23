@@ -7,11 +7,12 @@ import type { ErrorDetail } from '../errors/custom.error.js';
 type Issue = z.core.$ZodIssue;
 
 // Un texto por código, sin nombrar el campo (spec 002, plan D-03, M-03 a M-10).
-// Sin TOO_SMALL: esta spec no lo usa y su texto lo fijará la primera spec que lo use.
+// spec 003: TOO_SMALL (D-04) y el nuevo texto de TOO_BIG (D-05, antes «Supera la longitud máxima.»).
 export const MESSAGES = {
   REQUIRED: 'Este campo es obligatorio.',
   INVALID_TYPE: 'El tipo de dato no es válido.',
-  TOO_BIG: 'Supera la longitud máxima.',
+  TOO_SMALL: 'Está por debajo del mínimo permitido.',
+  TOO_BIG: 'Supera el máximo permitido.',
   INVALID_FORMAT: 'El formato no es válido.',
   INVALID_VALUE: 'El valor no está entre los admitidos.',
   UNKNOWN_FIELD: 'Campo no admitido.',
@@ -21,10 +22,19 @@ export const MESSAGES = {
 export type DetailCode = keyof typeof MESSAGES;
 
 // Códigos que un custom puede pedir con params.code (D-07, regla 3).
-const CUSTOM_CODES: ReadonlySet<string> = new Set<DetailCode>(['REQUIRED', 'TOO_BIG', 'INVALID_TAX_ID']);
+// spec 003: D-09 añade INVALID_TYPE y TOO_SMALL.
+const CUSTOM_CODES: ReadonlySet<string> = new Set<DetailCode>([
+  'REQUIRED',
+  'INVALID_TYPE',
+  'TOO_SMALL',
+  'TOO_BIG',
+  'INVALID_TAX_ID',
+]);
 
-// Prioridad dentro de un campo: REQUIRED > TOO_BIG > el resto (Decisión 2026-11-23 #32, R-35).
-const rank = (code: DetailCode): number => (code === 'REQUIRED' ? 0 : code === 'TOO_BIG' ? 1 : 2);
+// Prioridad dentro de un campo: REQUIRED > TOO_SMALL = TOO_BIG > el resto (Decisión 2026-11-23 #32, R-35;
+// spec 003: D-09 pone TOO_SMALL al mismo nivel que TOO_BIG).
+const rank = (code: DetailCode): number =>
+  code === 'REQUIRED' ? 0 : code === 'TOO_SMALL' || code === 'TOO_BIG' ? 1 : 2;
 
 // Clave del elemento sin field (cuerpo que no es un objeto); no choca con ningún nombre de campo.
 const ROOT = Symbol('root');

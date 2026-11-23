@@ -68,8 +68,11 @@ Reglas comunes de esta spec:
 ## T-03 · domain: textos de `TOO_SMALL` y `TOO_BIG`, traductor y error `NOT_FOUND`
 - Cubre: R-15 a R-17 y R-18, R-34 en la parte del texto de `details[]` (`TOO_SMALL` y `TOO_BIG`); R-27 en la parte de la prioridad del traductor (`rank`); R-28 y R-29 en la parte del texto y del `CustomError` `NOT_FOUND` sin `details`
 - Depende de: —
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Sonnet 5.5, confirmado por el autor (textos literales y cambios acotados por la lista de la D-16).
+- Aprobación del autor 2026-11-23 (literal): «Apruebo la T-03.» `npm run verify` en verde: 537 tests en la raíz y 14 en la web (antes, 532 + 14), relanzado por la sesión principal.
+- Decisión del autor 2026-11-23 (literal), sobre una desviación no declarada del implementer: «1. Filas de prioridad: (a). Acepto las dos filas con TOO_SMALL como cumplimiento de la casilla (gana al resto y pierde ante REQUIRED); anótalo en la T-03 como decisión mía.» Las dos filas del `it.each` de prioridad de `zod-issues.spec.ts` son `[INVALID_TAX_ID, TOO_SMALL, REQUIRED] → REQUIRED` y `[INVALID_TAX_ID, TOO_SMALL] → TOO_SMALL`; la Q-01 nombraba una.
+- Decisión del autor 2026-11-23 (literal), sobre el comentario que añadió el implementer: «2. Comentario de create-customer.dto.spec.ts:12: (a), se mantiene.»
 - Archivos de producción (2):
   - `apps/api/src/domain/dtos/zod-issues.ts`: `MESSAGES.TOO_BIG` «Supera el máximo permitido.» (D-05, `:14`); `MESSAGES.TOO_SMALL` «Está por debajo del mínimo permitido.» (D-04); `CUSTOM_CODES` con `REQUIRED`, `INVALID_TYPE`, `TOO_SMALL`, `TOO_BIG` e `INVALID_TAX_ID`; `rank` con `TOO_SMALL` igual que `TOO_BIG` (D-09). **D-16 (spec 002):** comentarios de `:9-10`, `:23` y `:26` al día, con citas «spec 003: …».
   - `apps/api/src/domain/errors/customer-not-found.error.ts` (nuevo): `CUSTOMER_NOT_FOUND_MESSAGE` y `customerNotFoundError()` (D-03, D-07).
@@ -81,19 +84,19 @@ Reglas comunes de esta spec:
   - `apps/api/src/domain/dtos/zod-issues.spec.ts`, **Q-01 (a), ampliación de la D-16 del autor**: dos casos nuevos, con citas «spec 003: …». Una fila `INVALID_TYPE` en el `it.each` de `:103-112` («refine con params.code %s da ese código»). Una fila con `TOO_SMALL` en el `it.each` de prioridad de `:153-163`. No se cambia ni se borra ninguna aserción existente por esta ampliación.
 - Fase roja: los cambios de los tests, los dos casos nuevos de la Q-01 y el test nuevo se escriben antes que el código. Fallan por el texto de M-06, por la falta de `TOO_SMALL` (en `MESSAGES`, `CUSTOM_CODES` y `rank`), porque `INVALID_TYPE` no está en `CUSTOM_CODES` y porque `customer-not-found.error.ts` no existe.
 - Hecho cuando:
-  - [ ] Fase roja: salida literal en el registro de la sesión.
-  - [ ] D-05: `TOO_BIG` da «Supera el máximo permitido.» en `zod-issues.spec.ts` y en `create-customer.dto.spec.ts`; la suite de la 002 sigue en verde.
-  - [ ] D-04, D-09: un `custom` con `params.code` `TOO_SMALL` da `TOO_SMALL` con «Está por debajo del mínimo permitido.»; `MESSAGES` tiene los textos de M-03, M-04, D-05, M-07 a M-10 y D-04.
-  - [ ] Q-01 (a), D-09: la fila nueva `INVALID_TYPE` del `it.each` de `zod-issues.spec.ts:103-112` pasa: un `custom` con `params.code` `INVALID_TYPE` da `INVALID_TYPE` con M-04.
-  - [ ] Q-01 (a), D-09: la fila nueva con `TOO_SMALL` del `it.each` de prioridad de `zod-issues.spec.ts:153-163` pasa: en un mismo campo, `TOO_SMALL` gana a un código del resto y pierde ante `REQUIRED`, con un solo elemento.
-  - [ ] En los ficheros de test de la 002 no se cambia ni se borra ninguna aserción existente fuera de lo que autorizan la D-05 (`:12` de los dos tests) y la D-16 (`zod-issues.spec.ts:126` y `:206-217`). Los dos casos de la Q-01 solo se añaden (`git diff` de `zod-issues.spec.ts`).
-  - [ ] Sin cambio de comportamiento en la 002: el `too_small` nativo de Zod sigue dando `INVALID_VALUE` (`zod-issues.spec.ts:132-136`, sin tocar).
-  - [ ] R-28, R-29: `customerNotFoundError()` da un `CustomError` con `code` `NOT_FOUND`, `message` «No existe el cliente indicado.» (`toBe`) y `details` vacío.
-  - [ ] Nota de la M-06 en `ai-workspace/specs/002-customers-create/plan.md`, tras la línea 7, con el texto de la D-05 de la 003; `git diff` de ese fichero solo con esa nota.
-  - [ ] D-16: en `zod-issues.ts`, `zod-issues.spec.ts` y `create-customer.dto.spec.ts` solo cambian las líneas de la lista, más los dos casos añadidos de la Q-01; ninguna aserción se borra ni se desactiva (`git diff` de los tres). Si falla otro test de la 000 o la 002, la tarea para y lo devuelve.
-  - [ ] Los dos ficheros de producción solo importan Zod o ficheros de `domain` (sin `node:*`, Express ni `better-sqlite3`).
-  - [ ] `npm run verify` desde la raíz, en verde.
-  - [ ] De `apps/` solo cambian los dos ficheros de producción y los tests nombrados; de `ai-workspace/`, solo la nota del plan de la 002.
+  - [x] Fase roja: salida literal en el registro de la sesión.
+  - [x] D-05: `TOO_BIG` da «Supera el máximo permitido.» en `zod-issues.spec.ts` y en `create-customer.dto.spec.ts`; la suite de la 002 sigue en verde.
+  - [x] D-04, D-09: un `custom` con `params.code` `TOO_SMALL` da `TOO_SMALL` con «Está por debajo del mínimo permitido.»; `MESSAGES` tiene los textos de M-03, M-04, D-05, M-07 a M-10 y D-04.
+  - [x] Q-01 (a), D-09: la fila nueva `INVALID_TYPE` del `it.each` de `zod-issues.spec.ts:103-112` pasa: un `custom` con `params.code` `INVALID_TYPE` da `INVALID_TYPE` con M-04.
+  - [x] Q-01 (a), D-09: la fila nueva con `TOO_SMALL` del `it.each` de prioridad de `zod-issues.spec.ts:153-163` pasa: en un mismo campo, `TOO_SMALL` gana a un código del resto y pierde ante `REQUIRED`, con un solo elemento (con dos filas, decisión del autor arriba).
+  - [x] En los ficheros de test de la 002 no se cambia ni se borra ninguna aserción existente fuera de lo que autorizan la D-05 (`:12` de los dos tests) y la D-16 (`zod-issues.spec.ts:126` y `:206-217`). Los dos casos de la Q-01 solo se añaden (`git diff` de `zod-issues.spec.ts`).
+  - [x] Sin cambio de comportamiento en la 002: el `too_small` nativo de Zod sigue dando `INVALID_VALUE` (`zod-issues.spec.ts:132-136`, sin tocar).
+  - [x] R-28, R-29: `customerNotFoundError()` da un `CustomError` con `code` `NOT_FOUND`, `message` «No existe el cliente indicado.» (`toBe`) y `details` vacío.
+  - [x] Nota de la M-06 en `ai-workspace/specs/002-customers-create/plan.md`, tras la línea 7, con el texto de la D-05 de la 003; `git diff` de ese fichero solo con esa nota.
+  - [x] D-16: en `zod-issues.ts`, `zod-issues.spec.ts` y `create-customer.dto.spec.ts` solo cambian las líneas de la lista, más los dos casos añadidos de la Q-01; ninguna aserción se borra ni se desactiva (`git diff` de los tres). Si falla otro test de la 000 o la 002, la tarea para y lo devuelve.
+  - [x] Los dos ficheros de producción solo importan Zod o ficheros de `domain` (sin `node:*`, Express ni `better-sqlite3`).
+  - [x] `npm run verify` desde la raíz, en verde.
+  - [x] De `apps/` solo cambian los dos ficheros de producción y los tests nombrados; de `ai-workspace/`, solo la nota del plan de la 002.
 
 ## T-04 · domain: DTO, entidad, puertos y caso de uso de la simulación
 - Cubre: R-03 (DTO y caso de uso), R-04, R-08, R-09, R-10 (`apps/api` las usa sin reimplementarlas), R-11 a R-22, R-24, R-27 (un solo elemento por campo, por construcción del DTO), R-28 (el caso de uso lanza `NOT_FOUND`), R-30 (el caso de uso deja salir el `RangeError`), R-34, R-35 (validación), R-36

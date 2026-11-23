@@ -9,7 +9,7 @@ import { CreateCustomerDto } from './create-customer.dto.js';
 const MESSAGES: Record<string, string> = {
   REQUIRED: 'Este campo es obligatorio.',
   INVALID_TYPE: 'El tipo de dato no es válido.',
-  TOO_BIG: 'Supera la longitud máxima.',
+  TOO_BIG: 'Supera el máximo permitido.', // spec 003: D-05 (antes «Supera la longitud máxima.»)
   INVALID_FORMAT: 'El formato no es válido.',
   INVALID_VALUE: 'El valor no está entre los admitidos.',
   UNKNOWN_FIELD: 'Campo no admitido.',

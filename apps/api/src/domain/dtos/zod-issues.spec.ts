@@ -9,7 +9,9 @@ import { MESSAGES, toDetails } from './zod-issues.js';
 // Textos literales de D-03 (M-03 a M-10).
 const M03 = 'Este campo es obligatorio.';
 const M04 = 'El tipo de dato no es válido.';
-const M06 = 'Supera la longitud máxima.';
+const M06 = 'Supera el máximo permitido.'; // spec 003: D-05 (antes «Supera la longitud máxima.»)
+// spec 003: D-04, texto de TOO_SMALL.
+const TOO_SMALL_TEXT = 'Está por debajo del mínimo permitido.';
 const M07 = 'El formato no es válido.';
 const M08 = 'El valor no está entre los admitidos.';
 const M09 = 'Campo no admitido.';
@@ -104,6 +106,8 @@ describe('toDetails: regla 3, resto de códigos', () => {
     ['REQUIRED', M03],
     ['TOO_BIG', M06],
     ['INVALID_TAX_ID', M10],
+    ['TOO_SMALL', TOO_SMALL_TEXT], // spec 003: D-04 y D-09
+    ['INVALID_TYPE', M04], // spec 003: Q-01 (a) y D-09
   ])('refine con params.code %s da ese código', (code, message) => {
     const schema = z.strictObject({ name: z.string().refine(() => false, { params: { code } }) });
     const [issue] = issuesOf(schema, { name: 'a' }, true);
@@ -123,7 +127,6 @@ describe('toDetails: regla 3, resto de códigos', () => {
   it.each([
     ['sin params', undefined],
     ['con un código fuera de la lista', { code: 'OTRO' }],
-    ['con TOO_SMALL, que no está en la lista', { code: 'TOO_SMALL' }],
   ])('custom %s da INVALID_VALUE', (_label, params) => {
     const schema = z.strictObject({ name: z.string().refine(() => false, params ? { params } : undefined) });
     expect(detailsOf(schema, { name: 'a' })).toEqual([{ field: 'name', code: 'INVALID_VALUE', message: M08 }]);
@@ -156,6 +159,9 @@ describe('toDetails: regla 4, un elemento por campo con prioridad (R-14, R-35)',
     [['INVALID_TAX_ID', 'TOO_BIG'], 'TOO_BIG'],
     [['TOO_BIG', 'INVALID_TAX_ID'], 'TOO_BIG'],
     [['OTRO', 'REQUIRED'], 'REQUIRED'],
+    // spec 003: Q-01 (a) y D-09, TOO_SMALL vale como TOO_BIG: gana al resto y pierde ante REQUIRED.
+    [['INVALID_TAX_ID', 'TOO_SMALL', 'REQUIRED'], 'REQUIRED'],
+    [['INVALID_TAX_ID', 'TOO_SMALL'], 'TOO_SMALL'],
   ])('con %j da un solo elemento %s', (codes, expected) => {
     const details = detailsOf(fieldWith(codes), { name: 'a' });
     expect(details).toHaveLength(1);
@@ -203,17 +209,18 @@ describe('toDetails: regla 5, sin input ni valor recibido', () => {
 });
 
 describe('MESSAGES (D-03)', () => {
-  it('tiene los textos literales de M-03 a M-10 y no tiene TOO_SMALL', () => {
+  it('tiene los textos literales de M-03 a M-10 y TOO_SMALL (spec 003: D-04)', () => {
     expect(MESSAGES).toEqual({
       REQUIRED: M03,
       INVALID_TYPE: M04,
+      TOO_SMALL: TOO_SMALL_TEXT,
       TOO_BIG: M06,
       INVALID_FORMAT: M07,
       INVALID_VALUE: M08,
       UNKNOWN_FIELD: M09,
       INVALID_TAX_ID: M10,
     });
-    expect(MESSAGES).not.toHaveProperty('TOO_SMALL');
+    expect(MESSAGES).toHaveProperty('TOO_SMALL', TOO_SMALL_TEXT);
   });
 });
 
