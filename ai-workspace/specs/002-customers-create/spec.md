@@ -1,6 +1,6 @@
 # Spec 002 · customers-create
 
-- **Estado:** Planificada
+- **Estado:** En implementación
 - **Depende de:** 000
 - **Cubre:** §2.A
 

@@ -16,21 +16,24 @@ Reglas comunes de esta spec:
 ## T-01 · data: migración `0001_init.sql` y `PRAGMA` en `openDatabase`
 - Cubre: R-25, R-26, R-27
 - Depende de: —
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción (2): `apps/api/migrations/0001_init.sql` (nuevo: solo `customers`, con columnas, tipos, `PRIMARY KEY`, `NOT NULL`, `CHECK (length(trim(…)) > 0)`, `DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))` y `STRICT` de `database.md` tal cual, más `UNIQUE (country, tax_id)`; sin `simulations`; D-10) y `apps/api/src/data/sqlite/index.ts` (`PRAGMA foreign_keys = ON` siempre y `PRAGMA journal_mode = WAL` si la ruta no es `:memory:`, justo tras abrir y antes de `runMigrations`, fuera de toda transacción; comentario al día, sin la frase «los trae la spec 002»).
 - Tests: `apps/api/src/data/sqlite/schema.spec.ts` (nuevo, sobre `openDatabase(':memory:')`) y `apps/api/src/data/sqlite/index.spec.ts` (las dos pruebas de `user_version` pasan de 0 a 1; C-34 y C-35).
 - Fase roja: `schema.spec.ts` y los cambios de `index.spec.ts` se escriben antes que la migración y los `PRAGMA`, y fallan porque `customers` no existe, `user_version` es 0 y los `PRAGMA` no se ejecutan.
+- Ampliación autorizada por el autor el 2026-11-23, tras el bloqueo del implementer (`migrations-dir.spec.ts:40`, test de la spec 000 que exigía `migrations/` sin ningún `.sql`), literal: «migrations-dir.spec.ts: (A), con un cambio: en vez de esperar exactamente .gitkeep y 0001_init.sql, que la segunda comprobación exija .gitkeep y que todo .sql siga el patrón NNNN_nombre.sql (R-27 de la spec 000). Así la 003, que añadirá 0002, no tendrá que tocar este test otra vez. Amplía la T-01 con ese fichero de test y anota en ella mi autorización literal, como el borrado de index.spec.ts en la T-04 de la 001.» Con ella, T-01 cambia también el test `apps/api/src/data/sqlite/migrations-dir.spec.ts` (sigue con 2 archivos de producción).
+- Rojo de C-34 aceptado por el autor el 2026-11-23, literal: «Rojo de C-34: (A). Acéptalo sin C-34 y anótalo en la T-01 con su motivo (better-sqlite3 se compila con SQLITE_DEFAULT_FOREIGN_KEYS=1). El PRAGMA explícito se queda por R-26.» Motivo: `node_modules/better-sqlite3/deps/defines.gypi:14` compila SQLite con `SQLITE_DEFAULT_FOREIGN_KEYS=1`, así que C-34 pasa sin el `PRAGMA`.
+- Aprobación del autor 2026-11-23 (literal): «Apruebo la T-01.» `npm run verify` en verde: 81 tests en la raíz y 14 en la web. Las casillas de «el resto de tests de la spec 000 sin cambios» y de los ficheros de `apps/` se cumplen con la ampliación de arriba: cambia también `migrations-dir.spec.ts`, autorizado por el autor.
 - Hecho cuando:
-  - [ ] Fase roja: salida literal en el registro de la sesión.
-  - [ ] C-31 pasa: `customers` existe y es `STRICT` (`PRAGMA table_list`), con sus siete columnas e `id` `INTEGER PRIMARY KEY` (`PRAGMA table_info`), `UNIQUE(country, tax_id)` (`PRAGMA index_list`), sin lista de valores en `country` ni `plan` (`sqlite_master.sql`); no existe `simulations`; `PRAGMA user_version` = 1.
-  - [ ] C-32 pasa: un `INSERT` directo con `company_name` solo con espacios, y aparte con cada columna de texto, lo rechaza el `CHECK`.
-  - [ ] C-33 pasa: un `INSERT` directo sin `created_at` deja `created_at` con formato `AAAA-MM-DDTHH:MM:SS.sssZ`.
-  - [ ] C-39 pasa: dos filas con el mismo `country` y `tax_id`, la segunda la rechaza `UNIQUE`; con el mismo `tax_id` y `country` distinto, entran las dos.
-  - [ ] C-34 pasa: `PRAGMA foreign_keys` devuelve 1 con `openDatabase(':memory:')` y con un fichero temporal.
-  - [ ] C-35 pasa: `PRAGMA journal_mode` devuelve `wal` con un fichero temporal; la conexión se cierra antes de borrar la carpeta temporal (riesgo 7 del plan).
-  - [ ] Las pruebas de `user_version` de `index.spec.ts` esperan 1 (riesgo 6) y el resto de tests de la spec 000 sigue en verde sin cambios.
-  - [ ] `npm run verify` desde la raíz, en verde.
-  - [ ] De `apps/` solo cambian `0001_init.sql`, `index.ts`, `schema.spec.ts` e `index.spec.ts` (`git status` y `git diff --stat`).
+  - [x] Fase roja: salida literal en el registro de la sesión.
+  - [x] C-31 pasa: `customers` existe y es `STRICT` (`PRAGMA table_list`), con sus siete columnas e `id` `INTEGER PRIMARY KEY` (`PRAGMA table_info`), `UNIQUE(country, tax_id)` (`PRAGMA index_list`), sin lista de valores en `country` ni `plan` (`sqlite_master.sql`); no existe `simulations`; `PRAGMA user_version` = 1.
+  - [x] C-32 pasa: un `INSERT` directo con `company_name` solo con espacios, y aparte con cada columna de texto, lo rechaza el `CHECK`.
+  - [x] C-33 pasa: un `INSERT` directo sin `created_at` deja `created_at` con formato `AAAA-MM-DDTHH:MM:SS.sssZ`.
+  - [x] C-39 pasa: dos filas con el mismo `country` y `tax_id`, la segunda la rechaza `UNIQUE`; con el mismo `tax_id` y `country` distinto, entran las dos.
+  - [x] C-34 pasa: `PRAGMA foreign_keys` devuelve 1 con `openDatabase(':memory:')` y con un fichero temporal.
+  - [x] C-35 pasa: `PRAGMA journal_mode` devuelve `wal` con un fichero temporal; la conexión se cierra antes de borrar la carpeta temporal (riesgo 7 del plan).
+  - [x] Las pruebas de `user_version` de `index.spec.ts` esperan 1 (riesgo 6) y el resto de tests de la spec 000 sigue en verde sin cambios.
+  - [x] `npm run verify` desde la raíz, en verde.
+  - [x] De `apps/` solo cambian `0001_init.sql`, `index.ts`, `schema.spec.ts` e `index.spec.ts` (`git status` y `git diff --stat`).
 
 ## T-02 · domain: `CustomError` y traductor de `details[]`
 - Cubre: R-04, R-05, R-06, R-11, R-12, R-14, R-15, R-35

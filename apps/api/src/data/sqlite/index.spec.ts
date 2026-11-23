@@ -69,15 +69,31 @@ describe('openDatabase', () => {
     expect(readdirSync(process.cwd()).sort()).toEqual(cwdEntriesBefore);
   });
 
-  it('aplica las migraciones reales de apps/api/migrations/ (0 ficheros) y user_version queda en 0 (base de C-09)', () => {
+  it('aplica las migraciones reales de apps/api/migrations/ (0001_init.sql) y user_version queda en 1 (base de C-09)', () => {
     db = openDatabase(':memory:');
 
-    expect(userVersion(db)).toBe(0);
+    expect(userVersion(db)).toBe(1);
   });
 
-  it('aplica las migraciones reales también en una base en fichero (user_version 0)', () => {
+  it('aplica las migraciones reales también en una base en fichero (user_version 1)', () => {
     db = openDatabase(path.join(tempRoot, 'data', 'saas-o-matic.db'));
 
-    expect(userVersion(db)).toBe(0);
+    expect(userVersion(db)).toBe(1);
+  });
+
+  it('C-34: foreign_keys vale 1 con ":memory:" y con un fichero temporal (R-26)', () => {
+    db = openDatabase(':memory:');
+    expect(db.pragma('foreign_keys', { simple: true })).toBe(1);
+    db.close();
+
+    db = openDatabase(path.join(tempRoot, 'fk.db'));
+    expect(db.pragma('foreign_keys', { simple: true })).toBe(1);
+  });
+
+  it('C-35: journal_mode vale wal con un fichero temporal (R-27)', () => {
+    db = openDatabase(path.join(tempRoot, 'wal.db'));
+
+    expect(db.pragma('journal_mode', { simple: true })).toBe('wal');
+    // La conexión se cierra en afterEach antes de borrar la carpeta (WAL deja -wal y -shm).
   });
 });

@@ -33,10 +33,14 @@ describe('MIGRATIONS_DIR compilado', () => {
 });
 
 describe('carpeta migrations/ del esqueleto', () => {
-  it('tiene .gitkeep y ningún fichero .sql (C-28, R-25)', () => {
+  // Spec 000: C-28 y R-25 (carpeta con .gitkeep) y R-27 (solo cuentan los ficheros NNNN_*.sql).
+  // Spec 002: R-25 añade 0001_init.sql; el test ya no fija una lista de ficheros para que
+  // las specs siguientes añadan migraciones sin tocarlo.
+  it('tiene .gitkeep y todo fichero .sql sigue el patrón NNNN_*.sql (C-28 y R-27 de la spec 000; R-25 de la spec 002)', () => {
     const files = readdirSync(expectedDirectory);
 
     expect(files).toContain('.gitkeep');
-    expect(files.filter((name) => name.endsWith('.sql'))).toEqual([]);
+    const sqlFiles = files.filter((name) => name.endsWith('.sql'));
+    expect(sqlFiles.filter((name) => !/^\d{4}_.+\.sql$/.test(name))).toEqual([]);
   });
 });
