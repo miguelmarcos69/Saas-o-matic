@@ -60,23 +60,25 @@ Reglas comunes de esta spec:
 ## T-03 · domain: normalización y validación del identificador fiscal
 - Cubre: R-18, R-19, R-20, R-21, R-24, R-30
 - Depende de: —
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción (2): `apps/api/src/domain/dtos/customers/tax-id.ts` (nuevo: `normalizeTaxId(raw)`, que quita `/[\s.\-]/g` y pasa solo `a`-`z` a `A`-`Z` carácter a carácter, sin `toUpperCase`; e `isValidTaxId(country, normalized)`, que llama a la de España en `ES` o aplica `^[A-Z0-9]{2,}$` en `PT`, `FR` e `IT`; D-04) y `apps/api/src/domain/dtos/customers/spanish-tax-id.ts` (nuevo: `isValidSpanishTaxId(normalized)` con DNI, NIE y CIF según D-08 y su tabla aprobada).
 - Tests: `apps/api/src/domain/dtos/customers/tax-id.spec.ts` y `apps/api/src/domain/dtos/customers/spanish-tax-id.spec.ts` (nuevos), sin servidor ni base (C-30).
 - Fase roja: los dos tests se escriben antes que los dos ficheros y fallan porque no existen.
+- Añadidos del implementer decididos por el autor el 2026-11-23, literal: «Nota 1: aceptado el tipo TaxIdCountry. Nota 3: aceptados los casos de más.» Con ella, `tax-id.ts` exporta `TaxIdCountry = 'ES' | 'PT' | 'FR' | 'IT'` como tipo de `country` en `isValidTaxId`, sin cambio de comportamiento, y los dos tests prueban, además de los casos de «Hecho cuando», cada letra de entidad de D-08, el control 0 del CIF, longitudes incorrectas, dígitos no ASCII y otros blancos de `trim`.
+- Aprobación del autor 2026-11-23 (literal): «Apruebo la T-03.» Implementer con Opus 5.5, por corrección del autor (ADR-016, punto 6). `npm run verify` en verde: 235 tests en la raíz y 14 en la web.
 - Hecho cuando:
-  - [ ] Fase roja: salida literal en el registro de la sesión.
-  - [ ] C-21 pasa: `12345678Z` es válido.
-  - [ ] C-22 pasa: `X1234567L`, `Y1234567X`, `Z1234567R`, `A58818501` y `Q1234567D` son válidos, y también `G12345674` y `G1234567D` (CIF «del resto», plan, sección 6).
-  - [ ] C-23 y C-24 pasan: `12345678A`, `X1234567A`, `A58818502`, `A5881850A` y `Q12345674` no son válidos.
-  - [ ] C-25 pasa: `123456789`, `ABC`, `K1234567L`, `L7654321J`, `M1111111G` y `K1234567D` no son válidos (Decisión 2026-11-23 #10 y #30).
-  - [ ] C-26 pasa: en `PT`, `FR` e `IT`, `AB` y `ABCDEFGHIJ0123456789` son válidos, y `normalizeTaxId('ab-12.3')` da `AB123`, válido.
-  - [ ] C-27 pasa: `normalizeTaxId` da `12345678Z`, `X1234567L` y `12345678Z` para `" 12.345.678-z "`, `"x-1234567-l"` y `"12345678\tZ"`, y los tres son válidos en `ES`.
-  - [ ] C-36 y C-38 pasan: en `PT`, `A` no es válido; en `FR`, `AB_12` sigue igual tras normalizar y no es válido.
-  - [ ] C-49 a C-51, en la parte de la función: `normalizeTaxId` deja sin tocar `ß`, `ı`, `ſ`, `‐` (U+2010) y `–` (U+2013); `ß12` e `ı12345` en `PT`, `ſ1234567D`, `12345678‐Z` y `12345678–Z` en `ES` y `AB–12` en `PT` no son válidos.
-  - [ ] C-30, parte automática: los dos tests pasan sin Express, SQLite ni servidor; `spanish-tax-id.ts` no tiene ningún `import` y `tax-id.ts` solo importa `./spanish-tax-id.js` (D-04: `isValidTaxId` llama a la de España); ninguno importa Zod (D-04). La parte manual la hace el revisor en la puerta 6.
-  - [ ] `npm run verify` desde la raíz, en verde.
-  - [ ] De `apps/` solo cambian `tax-id.ts`, `spanish-tax-id.ts` y sus dos tests.
+  - [x] Fase roja: salida literal en el registro de la sesión.
+  - [x] C-21 pasa: `12345678Z` es válido.
+  - [x] C-22 pasa: `X1234567L`, `Y1234567X`, `Z1234567R`, `A58818501` y `Q1234567D` son válidos, y también `G12345674` y `G1234567D` (CIF «del resto», plan, sección 6).
+  - [x] C-23 y C-24 pasan: `12345678A`, `X1234567A`, `A58818502`, `A5881850A` y `Q12345674` no son válidos.
+  - [x] C-25 pasa: `123456789`, `ABC`, `K1234567L`, `L7654321J`, `M1111111G` y `K1234567D` no son válidos (Decisión 2026-11-23 #10 y #30).
+  - [x] C-26 pasa: en `PT`, `FR` e `IT`, `AB` y `ABCDEFGHIJ0123456789` son válidos, y `normalizeTaxId('ab-12.3')` da `AB123`, válido.
+  - [x] C-27 pasa: `normalizeTaxId` da `12345678Z`, `X1234567L` y `12345678Z` para `" 12.345.678-z "`, `"x-1234567-l"` y `"12345678\tZ"`, y los tres son válidos en `ES`.
+  - [x] C-36 y C-38 pasan: en `PT`, `A` no es válido; en `FR`, `AB_12` sigue igual tras normalizar y no es válido.
+  - [x] C-49 a C-51, en la parte de la función: `normalizeTaxId` deja sin tocar `ß`, `ı`, `ſ`, `‐` (U+2010) y `–` (U+2013); `ß12` e `ı12345` en `PT`, `ſ1234567D`, `12345678‐Z` y `12345678–Z` en `ES` y `AB–12` en `PT` no son válidos.
+  - [x] C-30, parte automática: los dos tests pasan sin Express, SQLite ni servidor; `spanish-tax-id.ts` no tiene ningún `import` y `tax-id.ts` solo importa `./spanish-tax-id.js` (D-04: `isValidTaxId` llama a la de España); ninguno importa Zod (D-04). La parte manual la hace el revisor en la puerta 6.
+  - [x] `npm run verify` desde la raíz, en verde.
+  - [x] De `apps/` solo cambian `tax-id.ts`, `spanish-tax-id.ts` y sus dos tests.
 
 ## T-04 · domain: DTO de alta, entidad, puertos y caso de uso
 - Cubre: R-01 (puertos y caso de uso), R-02 (entidad), R-04 a R-12, R-14, R-17, R-18, R-19, R-20, R-21, R-23, R-28, R-29, R-30, R-33, R-34, R-35
