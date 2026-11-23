@@ -45,22 +45,25 @@ Reglas comunes de esta spec:
 ## T-02 · data: migración `0002_simulations.sql`
 - Cubre: R-31 (todas sus partes), R-32; R-01 en la parte del esquema
 - Depende de: —
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Sonnet 5.5, confirmado por el autor (SQL dado literal en D-13 y cambios de test acotados).
+- Aprobación del autor 2026-11-23 (literal): «Apruebo la T-02.» `npm run verify` en verde: 532 tests en la raíz y 14 en la web (antes, 528 + 14), relanzado por la sesión principal.
+- Decisión del autor 2026-11-23 (literal), sobre una desviación del implementer: «Cambio de import en index.spec.ts (import type Database a import Database, y readFileSync): aceptado, lo exige C-33. Anótalo en la T-02 como decisión mía.»
+- Decisión del autor 2026-11-23 (literal), sobre la fase roja: «1. Fase roja: (b). Repítela íntegra tú mismo: saca 0002_simulations.sql al scratchpad, ejecuta npx vitest run schema.spec index.spec, copia la salida literal completa al registro 14, devuelve el fichero a su sitio y comprueba con git status que queda igual.» El implementer solo dio las líneas de cada fallo; la sesión principal repitió el rojo (7 fallos, 9 en verde).
 - Archivos de producción (1): `apps/api/migrations/0002_simulations.sql` (nuevo, el SQL literal de D-13). `0001_init.sql` y `.gitkeep` no se tocan.
 - Tests:
   - `apps/api/src/data/sqlite/schema.spec.ts`: C-31 y C-32 de la 003, nuevos. **D-16 (spec 002):** el título de `:39` dice «con simulations» y «user_version 2»; `:43` comprueba que `simulations` existe; `:78` espera 2. Con citas «spec 003: …».
   - `apps/api/src/data/sqlite/index.spec.ts`: C-33, nuevo. **D-16 (spec 000, ya cambiado por la 002):** las dos aserciones de `user_version` de `:72-82` pasan de 1 a 2 y sus títulos nombran `0002_simulations.sql` y `user_version` 2. Con citas «spec 003: …».
 - Fase roja: los tests nuevos y los cambios de la D-16 se escriben antes que la migración, y fallan porque `simulations` no existe y `user_version` es 1.
 - Hecho cuando:
-  - [ ] Fase roja: salida literal en el registro de la sesión.
-  - [ ] C-31 pasa (R-31): sobre `openDatabase(':memory:')` existen `customers` y `simulations` `STRICT` (`PRAGMA table_list`). `simulations` tiene sus diez columnas y tipos, con `NOT NULL` (`table_info`) y sin columna de plan. Tiene clave foránea `customer_id` → `customers(id)` con `on_delete` `NO ACTION` (`foreign_key_list`) e índice `idx_simulations_customer_created` sobre `(customer_id, created_at)` (`index_list`, `index_info`). `PRAGMA user_version` = 2.
-  - [ ] C-32 pasa (R-31): (1) `total_cents` distinto de base + IVA y (2) -1 en cada una de las seis columnas con `CHECK (… >= 0)`, cada uno aparte, los rechaza un `CHECK`. (3) `customer_id` inexistente y, aparte, `customer_id` = -1 los rechaza la clave foránea. `id` no entra en la prueba del -1.
-  - [ ] C-33 pasa (R-32): sobre un fichero temporal con solo `0001_init.sql` aplicada (`user_version` 1) y un cliente guardado, `openDatabase` deja `user_version` en 2 y crea `simulations`, y el cliente sigue igual. La conexión se cierra antes de borrar la carpeta temporal.
-  - [ ] C-31, `0001_init.sql` sin cambios (R-31): `git diff --exit-code -- apps/api/migrations/0001_init.sql` sale con código 0; el implementer da el comando y su salida.
-  - [ ] D-16: en `schema.spec.ts` e `index.spec.ts` solo cambian las líneas de la lista; ninguna aserción se borra ni se desactiva, y el resto de tests de la 000 y la 002 sigue en verde sin cambios (`git diff` de los dos ficheros). Si falla otro test de la 000 o la 002, la tarea para y lo devuelve.
-  - [ ] `npm run verify` desde la raíz, en verde.
-  - [ ] De `apps/` solo cambian `0002_simulations.sql`, `schema.spec.ts` e `index.spec.ts`.
+  - [x] Fase roja: salida literal en el registro de la sesión.
+  - [x] C-31 pasa (R-31): sobre `openDatabase(':memory:')` existen `customers` y `simulations` `STRICT` (`PRAGMA table_list`). `simulations` tiene sus diez columnas y tipos, con `NOT NULL` (`table_info`) y sin columna de plan. Tiene clave foránea `customer_id` → `customers(id)` con `on_delete` `NO ACTION` (`foreign_key_list`) e índice `idx_simulations_customer_created` sobre `(customer_id, created_at)` (`index_list`, `index_info`). `PRAGMA user_version` = 2.
+  - [x] C-32 pasa (R-31): (1) `total_cents` distinto de base + IVA y (2) -1 en cada una de las seis columnas con `CHECK (… >= 0)`, cada uno aparte, los rechaza un `CHECK`. (3) `customer_id` inexistente y, aparte, `customer_id` = -1 los rechaza la clave foránea. `id` no entra en la prueba del -1.
+  - [x] C-33 pasa (R-32): sobre un fichero temporal con solo `0001_init.sql` aplicada (`user_version` 1) y un cliente guardado, `openDatabase` deja `user_version` en 2 y crea `simulations`, y el cliente sigue igual. La conexión se cierra antes de borrar la carpeta temporal.
+  - [x] C-31, `0001_init.sql` sin cambios (R-31): `git diff --exit-code -- apps/api/migrations/0001_init.sql` sale con código 0; el implementer da el comando y su salida.
+  - [x] D-16: en `schema.spec.ts` e `index.spec.ts` solo cambian las líneas de la lista; ninguna aserción se borra ni se desactiva, y el resto de tests de la 000 y la 002 sigue en verde sin cambios (`git diff` de los dos ficheros). Si falla otro test de la 000 o la 002, la tarea para y lo devuelve.
+  - [x] `npm run verify` desde la raíz, en verde.
+  - [x] De `apps/` solo cambian `0002_simulations.sql`, `schema.spec.ts` e `index.spec.ts`.
 
 ## T-03 · domain: textos de `TOO_SMALL` y `TOO_BIG`, traductor y error `NOT_FOUND`
 - Cubre: R-15 a R-17 y R-18, R-34 en la parte del texto de `details[]` (`TOO_SMALL` y `TOO_BIG`); R-27 en la parte de la prioridad del traductor (`rank`); R-28 y R-29 en la parte del texto y del `CustomError` `NOT_FOUND` sin `details`
