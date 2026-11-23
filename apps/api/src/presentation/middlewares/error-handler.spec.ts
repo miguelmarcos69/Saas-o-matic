@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import { describe, expect, it, vi } from 'vitest';
 import { CustomError } from '../../domain/errors/custom.error.js';
+import { customerNotFoundError } from '../../domain/errors/customer-not-found.error.js';
 import { errorHandler, STATUS_BY_CODE, toHttpError } from './error-handler.js';
 
 // Textos literales de D-03 (plan): M-11, M-12, M-13 y M-14.
@@ -8,6 +9,8 @@ const VALIDATION_MESSAGE = 'Hay datos no válidos.';
 const INVALID_JSON_MESSAGE = 'El cuerpo no es un JSON válido.';
 const CONFLICT_MESSAGE = 'Ya existe un cliente con ese identificador fiscal en ese país.';
 const INTERNAL_MESSAGE = 'Error interno del servidor.';
+// spec 003: texto de NOT_FOUND (plan de la 003, D-03).
+const NOT_FOUND_MESSAGE = 'No existe el cliente indicado.';
 
 // Respuesta falsa que guarda el estado y el cuerpo enviados.
 function fakeResponse(): { res: Response; sent: { status?: number; body?: unknown } } {
@@ -36,12 +39,13 @@ function parseFailure(): Error {
 }
 
 describe('STATUS_BY_CODE', () => {
-  it('tiene solo las cuatro filas de D-11, sin NOT_FOUND (D-14)', () => {
+  it('tiene las filas de D-11 (spec 002) y NOT_FOUND (spec 003: D-12)', () => {
     expect(STATUS_BY_CODE).toEqual({
       VALIDATION_ERROR: 400,
       INVALID_JSON: 400,
       CONFLICT: 409,
       INTERNAL_ERROR: 500,
+      NOT_FOUND: 404,
     });
   });
 });
@@ -76,6 +80,14 @@ describe('toHttpError', () => {
   it('un CustomError con details vacío no lleva la propiedad details (R-15, R-22)', () => {
     const { body } = toHttpError(new CustomError('VALIDATION_ERROR', VALIDATION_MESSAGE, []));
 
+    expect(body.error).not.toHaveProperty('details');
+  });
+
+  it('spec 003: customerNotFoundError() da 404 NOT_FOUND sin la propiedad details (R-28, R-29; D-12)', () => {
+    const { status, body } = toHttpError(customerNotFoundError());
+
+    expect(status).toBe(404);
+    expect(body).toEqual({ error: { code: 'NOT_FOUND', message: NOT_FOUND_MESSAGE } });
     expect(body.error).not.toHaveProperty('details');
   });
 

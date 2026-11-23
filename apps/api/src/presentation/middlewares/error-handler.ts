@@ -5,12 +5,13 @@ import { CustomError, type ErrorDetail } from '../../domain/errors/custom.error.
 const INVALID_JSON_MESSAGE = 'El cuerpo no es un JSON válido.';
 const INTERNAL_MESSAGE = 'Error interno del servidor.';
 
-// Tabla code → estado HTTP: solo los códigos que usa la spec 002 (D-11). Sin NOT_FOUND (D-14).
+// Tabla code → estado HTTP: solo los códigos que usan las specs 002 (D-11) y 003 (D-12). La ruta inexistente sigue sin 404 propio (spec 002: D-14).
 export const STATUS_BY_CODE: Readonly<Record<string, number>> = Object.freeze({
   VALIDATION_ERROR: 400,
   INVALID_JSON: 400,
   CONFLICT: 409,
   INTERNAL_ERROR: 500,
+  NOT_FOUND: 404,
 });
 
 // Formato único de errores (architecture.md).

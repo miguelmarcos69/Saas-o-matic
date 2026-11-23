@@ -165,8 +165,10 @@ Reglas comunes de esta spec:
 ## T-06 · presentation: `POST /simulations` y fila `NOT_FOUND`
 - Cubre: R-01, R-02, R-03 (sin llamadas al repositorio), R-11 a R-25 por HTTP, R-26 (500 sin trazas), R-28 (404 sin `details`), R-29 (estado 404 del `NOT_FOUND`), R-30, R-33, R-34, R-35, R-36
 - Depende de: T-05
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Opus 5.5, confirmado por el autor (cuerpos JSON literales, cabeceras de `fetch` y recuento de llamadas de C-08).
+- Aprobación del autor 2026-11-23 (literal): «Apruebo la T-06.» `npm run verify` en verde: 766 tests en la raíz y 14 en la web (antes, 642 + 14), relanzado por la sesión principal.
+- Decisión del autor 2026-11-23 (literal), sobre las desviaciones declaradas por el implementer: «Desviación 1: (a), el import y la constante NOT_FOUND_MESSAGE entran en «el test nuevo». Desviaciones 2 a 6: aceptadas.»
 - Archivos de producción (4), en `apps/api/src/presentation/`:
   - `middlewares/error-handler.ts`: fila `NOT_FOUND: 404` y comentario de la línea 8 con el texto de D-12; sin más cambios;
   - `simulations/controller.ts` (nuevo): `SimulationController.create` y `handleError`; 201 con la entidad en la raíz;
@@ -178,25 +180,25 @@ Reglas comunes de esta spec:
   - `simulations/routes.spec.ts` (nuevo): `createRoutes(':memory:')` con `fetch` nativo; los clientes se crean con `POST /customers`.
 - Fase roja: los tests se escriben (o cambian) antes que el código y fallan por la falta de la fila `NOT_FOUND` y de la ruta.
 - Hecho cuando:
-  - [ ] Fase roja: salida literal en el registro de la sesión.
-  - [ ] C-01 por HTTP (R-01, R-02, R-36): 201 con los diez campos en la raíz y los importes de C-01.
-  - [ ] C-02, C-03, C-04, C-06 y C-07 por HTTP (R-04 a R-09): los importes de la spec; con `starter` y `enterprise`, los mismos.
-  - [ ] C-18 pasa (R-20): `activeUsers: 1e2` y `100.0`, como texto JSON, dan 201 con 100, 67000, 14070 y 81070.
-  - [ ] C-34 pasa (R-33): los nueve campos numéricos de la respuesta de C-01 son `number` enteros.
-  - [ ] C-09, C-13, C-22, C-24 (`1e400` y `-1e400` como texto JSON), C-35 (`9007199254740993` y `9007199254740992`) y C-36 (`-0` como texto JSON) por HTTP: 400 `VALIDATION_ERROR` con `message` M-11 y los `details[]` de la spec, o 201 con el campo en 0 (C-36). Con C-22, la forma completa de R-25.
-  - [ ] C-20 pasa (R-22, R-11): (1) `[]`, `null`, `"texto"` y `42` con `Content-Type: application/json`; (2) sin esa cabecera, sin cuerpo y con un objeto válido enviado como `Uint8Array`. Las dos dan 400 con un único `INVALID_TYPE` sin `field`. (3) Cuerpo vacío con la cabecera: cuatro `REQUIRED`.
-  - [ ] C-21 pasa (R-23): `{ "customerId": ` da 400 `INVALID_JSON` con M-12, sin `details`.
-  - [ ] C-25 y C-37 pasan (R-28): 404 `{ "error": { "code": "NOT_FOUND", "message": "No existe el cliente indicado." } }`, sin `details`.
-  - [ ] C-26 pasa (R-28, orden): `customerId: 999` sin cliente y `activeUsers: -1` dan 400 `VALIDATION_ERROR`, sin 404.
-  - [ ] C-08 pasa (R-03, D-15): en `controller.spec.ts`, con cada cuerpo no válido de C-08 (también `customerId: -0` y los de C-35), ni `findCustomerCountry` ni `create` se llaman. Con `findCustomerCountry` → `undefined`, 404 y `create` sin llamar.
-  - [ ] C-28, parte HTTP (R-30, R-26): con `findCustomerCountry` → `'DE'`, 500 `INTERNAL_ERROR` con M-14, sin traza; el cuerpo no contiene `unknown country`; `create` sin llamar.
-  - [ ] C-23 pasa (R-26): si `create` lanza un `Error`, 500 `INTERNAL_ERROR` con M-14, sin el mensaje del error.
-  - [ ] R-29, parte HTTP: `toHttpError(customerNotFoundError())` da 404 sin `details`.
-  - [ ] C-29, parte de verificación (R-10): `git grep -nE "\b(2100|2300|2200)\b" -- apps/api/src ':!*.spec.ts'` sin resultados; el implementer da el comando y su salida.
-  - [ ] D-06 de la 002: `git grep -n "better-sqlite3\|getDatabase" -- apps/api/src/presentation` sin resultados (con `--untracked` si los ficheros no están aún en git); el implementer da el comando y su salida.
-  - [ ] D-16: en `error-handler.spec.ts` solo cambian `:39-46` y el test nuevo; ninguna aserción se borra ni se desactiva (`git diff`). Si falla otro test de la 000 o la 002, la tarea para y lo devuelve.
-  - [ ] `npm run verify` desde la raíz, en verde.
-  - [ ] De `apps/` solo cambian los cuatro ficheros de producción y los tres tests.
+  - [x] Fase roja: salida literal en el registro de la sesión.
+  - [x] C-01 por HTTP (R-01, R-02, R-36): 201 con los diez campos en la raíz y los importes de C-01.
+  - [x] C-02, C-03, C-04, C-06 y C-07 por HTTP (R-04 a R-09): los importes de la spec; con `starter` y `enterprise`, los mismos.
+  - [x] C-18 pasa (R-20): `activeUsers: 1e2` y `100.0`, como texto JSON, dan 201 con 100, 67000, 14070 y 81070.
+  - [x] C-34 pasa (R-33): los nueve campos numéricos de la respuesta de C-01 son `number` enteros.
+  - [x] C-09, C-13, C-22, C-24 (`1e400` y `-1e400` como texto JSON), C-35 (`9007199254740993` y `9007199254740992`) y C-36 (`-0` como texto JSON) por HTTP: 400 `VALIDATION_ERROR` con `message` M-11 y los `details[]` de la spec, o 201 con el campo en 0 (C-36). Con C-22, la forma completa de R-25.
+  - [x] C-20 pasa (R-22, R-11): (1) `[]`, `null`, `"texto"` y `42` con `Content-Type: application/json`; (2) sin esa cabecera, sin cuerpo y con un objeto válido enviado como `Uint8Array`. Las dos dan 400 con un único `INVALID_TYPE` sin `field`. (3) Cuerpo vacío con la cabecera: cuatro `REQUIRED`.
+  - [x] C-21 pasa (R-23): `{ "customerId": ` da 400 `INVALID_JSON` con M-12, sin `details`.
+  - [x] C-25 y C-37 pasan (R-28): 404 `{ "error": { "code": "NOT_FOUND", "message": "No existe el cliente indicado." } }`, sin `details`.
+  - [x] C-26 pasa (R-28, orden): `customerId: 999` sin cliente y `activeUsers: -1` dan 400 `VALIDATION_ERROR`, sin 404.
+  - [x] C-08 pasa (R-03, D-15): en `controller.spec.ts`, con cada cuerpo no válido de C-08 (también `customerId: -0` y los de C-35), ni `findCustomerCountry` ni `create` se llaman. Con `findCustomerCountry` → `undefined`, 404 y `create` sin llamar.
+  - [x] C-28, parte HTTP (R-30, R-26): con `findCustomerCountry` → `'DE'`, 500 `INTERNAL_ERROR` con M-14, sin traza; el cuerpo no contiene `unknown country`; `create` sin llamar.
+  - [x] C-23 pasa (R-26): si `create` lanza un `Error`, 500 `INTERNAL_ERROR` con M-14, sin el mensaje del error.
+  - [x] R-29, parte HTTP: `toHttpError(customerNotFoundError())` da 404 sin `details`.
+  - [x] C-29, parte de verificación (R-10): `git grep -nE "\b(2100|2300|2200)\b" -- apps/api/src ':!*.spec.ts'` sin resultados; el implementer da el comando y su salida.
+  - [x] D-06 de la 002: `git grep -n "better-sqlite3\|getDatabase" -- apps/api/src/presentation` sin resultados (con `--untracked` si los ficheros no están aún en git); el implementer da el comando y su salida.
+  - [x] D-16: en `error-handler.spec.ts` solo cambian `:39-46` y el test nuevo; ninguna aserción se borra ni se desactiva (`git diff`). Si falla otro test de la 000 o la 002, la tarea para y lo devuelve.
+  - [x] `npm run verify` desde la raíz, en verde.
+  - [x] De `apps/` solo cambian los cuatro ficheros de producción y los tres tests.
 
 ## Cobertura
 Cada `R-nn` aparece en al menos una tarea. Las partes de los requisitos compuestos de la reserva H-04 van por separado.
