@@ -1,6 +1,6 @@
 # Spec 002 · customers-create
 
-- **Estado:** Aprobada
+- **Estado:** Planificada
 - **Depende de:** 000
 - **Cubre:** §2.A
 
@@ -35,6 +35,18 @@ Registrar un cliente corporativo con `POST /customers` (nombre de empresa, ident
   - Punto 1: una ronda del revisor en la puerta 2. Ronda 1: `Conforme con reservas`. H-01 (`Importante`, normalización del identificador fiscal sin decidir) llevó a la Q-26 (Decisión 2026-11-23 #33) y lleva a una ronda 2 limitada a estos cambios. H-02, H-04, H-06 y H-07 (`Menor`) se corrigieron en la misma vuelta del planner. H-05 (`Menor`) queda como reserva aceptada por el autor, con su motivo: «son requisitos compuestos, como la H-08 de la spec 000, y partirlos alarga la spec sin cambiar ningún comportamiento». Ronda 2: `Conforme con reservas`, con H-08 y H-09 (`Menor`), corregidas por el planner en una quinta vuelta corta por decisión del autor, sin otra ronda del revisor. El revisor no ha visto estas dos correcciones (C-25 y este punto 2 de la sección 1) y debe seguirlas en la puerta 6.
   - Punto 4: encargos del planner (cinco vueltas) lanzados sin enseñarlos antes.
   - Punto 5: «Rutas a leer» acotadas a secciones y líneas.
+  - Punto 6: planner con Opus 5.5.
+- **Ajustes del ADR-016 aplicados en la puerta 3:**
+  - La Decisión 2026-11-23 #34 (P-01 del plan) corrige una errata de la explicación de la #23 y el paréntesis de R-10, sin cambiar ningún requisito ni caso: por decisión del autor, la spec no vuelve a la puerta 2. El revisor no ha visto esta corrección y debe seguirla en la puerta 6, como H-08 y H-09.
+  - Punto 3: decisiones previsibles propuestas por la sesión principal antes de lanzar al planner: los textos de los mensajes de error (M-01 a M-14), decididos por el autor con opciones y recogidos en D-03 del plan.
+  - Punto 4: encargos del planner (tres vueltas) lanzados sin enseñarlos antes.
+  - Punto 5: «Rutas a leer» acotadas a secciones y líneas.
+  - Punto 6: planner con Opus 5.5.
+  - Nota de Q-18: su celda «Estado» anota que la explicación la corrige la #34.
+- **Ajustes del ADR-016 aplicados en la puerta 4:**
+  - Punto 3: ninguna decisión previsible nueva en esta puerta.
+  - Punto 4: encargo del planner lanzado sin enseñarlo antes.
+  - Punto 5: «Rutas a leer» acotadas a secciones.
   - Punto 6: planner con Opus 5.5.
 
 ## 2. Requisitos
@@ -80,7 +92,7 @@ Los requisitos R-28 a R-34 se añadieron en la puerta 2, al aplicar las Decision
 **R-09.** Si el plan, ya recortado (R-17), no es exactamente uno de `starter`, `business` o `enterprise`, entonces el sistema deberá responder `VALIDATION_ERROR` con un elemento de `details[]` de código `INVALID_VALUE` en el campo del plan.
 - Origen: §2.A, Decisión 2026-11-23 #7, Decisión 2026-11-23 #16, Decisión 2026-11-23 #17
 
-**R-10.** Si el nombre de empresa, ya recortado (R-17), supera 200 unidades UTF-16 (lo que mide `.max()` de Zod), entonces el sistema deberá responder `VALIDATION_ERROR` con un elemento de `details[]` de código `TOO_BIG` en ese campo.
+**R-10.** Si el nombre de empresa, ya recortado (R-17), supera 200 unidades UTF-16 (lo que mide `length` de JavaScript), entonces el sistema deberá responder `VALIDATION_ERROR` con un elemento de `details[]` de código `TOO_BIG` en ese campo.
 - Origen: Decisión 2026-11-23 #4, Decisión 2026-11-23 #14, Decisión 2026-11-23 #23
 
 **R-11.** Si el cuerpo trae campos que no son los cinco del cliente, entonces el sistema deberá responder `VALIDATION_ERROR` con un elemento de `details[]` de código `UNKNOWN_FIELD` por cada campo desconocido, con su nombre en `field`.
@@ -293,7 +305,7 @@ Cada `R-nn` tiene al menos un caso. Los casos C-36 a C-45 se añadieron en la pr
 | 2026-11-23 #20 | Q-15 | Texto literal del autor: "(a), TOO_BIG en todos los países." Aplicada en R-19, R-29, R-30, la sección 3 y C-37. | `sessions/2026-11-23-01-002-customers-create.md` |
 | 2026-11-23 #21 | Q-16 | Texto literal del autor: "(a), INVALID_TAX_ID en los dos casos." Aplicada en R-30, la sección 3, C-36 y C-38. | `sessions/2026-11-23-01-002-customers-create.md` |
 | 2026-11-23 #22 | Q-17 | Texto literal del autor: "(a), REQUIRED." Aplicada en R-19, R-30, R-34, C-44 y C-45. | `sessions/2026-11-23-01-002-customers-create.md` |
-| 2026-11-23 #23 | Q-18 | Texto literal del autor: "(a) tras recortar, e (i) en unidades UTF-16, como .max() de Zod." Aplicada en R-10, R-28, la sección 3, C-13 y C-40. | `sessions/2026-11-23-01-002-customers-create.md` |
+| 2026-11-23 #23 | Q-18 | Texto literal del autor: "(a) tras recortar, e (i) en unidades UTF-16, como .max() de Zod." Aplicada en R-10, R-28, la sección 3, C-13 y C-40. Corregida por la #34: `.max()` de Zod 4.6.7 cuenta puntos de código, no unidades UTF-16; la medida sigue en unidades UTF-16 (`length` de JavaScript). | `sessions/2026-11-23-01-002-customers-create.md` |
 | 2026-11-23 #24 | Q-19 | Texto literal del autor: "(a), solo las comprobaciones que no dependen del país." Aplicada en R-33 y C-44. | `sessions/2026-11-23-01-002-customers-create.md` |
 | 2026-11-23 #25 | Q-20 | Texto literal del autor: "(a), sin details; el message del 409 dirá qué se repite, con su texto a elegir en el plan." Aplicada en R-22, las secciones 1 y 3 y C-28. | `sessions/2026-11-23-01-002-customers-create.md` |
 | 2026-11-23 #26 | Q-21 | Texto literal del autor: "(a), estricta: A, B, E y H, dígito; K, N, P, Q, R, S y W, letra; el resto, cualquiera de los dos. La tabla exacta la cita el plan y la apruebo allí." Aplicada en R-18, R-19, la sección 1, C-22 y C-24. Corregida por la #30: la `K` sale de la lista y queda «N, P, Q, R, S y W, letra» (la `K` llegó en el matiz de la sesión principal a Q-21 y el autor lo aceptó sin advertirlo; chocaba con la #10, Q-24). | `sessions/2026-11-23-01-002-customers-create.md` |
@@ -304,6 +316,7 @@ Cada `R-nn` tiene al menos un caso. Los casos C-36 a C-45 se añadieron en la pr
 | 2026-11-23 #31 | Q-25 | Texto literal del autor: "(a), TOO_BIG, con la misma prioridad que en el taxId." Aplicada en R-07, R-28, la sección 3 y C-47. | `sessions/2026-11-23-01-002-customers-create.md` |
 | 2026-11-23 #32 | Prioridad entre códigos de un mismo campo no decidida antes | Texto literal del autor: "Regla general para cualquier otra prioridad entre códigos de un mismo campo que no esté ya decidida: primero REQUIRED, después la longitud (TOO_SMALL, TOO_BIG) y al final el formato o el algoritmo (INVALID_TYPE, INVALID_FORMAT, INVALID_VALUE, INVALID_TAX_ID). Aplícala sin pararme y anota cada caso como decisión mía con esta regla." Aplicada en R-35, la sección 3 y C-48. Al aplicarla no quedó ningún par de códigos de un mismo campo sin decidir: los solapes posibles ya los fijan la #14 (país y plan sin máximo: solo `INVALID_VALUE`, C-11 y C-12), la #18, la #20, la #21, la #22 y la #31, que coinciden con esta regla salvo la #21 (un identificador de menos de 2 caracteres en `PT`, `FR` o `IT` da `INVALID_TAX_ID` y no `TOO_SMALL`), que manda por ser anterior y concreta. R-35 deja la regla escrita para cualquier solape que aparezca en el plan o en la implementación. | `sessions/2026-11-23-01-002-customers-create.md` |
 | 2026-11-23 #33 | Q-26 (H-01 de la ronda 1 del revisor) | Texto literal del autor: "(a), solo ASCII: normalizar solo pasa a-z a A-Z y quita los blancos de la #27, el guion - (U+002D) y el punto . (U+002E); cualquier otro carácter se queda y no pasa la validación (INVALID_TAX_ID)." Precisa la #9 (anotado en su fila, sin cambiar su texto). Aplicada en R-19 a R-21, R-29, R-30, la sección 3 y C-49 a C-52. | `sessions/2026-11-23-01-002-customers-create.md` |
+| 2026-11-23 #34 | P-01 de la puerta 3 (plan) | Texto literal del autor: "(a). La medida sigue en unidades UTF-16 (length de JavaScript), con un refine en lugar de .max(). Es una errata de la explicación, no un cambio de comportamiento: corrige el paréntesis de R-10 y R-28 («lo que mide length de JavaScript») y anota en la fila #23, sin cambiar mi texto, que .max() de Zod 4.6.7 cuenta puntos de código. Como no cambia ningún requisito ni caso, la spec no vuelve a la Puerta 2: anótalo como Decisión 2026-11-23 #34 y que el revisor lo siga en la Puerta 6, como H-08 y H-09." Corrige la explicación de la #23 (anotado en su fila, sin cambiar su texto). Aplicada en el paréntesis de R-10; R-28 no llevaba ese paréntesis y no cambia. Ningún requisito ni caso cambia de comportamiento; en el plan, D-12. | `sessions/2026-11-23-02-002-customers-create.md` |
 
 Aprobación literal del autor (2026-11-23): «3. Decisiones previsibles: apruebo A, B, C, D y E tal cual.»
 
@@ -314,6 +327,8 @@ Decisiones del autor en la puerta 2 (2026-11-23), segunda vuelta: las #20 a #27 
 Decisiones del autor en la puerta 2 (2026-11-23), tercera vuelta: las #29 a #31 son sus líneas literales, sin el prefijo «Q-nn: », de su mensaje que empieza «- Q-23: (i), en unidades UTF-16, como companyName y email.»; la #32 es su línea «Regla general…», sin el guion inicial. En el mismo mensaje el autor aceptó mantener en la fila #6 la frase «Precisada por la #28…» (no es una decisión nueva).
 
 Decisión del autor en la puerta 2 (2026-11-23), cuarta vuelta, tras la ronda 1 del revisor: la #33 es su punto 2, sin el «2. Q-26: » inicial. En el mismo mensaje (punto 3) el autor ordenó corregir H-02, H-04, H-06 y H-07 en esta vuelta y aceptó H-05 como reserva, con este motivo literal: «son requisitos compuestos, como la H-08 de la spec 000, y partirlos alarga la spec sin cambiar ningún comportamiento».
+
+Decisión del autor en la puerta 3 (2026-11-23), segunda vuelta del planner: la #34 es su línea literal «P-01: …», sin el prefijo «P-01: ». Sus decisiones sobre P-02 y P-03 y su aprobación de la tabla del CIF son del plan (D-13, D-14 y D-08 de `plan.md`), no de la spec.
 
 ## 6. Dudas abiertas
 No se resuelven aquí: las decide el autor en la puerta 2 (clarificación).
@@ -337,7 +352,7 @@ No se resuelven aquí: las decide el autor en la puerta 2 (clarificación).
 | Q-15 | Código del identificador fiscal que supera 20 caracteres tras normalizar (R-29, C-37). La #14 fija el máximo y R-10 da `TOO_BIG` al superarlo; la #16 da `INVALID_TAX_ID` «para el identificador»; R-14 pide un solo elemento por campo. Opciones: (a) `TOO_BIG` en todos los países; (b) `INVALID_TAX_ID` en todos los países; (c) `TOO_BIG` fuera de `ES` e `INVALID_TAX_ID` en `ES`. | Decisión 2026-11-23 #14; Decisión 2026-11-23 #16; R-14 | Decidida (Decisión 2026-11-23 #20) |
 | Q-16 | Código del identificador fiscal fuera de `ES` que no cumple R-20 por tener menos de 2 caracteres o un carácter fuera de `A-Z` y `0-9` (R-30, C-36, C-38). La #16 se decidió sobre el identificador «que no supera el algoritmo» (Q-11), y fuera de `ES` no hay algoritmo. Opciones: (a) `INVALID_TAX_ID` en ambos casos; (b) `TOO_SMALL` por longitud e `INVALID_FORMAT` por caracteres; (c) `TOO_SMALL` por longitud e `INVALID_TAX_ID` por caracteres. | Decisión 2026-11-23 #10; Decisión 2026-11-23 #16 | Decidida (Decisión 2026-11-23 #21) |
 | Q-17 | Código del identificador fiscal que queda vacío tras normalizarlo (`"---"`, `"..."`) (R-34, C-45). La #18 da `REQUIRED` al vacío y al solo con espacios, pero este valor no llega vacío. Opciones: (a) `REQUIRED`; (b) `INVALID_TAX_ID`; (c) el que dé R-19 o R-30 según el país. | Decisión 2026-11-23 #9; Decisión 2026-11-23 #18 | Decidida (Decisión 2026-11-23 #22) |
-| Q-18 | Cómo se miden los máximos de `companyName` (200) y `email` (254) (R-10, R-28, C-13, C-40). La #14 dice «taxId 20 tras normalizar», pero no si los otros dos se miden antes o después de recortar (#17). Opciones: (a) tras recortar; (b) sobre el valor recibido. Además, la unidad: (i) unidades UTF-16 (lo que mide `.max()` de Zod y `length` de JavaScript); (ii) puntos de código Unicode. | Decisión 2026-11-23 #14; Decisión 2026-11-23 #17 | Decidida (Decisión 2026-11-23 #23) |
+| Q-18 | Cómo se miden los máximos de `companyName` (200) y `email` (254) (R-10, R-28, C-13, C-40). La #14 dice «taxId 20 tras normalizar», pero no si los otros dos se miden antes o después de recortar (#17). Opciones: (a) tras recortar; (b) sobre el valor recibido. Además, la unidad: (i) unidades UTF-16 (lo que mide `.max()` de Zod y `length` de JavaScript); (ii) puntos de código Unicode. | Decisión 2026-11-23 #14; Decisión 2026-11-23 #17 | Decidida (Decisión 2026-11-23 #23) (explicación corregida por la #34) |
 | Q-19 | Cómo se valida el identificador fiscal si el país no es válido (falta, no es una cadena o no está en la lista) (R-33, C-44): la regla de R-18 o la de R-20 depende del país. Opciones: (a) solo las comprobaciones que no dependen del país (obligatorio, tipo, vacío tras normalizar, máximo de 20) y ningún elemento por el formato; (b) aplicar la regla de fuera de `ES` (R-20); (c) dar `INVALID_TAX_ID` si no cumple ninguna de las dos reglas. | Decisión 2026-11-23 #6; Decisión 2026-11-23 #10; R-14 | Decidida (Decisión 2026-11-23 #24) |
 | Q-20 | Si la respuesta `CONFLICT` 409 lleva `details` (R-22, C-28). `architecture.md` solo describe `details` en `VALIDATION_ERROR`. Opciones: (a) sin `details`: `{ "error": { "code": "CONFLICT", "message" } }`; (b) con un elemento `field: taxId` y un código propio (p. ej. `DUPLICATE_TAX_ID`); (c) con un elemento `field: taxId` y un código estable de `backend-conventions`. | Decisión 2026-11-23 #8; `architecture.md` (formato de error) | Decidida (Decisión 2026-11-23 #25) |
 | Q-21 | Forma del carácter de control del CIF (R-18, C-22). Según la letra de entidad, la norma pide un dígito, una letra o admite los dos, y las tablas publicadas no coinciden en todas las letras. Opciones: (a) estricta según la letra de entidad, con la tabla de la norma citada en el plan; (b) aceptar para cualquier letra de entidad el dígito o su letra equivalente. | reto §2.A («algoritmo oficial»); Decisión 2026-11-23 #10 | Decidida (Decisión 2026-11-23 #26) |
