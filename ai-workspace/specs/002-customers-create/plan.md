@@ -4,6 +4,7 @@
 - **Puerta:** 3 (plan). Solo plan y tareas; sin código.
 - **Estado del plan:** aprobado por el autor el 2026-11-23 (aprobación literal: «apruebo la Puerta 3 · plan de la spec 002-customers-create: plan.md con D-01 a D-14, la tabla del CIF de D-08 aprobada y P-02 y P-03 como límites conocidos»); sin dudas abiertas (P-01 a P-03 decididas en la segunda vuelta: D-12 a D-14). Formato elegido por el autor: «Temas + D-nn, breve» (D-01).
 - **Corrección posterior a la aprobación:** el 2026-11-23, en la puerta 4 y por orden del autor, se corrigió una frase de D-04 («Los dos ficheros no importan nada, ni Zod (C-30).») para alinearla con C-30 de la spec y con T-03 de `tasks.md`: `tax-id.ts` importa `./spanish-tax-id.js`. Sin cambio de ninguna otra decisión.
+- **Corrección posterior a la aprobación:** el 2026-11-23, en la puerta 5 (T-02) y por orden del autor, se corrigió la frase del orden de las reglas del traductor en D-07 («Reglas del traductor (`zod-issues.ts`), en este orden:» y la regla 1): `unrecognized_keys` se trata antes que la regla 1, que queda solo para el cuerpo que no es un objeto. Aplicadas en el orden anterior, un campo desconocido en la raíz (`path` `[]`, D-07) salía `INVALID_TYPE` sin `field`, contra R-11 y C-14. Sin cambio de ningún requisito ni de ninguna otra decisión.
 
 ## 1. Contexto y fuentes
 
@@ -131,8 +132,8 @@ Comprobado en Zod 4.6.7 (`node_modules/zod`, `package.json`: `"version": "4.6.7"
 - Código propio de un `refine`: `.refine(fn, { params: { code } })` deja `issue.code === 'custom'` e `issue.params` (`v4/core/schemas.js:2622-2634`); en `superRefine`/`check`, `ctx.addIssue({ code: 'custom', path, params })` conserva `params` (`v4/core/api.js:981-995`) y `finalizeIssue` lo copia. El traductor toma `params.code` si está en su lista (`REQUIRED`, `TOO_BIG`, `INVALID_TAX_ID`); si no, `INVALID_VALUE`.
 - Además, `.min()` y `.max()` de cadena miden en puntos de código, no en unidades UTF-16 (`v4/core/checks.js:272-273` y `295-298`). Por eso los máximos van con `refine` sobre `length` (D-12).
 
-Reglas del traductor (`zod-issues.ts`), en este orden:
-1. Issue con `path` vacío (el cuerpo no es un objeto) → `INVALID_TYPE` sin `field` (R-12). El mensaje es el de `INVALID_TYPE`, el mismo para todos (M-05).
+Reglas del traductor (`zod-issues.ts`), en este orden, salvo `unrecognized_keys` (regla 3), que se trata antes que la regla 1 porque en la raíz su `path` también es `[]`:
+1. Issue con `path` vacío que no es `unrecognized_keys` (el cuerpo no es un objeto) → `INVALID_TYPE` sin `field` (R-12). El mensaje es el de `INVALID_TYPE`, el mismo para todos (M-05).
 2. `invalid_type` con `input` `undefined` o `null` → `REQUIRED` (R-04, R-06, #18); si no, `INVALID_TYPE` (R-05).
 3. `invalid_format` → `INVALID_FORMAT` (R-07). `invalid_value` → `INVALID_VALUE` (R-08, R-09). `unrecognized_keys` → `UNKNOWN_FIELD` por cada nombre. `custom` → `params.code`. Cualquier otro → `INVALID_VALUE` (`patterns.md`).
 4. Un solo elemento por campo: si un campo trae varios, se queda el de mayor prioridad de la #32 (`REQUIRED` > `TOO_BIG` > el resto) (R-14, R-35). Con D-04 nunca se emite `TOO_SMALL`, así que la excepción de la #21 se cumple sin regla aparte.

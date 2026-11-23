@@ -38,22 +38,24 @@ Reglas comunes de esta spec:
 ## T-02 · domain: `CustomError` y traductor de `details[]`
 - Cubre: R-04, R-05, R-06, R-11, R-12, R-14, R-15, R-35
 - Depende de: —
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción (2): `apps/api/src/domain/errors/custom.error.ts` (nuevo: `CustomError` con `code`, `message` y `details`; `ErrorDetail` con `field` opcional, R-12; `CustomError.validation(details)` con M-11) y `apps/api/src/domain/dtos/zod-issues.ts` (nuevo: `toDetails(issues)` y `MESSAGES`, con las reglas 1 a 5 de D-07 en su orden y los textos M-03 a M-10 de D-03; sin clave `TOO_SMALL`).
 - Tests: `apps/api/src/domain/dtos/zod-issues.spec.ts` (nuevo), con esquemas Zod reales y `safeParse(…, { reportInput: true })`, sin servidor ni base.
 - Fase roja: `zod-issues.spec.ts` se escribe antes que `zod-issues.ts` y `custom.error.ts`, y falla porque no existen.
+- Desviación del implementer decidida por el autor el 2026-11-23, literal: «Desviación 1: (A), y además corrige tú la frase del orden de las reglas en D-07 de plan.md (unrecognized_keys antes que la regla 1, que queda solo para el cuerpo que no es un objeto), con una nota de «corrección posterior a la aprobación», como hicimos con D-04. Así el plan queda coherente sin otra vuelta del planner. Anota mi aprobación literal en la T-02. Los añadidos de la nota 3 y el test de CustomError.validation, aceptados.» Con ella, `zod-issues.ts` trata `unrecognized_keys` antes que la regla 1 de D-07 (corregida en `plan.md`), y se aceptan `this.name = 'CustomError'`, `details` y `ErrorDetail` `readonly`, el tipo `DetailCode` exportado, el primero que llega entre issues de la misma prioridad y el test de `CustomError.validation` en `zod-issues.spec.ts`.
+- Aprobación del autor 2026-11-23 (literal): «Apruebo la T-02.» `npm run verify` en verde: 119 tests en la raíz y 14 en la web. La casilla de R-15 se cumple aquí en la parte de `CustomError.validation`; el DTO y el HTTP los siguen probando T-04 y T-06.
 - Hecho cuando:
-  - [ ] Fase roja: salida literal en el registro de la sesión.
-  - [ ] Regla 1 de D-07 (R-12): un issue con `path` vacío da un único elemento `INVALID_TYPE`, sin la propiedad `field` y con el texto de M-04 (M-05).
-  - [ ] Regla 2 (R-04, R-05, R-06): `invalid_type` con `input` `undefined` o `null` da `REQUIRED`; con otro `input`, `INVALID_TYPE`. Confirma que `reportInput` funciona con `safeParse` en Zod 4.6.7 (D-07).
-  - [ ] Regla 3: `invalid_format` → `INVALID_FORMAT`; `invalid_value` → `INVALID_VALUE`; `unrecognized_keys` → un `UNKNOWN_FIELD` por nombre, con el nombre en `field` (R-11; confirma `keys` en Zod 4.6.7); `custom` con `params.code` de la lista (`REQUIRED`, `TOO_BIG`, `INVALID_TAX_ID`) → ese código (confirma `params` en `refine` y en `ctx.addIssue`); `custom` sin código de la lista y cualquier otro issue → `INVALID_VALUE`.
-  - [ ] Regla 4 (R-14, R-35): un campo con varios issues da un solo elemento, con la prioridad `REQUIRED` > `TOO_BIG` > el resto; campos distintos dan un elemento cada uno.
-  - [ ] Regla 5: ningún elemento de la salida tiene `input` ni el valor recibido.
-  - [ ] Cada código lleva su texto literal de D-03 (M-03 a M-10); `MESSAGES` no tiene `TOO_SMALL` y el traductor nunca lo emite (D-03, D-07).
-  - [ ] R-15: `CustomError.validation(details)` da `code` `VALIDATION_ERROR`, `message` M-11 («Hay datos no válidos.») y esos `details`; lo prueban T-04 (DTO) y T-06 (HTTP).
-  - [ ] `custom.error.ts` y `zod-issues.ts` solo importan Zod o ficheros de `domain` (sin `node:*`, Express ni `better-sqlite3`; `architecture.md`).
-  - [ ] `npm run verify` desde la raíz, en verde.
-  - [ ] De `apps/` solo cambian `custom.error.ts`, `zod-issues.ts` y `zod-issues.spec.ts`.
+  - [x] Fase roja: salida literal en el registro de la sesión.
+  - [x] Regla 1 de D-07 (R-12): un issue con `path` vacío da un único elemento `INVALID_TYPE`, sin la propiedad `field` y con el texto de M-04 (M-05).
+  - [x] Regla 2 (R-04, R-05, R-06): `invalid_type` con `input` `undefined` o `null` da `REQUIRED`; con otro `input`, `INVALID_TYPE`. Confirma que `reportInput` funciona con `safeParse` en Zod 4.6.7 (D-07).
+  - [x] Regla 3: `invalid_format` → `INVALID_FORMAT`; `invalid_value` → `INVALID_VALUE`; `unrecognized_keys` → un `UNKNOWN_FIELD` por nombre, con el nombre en `field` (R-11; confirma `keys` en Zod 4.6.7); `custom` con `params.code` de la lista (`REQUIRED`, `TOO_BIG`, `INVALID_TAX_ID`) → ese código (confirma `params` en `refine` y en `ctx.addIssue`); `custom` sin código de la lista y cualquier otro issue → `INVALID_VALUE`.
+  - [x] Regla 4 (R-14, R-35): un campo con varios issues da un solo elemento, con la prioridad `REQUIRED` > `TOO_BIG` > el resto; campos distintos dan un elemento cada uno.
+  - [x] Regla 5: ningún elemento de la salida tiene `input` ni el valor recibido.
+  - [x] Cada código lleva su texto literal de D-03 (M-03 a M-10); `MESSAGES` no tiene `TOO_SMALL` y el traductor nunca lo emite (D-03, D-07).
+  - [x] R-15: `CustomError.validation(details)` da `code` `VALIDATION_ERROR`, `message` M-11 («Hay datos no válidos.») y esos `details`; lo prueban T-04 (DTO) y T-06 (HTTP).
+  - [x] `custom.error.ts` y `zod-issues.ts` solo importan Zod o ficheros de `domain` (sin `node:*`, Express ni `better-sqlite3`; `architecture.md`).
+  - [x] `npm run verify` desde la raíz, en verde.
+  - [x] De `apps/` solo cambian `custom.error.ts`, `zod-issues.ts` y `zod-issues.spec.ts`.
 
 ## T-03 · domain: normalización y validación del identificador fiscal
 - Cubre: R-18, R-19, R-20, R-21, R-24, R-30
