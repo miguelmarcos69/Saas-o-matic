@@ -118,21 +118,23 @@ Reglas comunes de esta spec:
 ## T-05 · infrastructure: conexión opaca, datasource y repositorio de clientes
 - Cubre: R-01, R-02, R-22, R-31, R-32
 - Depende de: T-01, T-04
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción (3): `apps/api/src/infrastructure/sqlite-connection.ts` (`openSqliteConnection` devuelve un `SqliteConnection` opaco con `close()`, y `getDatabase(connection)` lo resuelve con un `WeakMap` del módulo, solo para `infrastructure`; D-06), `apps/api/src/infrastructure/datasource/sqlite-customer.datasource.ts` (nuevo: `INSERT … RETURNING` con parámetros; fila `snake_case` → entidad `camelCase`; `SQLITE_CONSTRAINT_UNIQUE` → `CustomError('CONFLICT', M-13)`; lo demás se relanza) y `apps/api/src/infrastructure/repository/customer.repository.imp.ts` (nuevo: delega en el datasource).
 - Tests: `apps/api/src/infrastructure/datasource/sqlite-customer.datasource.spec.ts` (nuevo), sobre `openSqliteConnection(':memory:')` y `getDatabase`, con `customers` vaciada antes de cada caso (D-09).
 - Fase roja: el test se escribe antes que el datasource y `getDatabase`, y falla porque no existen.
+- Decisiones de detalle del implementer decididas por el autor el 2026-11-23, literal: «Las tres decisiones de detalle, aceptadas, con un cambio en la 1: que el mensaje vaya en inglés, «Unknown SQLite connection», como los demás errores internos del código (los de envs.ts y run-migrations.ts de la 000 están en inglés). Hazlo tú, es solo el texto del mensaje, relanza npm run verify y anótalo con mi aprobación.» Con ella, `getDatabase` lanza `Error('Unknown SQLite connection')` con una conexión que no está en el `WeakMap` (texto cambiado por la sesión principal; ningún test lo compara), `CustomerRepositoryImp` se prueba en un `describe` aparte del test del datasource, con un datasource falso, y el error de SQLite que no es de `UNIQUE` se provoca cerrando la base antes del `create`.
+- Aprobación del autor 2026-11-23 (literal): «Apruebo la T-05.» Implementer con Sonnet 5.5 (ADR-016, punto 6), propuesto y confirmado por el autor. `SELECT sqlite_version()` da `3.54.1`. `npm run verify` en verde, relanzado por la sesión principal tras el cambio del mensaje: 361 tests en la raíz y 14 en la web.
 - Hecho cuando:
-  - [ ] Fase roja: salida literal en el registro de la sesión.
-  - [ ] `SELECT sqlite_version()` da 3.35 o superior (`INSERT … RETURNING`; plan, sección 4); el implementer da el comando y su salida.
-  - [ ] C-01, parte de la base (R-01, R-02): un alta deja una fila con los cinco valores y la entidad devuelta tiene `id`, los cinco valores y `createdAt` igual a `created_at`, en UTC ISO 8601.
-  - [ ] C-02, C-42 y C-43, parte de la base (R-01, R-31, R-32): `123456789` en `PT` y en `FR`, `12345678Z` en `ES` y en `PT`, y dos altas con el mismo email y otra que solo difiere en mayúsculas dejan una fila por alta.
-  - [ ] C-28, parte de la base (R-22): la segunda alta en `ES` con `12345678Z` (y aparte con `12.345.678-z`, pasada por el DTO) lanza `CustomError` con `code` `CONFLICT`, `message` M-13 y sin `details`, y queda una sola fila (D-09, C-03).
-  - [ ] Un error de SQLite que no es `SQLITE_CONSTRAINT_UNIQUE` se relanza sin convertir.
-  - [ ] El `INSERT` usa parámetros, sin concatenar valores (`backend-conventions`).
-  - [ ] `createRoutes` y `server.ts` siguen funcionando sin cambios: los tests de la spec 000 (`routes.spec.ts`, `server.spec.ts`, `app.spec.ts`) siguen en verde.
-  - [ ] `npm run verify` desde la raíz, en verde.
-  - [ ] De `apps/` solo cambian `sqlite-connection.ts`, `sqlite-customer.datasource.ts`, `customer.repository.imp.ts` y el test del datasource.
+  - [x] Fase roja: salida literal en el registro de la sesión.
+  - [x] `SELECT sqlite_version()` da 3.35 o superior (`INSERT … RETURNING`; plan, sección 4); el implementer da el comando y su salida.
+  - [x] C-01, parte de la base (R-01, R-02): un alta deja una fila con los cinco valores y la entidad devuelta tiene `id`, los cinco valores y `createdAt` igual a `created_at`, en UTC ISO 8601.
+  - [x] C-02, C-42 y C-43, parte de la base (R-01, R-31, R-32): `123456789` en `PT` y en `FR`, `12345678Z` en `ES` y en `PT`, y dos altas con el mismo email y otra que solo difiere en mayúsculas dejan una fila por alta.
+  - [x] C-28, parte de la base (R-22): la segunda alta en `ES` con `12345678Z` (y aparte con `12.345.678-z`, pasada por el DTO) lanza `CustomError` con `code` `CONFLICT`, `message` M-13 y sin `details`, y queda una sola fila (D-09, C-03).
+  - [x] Un error de SQLite que no es `SQLITE_CONSTRAINT_UNIQUE` se relanza sin convertir.
+  - [x] El `INSERT` usa parámetros, sin concatenar valores (`backend-conventions`).
+  - [x] `createRoutes` y `server.ts` siguen funcionando sin cambios: los tests de la spec 000 (`routes.spec.ts`, `server.spec.ts`, `app.spec.ts`) siguen en verde.
+  - [x] `npm run verify` desde la raíz, en verde.
+  - [x] De `apps/` solo cambian `sqlite-connection.ts`, `sqlite-customer.datasource.ts`, `customer.repository.imp.ts` y el test del datasource.
 
 ## T-06 · presentation: `POST /customers` y middleware de errores
 - Cubre: R-01, R-02, R-03, R-12, R-13, R-15, R-16, R-17, R-22, R-31, R-32
