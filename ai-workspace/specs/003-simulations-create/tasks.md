@@ -140,25 +140,27 @@ Reglas comunes de esta spec:
 ## T-05 · infrastructure: datasource y repositorio de simulaciones
 - Cubre: R-01, R-02 (fila → entidad), R-03 y R-26 (sin fila, con base real), R-28 (sin fila), R-29 (traducción de la clave foránea y su prueba en el datasource), R-30 (sin fila), R-33 (enteros desde la base), R-35 (`-0` guardado como 0), R-36 (`SELECT country`)
 - Depende de: T-02, T-03, T-04
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Sonnet 5.5, confirmado por el autor (sigue el patrón del datasource de la 002).
+- Aprobación del autor 2026-11-23 (literal): «Apruebo la T-05.» `npm run verify` en verde: 642 tests en la raíz y 14 en la web (antes, 631 + 14), relanzado por la sesión principal.
+- Decisión del autor 2026-11-23 (literal), sobre las desviaciones declaradas por el implementer: «Las desviaciones 2, 3 y 4: aceptadas (CHECK del total para provocar el error que no es de clave foránea, importes a 0 por la migración y test extra borrado).»
 - Archivos de producción (2), en `apps/api/src/infrastructure/`:
   - `datasource/sqlite-simulation.datasource.ts` (nuevo): `findCustomerCountry` con `SELECT country FROM customers WHERE id = ?`; `create` con `INSERT … RETURNING` y parámetros; fila `snake_case` → entidad `camelCase`; `SQLITE_CONSTRAINT_FOREIGNKEY` → `customerNotFoundError()`; lo demás se relanza (D-11);
   - `repository/simulation.repository.imp.ts` (nuevo): delega en el datasource.
 - Tests (nuevo): `datasource/sqlite-simulation.datasource.spec.ts`, sobre `openSqliteConnection(':memory:')` y `getDatabase`, una base nueva por caso.
 - Fase roja: el test se escribe antes que los dos ficheros y falla porque no existen.
 - Hecho cuando:
-  - [ ] Fase roja: salida literal en el registro de la sesión.
-  - [ ] `findCustomerCountry` da el país de un cliente insertado y `undefined` si no existe (R-36).
-  - [ ] C-01, parte de la base (R-01, R-02): `create` guarda una fila con las ocho columnas y devuelve la entidad con los diez campos; `created_at` en UTC ISO 8601 e igual a `createdAt`.
-  - [ ] C-34, parte de la base (R-33): los nueve campos numéricos de la entidad son `number` con `Number.isInteger` `true`.
-  - [ ] C-27 pasa (R-29): `create` directo con un `customer_id` inexistente lanza el `CustomError` `NOT_FOUND`, sin `details`, y no queda ninguna fila nueva.
-  - [ ] R-35 (D-11): `-0` pasado directo a `create` en `active_users`, `storage` y `api_calls` da 0 en la fila y en `RETURNING` (`Object.is(value, 0)`).
-  - [ ] Con el caso de uso y el repositorio reales (D-15): un cliente inexistente da `NOT_FOUND` y 0 filas (C-25, R-28, R-03). Un cliente `DE` insertado a mano da el `RangeError` `unknown country` y 0 filas (C-28, R-30, R-26).
-  - [ ] Un error que no es de clave foránea se relanza sin convertir.
-  - [ ] El repositorio delega en el datasource (datasource falso).
-  - [ ] `npm run verify` desde la raíz, en verde.
-  - [ ] De `apps/` solo cambian los dos ficheros de producción y su test.
+  - [x] Fase roja: salida literal en el registro de la sesión.
+  - [x] `findCustomerCountry` da el país de un cliente insertado y `undefined` si no existe (R-36).
+  - [x] C-01, parte de la base (R-01, R-02): `create` guarda una fila con las ocho columnas y devuelve la entidad con los diez campos; `created_at` en UTC ISO 8601 e igual a `createdAt`.
+  - [x] C-34, parte de la base (R-33): los nueve campos numéricos de la entidad son `number` con `Number.isInteger` `true`.
+  - [x] C-27 pasa (R-29): `create` directo con un `customer_id` inexistente lanza el `CustomError` `NOT_FOUND`, sin `details`, y no queda ninguna fila nueva.
+  - [x] R-35 (D-11): `-0` pasado directo a `create` en `active_users`, `storage` y `api_calls` da 0 en la fila y en `RETURNING` (`Object.is(value, 0)`).
+  - [x] Con el caso de uso y el repositorio reales (D-15): un cliente inexistente da `NOT_FOUND` y 0 filas (C-25, R-28, R-03). Un cliente `DE` insertado a mano da el `RangeError` `unknown country` y 0 filas (C-28, R-30, R-26).
+  - [x] Un error que no es de clave foránea se relanza sin convertir.
+  - [x] El repositorio delega en el datasource (datasource falso).
+  - [x] `npm run verify` desde la raíz, en verde.
+  - [x] De `apps/` solo cambian los dos ficheros de producción y su test.
 
 ## T-06 · presentation: `POST /simulations` y fila `NOT_FOUND`
 - Cubre: R-01, R-02, R-03 (sin llamadas al repositorio), R-11 a R-25 por HTTP, R-26 (500 sin trazas), R-28 (404 sin `details`), R-29 (estado 404 del `NOT_FOUND`), R-30, R-33, R-34, R-35, R-36
