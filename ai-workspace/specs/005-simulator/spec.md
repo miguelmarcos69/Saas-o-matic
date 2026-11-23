@@ -1,6 +1,6 @@
 # Spec 005 · simulator
 
-- **Estado:** Aprobada
+- **Estado:** Planificada
 - **Depende de:** 001, 003
 - **Cubre:** §2.B
 
@@ -40,6 +40,9 @@ En la web, conectar con una API pública de tipos de cambio (`open.er-api.com/v6
   - Puerta 2, punto 5: «Rutas a leer» acotadas a secciones, líneas y ficheros.
   - Puerta 2, punto 6: planner con Opus 5.5.
   - Puerta 2, punto 1: una sola ronda del revisor por puerta, con lo `Menor` como reserva (pedida por el autor). La ronda 1 dio `Conforme con reservas` con dos `Importante` (H-01 y H-02), por eso se lanza la ronda 2, limitada a H-01, H-02, H-04, H-06, H-07, H-09, H-10 y H-11 y a lo que se toque. Antes, una tercera vuelta del planner: H-01 y H-12 con el ADR-017 (Decisión 2026-11-23 #30), H-02 sin cambiar requisitos, H-06 (Decisión 2026-11-23 #31), H-07 (Decisión 2026-11-23 #32) y H-04, H-09, H-10 y H-11 corregidos. Reservas aceptadas por el autor en la misma aprobación, con su motivo literal: H-03 («requisitos compuestos; corregirlo cambia requisitos»), H-05 («app.config.ts no se toca en esta spec») y H-08 («el formulario sigue funcionando en EUR mientras no haya respuesta»). H-12 se cierra con el ADR-017.
+  - Puerta 3, punto 3: cuatro decisiones previsibles propuestas por la sesión principal antes de lanzar al planner y aceptadas por el autor (plan, D-02 a D-05); la (1) chocó con R-10 y el autor la corrigió con la Q-01 (D-02).
+  - Puerta 3, puntos 4, 5 y 6: encargo del planner sin enseñarlo antes, «Rutas a leer» acotadas y planner con Opus 5.5.
+  - Puerta 4, puntos 3, 4 y 6: cuatro decisiones previsibles aceptadas por el autor (cabecera de tasks.md), encargo sin enseñarlo antes y planner con Opus 5.5; modelo del implementer por tarea, confirmado por el autor.
 
 ## 2. Requisitos
 Una sola afirmación comprobable por requisito. Patrones EARS:
