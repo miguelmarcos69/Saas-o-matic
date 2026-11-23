@@ -139,28 +139,34 @@ Reglas comunes de esta spec:
 ## T-06 · presentation: `POST /customers` y middleware de errores
 - Cubre: R-01, R-02, R-03, R-12, R-13, R-15, R-16, R-17, R-22, R-31, R-32
 - Depende de: T-02, T-04, T-05
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción (4): `apps/api/src/presentation/middlewares/error-handler.ts` (nuevo: `STATUS_BY_CODE` con `VALIDATION_ERROR` 400, `INVALID_JSON` 400, `CONFLICT` 409 e `INTERNAL_ERROR` 500, sin `NOT_FOUND`; `toHttpError(error)`; middleware que reconoce `type === 'entity.parse.failed'` como `INVALID_JSON` con M-12 y saca lo que no es `CustomError` como `INTERNAL_ERROR` con M-14; `details` solo si tiene elementos; D-05, D-11, D-14), `apps/api/src/presentation/customers/controller.ts` (nuevo: `CustomerController.create` con el repositorio por constructor, caso de uso por petición, 201 con la entidad, y `handleError`), `apps/api/src/presentation/customers/routes.ts` (nuevo: compone datasource, repositorio y controlador con la conexión recibida; `POST /` con `express.json({ strict: false })`; D-05, D-06) y `apps/api/src/presentation/routes.ts` (monta `/customers` con la conexión abierta y, al final, el middleware de errores; `/health` y `createRoutes` sin cambio de firma).
 - Tests: `apps/api/src/presentation/middlewares/error-handler.spec.ts`, `apps/api/src/presentation/customers/controller.spec.ts` (repositorio falso que cuenta las llamadas; D-09) y `apps/api/src/presentation/customers/routes.spec.ts` (`fetch` nativo sobre `createRoutes(':memory:')`, con `customers` vaciada antes de cada caso), los tres nuevos.
 - Fase roja: los tres tests se escriben antes que los cuatro ficheros de producción, y fallan porque no existen o porque `POST /customers` aún no está montado.
+- Desviaciones y decisiones de detalle del implementer decididas por el autor el 2026-11-23, literal: «1. Desviación 1: (a). Una base :memory: nueva por caso aísla igual y no abre una excepción a D-06. 2. Desviación 2: aceptada; C-16 no llega al controlador y C-18 no tiene cuerpo propio, y los dos se prueban por HTTP. 3. Decisión de detalle 2: no la acepto tal cual. Quiero la forma de la convención (patterns.md): una clase CustomerRoutes con un método estático routes(connection: SqliteConnection): Router (no puede ser un getter porque recibe la conexión de D-06), y en presentation/routes.ts, router.use('/customers', CustomerRoutes.routes(connection)). createRoutes de la 000 no se toca. Relanza al implementer con Sonnet solo para este cambio y vuelve a pasar npm run verify y el git grep de D-06. 4. Decisiones de detalle 1, 3, 4, 5 y 6: aceptadas.» Con ella:
+  - `customers/routes.spec.ts` no vacía `customers`: cada caso abre su propio `createRoutes(':memory:')`, porque `getDatabase` no puede entrar en `presentation/` (D-06).
+  - C-03 en `controller.spec.ts` no incluye C-16 ni C-18, que se prueban por HTTP.
+  - La composición es `CustomerRoutes.routes(connection)`, hecha por el implementer con Sonnet 5.5.
+  - Se aceptan cuatro cosas: `toHttpError` da `INTERNAL_ERROR` a un `CustomError` con un `code` sin estado; `STATUS_BY_CODE` va congelado, con los tipos `HttpErrorBody` y `HttpError`; el middleware va sin la rama `headersSent`; y los tests de más.
+- Aprobación del autor 2026-11-23 (literal): «Con ese cambio hecho, apruebo la T-06.» Implementer con Opus 5.5 (ADR-016, punto 6) y, para el cambio de forma, con Sonnet 5.5 por decisión del autor. `npm run verify` en verde, relanzado por la sesión principal tras el cambio: 461 tests en la raíz y 14 en la web. `git grep --untracked` de D-06, sin resultados (los ficheros aún no están en git, como en la T-04).
 - Hecho cuando:
-  - [ ] Fase roja: salida literal en el registro de la sesión.
-  - [ ] C-01 y C-02 pasan por HTTP (R-01, R-02): 201 con `id`, `companyName`, `taxId`, `email`, `country`, `plan` y `createdAt` en la raíz.
-  - [ ] C-42 y C-43 pasan por HTTP (R-31, R-32): 201 en todas las altas.
-  - [ ] C-03 pasa (R-03, D-09): con cada cuerpo no válido de C-04 a C-18, C-23 a C-25, C-36 a C-38, C-40, C-44 a C-47 y C-49 a C-52, el `create` del repositorio falso de `controller.spec.ts` no se llama nunca (la segunda alta de C-28 está en T-05).
-  - [ ] C-04, C-05 y C-17 pasan por HTTP: 400 `VALIDATION_ERROR` con sus elementos.
-  - [ ] C-15 pasa (R-12, R-04; D-05): (1) con `Content-Type: application/json`, `[]`, `null`, `"texto"` y `42` dan 400 con un único elemento `INVALID_TYPE` sin `field`; (2) sin esa cabecera, sin cuerpo y con el objeto válido enviado como `Uint8Array`, lo mismo; (3) con esa cabecera y el cuerpo vacío, los cinco `REQUIRED` de C-05.
-  - [ ] C-15 (2): el test confirma que la petición llega sin `Content-Type`, leyendo `req.headers` (D-05, riesgo 3). Si llega con alguno, el implementer para y lo devuelve.
-  - [ ] C-16 pasa (R-13): `{ "companyName": ` con `Content-Type: application/json` da 400 `{ error: { code: 'INVALID_JSON', message: M-12 } }`, sin `details`, por HTTP y en `error-handler.spec.ts`.
-  - [ ] C-18 pasa (R-15): en C-04, C-05, C-15 y C-17, estado 400 y cuerpo `{ error: { code, message, details } }` con `message` M-11 y `field`, `code` y `message` en cada elemento, salvo el de C-15, sin `field`.
-  - [ ] C-19 pasa (R-16): con un repositorio falso que lanza `Error`, 500 `{ error: { code: 'INTERNAL_ERROR', message: M-14 } }`, sin traza, sin el mensaje del `Error` y sin `details`.
-  - [ ] C-20 pasa por HTTP (R-17): 201 con `"Acme  Corp"`, `"ana@acme.es"`, `"ES"` y `"starter"`.
-  - [ ] C-28 pasa por HTTP (R-22): la primera alta, 201; la segunda (y aparte con `12.345.678-z`), 409 `{ error: { code: 'CONFLICT', message: M-13 } }`, sin `details`.
-  - [ ] `error-handler.spec.ts`: `STATUS_BY_CODE` tiene solo las cuatro filas de D-11; `toHttpError` da `details` solo si tiene elementos (R-15, R-22) y saca lo que no es `CustomError` como `INTERNAL_ERROR` 500 con M-14 (R-16).
-  - [ ] `GET /health` y el 404 por defecto de Express de una ruta inexistente siguen como en la spec 000: sus tests siguen en verde sin cambios (D-14).
-  - [ ] `git grep -n "better-sqlite3\|getDatabase" -- apps/api/src/presentation` sin resultados (D-06); el implementer da el comando y su salida.
-  - [ ] `npm run verify` desde la raíz, en verde.
-  - [ ] De `apps/` solo cambian los cuatro ficheros de producción y sus tres tests.
+  - [x] Fase roja: salida literal en el registro de la sesión.
+  - [x] C-01 y C-02 pasan por HTTP (R-01, R-02): 201 con `id`, `companyName`, `taxId`, `email`, `country`, `plan` y `createdAt` en la raíz.
+  - [x] C-42 y C-43 pasan por HTTP (R-31, R-32): 201 en todas las altas.
+  - [x] C-03 pasa (R-03, D-09): con cada cuerpo no válido de C-04 a C-18, C-23 a C-25, C-36 a C-38, C-40, C-44 a C-47 y C-49 a C-52, el `create` del repositorio falso de `controller.spec.ts` no se llama nunca (la segunda alta de C-28 está en T-05).
+  - [x] C-04, C-05 y C-17 pasan por HTTP: 400 `VALIDATION_ERROR` con sus elementos.
+  - [x] C-15 pasa (R-12, R-04; D-05): (1) con `Content-Type: application/json`, `[]`, `null`, `"texto"` y `42` dan 400 con un único elemento `INVALID_TYPE` sin `field`; (2) sin esa cabecera, sin cuerpo y con el objeto válido enviado como `Uint8Array`, lo mismo; (3) con esa cabecera y el cuerpo vacío, los cinco `REQUIRED` de C-05.
+  - [x] C-15 (2): el test confirma que la petición llega sin `Content-Type`, leyendo `req.headers` (D-05, riesgo 3). Si llega con alguno, el implementer para y lo devuelve.
+  - [x] C-16 pasa (R-13): `{ "companyName": ` con `Content-Type: application/json` da 400 `{ error: { code: 'INVALID_JSON', message: M-12 } }`, sin `details`, por HTTP y en `error-handler.spec.ts`.
+  - [x] C-18 pasa (R-15): en C-04, C-05, C-15 y C-17, estado 400 y cuerpo `{ error: { code, message, details } }` con `message` M-11 y `field`, `code` y `message` en cada elemento, salvo el de C-15, sin `field`.
+  - [x] C-19 pasa (R-16): con un repositorio falso que lanza `Error`, 500 `{ error: { code: 'INTERNAL_ERROR', message: M-14 } }`, sin traza, sin el mensaje del `Error` y sin `details`.
+  - [x] C-20 pasa por HTTP (R-17): 201 con `"Acme  Corp"`, `"ana@acme.es"`, `"ES"` y `"starter"`.
+  - [x] C-28 pasa por HTTP (R-22): la primera alta, 201; la segunda (y aparte con `12.345.678-z`), 409 `{ error: { code: 'CONFLICT', message: M-13 } }`, sin `details`.
+  - [x] `error-handler.spec.ts`: `STATUS_BY_CODE` tiene solo las cuatro filas de D-11; `toHttpError` da `details` solo si tiene elementos (R-15, R-22) y saca lo que no es `CustomError` como `INTERNAL_ERROR` 500 con M-14 (R-16).
+  - [x] `GET /health` y el 404 por defecto de Express de una ruta inexistente siguen como en la spec 000: sus tests siguen en verde sin cambios (D-14).
+  - [x] `git grep -n "better-sqlite3\|getDatabase" -- apps/api/src/presentation` sin resultados (D-06); el implementer da el comando y su salida.
+  - [x] `npm run verify` desde la raíz, en verde.
+  - [x] De `apps/` solo cambian los cuatro ficheros de producción y sus tres tests.
 
 ## Cobertura
 Cada `R-nn` aparece en al menos una tarea.
