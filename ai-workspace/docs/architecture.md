@@ -4,7 +4,7 @@ Stack: ADR-009 · Cálculo compartido: ADR-010 · Datos: database.md
 
 ## Carpetas
 ```text
-packages/pricing/                  # cálculo por tramos: TS puro, importes enteros
+packages/pricing/                  # cálculo por tramos e IVA: TS puro, importes enteros
 apps/api/
 ├─ migrations/                     # SQL del esquema (database.md)
 └─ src/

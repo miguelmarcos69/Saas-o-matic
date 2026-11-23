@@ -24,7 +24,7 @@ Ambas tablas son `STRICT`. Cada conexión ejecuta `PRAGMA foreign_keys = ON` y `
 | `id` | INTEGER | sí | PRIMARY KEY |
 | `customer_id` | INTEGER | sí | FOREIGN KEY → `customers(id)`, sin `ON DELETE` |
 | `active_users` | INTEGER | sí | CHECK (active_users >= 0) |
-| `storage` | INTEGER | sí | CHECK (storage >= 0). Unidad sin definir |
+| `storage` | INTEGER | sí | CHECK (storage >= 0). En GB (spec 003, Decisión 2026-11-23 #11) |
 | `api_calls` | INTEGER | sí | CHECK (api_calls >= 0) |
 | `base_cost_cents` | INTEGER | sí | CHECK (base_cost_cents >= 0) |
 | `tax_rate_bps` | INTEGER | sí | CHECK (tax_rate_bps >= 0). Puntos básicos: 21 % = 2100 |
@@ -74,14 +74,14 @@ erDiagram
 | # | Duda | Spec |
 |---|---|---|
 | 1 | Países admitidos y su formato (nombre, código ISO…). Resuelta en la spec 002, Decisión 2026-11-23 #6 | `POST /customers` |
-| 2 | Planes válidos; si el plan influye en el cálculo o solo se guarda. Planes válidos: resuelta en la spec 002, Decisión 2026-11-23 #7; si influye en el cálculo sigue abierta para la spec 003 | `POST /customers` y `POST /simulations` |
+| 2 | Planes válidos; si el plan influye en el cálculo o solo se guarda. Planes válidos: resuelta en la spec 002, Decisión 2026-11-23 #7; si influye en el cálculo: resuelta en la spec 003, Decisión 2026-11-23 #10 (no influye) | `POST /customers` y `POST /simulations` |
 | 3 | Unicidad del identificador fiscal (global o por país) y qué hacer si se repite. Resuelta en la spec 002, Decisión 2026-11-23 #8 | `POST /customers` |
 | 4 | Normalización del identificador fiscal (mayúsculas, guiones, espacios) y si se guarda normalizado. Resuelta en la spec 002, Decisión 2026-11-23 #9 | `POST /customers` |
 | 5 | Qué documentos acepta la validación en España (DNI, NIE, NIF, CIF) y qué se valida si el país no es España (§2.A). Resuelta en la spec 002, Decisión 2026-11-23 #10 | `POST /customers` |
 | 6 | Unicidad y normalización del email. Resuelta en la spec 002, Decisión 2026-11-23 #11 | `POST /customers` |
-| 7 | Tipos de IVA por país, países sin tipo definido (Roams: ES, PT, FR, IT) y sobre qué importe se aplica | `POST /simulations` |
-| 8 | Redondeo del IVA y de los importes (un único punto, principio 6) | `POST /simulations` |
-| 9 | Límites de `active_users` (¿0 es válido?, máximo), `storage` (unidad, decimales, máximo) y `api_calls` (periodo, máximo) | `POST /simulations` |
-| 10 | Si `storage` y `api_calls` influyen en el coste: §2.A solo define tramos por usuarios | `POST /simulations` |
+| 7 | Tipos de IVA por país, países sin tipo definido (Roams: ES, PT, FR, IT) y sobre qué importe se aplica. Resuelta en la spec 003, Decisión 2026-11-23 #7, #9 y #19 | `POST /simulations` |
+| 8 | Redondeo del IVA y de los importes (un único punto, principio 6). Resuelta en la spec 003, Decisión 2026-11-23 #9 | `POST /simulations` |
+| 9 | Límites de `active_users` (¿0 es válido?, máximo), `storage` (unidad, decimales, máximo) y `api_calls` (periodo, máximo). Resuelta en la spec 003, Decisión 2026-11-23 #11 | `POST /simulations` |
+| 10 | Si `storage` y `api_calls` influyen en el coste: §2.A solo define tramos por usuarios. Resuelta en la spec 003, Decisión 2026-11-23 #10 | `POST /simulations` |
 | 11 | Buscador: mayúsculas, tildes, coincidencia parcial, orden, paginación e índices | Lectura (buscador e historial) |
 | 12 | Endpoints de lectura de clientes y simulaciones (ambigüedad #8) | Lectura (buscador e historial) |

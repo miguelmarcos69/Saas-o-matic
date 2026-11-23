@@ -108,7 +108,7 @@ Lo demás es una regla de CLAUDE.md o queda en el registro de la sesión.
 - **Fecha:** 2026-11-19
 - **Estado:** Aceptado, condicionado a su validación en la fase 6
 - **Contexto:** El algoritmo de tramos lo necesita el backend, al guardar la simulación (§2.A), y el frontend, para el simulador en tiempo real (§2.B). Dos implementaciones podrían dar resultados distintos.
-- **Decisión:** Paquete `packages/pricing` en el workspace, TypeScript puro, con importes enteros, compilado a `dist` (JS y `.d.ts`). La API y la web lo consumen como un paquete normal. Un único cálculo y una forma estándar de consumirlo. Para evitar un `dist` obsoleto, los scripts de la raíz (`dev`, `test`, `build`) compilan `pricing` antes que las apps. Quedan fuera del paquete el IVA, que depende de decisiones abiertas, y la conversión de divisa, que es solo del frontend.
+- **Decisión:** Paquete `packages/pricing` en el workspace, TypeScript puro, con importes enteros, compilado a `dist` (JS y `.d.ts`). La API y la web lo consumen como un paquete normal. Un único cálculo y una forma estándar de consumirlo. Para evitar un `dist` obsoleto, los scripts de la raíz (`dev`, `test`, `build`) compilan `pricing` antes que las apps. Queda fuera del paquete la conversión de divisa, que es solo del frontend. El IVA entra en el paquete: tipo por país, IVA redondeado y total (spec 003, Decisión 2026-11-23 #8, #9 y #25; ver «Modificación»).
 - **Alternativa descartada:**
   - Carpeta compartida sin build, con alias de `tsconfig`: descartada por el autor.
   - Endpoint de previsualización en la API: añade un endpoint que el reto no pide y el slider dependería de la red, contra el tiempo real de §2.B.
@@ -116,6 +116,7 @@ Lo demás es una regla de CLAUDE.md o queda en el registro de la sesión.
   - Condición: se valida en la fase 6. Si no funciona con Angular o con la API, se avisa al autor y se aplica la opción B: duplicar el cálculo en cada app y garantizar que coinciden con un fichero de casos de prueba común que ejecutan los tests de ambas.
   - Hay un paso de compilación previo a probar o arrancar las apps, que los scripts de la raíz hacen solos.
   - Los límites de los tramos (10/11 y 50/51) se prueban una sola vez, en el paquete (constitución, principios 3 y 6).
+- **Modificación (2026-11-23, spec 003):** el texto original decía «Quedan fuera del paquete el IVA, que depende de decisiones abiertas, y la conversión de divisa». Decididos el tipo de IVA por país, la base y el redondeo, el autor llevó el IVA a `packages/pricing`, porque el simulador de la spec 005 muestra el total con IVA en tiempo real en la web (spec 003, Decisión 2026-11-23 #8).
 
 ## ADR-011 · Qué se guarda de cada simulación
 - **Fecha:** 2026-11-19
