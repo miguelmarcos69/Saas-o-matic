@@ -83,34 +83,37 @@ Reglas comunes de esta spec:
 ## T-04 · domain: DTO de alta, entidad, puertos y caso de uso
 - Cubre: R-01 (puertos y caso de uso), R-02 (entidad), R-04 a R-12, R-14, R-17, R-18, R-19, R-20, R-21, R-23, R-28, R-29, R-30, R-33, R-34, R-35
 - Depende de: T-02, T-03
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Archivos de producción (5): `apps/api/src/domain/dtos/customers/create-customer.dto.ts` (nuevo: esquema `z.strictObject` y `CreateCustomerDto.create(body)` con `safeParse(body, { reportInput: true })`, según D-07 y D-12), `apps/api/src/domain/entities/customer.entity.ts` (nuevo: `CustomerEntity` con `id`, `companyName`, `taxId`, `email`, `country`, `plan` y `createdAt`), `apps/api/src/domain/datasources/customer.datasource.ts` (nuevo: puerto `create(dto): Promise<CustomerEntity>`), `apps/api/src/domain/repository/customer.repository.ts` (nuevo: puerto, misma firma) y `apps/api/src/domain/use-cases/customer/create-customer.ts` (nuevo: `CreateCustomer` con el repositorio por constructor y `execute(dto)`).
 - Tests: `apps/api/src/domain/dtos/customers/create-customer.dto.spec.ts` (nuevo; un `it` por entrada) y `apps/api/src/domain/use-cases/customer/create-customer.spec.ts` (nuevo; repositorio falso).
 - Fase roja: los dos tests se escriben antes que el DTO y el caso de uso, y fallan porque no existen.
+- Desviaciones del implementer decididas por el autor el 2026-11-23, literal: «Desviaciones 1, 2 y 3: aceptadas; no cambian el comportamiento y son la forma de escribirlo en Zod 4.6.7 (la 3 es la que pide D-07).» Con ella, `country` y `plan` pasan el texto recortado por `.pipe(z.enum(…))` (el error sale como `invalid_value` y un valor vacío da solo `REQUIRED`), el email usa `.check(z.email())` en vez de `.email()`, obsoleto en Zod 4.6.7, y `INVALID_TAX_ID` es un `refine` del objeto con `when` que no corre si el cuerpo no es un objeto o hay un issue en `country` o en `taxId` (un `unrecognized_keys` no lo impide, R-14).
+- Nota del implementer anotada por decisión del autor el 2026-11-23, literal: «Nota 4: sí, anótala en la T-04 junto a mi aprobación, sin cambiar el texto de la casilla.» La casilla del `git grep` se comprobó con `git grep --untracked`: el fichero aún no estaba en git y, sin esa opción, `git grep` no lo lee y no daría resultados aunque el texto estuviera.
+- Aprobación del autor 2026-11-23 (literal): «Apruebo la T-04.» Implementer con Opus 5.5 (ADR-016, punto 6). `npm run verify` en verde: 352 tests en la raíz y 14 en la web.
 - Hecho cuando:
-  - [ ] Fase roja: salida literal en el registro de la sesión.
-  - [ ] Todo error del DTO es un `CustomError` con `code` `VALIDATION_ERROR` y `message` M-11, y sus `details` llevan los textos de D-03.
-  - [ ] C-04 a C-09 pasan (R-04 a R-07): `REQUIRED` por campo ausente, cinco `REQUIRED` con `{}`, `INVALID_TYPE` con `email: 123`, `country: true` y `plan: {}`, `REQUIRED` con `null`, `""`, `"   "`, `"\t\n"` y `taxId: "   "`, e `INVALID_FORMAT` con `no-es-un-email`.
-  - [ ] C-10 pasa: `ana@empresa` da `INVALID_FORMAT`; `"  ana@empresa.es  "` da un DTO con `ana@empresa.es`; y los límites de la sección 6 del plan: los ocho emails válidos dan DTO (`ANA@EMPRESA.ES` como `ana@empresa.es`) y los catorce no válidos, `INVALID_FORMAT`.
-  - [ ] C-11 y C-12 pasan (R-08, R-09): `XX`, `es`, `Es`, `ESP`, `España` y 300 caracteres en `country`, y `premium`, `Starter`, `STARTER` y 300 caracteres en `plan`, dan `INVALID_VALUE` (nunca `TOO_BIG`).
-  - [ ] C-13 y C-40 pasan (R-10, R-28): `companyName` de 200 da DTO, de 201 `TOO_BIG`, y de 200 con dos espacios a cada lado, DTO; `email` válido de 254 da DTO, de 255 `TOO_BIG`, y de 254 con un espacio a cada lado, DTO.
-  - [ ] C-14 pasa (R-11): `extra` da un `UNKNOWN_FIELD`; `id` y `createdAt`, dos, con su nombre en `field`.
-  - [ ] C-15, parte del DTO (R-12): `undefined`, `null`, `[]`, `"texto"` y `42` dan un único elemento `INVALID_TYPE` sin `field`.
-  - [ ] C-17 pasa (R-14): `email` no válido y sin `companyName`, dos elementos; y el test de R-14 añadido por el plan (sección 5): sin `companyName` y `ES` con `12345678A`, dos elementos (`companyName` `REQUIRED` y `taxId` `INVALID_TAX_ID`; riesgo 1).
-  - [ ] C-20, C-27 y C-29 pasan (R-17, R-21, R-23): el DTO lleva `"Acme  Corp"`, `"ana@acme.es"`, `"ES"`, `"starter"`, `12345678Z`, `X1234567L`, `12345678Z` y `ana@empresa.es`.
-  - [ ] C-21, C-23 y C-25 pasan en el DTO (R-18, R-19): `12345678Z` en `ES` da DTO; `12345678A` y las entradas de C-25 dan `INVALID_TAX_ID` en `taxId`.
-  - [ ] C-26 y C-41 pasan (R-20, R-29): `AB`, `ABCDEFGHIJ0123456789` y `ab-12.3` (como `AB123`) dan DTO en `PT`, `FR` e `IT`; en `IT`, 20 caracteres más cinco guiones dan DTO.
-  - [ ] C-36 a C-38 pasan (R-29, R-30): `A` en `PT` da `INVALID_TAX_ID`; 21 caracteres tras normalizar en `ES`, `PT`, `FR` e `IT` dan `TOO_BIG` (nunca `INVALID_TAX_ID`); `AB_12` en `FR` da `INVALID_TAX_ID`.
-  - [ ] C-44 pasa (R-33): las cuatro entradas dan, en este orden, un elemento (`country` `INVALID_VALUE`), un elemento (`country` `REQUIRED`), dos (`country` `INVALID_VALUE` y `taxId` `TOO_BIG`) y dos (`country` `INVALID_VALUE` y `taxId` `REQUIRED`).
-  - [ ] C-45 pasa (R-34): `---` y `...` en `ES` y en `PT` dan `REQUIRED` en `taxId`.
-  - [ ] C-46 y C-52 pasan (R-29, D-12): once `𝐀` en `PT` dan un solo `TOO_BIG`; 19 caracteres más `ﬁ` dan `INVALID_TAX_ID`, y 20 más `ß`, `TOO_BIG`.
-  - [ ] C-47 pasa (R-28): un email de 300 caracteres sin `@` da un solo `TOO_BIG`.
-  - [ ] C-49 a C-51 pasan en el DTO: cada entrada da un solo `INVALID_TAX_ID` en `taxId`.
-  - [ ] `create-customer.dto.ts` no usa `.max(` ni `.min(` (D-12) ni `abort: true` (D-07): `git grep` sobre el fichero, sin resultados; el implementer da el comando y su salida.
-  - [ ] `create-customer.spec.ts` pasa: `execute(dto)` llama una vez al `create` del repositorio falso con ese DTO y devuelve su entidad.
-  - [ ] Los cinco ficheros solo importan Zod o ficheros de `domain` (sin `node:*`, Express ni `better-sqlite3`; `architecture.md`).
-  - [ ] `npm run verify` desde la raíz, en verde.
-  - [ ] De `apps/` solo cambian los cinco ficheros y sus dos tests.
+  - [x] Fase roja: salida literal en el registro de la sesión.
+  - [x] Todo error del DTO es un `CustomError` con `code` `VALIDATION_ERROR` y `message` M-11, y sus `details` llevan los textos de D-03.
+  - [x] C-04 a C-09 pasan (R-04 a R-07): `REQUIRED` por campo ausente, cinco `REQUIRED` con `{}`, `INVALID_TYPE` con `email: 123`, `country: true` y `plan: {}`, `REQUIRED` con `null`, `""`, `"   "`, `"\t\n"` y `taxId: "   "`, e `INVALID_FORMAT` con `no-es-un-email`.
+  - [x] C-10 pasa: `ana@empresa` da `INVALID_FORMAT`; `"  ana@empresa.es  "` da un DTO con `ana@empresa.es`; y los límites de la sección 6 del plan: los ocho emails válidos dan DTO (`ANA@EMPRESA.ES` como `ana@empresa.es`) y los catorce no válidos, `INVALID_FORMAT`.
+  - [x] C-11 y C-12 pasan (R-08, R-09): `XX`, `es`, `Es`, `ESP`, `España` y 300 caracteres en `country`, y `premium`, `Starter`, `STARTER` y 300 caracteres en `plan`, dan `INVALID_VALUE` (nunca `TOO_BIG`).
+  - [x] C-13 y C-40 pasan (R-10, R-28): `companyName` de 200 da DTO, de 201 `TOO_BIG`, y de 200 con dos espacios a cada lado, DTO; `email` válido de 254 da DTO, de 255 `TOO_BIG`, y de 254 con un espacio a cada lado, DTO.
+  - [x] C-14 pasa (R-11): `extra` da un `UNKNOWN_FIELD`; `id` y `createdAt`, dos, con su nombre en `field`.
+  - [x] C-15, parte del DTO (R-12): `undefined`, `null`, `[]`, `"texto"` y `42` dan un único elemento `INVALID_TYPE` sin `field`.
+  - [x] C-17 pasa (R-14): `email` no válido y sin `companyName`, dos elementos; y el test de R-14 añadido por el plan (sección 5): sin `companyName` y `ES` con `12345678A`, dos elementos (`companyName` `REQUIRED` y `taxId` `INVALID_TAX_ID`; riesgo 1).
+  - [x] C-20, C-27 y C-29 pasan (R-17, R-21, R-23): el DTO lleva `"Acme  Corp"`, `"ana@acme.es"`, `"ES"`, `"starter"`, `12345678Z`, `X1234567L`, `12345678Z` y `ana@empresa.es`.
+  - [x] C-21, C-23 y C-25 pasan en el DTO (R-18, R-19): `12345678Z` en `ES` da DTO; `12345678A` y las entradas de C-25 dan `INVALID_TAX_ID` en `taxId`.
+  - [x] C-26 y C-41 pasan (R-20, R-29): `AB`, `ABCDEFGHIJ0123456789` y `ab-12.3` (como `AB123`) dan DTO en `PT`, `FR` e `IT`; en `IT`, 20 caracteres más cinco guiones dan DTO.
+  - [x] C-36 a C-38 pasan (R-29, R-30): `A` en `PT` da `INVALID_TAX_ID`; 21 caracteres tras normalizar en `ES`, `PT`, `FR` e `IT` dan `TOO_BIG` (nunca `INVALID_TAX_ID`); `AB_12` en `FR` da `INVALID_TAX_ID`.
+  - [x] C-44 pasa (R-33): las cuatro entradas dan, en este orden, un elemento (`country` `INVALID_VALUE`), un elemento (`country` `REQUIRED`), dos (`country` `INVALID_VALUE` y `taxId` `TOO_BIG`) y dos (`country` `INVALID_VALUE` y `taxId` `REQUIRED`).
+  - [x] C-45 pasa (R-34): `---` y `...` en `ES` y en `PT` dan `REQUIRED` en `taxId`.
+  - [x] C-46 y C-52 pasan (R-29, D-12): once `𝐀` en `PT` dan un solo `TOO_BIG`; 19 caracteres más `ﬁ` dan `INVALID_TAX_ID`, y 20 más `ß`, `TOO_BIG`.
+  - [x] C-47 pasa (R-28): un email de 300 caracteres sin `@` da un solo `TOO_BIG`.
+  - [x] C-49 a C-51 pasan en el DTO: cada entrada da un solo `INVALID_TAX_ID` en `taxId`.
+  - [x] `create-customer.dto.ts` no usa `.max(` ni `.min(` (D-12) ni `abort: true` (D-07): `git grep` sobre el fichero, sin resultados; el implementer da el comando y su salida.
+  - [x] `create-customer.spec.ts` pasa: `execute(dto)` llama una vez al `create` del repositorio falso con ese DTO y devuelve su entidad.
+  - [x] Los cinco ficheros solo importan Zod o ficheros de `domain` (sin `node:*`, Express ni `better-sqlite3`; `architecture.md`).
+  - [x] `npm run verify` desde la raíz, en verde.
+  - [x] De `apps/` solo cambian los cinco ficheros y sus dos tests.
 
 ## T-05 · infrastructure: conexión opaca, datasource y repositorio de clientes
 - Cubre: R-01, R-02, R-22, R-31, R-32
