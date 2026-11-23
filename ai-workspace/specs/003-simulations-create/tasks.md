@@ -19,8 +19,9 @@ Reglas comunes de esta spec:
 ## T-01 · packages/pricing: tipo de IVA por país, IVA redondeado y total
 - Cubre: R-05, R-06, R-07, R-10 (funciones puras en `packages/pricing`), R-37, R-38, R-39, R-40, R-41
 - Depende de: —
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Opus 5.5, confirmado por el autor (bordes exactos del rango seguro y único punto de redondeo).
+- Aprobación del autor 2026-11-23 (literal): «Apruebo la T-01.» `npm run verify` en verde: 528 tests en la raíz y 14 en la web (antes, 470 + 14), relanzado por la sesión principal.
 - Archivos de producción (4), todos en `packages/pricing/src/`:
   - `tax-rate.ts` (nuevo): `getTaxRateBps(country)` con un `ReadonlyMap` `ES` 2100, `PT` 2300, `FR` 2000, `IT` 2200, y `RangeError('unknown country')` si no está (D-10);
   - `tax-amount.ts` (nuevo): `calculateTaxAmountCents(baseCents, rateBps)`, con validación de R-38, producto de R-39 y cociente por resto entero, sin `Math.floor` (D-10);
@@ -29,17 +30,17 @@ Reglas comunes de esta spec:
 - Tests (nuevos, en `packages/pricing/src/`): `tax-rate.spec.ts`, `tax-amount.spec.ts` y `total.spec.ts`, sin servidor ni base.
 - Fase roja: los tres tests se escriben antes que los tres módulos y fallan porque no existen.
 - Hecho cuando:
-  - [ ] Fase roja: salida literal en el registro de la sesión.
-  - [ ] R-05: `getTaxRateBps` da 2100, 2300, 2000 y 2200 para `ES`, `PT`, `FR` e `IT`.
-  - [ ] C-40 pasa (R-40): con `"DE"` lanza un error `instanceof RangeError` con `message` `unknown country` (`toBe`). También con `"constructor"` y `"__proto__"` (plan, riesgo 5).
-  - [ ] C-05 pasa (R-06, R-37): base 1 y 5000 bps → 1; base 1 y 4999 bps → 0; base 3 y 5000 bps → 2.
-  - [ ] C-01 a C-04 en la parte del cálculo: base 14000 con los cuatro tipos da 2940, 3220, 2800 y 3080 de IVA y 16940, 17220, 16800 y 17080 de total; base 0 da 0 y 0; base 50017000 con 2100 y 2300 da 10503570 y 11503910 de IVA y 60520570 y 61520910 de total.
-  - [ ] C-38 pasa (R-38): -1, `1.5`, `NaN`, `Infinity` y 9007199254740992, cada uno aparte en la base y en el tipo, lanzan en `calculateTaxAmountCents` y en `calculateTotalCents` un `RangeError` con `message` `base and rate must be non-negative safe integers`. Bordes sin error: (a) IVA 0, total 9007199254740991; (b) IVA 0, total 0; (c) IVA 0, total 14000.
-  - [ ] C-39 pasa (R-39): (1) y (3) lanzan en las dos funciones un `RangeError` con `message` `tax amount exceeds the safe integer range`; (2) sin error, IVA 900719925474 y total 124287011086241.
-  - [ ] C-41 pasa (R-41, R-07): (1) total 9007199254740991; (2) `RangeError` con `message` `total exceeds the safe integer range`.
-  - [ ] C-29, parte automática (R-10): los tests pasan sin Express ni SQLite; ningún módulo nuevo importa nada de fuera de `packages/pricing/src` ni `node:*`.
-  - [ ] `npm run verify` desde la raíz, en verde; el test de la API desde `dist` (`apps/api/src/domain/pricing-check.spec.ts`) sigue igual y en verde.
-  - [ ] De `packages/` y `apps/` solo cambian los cuatro ficheros de producción y los tres tests.
+  - [x] Fase roja: salida literal en el registro de la sesión.
+  - [x] R-05: `getTaxRateBps` da 2100, 2300, 2000 y 2200 para `ES`, `PT`, `FR` e `IT`.
+  - [x] C-40 pasa (R-40): con `"DE"` lanza un error `instanceof RangeError` con `message` `unknown country` (`toBe`). También con `"constructor"` y `"__proto__"` (plan, riesgo 5).
+  - [x] C-05 pasa (R-06, R-37): base 1 y 5000 bps → 1; base 1 y 4999 bps → 0; base 3 y 5000 bps → 2.
+  - [x] C-01 a C-04 en la parte del cálculo: base 14000 con los cuatro tipos da 2940, 3220, 2800 y 3080 de IVA y 16940, 17220, 16800 y 17080 de total; base 0 da 0 y 0; base 50017000 con 2100 y 2300 da 10503570 y 11503910 de IVA y 60520570 y 61520910 de total.
+  - [x] C-38 pasa (R-38): -1, `1.5`, `NaN`, `Infinity` y 9007199254740992, cada uno aparte en la base y en el tipo, lanzan en `calculateTaxAmountCents` y en `calculateTotalCents` un `RangeError` con `message` `base and rate must be non-negative safe integers`. Bordes sin error: (a) IVA 0, total 9007199254740991; (b) IVA 0, total 0; (c) IVA 0, total 14000.
+  - [x] C-39 pasa (R-39): (1) y (3) lanzan en las dos funciones un `RangeError` con `message` `tax amount exceeds the safe integer range`; (2) sin error, IVA 900719925474 y total 124287011086241.
+  - [x] C-41 pasa (R-41, R-07): (1) total 9007199254740991; (2) `RangeError` con `message` `total exceeds the safe integer range`.
+  - [x] C-29, parte automática (R-10): los tests pasan sin Express ni SQLite; ningún módulo nuevo importa nada de fuera de `packages/pricing/src` ni `node:*`.
+  - [x] `npm run verify` desde la raíz, en verde; el test de la API desde `dist` (`apps/api/src/domain/pricing-check.spec.ts`) sigue igual y en verde.
+  - [x] De `packages/` y `apps/` solo cambian los cuatro ficheros de producción y los tres tests.
 
 ## T-02 · data: migración `0002_simulations.sql`
 - Cubre: R-31 (todas sus partes), R-32; R-01 en la parte del esquema

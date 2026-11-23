@@ -1,6 +1,6 @@
 # Spec 003 · simulations-create
 
-- **Estado:** Planificada
+- **Estado:** En implementación
 - **Depende de:** 001, 002
 - **Cubre:** §2.A
 
