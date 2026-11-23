@@ -200,3 +200,12 @@ Lo demás es una regla de CLAUDE.md o queda en el registro de la sesión.
   - Cada spec anota qué ajustes de este ADR aplicó.
   - ai-workspace/specs/README.md refleja el nuevo reparto; las filas 006 y 007 se conservan como «Fusionada en …» para no perder la trazabilidad.
 - **Ver también:** ADR-002, ADR-003, ADR-012; spec 000 (review.md, rondas 1 a 8).
+
+## ADR-017 · Un único punto de redondeo por cálculo
+- **Fecha:** 2026-11-23
+- **Estado:** Aceptado
+- **Contexto:** El principio 6 dice "los importes no usan coma flotante: se guardan y calculan en unidades enteras mínimas, y el redondeo ocurre en un único punto". En la spec 005 (simulador), el IVA y el total que se muestran en USD o GBP se redondean dos veces: el IVA en `calculateTaxAmountCents` de `packages/pricing` (spec 003) y cada importe mostrado en la función de conversión (spec 005, Decisión 2026-11-23 #9). La interpretación del autor estaba solo en esa decisión, por debajo de la constitución (spec 005, review.md, ronda 1, H-01). Además, para mostrar un importe se divide entre 100 el número de céntimos, y el resultado no es entero (H-12).
+- **Decisión:** Interpretación del autor del principio 6: "un único punto de redondeo por cálculo". Cada cálculo redondea una sola vez y en un solo sitio: el IVA, en `packages/pricing` (`calculateTaxAmountCents`); la conversión de lo que se muestra a otra divisa, en su función pura única. Cada importe mostrado se convierte por separado desde su importe en céntimos de euro. La división de los céntimos entre 100 es solo para dar formato al importe (`Intl.NumberFormat`), no es un cálculo: su resultado no se guarda ni se usa en ninguna operación. No se modifica la constitución.
+- **Alternativa descartada:** (a) Cambiar el texto del principio 6 en la constitución. (b) Dejar la interpretación solo en la Decisión 2026-11-23 #9 de la spec 005 y aceptar el choque como reserva: volvería a aparecer en la puerta 6 y en la spec 004.
+- **Consecuencias:** En USD o GBP, la suma de las partes mostradas puede diferir en un céntimo del total mostrado; se acepta y se anota en la spec 005. La spec 004, que mostrará importes en la divisa elegida, usa la misma función y la misma regla. Si aparece otro cálculo con redondeo, va en su propio punto único y se cita este ADR.
+- **Ver también:** principio 6 de la constitución; ADR-010; ADR-013 (la misma forma, con el principio 5); spec 003, Decisión 2026-11-23 #9; spec 005, Decisiones 2026-11-23 #9 y #15, y review.md (ronda 1, H-01 y H-12); skill `frontend-conventions` (Importes).
