@@ -6,11 +6,11 @@ import { runMigrations } from './run-migrations.js';
 
 const IN_MEMORY = ':memory:';
 
-// Abre la base y aplica las migraciones (R-08, D-16). La ruta llega ya resuelta desde config.
-// Cada conexión activa foreign_keys y, si es un fichero, journal_mode WAL (R-26, R-27, database.md).
+// Abre la base y aplica las migraciones (spec 000: R-08, D-16). La ruta llega ya resuelta desde config.
+// Cada conexión activa foreign_keys y, si es un fichero, journal_mode WAL (spec 002: R-26, R-27, database.md).
 // Los PRAGMA van aquí y no en una migración, porque cada migración corre en una transacción.
 export function openDatabase(databasePath: string): Database.Database {
-  // ':memory:' se usa tal cual: sin carpeta (R-26). Para el resto se crea siempre la carpeta padre (R-23, P-02).
+  // ':memory:' se usa tal cual: sin carpeta (spec 000: R-26). Para el resto se crea siempre la carpeta padre (spec 000: R-23, P-02).
   if (databasePath !== IN_MEMORY) {
     mkdirSync(path.dirname(databasePath), { recursive: true });
   }

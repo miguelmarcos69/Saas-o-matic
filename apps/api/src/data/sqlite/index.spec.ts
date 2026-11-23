@@ -5,7 +5,7 @@ import type Database from 'better-sqlite3';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { openDatabase } from './index.js';
 
-// Raíz de apps/api, para comprobar que ':memory:' no deja nada en ella (C-30).
+// Raíz de apps/api, para comprobar que ':memory:' no deja nada en ella (spec 000: C-30).
 const apiRoot = path.resolve(import.meta.dirname, '../../..');
 
 // Carpeta temporal propia por prueba: nunca la base real de apps/api/data/.
@@ -27,7 +27,7 @@ afterEach(() => {
 });
 
 describe('openDatabase', () => {
-  it('crea la carpeta de la base si no existe y abre la base (C-26, R-23)', () => {
+  it('crea la carpeta de la base si no existe y abre la base (spec 000: C-26, R-23)', () => {
     const dataDir = path.join(tempRoot, 'data');
     const databasePath = path.join(dataDir, 'saas-o-matic.db');
     expect(existsSync(dataDir)).toBe(false);
@@ -39,7 +39,7 @@ describe('openDatabase', () => {
     expect(db.open).toBe(true);
   });
 
-  it('con una ruta distinta de la de por defecto crea su carpeta padre, también anidada (C-26, P-02)', () => {
+  it('con una ruta distinta de la de por defecto crea su carpeta padre, también anidada (spec 000: C-26, P-02)', () => {
     const parentDir = path.join(tempRoot, 'other', 'nested');
     const databasePath = path.join(parentDir, 'custom.db');
 
@@ -57,7 +57,7 @@ describe('openDatabase', () => {
     expect(existsSync(databasePath)).toBe(true);
   });
 
-  it('con ":memory:" abre la base en memoria sin crear carpeta ni apps/api/:memory: (C-30, R-26)', () => {
+  it('con ":memory:" abre la base en memoria sin crear carpeta ni apps/api/:memory: (spec 000: C-30, R-26)', () => {
     const apiEntriesBefore = readdirSync(apiRoot).sort();
     const cwdEntriesBefore = readdirSync(process.cwd()).sort();
 
@@ -69,7 +69,7 @@ describe('openDatabase', () => {
     expect(readdirSync(process.cwd()).sort()).toEqual(cwdEntriesBefore);
   });
 
-  it('aplica las migraciones reales de apps/api/migrations/ (0001_init.sql) y user_version queda en 1 (base de C-09)', () => {
+  it('aplica las migraciones reales de apps/api/migrations/ (0001_init.sql) y user_version queda en 1 (spec 000: base de C-09)', () => {
     db = openDatabase(':memory:');
 
     expect(userVersion(db)).toBe(1);
@@ -81,7 +81,7 @@ describe('openDatabase', () => {
     expect(userVersion(db)).toBe(1);
   });
 
-  it('C-34: foreign_keys vale 1 con ":memory:" y con un fichero temporal (R-26)', () => {
+  it('spec 002: C-34: foreign_keys vale 1 con ":memory:" y con un fichero temporal (R-26)', () => {
     db = openDatabase(':memory:');
     expect(db.pragma('foreign_keys', { simple: true })).toBe(1);
     db.close();
@@ -90,7 +90,7 @@ describe('openDatabase', () => {
     expect(db.pragma('foreign_keys', { simple: true })).toBe(1);
   });
 
-  it('C-35: journal_mode vale wal con un fichero temporal (R-27)', () => {
+  it('spec 002: C-35: journal_mode vale wal con un fichero temporal (R-27)', () => {
     db = openDatabase(path.join(tempRoot, 'wal.db'));
 
     expect(db.pragma('journal_mode', { simple: true })).toBe('wal');

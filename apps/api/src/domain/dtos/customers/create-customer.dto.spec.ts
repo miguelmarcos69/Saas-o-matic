@@ -111,6 +111,22 @@ describe('C-07 y C-08: null, vacío o solo blancos dan REQUIRED (R-06)', () => {
   ])('%s: %j', (field, value) => {
     expectSingle(withField(field, value), field, 'REQUIRED');
   });
+
+  // Vacío y solo blancos en email, country y plan dan REQUIRED y un único elemento
+  // (prioridad de REQUIRED sobre INVALID_FORMAT e INVALID_VALUE, R-07 y R-35).
+  it.each([
+    ['email', ''],
+    ['email', '   '],
+    ['email', '\t\n'],
+    ['country', ''],
+    ['country', '   '],
+    ['country', '\t\n'],
+    ['plan', ''],
+    ['plan', '   '],
+    ['plan', '\t\n'],
+  ])('%s: %j', (field, value) => {
+    expectSingle(withField(field, value), field, 'REQUIRED');
+  });
 });
 
 describe('C-09 y C-10: formato del email (R-07, R-17, R-23)', () => {

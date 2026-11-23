@@ -48,6 +48,11 @@ Registrar un cliente corporativo con `POST /customers` (nombre de empresa, ident
   - Punto 4: encargo del planner lanzado sin enseñarlo antes.
   - Punto 5: «Rutas a leer» acotadas a secciones.
   - Punto 6: planner con Opus 5.5.
+- **Ajustes del ADR-016 aplicados en la puerta 5:**
+  - Punto 4: encargos del implementer lanzados sin enseñarlos antes.
+  - Punto 6: implementer con Sonnet 5.5 en la T-01, la T-05, el cambio de forma de la T-06 (por decisión del autor) y la T-07 (por decisión del autor: solo tests y comentarios); con Opus 5.5 en la T-02, la T-03 (lanzada primero con Sonnet 5.5 y corregida a Opus 5.5 por el autor), la T-04 y la T-06. Fuentes: `tasks.md` y `ai-workspace/sessions/2026-11-23-03` a `-08`.
+- **Ajustes del ADR-016 aplicados en la puerta 6:**
+  - Punto 1: una ronda del revisor, la 3: `Conforme con reservas`. H-10 (`Importante`) y H-11 (`Menor`) se corrigen en la T-07, añadida en una puerta 4 ampliada por decisión del autor, con una ronda 4 del revisor limitada a ella. H-12 (`Menor`), resuelta al renombrar la captura a `fase-7-002-validar-encargo.png`.
 
 ## 2. Requisitos
 Una sola afirmación comprobable por requisito. Patrones EARS:

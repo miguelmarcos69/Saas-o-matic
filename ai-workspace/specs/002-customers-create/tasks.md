@@ -2,10 +2,10 @@
 
 Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo 5 archivos de producción, sin contar sus tests (`*.spec.ts`) ni los ficheros generados (solo el lockfile). Las migraciones son SQL escrito a mano y cuentan como producción. Si no cabe, se parte. Un recurso nuevo se divide por capa: en la API, una tarea por capa (`domain`, `infrastructure` y `presentation`); en la web, una tarea por servicio con su interfaz y una por página o componente (cuentan `.ts` y `.html`). Si una tarea necesita más de 5 archivos y no se puede dividir, lo justifica por escrito en una línea `Excepción de tamaño:` y el revisor lo comprueba. El test va dentro de la tarea que lo exige. Al cerrar una tarea: MEMORY.md, diff y commit propuesto.
 
-Seis tareas, en el orden de construcción del plan (sección 7): una por paso, cada una en una sola capa (`data`, tres de `domain`, `infrastructure` y `presentation`). Ninguna pasa de 5 archivos de producción, así que ninguna lleva `Excepción de tamaño:`.
+Siete tareas. T-01 a T-06, en el orden de construcción del plan (sección 7): una por paso, cada una en una sola capa (`data`, tres de `domain`, `infrastructure` y `presentation`). T-07, añadida en una puerta 4 ampliada tras la ronda 3 del revisor (H-10 y H-11), solo tests y comentarios (ver la tarea). Ninguna pasa de 5 archivos de producción, así que ninguna lleva `Excepción de tamaño:`.
 
 Reglas comunes de esta spec:
-- Fase roja en las seis tareas: los tests de la tarea se escriben (o se cambian) antes que el código de producción y fallan por su ausencia. El implementer da en su retorno la salida literal del rojo, y la sesión principal la copia al registro de la sesión en el momento en que la recibe, no al cerrar.
+- Fase roja en T-01 a T-06 (la T-07, sin fase roja por decisión del autor; ver la tarea): los tests de la tarea se escriben (o se cambian) antes que el código de producción y fallan por su ausencia. El implementer da en su retorno la salida literal del rojo, y la sesión principal la copia al registro de la sesión en el momento en que la recibe, no al cerrar.
 - Cada tarea se cierra con `npm run verify` desde la raíz (`build` y `test`, principio 3), en verde; el implementer da los recuentos en su retorno.
 - Ninguna tarea añade dependencias (plan, sección 4; principio 4).
 - De `apps/` y `packages/` solo cambian los ficheros que nombra cada tarea (`git status` y `git diff --stat`); `apps/api/migrations/.gitkeep` se mantiene (plan, sección 2).
@@ -168,6 +168,51 @@ Reglas comunes de esta spec:
   - [x] `npm run verify` desde la raíz, en verde.
   - [x] De `apps/` solo cambian los cuatro ficheros de producción y sus tres tests.
 
+## T-07 · tests de R-06 en `email`, `country` y `plan`, y citas calificadas por spec (H-10 y H-11)
+- Origen: puerta 4 ampliada (`sdd`, «Estados»), tras la ronda 3 del revisor en la puerta 6 (`Conforme con reservas`), sin cambio de requisitos: no cambian requisitos, casos ni la sección 5 de `spec.md`. La ronda 4 del revisor se limita a esta tarea.
+- Decisión del autor 2026-11-23, respuesta a la ronda 3 (literal, puntos 2 y 3): «2. H-10: (a), corregirlo. Lanza al planner en una puerta 4 ampliada con una tarea T-07: tests del DTO con "" y solo blancos en email, country y plan, que dan REQUIRED y un solo elemento por campo, sin código de producción. C-08 y los requisitos no se tocan: R-06 ya cubre todos los campos. 3. H-11: corrígelo en la misma T-07: calificar por spec las citas de los comentarios de index.ts, index.spec.ts, sqlite-connection.ts y presentation/routes.ts («spec 000: …», «spec 002: …»), solo comentarios. Así no queda otra reserva.» Y, de la misma respuesta: «La spec vuelve a En implementación; la T-07, con el implementer en Sonnet (solo tests y comentarios).»
+- Cubre: R-06, R-07 (la salvedad «salvo que esté vacío (R-06, `REQUIRED`)»), R-35 (prioridad `REQUIRED` sobre `INVALID_FORMAT` en el esquema real); H-11, solo trazabilidad (principio 1), sin requisito propio.
+- Depende de: T-01, T-04, T-05, T-06
+- Estado: [x] hecha
+- Archivos de producción (3), solo líneas de comentario: `apps/api/src/data/sqlite/index.ts`, `apps/api/src/infrastructure/sqlite-connection.ts` y `apps/api/src/presentation/routes.ts`. Ningún cambio de código: `create-customer.dto.ts` no se toca. Toca comentarios de `data`, `infrastructure` y `presentation` en una sola tarea por decisión del autor («en la misma T-07»); no es un recurso nuevo, así que no aplica la división por capa de la cabecera.
+- Tests: `apps/api/src/domain/dtos/customers/create-customer.dto.spec.ts` (H-10) y `apps/api/src/data/sqlite/index.spec.ts` (H-11, solo textos de citas).
+- H-10, en `create-customer.dto.spec.ts`, bloque «C-07 y C-08» (líneas 101-114): un `it` por entrada con `""`, `"   "` y `"\t\n"` en `email`, `country` y `plan` (nueve entradas), cada una con el resto del cuerpo válido. Cada `it` comprueba con `expectSingle(withField(campo, valor), campo, 'REQUIRED')`, que compara `details` con `toEqual` contra un único elemento: el código exacto `REQUIRED`, su texto M-03 y ningún otro elemento. Así fallaría si ganara `INVALID_FORMAT` (email) o `INVALID_VALUE` (`country`, `plan`), o si salieran dos. Los `it` existentes no cambian.
+- H-11: cada cita pasa a «spec 000: …» o «spec 002: …», comprobada en `000-skeleton/spec.md`, `000-skeleton/plan.md`, `000-skeleton/tasks.md` y en `spec.md` y `plan.md` de esta spec. Solo cambia el texto de la cita; el resto de cada línea, igual.
+
+  | Fichero:línea | Cita actual | Spec | Comprobación |
+  |---|---|---|---|
+  | `data/sqlite/index.ts:9` | `R-08, D-16` | 000 | R-08 de la 000 (`index.ts` abre la base y migra); D-16 del plan de la 000 (forma de las piezas). |
+  | `data/sqlite/index.ts:10` | `R-26, R-27` | 002 | R-26 (`foreign_keys`) y R-27 (WAL) de la 002. `database.md` no cambia. |
+  | `data/sqlite/index.ts:13` | `R-26` y `R-23, P-02` | 000 | R-26 de la 000 (`:memory:` sin carpeta), R-23 (crear `apps/api/data/`) y P-02 del plan de la 000 (carpeta padre). La P-02 de la 002 es otra (413, 415). |
+  | `data/sqlite/index.spec.ts:8` | `C-30` | 000 | C-30 de la 000 (`:memory:`); la C-30 de la 002 es la del identificador fiscal. |
+  | `data/sqlite/index.spec.ts:30` | `C-26, R-23` | 000 | C-26 y R-23 de la 000. |
+  | `data/sqlite/index.spec.ts:42` | `C-26, P-02` | 000 | C-26 y P-02 de la 000. |
+  | `data/sqlite/index.spec.ts:60` | `C-30, R-26` | 000 | C-30 y R-26 de la 000. |
+  | `data/sqlite/index.spec.ts:72` | `base de C-09` | 000 | C-09 de la 000 (`user_version` = nº de migraciones); la C-09 de la 002 es la del email. |
+  | `data/sqlite/index.spec.ts:84` | `C-34` y `R-26` | 002 | C-34 y R-26 de la 002 (`foreign_keys`). |
+  | `data/sqlite/index.spec.ts:93` | `C-35` y `R-27` | 002 | C-35 y R-27 de la 002 (WAL). |
+  | `infrastructure/sqlite-connection.ts:5` | `decisión del autor 2026-11-21; spec 002, D-06` | 000 y 002 | La decisión del 2026-11-21 es la de la T-11 de la 000 (`000-skeleton/tasks.md:186`); D-06 ya está calificada (002). |
+  | `infrastructure/sqlite-connection.ts:13` | `R-08, D-04, D-16` | 000 | R-08 de la 000; D-04 y D-16 del plan de la 000. La D-04 de la 002 es la ubicación del identificador fiscal. |
+  | `presentation/routes.ts:6` | `Decisión #10, D-16` | 000 | Decisión 2026-11-20 #10 de la 000 (excepción de `presentation/routes.ts`) y D-16 de su plan. |
+  | `presentation/routes.ts:12` | `Decisión #2, #8` | 000 | Decisiones 2026-11-20 #2 (sin prefijo, proxy) y #8 (`GET /health`) de la 000. |
+  | `presentation/routes.ts:21` | `D-14` | 002 | D-14 del plan de la 002 (ruta inexistente, 404 por defecto); la D-14 de la 000 es la configuración de Vitest. |
+
+  Ya calificadas, sin cambio: `sqlite-connection.ts:26` («spec 002, D-06») y `presentation/routes.ts:17` («spec 002, D-06»).
+- Q-01 de esta puerta, decidida por el autor el 2026-11-23 (literal): «Q-01: (a), califica también los títulos de los it de index.spec.ts, sin tocar ninguna aserción.» En `index.spec.ts` solo la línea 8 es un comentario; las citas de las líneas 30, 42, 60, 72, 84 y 93 están en los títulos de `it`, y se califican cambiando solo el texto del título, no las aserciones.
+- Fase roja: sin fase roja, por decisión del autor 2026-11-23 (literal): «1. Fase roja de la T-07: (a), sin fase roja, con el motivo escrito en la tarea, como la T-02 y la T-04 de la 001. Que cada test nuevo compruebe el código exacto (REQUIRED) y un solo elemento en details[] para ese campo: así fallaría si ganara INVALID_FORMAT o si salieran dos.» El código de producción que prueban existe desde la T-04 y no cambia; H-11 solo cambia comentarios. Como la T-02 y la T-04 de la 001, la excepción se declara aquí y el implementer lo dice en su retorno.
+- Implementer con Sonnet 5.5, por decisión del autor (ADR-016, punto 6).
+- Correcciones de texto decididas por el autor el 2026-11-23, hechas por la sesión principal (literal): «Los tres detalles: corrígelos tú, son solo textos (títulos y comentarios, ninguna aserción): 1) un solo «spec 002:» en los títulos de C-34 y C-35; 2) «(spec 000: base de C-09)» en index.spec.ts:72; 3) quita «H-10» del comentario del DTO. Después relanza npm run verify.» Con ellas, los títulos de C-34 y C-35 llevan un solo «spec 002:» al principio, y el de la línea 72, «(spec 000: base de C-09)».
+- Aprobación del autor 2026-11-23 (literal): «Apruebo la T-07.» Implementer con Sonnet 5.5 (ADR-016, punto 6). Sin fase roja. `npm run verify` en verde, relanzado por la sesión principal tras las correcciones de texto: 470 tests en la raíz (461 + 9) y 14 en la web.
+- Hecho cuando:
+  - [x] Sin fase roja: el implementer lo declara en su retorno.
+  - [x] H-10: los nueve `it` nuevos pasan; cada uno con `expectSingle(…, 'REQUIRED')` (código exacto y un único elemento en `details[]`), sin `toContain` ni `arrayContaining`.
+  - [x] Los `it` que ya había en `create-customer.dto.spec.ts` siguen sin cambios.
+  - [x] H-11: cada cita de la tabla queda calificada con «spec 000: …» o «spec 002: …» según su columna «Spec»; las dos ya calificadas no cambian.
+  - [x] En `index.ts`, `sqlite-connection.ts` y `presentation/routes.ts`, `git diff` solo muestra líneas de comentario (`//`) cambiadas; el implementer da el `git diff` de los tres.
+  - [x] En `index.spec.ts`, `git diff` solo muestra el comentario de la línea 8 y los textos de los títulos de `it` de la tabla (según la Q-01); ninguna aserción cambia.
+  - [x] `npm run verify` desde la raíz, en verde, con nueve tests más en la raíz que los 461 de la T-06 y los 14 de la web sin cambios; el implementer da los recuentos.
+  - [x] De `apps/` solo cambian `create-customer.dto.spec.ts`, `index.spec.ts`, `index.ts`, `sqlite-connection.ts` y `presentation/routes.ts` (`git status` y `git diff --stat`).
+
 ## Cobertura
 Cada `R-nn` aparece en al menos una tarea.
 
@@ -178,8 +223,8 @@ Cada `R-nn` aparece en al menos una tarea.
 | R-03 | T-05 (segunda alta de C-28), T-06 |
 | R-04 | T-02, T-04, T-06 |
 | R-05 | T-02, T-04 |
-| R-06 | T-02, T-04 |
-| R-07 | T-04 |
+| R-06 | T-02, T-04, T-07 (`email`, `country` y `plan` vacíos o solo con blancos) |
+| R-07 | T-04, T-07 (salvedad del email vacío) |
 | R-08 | T-04 |
 | R-09 | T-04 |
 | R-10 | T-04 |
@@ -207,6 +252,6 @@ Cada `R-nn` aparece en al menos una tarea.
 | R-32 | T-05, T-06 |
 | R-33 | T-04 |
 | R-34 | T-04 |
-| R-35 | T-02 (C-48, revisor en la puerta 6) |
+| R-35 | T-02 (C-48, revisor en la puerta 6), T-07 (`REQUIRED` sobre `INVALID_FORMAT` en el esquema real) |
 
-Casos por tarea: T-01, C-31 a C-35 y C-39; T-02, sin caso propio de la spec (reglas de D-07); T-03, C-21 a C-27, C-30 (automática), C-36, C-38 y C-49 a C-51; T-04, C-04 a C-15, C-17, C-20, C-21, C-23, C-25 a C-27, C-29, C-36 a C-38, C-40, C-41, C-44 a C-47 y C-49 a C-52; T-05, C-01, C-02, C-28, C-42 y C-43 (base); T-06, C-01 a C-05, C-15 a C-20, C-28, C-42 y C-43 (HTTP). C-48 y la parte manual de C-30: revisor, puerta 6.
+Casos por tarea: T-01, C-31 a C-35 y C-39; T-02, sin caso propio de la spec (reglas de D-07); T-03, C-21 a C-27, C-30 (automática), C-36, C-38 y C-49 a C-51; T-04, C-04 a C-15, C-17, C-20, C-21, C-23, C-25 a C-27, C-29, C-36 a C-38, C-40, C-41, C-44 a C-47 y C-49 a C-52; T-05, C-01, C-02, C-28, C-42 y C-43 (base); T-06, C-01 a C-05, C-15 a C-20, C-28, C-42 y C-43 (HTTP); T-07, sin caso nuevo: amplía los tests de R-06 (bloque de C-07 y C-08) a `email`, `country` y `plan` (H-10), y H-11 es solo trazabilidad. C-48 y la parte manual de C-30: revisor, puerta 6.
