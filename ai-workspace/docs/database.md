@@ -12,7 +12,7 @@ Ambas tablas son `STRICT`. Cada conexión ejecuta `PRAGMA foreign_keys = ON` y `
 |---|---|---|---|
 | `id` | INTEGER | sí | PRIMARY KEY |
 | `company_name` | TEXT | sí | CHECK (length(trim(company_name)) > 0) |
-| `tax_id` | TEXT | sí | CHECK (length(trim(tax_id)) > 0). Sin UNIQUE |
+| `tax_id` | TEXT | sí | CHECK (length(trim(tax_id)) > 0). `UNIQUE(country, tax_id)` (spec 002, Decisión 2026-11-23 #8); se guarda normalizado (#9) |
 | `email` | TEXT | sí | CHECK (length(trim(email)) > 0); el formato lo valida el DTO |
 | `country` | TEXT | sí | CHECK (length(trim(country)) > 0). Sin lista de valores |
 | `plan` | TEXT | sí | CHECK (length(trim(plan)) > 0). Sin lista de valores |
@@ -70,15 +70,15 @@ erDiagram
   }
 ```
 
-## Dudas para las specs (sin resolver)
+## Dudas para las specs
 | # | Duda | Spec |
 |---|---|---|
-| 1 | Países admitidos y su formato (nombre, código ISO…) | `POST /customers` |
-| 2 | Planes válidos; si el plan influye en el cálculo o solo se guarda | `POST /customers` y `POST /simulations` |
-| 3 | Unicidad del identificador fiscal (global o por país) y qué hacer si se repite | `POST /customers` |
-| 4 | Normalización del identificador fiscal (mayúsculas, guiones, espacios) y si se guarda normalizado | `POST /customers` |
-| 5 | Qué documentos acepta la validación en España (DNI, NIE, NIF, CIF) y qué se valida si el país no es España (§2.A) | `POST /customers` |
-| 6 | Unicidad y normalización del email | `POST /customers` |
+| 1 | Países admitidos y su formato (nombre, código ISO…). Resuelta en la spec 002, Decisión 2026-11-23 #6 | `POST /customers` |
+| 2 | Planes válidos; si el plan influye en el cálculo o solo se guarda. Planes válidos: resuelta en la spec 002, Decisión 2026-11-23 #7; si influye en el cálculo sigue abierta para la spec 003 | `POST /customers` y `POST /simulations` |
+| 3 | Unicidad del identificador fiscal (global o por país) y qué hacer si se repite. Resuelta en la spec 002, Decisión 2026-11-23 #8 | `POST /customers` |
+| 4 | Normalización del identificador fiscal (mayúsculas, guiones, espacios) y si se guarda normalizado. Resuelta en la spec 002, Decisión 2026-11-23 #9 | `POST /customers` |
+| 5 | Qué documentos acepta la validación en España (DNI, NIE, NIF, CIF) y qué se valida si el país no es España (§2.A). Resuelta en la spec 002, Decisión 2026-11-23 #10 | `POST /customers` |
+| 6 | Unicidad y normalización del email. Resuelta en la spec 002, Decisión 2026-11-23 #11 | `POST /customers` |
 | 7 | Tipos de IVA por país, países sin tipo definido (Roams: ES, PT, FR, IT) y sobre qué importe se aplica | `POST /simulations` |
 | 8 | Redondeo del IVA y de los importes (un único punto, principio 6) | `POST /simulations` |
 | 9 | Límites de `active_users` (¿0 es válido?, máximo), `storage` (unidad, decimales, máximo) y `api_calls` (periodo, máximo) | `POST /simulations` |
