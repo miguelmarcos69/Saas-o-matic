@@ -52,24 +52,25 @@ Reglas comunes de esta spec:
 ## T-02 · shared: conversión entera y formato de divisa
 - Cubre: R-28 (parte de la función: `toDisplayCents` sin tipo), R-29, R-30, R-31 (parte de la función), R-32 (parte de la función), R-64, R-65, R-69, R-97, R-99
 - Depende de: —
-- Estado: [ ] pendiente
-- Modelo propuesto: Opus 5.5 (bordes exactos del rango seguro y único punto de redondeo de la conversión).
+- Estado: [x] hecha
+- Modelo: Opus 5.5, confirmado por el autor (bordes exactos del rango seguro y único punto de redondeo de la conversión).
+- Aprobación del autor 2026-11-24 (literal): «Apruebo la T-02.» `npm run verify` en verde: 766 tests en la raíz y 55 en la web (antes, 766 + 14; 41 nuevos), relanzado por la sesión principal. Fase roja íntegra en `ai-workspace/sessions/2026-11-24-02-005-simulator.md`.
 - Archivos de producción (2):
   - `app/shared/interfaces/currency.ts` (nuevo): `Currency` (`'EUR' | 'USD' | 'GBP'`) (D-10).
   - `app/shared/services/currency-conversion.ts` (nuevo): `convertCents`, `toDisplayCents` y `formatCents`, funciones puras sin Angular, con los mensajes como constantes del módulo (D-09).
 - Tests (nuevo): `app/shared/services/currency-conversion.spec.ts`.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] C-24 pasa (R-29): (1) 1, (2) 2, (3) 0, (4) 0 y (5) 14000. Llamar dos veces con la misma entrada da el mismo resultado.
-  - [ ] C-25 (1) y (2) pasan (R-30): 101 y 6 152 091 000, sin error.
-  - [ ] C-41 pasa (R-64, R-97): (1) y (3) lanzan un error `instanceof RangeError` con `message` `converted amount exceeds the safe integer range` (`toBe`). (2) devuelve 9 007 199 254.
-  - [ ] C-42 pasa (R-65, R-97):
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] C-24 pasa (R-29): (1) 1, (2) 2, (3) 0, (4) 0 y (5) 14000. Llamar dos veces con la misma entrada da el mismo resultado.
+  - [x] C-25 (1) y (2) pasan (R-30): 101 y 6 152 091 000, sin error.
+  - [x] C-41 pasa (R-64, R-97): (1) y (3) lanzan un error `instanceof RangeError` con `message` `converted amount exceeds the safe integer range` (`toBe`). (2) devuelve 9 007 199 254.
+  - [x] C-42 pasa (R-65, R-97):
     - (1) a (9), (13) y (14) lanzan un error `instanceof RangeError` con `message` `amount and rate must be non-negative safe integers` (`toBe`). En (9) y (14) es ese mensaje y no el de R-64.
     - (10), (11) y (12) devuelven 0 sin error.
-  - [ ] C-54 pasa (R-99): los tres casos devuelven 0 y `Object.is(resultado, 0)` es `true`.
-  - [ ] `toDisplayCents`: con `null` devuelve los céntimos tal cual (R-28). Con 1 031 250 y con 875 000 da los céntimos de C-20: 14438, 3032 y 17469, y 12250, 2573 y 14823 (R-31).
-  - [ ] `formatCents` (R-32): coincide con `Intl.NumberFormat('es-ES', { style: 'currency', currency, minimumFractionDigits: 2, maximumFractionDigits: 2 })` sobre `cents / 100` para EUR, USD y GBP. Dos decimales también con 14000 (140,00).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] C-54 pasa (R-99): los tres casos devuelven 0 y `Object.is(resultado, 0)` es `true`.
+  - [x] `toDisplayCents`: con `null` devuelve los céntimos tal cual (R-28). Con 1 031 250 y con 875 000 da los céntimos de C-20: 14438, 3032 y 17469, y 12250, 2573 y 14823 (R-31).
+  - [x] `formatCents` (R-32): coincide con `Intl.NumberFormat('es-ES', { style: 'currency', currency, minimumFractionDigits: 2, maximumFractionDigits: 2 })` sobre `cents / 100` para EUR, USD y GBP. Dos decimales también con 14000 (140,00).
+  - [x] `npm run verify` desde la raíz, en verde.
 
 ## T-03 · shared: esquema y servicio de tipos de cambio
 - Cubre: R-17 (parte del servicio), R-18, R-19, R-33, R-53, R-54, R-55, R-56, R-57, R-58, R-96
