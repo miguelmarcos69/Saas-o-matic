@@ -1,11 +1,14 @@
 import { DestroyRef, EnvironmentInjector, createEnvironmentInjector } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { CustomerWithLastSimulation } from '../../shared/interfaces/customer';
+import { Customer, CustomerWithLastSimulation } from '../../shared/interfaces/customer';
 import { Simulation } from '../../shared/interfaces/simulation';
+import { CustomerDetail } from '../interfaces/customer-detail';
 import { CustomersApi } from './customers-api';
 
 const SEARCH_ERROR_MESSAGE = 'No se han podido cargar los clientes.';
+// Texto literal de spec 004: R-125.
+const DETAIL_ERROR_MESSAGE = 'No se ha podido cargar el cliente.';
 
 const simulation: Simulation = {
   id: 7,
@@ -176,5 +179,136 @@ describe('CustomersApi (búsqueda)', () => {
     child.destroy();
 
     expect(request.cancelled).toBe(true);
+  });
+});
+
+const detailCustomer: Customer = {
+  id: 7,
+  companyName: 'Acme Cloud',
+  taxId: 'B12345674',
+  email: 'billing@acme.example',
+  country: 'ES',
+  plan: 'business',
+  createdAt: '2026-11-24T08:00:00.000Z',
+};
+
+const detailSimulations: Simulation[] = [{ ...simulation, customerId: 7 }];
+
+const CUSTOMER_URL = '/api/customers/7';
+const SIMULATIONS_URL = '/api/customers/7/simulations';
+
+// spec 004: detalle en el servicio (D-09, riesgo 7): id canónico, dos lecturas a la vez y estados
+// (R-43, R-44, R-46, R-125, R-128, R-163, R-164).
+describe('CustomersApi (detalle)', () => {
+  let api: CustomersApi;
+  let http: HttpTestingController;
+  let destroyRef: DestroyRef;
+
+  beforeEach(() => {
+    // Sin provideHttpClient(): en Angular 22 HttpClient se inyecta por defecto (spec 000: T-16).
+    TestBed.configureTestingModule({ providers: [provideHttpClientTesting()] });
+    api = TestBed.inject(CustomersApi);
+    http = TestBed.inject(HttpTestingController);
+    destroyRef = TestBed.inject(DestroyRef);
+  });
+
+  afterEach(() => {
+    // Ninguna petición queda sin atender.
+    http.verify();
+  });
+
+  it('empieza en el estado de carga', () => {
+    expect(api.detailState()).toEqual({ status: 'loading' });
+  });
+
+  it.each(['abc', '0', '01', '9007199254740992'])(
+    'con el id «%s», not-found sin ninguna petición (spec 004: C-128, R-128)',
+    (idText) => {
+      api.loadDetail(idText, destroyRef);
+
+      http.expectNone(() => true);
+      expect(api.detailState()).toEqual({ status: 'not-found' });
+    },
+  );
+
+  it('con un id válido, las dos peticiones están pendientes a la vez y sigue en carga (spec 004: C-168, R-163, R-43)', () => {
+    api.loadDetail('7', destroyRef);
+
+    const customerRequest = http.expectOne((req) => req.method === 'GET' && req.url === CUSTOMER_URL);
+    const simulationsRequest = http.expectOne(
+      (req) => req.method === 'GET' && req.url === SIMULATIONS_URL,
+    );
+    expect(customerRequest.cancelled).toBe(false);
+    expect(simulationsRequest.cancelled).toBe(false);
+    expect(api.detailState()).toEqual({ status: 'loading' });
+
+    customerRequest.flush(detailCustomer);
+    expect(api.detailState()).toEqual({ status: 'loading' });
+    simulationsRequest.flush(detailSimulations);
+  });
+
+  it('cliente 404 e historial 404 → not-found (spec 004: C-169, R-164)', () => {
+    api.loadDetail('7', destroyRef);
+
+    http
+      .expectOne(CUSTOMER_URL)
+      .flush({ code: 'NOT_FOUND' }, { status: 404, statusText: 'Not Found' });
+    http
+      .expectOne(SIMULATIONS_URL)
+      .flush({ code: 'NOT_FOUND' }, { status: 404, statusText: 'Not Found' });
+
+    expect(api.detailState()).toEqual({ status: 'not-found' });
+  });
+
+  it('historial 500 antes que el cliente 404 → not-found (spec 004: C-169, R-164; plan, riesgo 7)', () => {
+    api.loadDetail('7', destroyRef);
+    const customerRequest = http.expectOne(CUSTOMER_URL);
+    const simulationsRequest = http.expectOne(SIMULATIONS_URL);
+
+    simulationsRequest.flush('Failed!', { status: 500, statusText: 'Internal Server Error' });
+    expect(customerRequest.cancelled).toBe(false);
+    customerRequest.flush({ code: 'NOT_FOUND' }, { status: 404, statusText: 'Not Found' });
+
+    expect(api.detailState()).toEqual({ status: 'not-found' });
+  });
+
+  it('datos 200 e historial 500 → error con el texto de spec 004: R-125 (C-44, R-44)', () => {
+    api.loadDetail('7', destroyRef);
+
+    http.expectOne(CUSTOMER_URL).flush(detailCustomer);
+    http
+      .expectOne(SIMULATIONS_URL)
+      .flush('Failed!', { status: 500, statusText: 'Internal Server Error' });
+
+    const state = api.detailState();
+    expect(state.status).toBe('error');
+    if (state.status === 'error') {
+      expect(state.message).toBe(DETAIL_ERROR_MESSAGE);
+    }
+  });
+
+  it('datos 500 e historial 200 → error con el texto de spec 004: R-125 (C-44, R-44)', () => {
+    api.loadDetail('7', destroyRef);
+
+    http
+      .expectOne(CUSTOMER_URL)
+      .flush('Failed!', { status: 500, statusText: 'Internal Server Error' });
+    http.expectOne(SIMULATIONS_URL).flush(detailSimulations);
+
+    const state = api.detailState();
+    expect(state.status).toBe('error');
+    if (state.status === 'error') {
+      expect(state.message).toBe(DETAIL_ERROR_MESSAGE);
+    }
+  });
+
+  it('las dos 200 → data con el cliente y su historial tal cual (spec 004: R-43)', () => {
+    api.loadDetail('7', destroyRef);
+
+    http.expectOne(CUSTOMER_URL).flush(detailCustomer);
+    http.expectOne(SIMULATIONS_URL).flush(detailSimulations);
+
+    const expected: CustomerDetail = { customer: detailCustomer, simulations: detailSimulations };
+    expect(api.detailState()).toEqual({ status: 'data', data: expected });
   });
 });

@@ -218,7 +218,7 @@ Reglas comunes de esta spec:
 ## T-11 · web: detalle en el servicio
 - Cubre: R-25, R-43, R-44, R-46, R-125, R-128, R-144, R-163, R-164 (parte del servicio)
 - Depende de: T-06
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Opus 5.5 (servicio y detalle, según la petición del autor).
 - Archivos de producción (3):
   - `app/customers/interfaces/customer-detail.ts` (nuevo): `CustomerDetail` y `CustomerDetailState` (D-09).
@@ -226,11 +226,12 @@ Reglas comunes de esta spec:
   - `app/customers/services/customers-api.ts` (crece): `detailState` y `loadDetail(idText, destroyRef)`, con `catchError` por petición y `forkJoin` (D-09, riesgo 7).
 - Tests: `customer-id.spec.ts` (nuevo) y `customers-api.spec.ts` (crece).
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] `customer-id.spec.ts`: `abc`, `0`, `01` y `9007199254740992` → `false`; `1` y `9007199254740991` → `true` (C-128, parte de la función).
-  - [ ] `loadDetail`: con un id rechazado, `not-found` sin ninguna petición (C-128 en el servicio); con uno válido, las dos peticiones pendientes a la vez (C-168).
-  - [ ] Cliente 404 con el historial en 404 o en 500 → `not-found` (C-169); datos 200 e historial 500, y al revés → `error` con «No se ha podido cargar el cliente.» (C-44, R-125); las dos 200 → `data` (R-43).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] `customer-id.spec.ts`: `abc`, `0`, `01` y `9007199254740992` → `false`; `1` y `9007199254740991` → `true` (C-128, parte de la función).
+  - [x] `loadDetail`: con un id rechazado, `not-found` sin ninguna petición (C-128 en el servicio); con uno válido, las dos peticiones pendientes a la vez (C-168).
+  - [x] Cliente 404 con el historial en 404 o en 500 → `not-found` (C-169); datos 200 e historial 500, y al revés → `error` con «No se ha podido cargar el cliente.» (C-44, R-125); las dos 200 → `data` (R-43).
+  - [x] `npm run verify` desde la raíz, en verde.
+- Aprobación del autor 2026-11-24 (literal): «Apruebo la T-11 (web: detalle en el servicio) con las observaciones 1, 2, 3, 5, 7 y 8 aceptadas. Desviación 6: antes de marcarla, haz el rojo temporal del riesgo 7: quita un momento el catchError de toOutcome, comprueba que falla al menos «historial 500 antes que el cliente 404», guarda la salida íntegra en un fichero, devuelve el fichero y compruébalo con cmp, y repite npm run verify; copia las dos salidas al registro. Desviación 4: se queda para la T-13; anótalo en tasks.md como entrada de la T-13 (si la página reacciona a cambios de :id, cancelar la carga anterior en loadDetail, con su test) y como observación para el revisor. Rojo de compilación sin repetir, sin ANSI y con los signos reales. Las capturas fase-7-004-t11-rojo y t11-verde son mías.» Observaciones aceptadas: (1) `detailState` empieza en `{ status: 'loading' }`, como `searchState`, con 1 test; (2) cada petición va envuelta en `ReadOutcome<T>` (`{ ok: true, value }` o `{ ok: false, status }`) con `toOutcome`, privados del fichero, y un error que no sea `HttpErrorResponse` da `status: 0` y acaba en `error`; (3) la URL se forma con `idText` tal cual, ya canónico; (5) dos tests fuera de la lista literal, declarados: el del estado inicial y, en C-168, la aserción de que sigue en `loading` tras responder solo el cliente; (7) el texto de R-125 coincide con `spec.md:373` y se compara con `toBe`; (8) rojo con `npm run test -w apps/web` y cierre con `npm run verify`. Desviación 6, resuelta por la sesión principal: rojo temporal del riesgo 7 sin el `catchError` de `toOutcome` (fallan 4 tests, entre ellos «historial 500 antes que el cliente 404»), fichero devuelto con `cmp` idéntico y `npm run verify` repetido, código 0; las dos salidas, en el registro de la sesión. Desviación 4: pasa a la T-13 (entrada abajo). Rojo de compilación no repetido, copiado sin ANSI y con los signos reales. 17 tests nuevos (6 en `customer-id.spec.ts` y 11 en `customers-api.spec.ts`). `npm run verify` en verde, con código 0: 905 tests en la raíz y 261 en la web (antes, 905 + 244). Observación para el revisor: `loadDetail` no cancela la carga anterior; si la página del detalle reacciona a cambios de `:id`, una respuesta tardía podría pisar el estado (entrada de la T-13).
 
 ## T-12 · web: componente del historial
 - Cubre: R-24, R-36, R-37, R-45, R-48 a R-51, R-73, R-74, R-75, R-106 a R-109, R-126, R-144
@@ -256,6 +257,7 @@ Reglas comunes de esta spec:
   - `app/app.routes.ts`: ruta `customers/:id` con `loadComponent`, después de `customers` (D-13).
   - `scss/_customers.scss` (crece): filas `dt`/`dd` del detalle y del historial (D-14; P-05 (a)).
 - Tests: `customer-detail-page.spec.ts` (nuevo) y `customers-page.spec.ts` (crece con C-33 y C-57, con las dos páginas en las rutas del test).
+- Entrada de la T-11 (desviación 4, decisión del autor del 2026-11-24): si la página reacciona a cambios de `:id`, cancelar la carga anterior en `loadDetail`, con su test.
 - Hecho cuando:
   - [ ] Fase roja: salida íntegra en el registro de la sesión.
   - [ ] Estados: C-43 (los dos casos), C-124 y C-47 (carga en `role="status"`), C-44, C-125 y C-120 (error en `role="alert"`), C-45 (tarjeta de datos y vacío del historial), C-46, C-129, C-127 y C-160 (`not-found` con «Volver a Clientes» a `/customers`), C-169 en la página.
