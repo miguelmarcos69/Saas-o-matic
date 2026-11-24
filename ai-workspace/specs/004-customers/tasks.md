@@ -165,17 +165,18 @@ Reglas comunes de esta spec:
 ## T-08 · web: componente del buscador
 - Cubre: R-22, R-24, R-29, R-68, R-75, R-112, R-144
 - Depende de: —
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Opus 5.5, por la Q-01 (a) (`outputFromObservable` con `debounceTime` en zoneless y temporizadores falsos, riesgo 10).
 - Archivos de producción (2): `app/customers/components/customer-search/customer-search.ts` y `customer-search.html` (nuevos): `CustomerSearch` (`app-customer-search`) (D-10).
 - Tests (nuevo): `customer-search.spec.ts`, con temporizadores falsos de Vitest.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] C-29 y C-112: `<label for="customer-search-input">` con «Buscar por nombre de empresa o identificador fiscal» (`toBe`) e `<input id="customer-search-input" type="search">`.
-  - [ ] C-22 en el componente: ninguna emisión antes de 300 ms tras la última tecla y una sola después, con «Acme».
-  - [ ] `initialQuery` se pone en el control sin emitir.
-  - [ ] Si los temporizadores falsos no funcionan con el ejecutor de Angular, la tarea para y lo devuelve (riesgo 10).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] C-29 y C-112: `<label for="customer-search-input">` con «Buscar por nombre de empresa o identificador fiscal» (`toBe`) e `<input id="customer-search-input" type="search">`.
+  - [x] C-22 en el componente: ninguna emisión antes de 300 ms tras la última tecla y una sola después, con «Acme».
+  - [x] `initialQuery` se pone en el control sin emitir.
+  - [x] Si los temporizadores falsos no funcionan con el ejecutor de Angular, la tarea para y lo devuelve (riesgo 10).
+  - [x] `npm run verify` desde la raíz, en verde.
+- Aprobación del autor 2026-11-24 (literal): «Apruebo la T-08 (web: componente del buscador) con las desviaciones 1 a 12 aceptadas, incluidas la 10 (350 ms de reloj real en los dos tests de initialQuery, por mi elección de la (c)), la 11 (en el rojo temporal también fallan C-22 y «tal cual», por la espera de debounceTime con reloj real) y la 12 (un solo comentario para los dos tests). Anota en el registro, como aprendizaje: con debounceTime, los temporizadores falsos de Vitest solo sirven si se falsea también Date, y whenStable() puede no terminar; para probar que algo no se emite, se usa reloj real y una espera corta. Rojo de compilación sin repetir, sin ANSI y con los signos reales. Las capturas fase-7-004-t08-retorno, t08-rojo y t08-verde son mías.» Desviaciones aceptadas: (1) dos tests de más, «emite el texto tal cual, sin recortar» y «sin initialQuery el campo empieza vacío y no emite», dentro de los 5; (2) `<div class="customer-search">` y clases `customer-search__label` y `customer-search__input`, que el plan no cita (los estilos son de la T-10); (3) constante `SEARCH_DEBOUNCE_MS = 300`; (4) control `protected` llamado `control`, con `search` e `initialQuery` públicas y `readonly`; (5) el test escribe en `input.value` con un evento `input` por tecla y C-22 deja 100, 250 y 299 ms entre teclas; (6) sin `maxlength` (reserva H-10), sin `<form>`, sin `role="search"` y sin `autocomplete`; (7) R-68 sin test: C-68 se comprueba a mano con Tab en la puerta 6; (8) R-24 y R-75 sin test propio; (9) citas calificadas «spec 004:»; (10) los dos tests de `initialQuery` esperan 350 ms con reloj real (decisión (c) del autor, tras bloquearse la vuelta 2 porque `whenStable()` no terminaba con el reloj falso y la vuelta 3 porque `toFake: ['setInterval', 'clearInterval']` no falseaba `Date`); (11) en el rojo temporal también fallan C-22 y «tal cual»; (12) un solo comentario para los dos tests. `npm run verify` en verde, con código 0: 905 tests en la raíz y 221 en la web (antes, 905 + 216; 5 nuevos en `customer-search.spec.ts`). Fase roja de compilación y rojo demostrado de la casilla de `initialQuery` (de aserciones, quitando `{ emitEvent: false }` un momento), copiados de sus ficheros con los signos reales, en `ai-workspace/sessions/2026-11-24-22-004-customers.md`. Observaciones para el revisor: desviaciones 6 y 7.
 
 ## T-09 · web: página del buscador y ruta `customers`
 - Cubre: R-23, R-28, R-30, R-32, R-40, R-41, R-42, R-47 a R-53, R-57, R-61, R-67, R-68, R-73, R-74, R-75, R-96 a R-100, R-110, R-111, R-120 a R-123, R-132 a R-134, R-144, R-159, R-165 (parte de la plantilla), R-166, R-167
