@@ -87,7 +87,7 @@ Reglas comunes de esta spec:
 ## T-04 · domain: casos de uso de lectura
 - Cubre: R-04, R-10, R-13, R-16 a R-20, R-79, R-81, R-144, R-158
 - Depende de: T-01, T-03
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Opus 5.5 (casos de uso, según la petición del autor).
 - Archivos de producción (3):
   - `domain/use-cases/customer/search-customers.ts` (nuevo): `SearchCustomers` (D-05).
@@ -95,11 +95,12 @@ Reglas comunes de esta spec:
   - `domain/use-cases/customer/list-customer-simulations.ts` (nuevo): `ListCustomerSimulations`, que lee antes el cliente (D-07).
 - Tests (nuevos): `search-customers.spec.ts`, `get-customer.spec.ts` y `list-customer-simulations.spec.ts`, con repositorio falso.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] C-13 pasa: los tres casos de uso, sin Express ni SQLite; `git grep -n "^import" -- apps/api/src/domain/use-cases/customer/` (con `--untracked`) no muestra nada fuera de `domain` y `packages/pricing`.
-  - [ ] `SearchCustomers`: con `q` `''`, todos en el orden de R-18 (C-18, C-20 a nivel unitario); con texto, solo los que coinciden, en ese orden; sin límite (R-19).
-  - [ ] `GetCustomer` y `ListCustomerSimulations`: con `findById` en `undefined`, `NOT_FOUND` con «No existe el cliente indicado.» (R-10), y el segundo no llama a `findSimulationsByCustomerId`; con cliente sin simulaciones, `[]` (R-81).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] C-13 pasa: los tres casos de uso, sin Express ni SQLite; `git grep -n "^import" -- apps/api/src/domain/use-cases/customer/` (con `--untracked`) no muestra nada fuera de `domain` y `packages/pricing`.
+  - [x] `SearchCustomers`: con `q` `''`, todos en el orden de R-18 (C-18, C-20 a nivel unitario); con texto, solo los que coinciden, en ese orden; sin límite (R-19).
+  - [x] `GetCustomer` y `ListCustomerSimulations`: con `findById` en `undefined`, `NOT_FOUND` con «No existe el cliente indicado.» (R-10), y el segundo no llama a `findSimulationsByCustomerId`; con cliente sin simulaciones, `[]` (R-81).
+  - [x] `npm run verify` desde la raíz, en verde.
+- Aprobación del autor 2026-11-24 (literal): «Apruebo la T-04 (domain: casos de uso de lectura) con las desviaciones 1 a 4 aceptadas. Rojo no repetido por mi regla (es «Cannot find module»); en el registro, los signos reales.» Desviaciones aceptadas: (1) R-158 sin test en `SearchCustomers`, porque el DTO no deja llegar a él (plan D-05; C-158 ya cubierto en la T-01); en su lugar, búsqueda sin coincidencias → `[]`; (2) tests que la tarea no enumera (objetos del repositorio tal cual con `lastSimulation`, R-05; orden `findById` → `findSimulationsByCustomerId`; «a-b» frente a «ab c» de C-18), dentro de los 13; (3) `SearchCustomers` ordena una copia sin mutar el array del repositorio; (4) textos «spec 004: no se espera …» de los falsos, con el patrón de la T-03. `tsc --noEmit` de `apps/api` con código 0 y `npm run verify` en verde: 837 tests en la raíz y 180 en la web (antes, 824 + 180; 13 nuevos: 8 + 2 + 3). Fase roja íntegra, copiada del retorno con los signos reales, en `ai-workspace/sessions/2026-11-24-18-004-customers.md`.
 
 ## T-05 · presentation: lecturas, ruta inexistente y textos
 - Cubre: R-01, R-03 a R-12, R-14 a R-21, R-72, R-79 a R-95, R-144, R-156, R-157
