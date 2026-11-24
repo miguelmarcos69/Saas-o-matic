@@ -179,8 +179,10 @@ Reglas comunes de esta spec:
 ## T-07 · simulations: página del simulador y ruta `simulator`
 - Cubre: R-01, R-11 a R-14, R-15 (parte de la página), R-16, R-17 (una petición por apertura), R-19 a R-28 y R-31 a R-32 (parte de la página), R-38, R-40, R-41, R-45, R-46, R-47 (importes), R-48, R-49, R-51, R-52, R-59 a R-63 (parte de la página), R-77, R-81 (parte de `app.routes.ts`), R-82 y R-83 (marcado), R-84, R-92, R-96 (parte de la página)
 - Depende de: T-04, T-05, T-06, T-10
-- Estado: [~] en curso
-- Modelo propuesto: Opus 5.5 (la tarea con más casos; `vi.mock` con el ejecutor de Angular, riesgo 2 del plan).
+- Estado: [x] hecha
+- Modelo: Opus 5.5, confirmado por el autor (la tarea con más casos).
+  - Corrección posterior a la aprobación (2026-11-24, puerta 5): antes decía «Modelo propuesto: Opus 5.5 (la tarea con más casos; `vi.mock` con el ejecutor de Angular, riesgo 2 del plan).». Autorización literal del autor: «Corrige también la línea «Modelo propuesto» de la T-07 que aún cita vi.mock, con la misma nota «Corrección posterior a la aprobación».»
+- Aprobación del autor 2026-11-24 (literal): «Signos escapados: sí, con los signos reales y anótalo. Desviaciones 1 a 4 de la T-07: aceptadas. Corrige también la línea «Modelo propuesto» de la T-07 que aún cita vi.mock, con la misma nota «Corrección posterior a la aprobación».» y «Apruebo la T-07.» `npm run verify` en verde: 766 tests en la raíz y 177 en la web (antes, 766 + 124 con el spec de la página sin cargar por el `vi.mock`; 53 nuevos), relanzado por la sesión principal. Primera vuelta bloqueada por el riesgo 2 y por R-51 (sesión 07; D-15 corregida y T-10). Fase roja (fallo de `vi.mock`) en `ai-workspace/sessions/2026-11-24-07-005-simulator.md` y primera ejecución del spec retomado en `ai-workspace/sessions/2026-11-24-08-005-simulator.md`. El riesgo 1 no se dio: la página recibe la primera emisión de `simulationInputChange` y de `countryChange`.
 - Archivos de producción (3):
   - `app/simulations/pages/simulation-page/simulation-page.ts` (nuevo): `SimulationPage` (`app-simulation-page`). Llama a `currencySelection.load(inject(DestroyRef))` en el constructor. Guarda la entrada del formulario en una señal y calcula con `computed`, con `packages/pricing` y `toDisplayCents`/`formatCents` (D-12). Guarda también el país de `countryChange` (T-10) en otra señal, y la etiqueta del IVA sale de ella con `getTaxRateBps(country)`, también con el campo no válido (D-12, R-51). Sin tarifas, límites ni tipos de IVA escritos (R-13).
   - `app/simulations/pages/simulation-page/simulation-page.html` (nuevo), según la D-12:
@@ -195,31 +197,31 @@ Reglas comunes de esta spec:
   - Sin `vi.mock` ni espía: R-46 se cubre con los «—» de C-06 y la revisión del código en la puerta 6 (D-15).
     - Corrección posterior a la aprobación (2026-11-24, puerta 5): antes decía «`vi.mock('@saas-o-matic/pricing', importOriginal)` con un espía para R-46 (D-15).». Autorización literal del autor: «2. Sí, corrige las dos líneas de la T-07 que aún citan el espía, con la misma nota «Corrección posterior a la aprobación».», que sigue a la del bloqueo 1 (ver la casilla de C-06).
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] Si la página no recibe la primera emisión de `simulationInputChange` o de `countryChange`, la tarea para y lo devuelve (riesgo 1).
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] Si la página no recibe la primera emisión de `simulationInputChange` o de `countryChange`, la tarea para y lo devuelve (riesgo 1).
     - Corrección posterior a la aprobación (2026-11-24, puerta 5): antes empezaba «Si `vi.mock` no funciona con el ejecutor de tests de Angular, la tarea para y lo devuelve (D-15, riesgo 2). Lo mismo si…». Misma autorización literal del autor que la línea de «Tests»: «2. Sí, corrige las dos líneas de la T-07 que aún citan el espía, con la misma nota «Corrección posterior a la aprobación».»
-  - [ ] C-01 pasa (R-01): `simulator` tiene `loadComponent` y no `component`, y `/simulator` carga `SimulationPage`.
-  - [ ] C-09, C-10, C-11 y C-23 pasan (R-11, R-12, R-15, R-28, R-32, R-40).
-  - [ ] C-14 y C-36 pasan (R-16, R-51, R-52): «Coste base», «IVA (21 %)», «IVA (23 %)», «IVA (20 %)», «IVA (22 %)» y «Total mensual», sin más datos de cálculo.
-  - [ ] R-51 con el campo no válido (puerta 4 ampliada, 2026-11-24): con el campo vacío, la etiqueta dice «IVA (21 %)» (`toBe`) y los tres importes «—»; al cambiar después el país a `PT`, sin tocar el campo, dice «IVA (23 %)» y los importes siguen en «—» (R-45, R-51).
-  - [ ] C-06 en la página (R-45, R-46): con cada valor no válido, «—» en los tres importes. R-46 queda cubierto con eso y con la revisión del código en la puerta 6 (plan, D-15).
+  - [x] C-01 pasa (R-01): `simulator` tiene `loadComponent` y no `component`, y `/simulator` carga `SimulationPage`.
+  - [x] C-09, C-10, C-11 y C-23 pasan (R-11, R-12, R-15, R-28, R-32, R-40).
+  - [x] C-14 y C-36 pasan (R-16, R-51, R-52): «Coste base», «IVA (21 %)», «IVA (23 %)», «IVA (20 %)», «IVA (22 %)» y «Total mensual», sin más datos de cálculo.
+  - [x] R-51 con el campo no válido (puerta 4 ampliada, 2026-11-24): con el campo vacío, la etiqueta dice «IVA (21 %)» (`toBe`) y los tres importes «—»; al cambiar después el país a `PT`, sin tocar el campo, dice «IVA (23 %)» y los importes siguen en «—» (R-45, R-51).
+  - [x] C-06 en la página (R-45, R-46): con cada valor no válido, «—» en los tres importes. R-46 queda cubierto con eso y con la revisión del código en la puerta 6 (plan, D-15).
     - Corrección posterior a la aprobación (2026-11-24, puerta 5, T-07 bloqueada por el riesgo 2): antes decía «y el espía de `calculateBaseCostCents` sin llamadas con ese valor». Autorización literal del autor: «Bloqueo 1: (B). Quita el espía de la T-07 y da R-46 por cubierto con los «—» de C-06 más la revisión del código en la Puerta 6, porque el formulario emite null con un valor no válido y la página nunca recibe ese valor. Autorizo corregir tú, sin vuelta del planner, la D-15 del plan.md y la casilla de C-06 de la T-07, con una nota «Corrección posterior a la aprobación» con mi autorización literal, como con D-04 y D-07 de la 002.»
-  - [ ] C-33 en la página (R-47): de vuelta en 15, los importes de C-09.
-  - [ ] C-13 y C-15 pasan (R-14, R-17): un solo `GET` a la URL en toda la prueba; ninguno a `/api/simulations` ni con `POST`.
-  - [ ] C-16 pasa en la página con las 16 variantes, y C-53 también (R-19, R-22, R-23, R-60, R-96): alerta, importes en EUR y selector deshabilitado con EUR.
-  - [ ] C-17 pasa (R-20, R-41): al destruir la página antes de responder, `cancelled` es `true`.
-  - [ ] C-18 pasa (R-21): «Cargando tipos de cambio…» (`toBe`) en `role="status"` y ningún `role="alert"`.
-  - [ ] C-19 pasa (R-22 a R-24): con error de red y, aparte, con 500, el texto de R-22 (`toBe`) en `role="alert"` e importes en EUR de 10, 2,30 y 12,30.
-  - [ ] C-20 pasa (R-25, R-27, R-31, R-32): los importes en USD y en GBP, sin petición nueva al cambiar de divisa.
-  - [ ] C-22 pasa (R-26, R-59 a R-61).
-  - [ ] C-31 pasa (R-38, R-84).
-  - [ ] C-34 y C-35 en la página (R-48, R-49): «Simulador de factura» y, encima, «Proyección mensual».
-  - [ ] C-37 pasa en la página.
-  - [ ] C-39 y C-40 pasan (R-62, R-63; dos peticiones de tipos en C-39).
-  - [ ] Dos `.simulation-page__card`, una con el formulario y otra con los importes (R-82, marcado).
-  - [ ] No existe `app/simulations/services/` (R-77).
-  - [ ] En `app.routes.ts` solo cambian la ruta y el comentario de la línea 3 (R-81, R-92). `health-page.spec.ts` sigue en verde.
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] C-33 en la página (R-47): de vuelta en 15, los importes de C-09.
+  - [x] C-13 y C-15 pasan (R-14, R-17): un solo `GET` a la URL en toda la prueba; ninguno a `/api/simulations` ni con `POST`.
+  - [x] C-16 pasa en la página con las 16 variantes, y C-53 también (R-19, R-22, R-23, R-60, R-96): alerta, importes en EUR y selector deshabilitado con EUR.
+  - [x] C-17 pasa (R-20, R-41): al destruir la página antes de responder, `cancelled` es `true`.
+  - [x] C-18 pasa (R-21): «Cargando tipos de cambio…» (`toBe`) en `role="status"` y ningún `role="alert"`.
+  - [x] C-19 pasa (R-22 a R-24): con error de red y, aparte, con 500, el texto de R-22 (`toBe`) en `role="alert"` e importes en EUR de 10, 2,30 y 12,30.
+  - [x] C-20 pasa (R-25, R-27, R-31, R-32): los importes en USD y en GBP, sin petición nueva al cambiar de divisa.
+  - [x] C-22 pasa (R-26, R-59 a R-61).
+  - [x] C-31 pasa (R-38, R-84).
+  - [x] C-34 y C-35 en la página (R-48, R-49): «Simulador de factura» y, encima, «Proyección mensual».
+  - [x] C-37 pasa en la página.
+  - [x] C-39 y C-40 pasan (R-62, R-63; dos peticiones de tipos en C-39).
+  - [x] Dos `.simulation-page__card`, una con el formulario y otra con los importes (R-82, marcado).
+  - [x] No existe `app/simulations/services/` (R-77).
+  - [x] En `app.routes.ts` solo cambian la ruta y el comentario de la línea 3 (R-81, R-92). `health-page.spec.ts` sigue en verde.
+  - [x] `npm run verify` desde la raíz, en verde.
 
 ## T-08 · estilos del simulador y tokens
 - Cubre: R-34, R-37 (preparado; C-30 en la puerta 6), R-82 y R-83 (estilos), R-39, R-85 y R-86 (preparados; C-32 en la puerta 6)

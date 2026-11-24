@@ -1,0 +1,31 @@
+<!-- Simulador de factura (spec 005: D-12). El role="status" está siempre en el DOM y solo cambia su texto; el error va aparte, en role="alert", como en health-page.html. -->
+@let current = state();
+<p class="simulation-page__eyebrow">Proyección mensual</p>
+<h1 class="simulation-page__title">Simulador de factura</h1>
+
+<section class="simulation-page__card">
+  <app-simulation-form (simulationInputChange)="updateInput($event)" (countryChange)="updateCountry($event)" />
+  <app-currency-selector
+    [value]="displayCurrency()"
+    [disabled]="currencyDisabled()"
+    (valueChange)="selectCurrency($event)"
+  />
+  <p class="simulation-page__status" role="status">
+    @if (current.status === 'loading') {Cargando tipos de cambio…}
+  </p>
+  @if (current.status === 'error') {
+    <p class="simulation-page__alert" role="alert">{{ current.message }}</p>
+  }
+</section>
+
+<section class="simulation-page__card">
+  <!-- Solo el total va en una región viva (R-38, R-84). -->
+  <dl class="simulation-page__amounts">
+    <dt class="simulation-page__term">Coste base</dt>
+    <dd class="simulation-page__amount">{{ amounts().base }}</dd>
+    <dt class="simulation-page__term">{{ taxLabel() }}</dt>
+    <dd class="simulation-page__amount">{{ amounts().tax }}</dd>
+    <dt class="simulation-page__term">Total mensual</dt>
+    <dd class="simulation-page__amount" aria-live="polite">{{ amounts().total }}</dd>
+  </dl>
+</section>
