@@ -121,8 +121,9 @@ Reglas comunes de esta spec:
 ## T-05 · shared: componente selector de divisa
 - Cubre: R-25 (parte del componente), R-34 (parte de `_shared.scss`), R-35 y R-36 (parte del selector de divisa), R-50 (etiqueta «Divisa»), R-59 a R-61 (parte del componente: `disabled`), R-66, R-68
 - Depende de: T-02
-- Estado: [ ] pendiente
-- Modelo propuesto: Sonnet 5.5 (componente presentacional pequeño).
+- Estado: [x] hecha
+- Modelo: Sonnet 5.5, confirmado por el autor (componente presentacional pequeño).
+- Aprobación del autor 2026-11-24 (literal): «Los tres detalles de implementación de la T-05 (el (change) con changeCurrency, el [selected] en cada opción y el test de disabled sin indicar): aceptados.» y «Apruebo la T-05.» `npm run verify` en verde: 766 tests en la raíz y 100 en la web (antes, 766 + 93; 7 nuevos), relanzado por la sesión principal. Fase roja íntegra en `ai-workspace/sessions/2026-11-24-05-005-simulator.md`.
 - Archivos de producción (4):
   - `app/shared/components/currency-selector/currency-selector.ts` (nuevo): `CurrencySelector` (`app-currency-selector`), con `value = input.required<Currency>()`, `disabled = input<boolean>(false)` y `valueChange = output<Currency>()`. No inyecta servicios (D-12).
   - `app/shared/components/currency-selector/currency-selector.html` (nuevo): `<label for="currency-selector">Divisa</label>` y `<select id="currency-selector" class="currency-selector__select">` nativo con `[disabled]` y las tres opciones de R-66.
@@ -130,13 +131,13 @@ Reglas comunes de esta spec:
   - `styles.scss`: `@use 'scss/shared';` después de `health`.
 - Tests (nuevo): `app/shared/components/currency-selector/currency-selector.spec.ts`.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] C-21 y C-43 pasan (R-25, R-66): las opciones `EUR`, `USD` y `GBP`, en ese orden, con sus textos literales.
-  - [ ] Etiqueta visible «Divisa» asociada por `for`/`id` (R-35, R-50).
-  - [ ] Con `disabled` en `true`, el `<select>` tiene el atributo `disabled`, y con `false` no lo tiene (R-59 a R-61, R-36). El valor mostrado es el de `value`.
-  - [ ] Al elegir otra opción emite `valueChange` con su valor.
-  - [ ] Ningún `.scss` en la carpeta del componente (R-34).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] C-21 y C-43 pasan (R-25, R-66): las opciones `EUR`, `USD` y `GBP`, en ese orden, con sus textos literales.
+  - [x] Etiqueta visible «Divisa» asociada por `for`/`id` (R-35, R-50).
+  - [x] Con `disabled` en `true`, el `<select>` tiene el atributo `disabled`, y con `false` no lo tiene (R-59 a R-61, R-36). El valor mostrado es el de `value`.
+  - [x] Al elegir otra opción emite `valueChange` con su valor.
+  - [x] Ningún `.scss` en la carpeta del componente (R-34).
+  - [x] `npm run verify` desde la raíz, en verde.
 
 ## T-06 · simulations: `@angular/forms` y componente del formulario
 - Cubre: R-02 a R-10, R-15 (parte del formulario), R-35 y R-36 (parte de los tres controles), R-42, R-43, R-44, R-47 (parte del formulario), R-50 (tres etiquetas)

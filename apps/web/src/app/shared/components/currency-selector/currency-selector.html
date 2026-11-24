@@ -1,0 +1,11 @@
+<label for="currency-selector">Divisa</label>
+<select
+  id="currency-selector"
+  class="currency-selector__select"
+  [disabled]="disabled()"
+  (change)="changeCurrency($event)"
+>
+  <option value="EUR" [selected]="value() === 'EUR'">Euro (EUR)</option>
+  <option value="USD" [selected]="value() === 'USD'">Dólar estadounidense (USD)</option>
+  <option value="GBP" [selected]="value() === 'GBP'">Libra esterlina (GBP)</option>
+</select>

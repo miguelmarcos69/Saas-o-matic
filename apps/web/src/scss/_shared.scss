@@ -1,0 +1,6 @@
+// Estilos de los componentes de shared/ (spec 005, R-34, R-37; D-14).
+// El selector de divisa ocupa el ancho de su contenedor sin desbordarlo.
+.currency-selector__select {
+  width: 100%;
+  max-width: 100%;
+}
