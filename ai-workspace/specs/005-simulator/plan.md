@@ -4,6 +4,8 @@
 - **Puerta:** 3 (plan). Solo plan y tareas; sin código.
 - **Estado del plan:** aprobado por el autor el 2026-11-23 (aprobación literal: «Apruebo la Puerta 3 · plan de la spec 005-simulator: plan.md con D-01 a D-18 (D-06 a D-17, propuestas por el planner; D-18, mi decisión sobre la P-01), y la instalación de @angular/forms 22.3.0 autorizada en la tarea de la Puerta 5 que la necesite. El Estado: sigue en Aprobada.»). Sin dudas abiertas: la Q-01 de la primera vuelta (D-02) y la P-01 (D-18), decididas por el autor.
 - **Formato elegido por el autor:** «Temas + D-nn, breve» (D-01).
+- **Corrección posterior a la aprobación:** el 2026-11-24, en la puerta 5 (T-07, bloqueada por el riesgo 2: `vi.mock` no funciona con el ejecutor de tests de Angular) y por autorización del autor, la D-15 deja de comprobar R-46 con `vi.mock` y un espía: R-46 queda cubierto con los «—» de C-06 y la revisión del código en la puerta 6. Autorización literal: «Bloqueo 1: (B). Quita el espía de la T-07 y da R-46 por cubierto con los «—» de C-06 más la revisión del código en la Puerta 6, porque el formulario emite null con un valor no válido y la página nunca recibe ese valor. Autorizo corregir tú, sin vuelta del planner, la D-15 del plan.md y la casilla de C-06 de la T-07, con una nota «Corrección posterior a la aprobación» con mi autorización literal, como con D-04 y D-07 de la 002.» Sin cambio de ninguna otra decisión ni de ningún requisito.
+- **Corrección posterior a la aprobación (2):** el 2026-11-24, en la puerta 5 (T-07, bloqueo 2: con la D-11 el formulario emite `null` con el campo no válido y la página no sabe qué país hay seleccionado, así que no puede cumplir R-51), en una puerta 3 ampliada con la spec en `En implementación` (`sdd`, «Estados»), la D-11 añade una segunda salida, `countryChange`, que informa siempre del país, y la D-12 la usa para la etiqueta del IVA. Petición literal del autor: «Bloqueo 2: (a). El formulario informa siempre del país, con una salida aparte. Lanza al planner en una puerta 3 y 4 ampliadas: corrige la D-11 del plan y añade una T-10, pequeña, con Sonnet 5.5, que se hace antes de retomar la T-07. Enséñame el retorno antes de aprobar. La T-07 se queda en [~] hasta que se resuelvan las dos cosas.» Por consecuencia, cambian también la fila de `simulation-form/` de la sección 2, una fila de la sección 5, el orden de construcción (sección 7, paso 10), el riesgo 1 (sección 8) y la fila de R-51 de la sección 10. Ningún requisito cambia. Aprobada por el autor el 2026-11-24 (aprobación literal: «1. Apruebo las puertas 3 y 4 ampliadas de la 005: la D-11 corregida (salida countryChange), la D-12 en lo declarado y la T-10, pequeña, con Sonnet 5.5, antes de retomar la T-07. La señal del país de la página arranca en null y entra 'ES' al conectarse; acepto la nota 1. El Estado: sigue en En implementación.»).
 
 ## 1. Contexto y fuentes
 
@@ -78,7 +80,7 @@ Tests nuevos:
 | Fichero | Cambio | Requisitos |
 |---|---|---|
 | `interfaces/simulation-input.ts` | nuevo: `Country` (`'ES' \| 'PT' \| 'FR' \| 'IT'`) y `SimulationInput` (`activeUsers`, `country`) (D-10) | R-08, R-11, R-12 |
-| `components/simulation-form/` | nuevo: `SimulationForm` (`app-simulation-form`), con Reactive Forms tipados, slider y campo sincronizados, selector de país y validación (D-11) | R-02 a R-10, R-15, R-35, R-36, R-42 a R-44, R-47, R-50 |
+| `components/simulation-form/` | nuevo: `SimulationForm` (`app-simulation-form`), con Reactive Forms tipados, slider y campo sincronizados, selector de país y validación; salidas `simulationInputChange` y `countryChange` (D-11) | R-02 a R-10, R-15, R-35, R-36, R-42 a R-44, R-47, R-50, R-51 (el país, también con el campo no válido) |
 | `pages/simulation-page/` | nuevo: `SimulationPage` (`app-simulation-page`): importes, estados de los tipos, tarjetas, título y eyebrow (D-12) | R-01, R-11 a R-16, R-21 a R-24, R-27, R-31, R-38, R-45 a R-49, R-51, R-52, R-82 a R-84 |
 
 Tests nuevos: `simulation-form.spec.ts` y `simulation-page.spec.ts`. No se crea `simulations/services/` (R-77).
@@ -192,7 +194,10 @@ La respuesta del autor a las cuatro, literal: «Acepto las cuatro (Recommended)�
   - Si no es válido, el slider queda en el último valor válido (R-44).
   - Las dos suscripciones llevan `takeUntilDestroyed()`.
 - Señales con `toSignal` sobre `statusChanges` del campo, para que la plantilla pinte el error, `aria-invalid="true"` y `aria-describedby` (R-07, R-42, R-43, R-47). El texto aparece en cuanto el valor no es válido, sin esperar a `touched` (C-06). No se usa `markForCheck()`.
-- Salida: `simulationInputChange = outputFromObservable(...)` sobre `valueChanges` con `startWith` del valor inicial. Emite `{ activeUsers, country }` si el campo es válido y `null` si no. Así la página recibe el valor inicial (15, `ES`) en cuanto escucha, sin repetir el 15 ni `ES` (sección 8, riesgo 1).
+- Salidas (dos):
+  - `simulationInputChange = outputFromObservable(...)` sobre `valueChanges` con `startWith` del valor inicial. Emite `{ activeUsers, country }` si el campo es válido y `null` si no. Así la página recibe el valor inicial (15, `ES`) en cuanto escucha, sin repetir el 15 ni `ES` (sección 8, riesgo 1). Sin cambios.
+  - `countryChange = outputFromObservable<Country>(...)` sobre `valueChanges` del control `country`, con `startWith` de su valor inicial (`'ES'`). Emite el país seleccionado al conectarse y en cada cambio de país, sea válido o no el campo numérico. Así la página conoce el país con el campo no válido y pinta la etiqueta del IVA de R-51 (D-12). No lleva el valor del campo, así que no cambia R-46.
+  - (Corrección posterior a la aprobación, 2026-11-24: ver la nota (2) de la cabecera.)
 - Plantilla:
   - `<input type="range" min="0" max="100000" step="1">` (R-02).
   - `<input type="number">`.
@@ -203,10 +208,10 @@ La respuesta del autor a las cuatro, literal: «Acepto las cuatro (Recommended)�
 - El componente no inyecta servicios (`frontend-conventions`, «Componentes»).
 
 **D-12 · Página y selector de divisa.**
-- `SimulationPage` recibe `SimulationInput | null` del formulario en una señal y calcula con `computed`:
+- `SimulationPage` recibe `SimulationInput | null` del formulario (`simulationInputChange`) en una señal y el país (`countryChange`, D-11) en otra, que recibe `'ES'` al conectarse (sección 8, riesgo 1). Calcula con `computed`:
   - `null` si la entrada es `null`. Así no hay llamadas a `packages/pricing`: R-45 y R-46 dan «—» en los tres importes.
   - Si no, `baseCents = calculateBaseCostCents(...)`, `rateBps = getTaxRateBps(country)`, `taxCents = calculateTaxAmountCents(baseCents, rateBps)` y `totalCents = calculateTotalCents(baseCents, rateBps)` (R-11, R-12).
-- Otro `computed` da los textos: `formatCents(toDisplayCents(x, selection.displayRateMicros()), selection.displayCurrency())` para cada importe, por separado (R-31). La etiqueta del IVA es `IVA (${rateBps / 100} %)`, con `rateBps / 100` tal como lo fija R-51 (solo para mostrar).
+- Otro `computed` da los textos: `formatCents(toDisplayCents(x, selection.displayRateMicros()), selection.displayCurrency())` para cada importe, por separado (R-31). La etiqueta del IVA es `IVA (${getTaxRateBps(country) / 100} %)`, con el país de la segunda señal y `/ 100` tal como lo fija R-51 (solo para mostrar). Sale de esa señal también con el campo no válido, mientras los importes muestran «—» (R-45, R-51). `getTaxRateBps(country)` no recibe el valor del campo, así que no choca con R-46. (Corrección posterior a la aprobación, 2026-11-24: ver la nota (2) de la cabecera.)
 - Sin tarifas, límites ni tipos de IVA escritos (R-13).
 - Plantilla:
   - Eyebrow «Proyección mensual» en un `<p>` encima de `<h1>Simulador de factura</h1>` (R-48, R-49). El tamaño del título lo fija la D-18.
@@ -254,7 +259,7 @@ La respuesta del autor a las cuatro, literal: «Acepto las cuatro (Recommended)�
 **D-15 · Pruebas web sin repetir los tramos (R-40).**
 - Importes concretos en céntimos con 15 usuarios, `ES` y EUR (C-09), más los de C-10, C-11, C-19, C-20 y C-37. Ninguna batería de límites.
 - Los formatos esperados se comparan con la salida del mismo `Intl.NumberFormat`, no con un literal (nota de la sección 4 de la spec).
-- R-46 (sin llamadas a `packages/pricing` con un valor no válido) se comprueba en `simulation-page.spec.ts` con `vi.mock('@saas-o-matic/pricing', importOriginal)` y un espía, como en la spec 003. Si `vi.mock` no funciona con el ejecutor de tests de Angular, la tarea para y lo devuelve (riesgo 2).
+- R-46 (sin llamadas a `packages/pricing` con un valor no válido) queda cubierto con los «—» de los tres importes en C-06 (`simulation-page.spec.ts`) y con la revisión del código en la puerta 6: el formulario emite `null` con un valor no válido (D-11) y la página nunca recibe ese valor (D-12). Sin `vi.mock` ni espía. (Corrección posterior a la aprobación, 2026-11-24: ver la nota de la cabecera.)
 
 **D-16 · Traslado de `LoadState<T>` (R-70, R-73, R-98).**
 - En el mismo commit se crea `shared/interfaces/load-state.ts` con el contenido de `health/interfaces/load-state.ts` y la línea 2 cambiada, y se borra el original. Así `git diff -M` lo ve como renombrado (C-45).
@@ -291,7 +296,8 @@ Tipos de prueba:
 | C-03, C-34, C-35 | R-03, R-06, R-48 a R-50 | `simulation-form.spec.ts` (controles) y `simulation-page.spec.ts` (título, eyebrow y etiqueta «Divisa») | Auto |
 | C-06 | R-07, R-42 a R-46 | `simulation-form.spec.ts` (texto, `aria-*` y slider en 15) y `simulation-page.spec.ts` («—» y espía de `calculateBaseCostCents`: D-15) | Auto |
 | C-08, C-12 | R-10, R-13 | revisión del código; búsqueda de texto a elección del revisor | Manual |
-| C-09 a C-11, C-14, C-23, C-36 | R-11, R-12, R-15, R-16, R-28, R-32, R-40, R-51, R-52 | `simulation-page.spec.ts` | Auto |
+| C-09 a C-11, C-14, C-23, C-36 | R-11, R-12, R-15, R-16, R-28, R-32, R-40, R-51, R-52 | `simulation-page.spec.ts`; además, la etiqueta del IVA con el campo no válido (R-51) | Auto |
+| C-36 (formulario) | R-15, R-51 | `simulation-form.spec.ts`: `countryChange` emite `'ES'` al conectarse y el país nuevo al cambiarlo, también con el campo no válido (D-11) | Auto |
 | C-13, C-15, C-17 a C-20, C-22, C-31, C-37, C-39, C-40, C-53 (página) | R-14, R-17 a R-27, R-29, R-31, R-38, R-41, R-59 a R-63, R-67, R-84, R-96 | `simulation-page.spec.ts` con `HttpTestingController` (`verify()` en `afterEach`) y `RouterTestingHarness` para C-39 y C-40 (la petición de `/api/health` se atiende al pasar por `/`) | Auto |
 | C-16, C-37, C-38, C-53 (esquema) | R-19, R-53 a R-58, R-96 | `exchange-rates.spec.ts`: cada variante de C-16, las de C-53 y los cuatro tipos de C-38. C-16 también en la página, con las 16 variantes | Auto |
 | — | R-17, R-18, R-19 | `exchange-rates-api.spec.ts`: un `GET` a la URL, un cuerpo válido da millonésimas y uno no válido da error | Auto |
@@ -339,9 +345,10 @@ Propuesta para la puerta 4. Cada paso es un commit con 5 ficheros de producción
 7. `simulation-page/` y la ruta en `app.routes.ts` (D-12).
 8. Estilos del simulador: `_simulations.scss`, tokens y `@use` en `styles.scss` (D-14).
 9. Navegación: `app.html`, `app.ts` y `app.spec.ts` (D-13).
+10. Salida `countryChange` en `simulation-form/` (D-11, corrección del 2026-11-24). Se hace antes de retomar el paso 7, que la consume.
 
 ## 8. Riesgos y verificaciones
-1. **`outputFromObservable` con `startWith`** debe entregar el valor inicial a la página al conectarse el listener. Si no llega, C-03 y C-09 fallan en el paso 7. En ese caso la tarea para y lo devuelve, porque la alternativa (la página guarda 15 y `ES`) duplica valores de la #6 y la #7.
+1. **`outputFromObservable` con `startWith`** debe entregar el valor inicial a la página al conectarse el listener. Si no llega, C-03 y C-09 fallan en el paso 7. En ese caso la tarea para y lo devuelve, porque la alternativa (la página guarda 15 y `ES`) duplica valores de la #6 y la #7. Lo mismo vale para `countryChange` (D-11): si la página no recibe `'ES'` al conectarse, la etiqueta de C-14 falla y la tarea para y lo devuelve.
 2. **`vi.mock` en `apps/web`**: el ejecutor de tests de Angular compila antes de pasar a Vitest, y puede que no admita `vi.mock` de un paquete. Si no funciona, la tarea del paso 7 para y lo devuelve (D-15). C-06 tiene además la comprobación de «—».
 3. **Cancelación**: se comprueba que `takeUntilDestroyed` con el `DestroyRef` de la página deja `cancelled` en `true` en `HttpTestingController` (C-17).
 4. **`ariaCurrentWhenActive`** con `routerLinkActive` vacío. Lo cubre C-50 en `app.spec.ts`.
@@ -390,7 +397,8 @@ Requisito → fichero → decisión → caso. Los compuestos (H-03) se trazan ju
 | R-11 a R-13 | `simulation-page/` | D-12 | C-09, C-10, C-12 |
 | R-14 | `simulation-page/` (sin petición propia) | D-06, D-12 | C-13 |
 | R-15 | `simulation-form/`, `simulation-page/` | D-11, D-12 | C-10, C-11 |
-| R-16, R-51, R-52 | `simulation-page/` | D-12 | C-14, C-36 |
+| R-16, R-52 | `simulation-page/` | D-12 | C-14, C-36 |
+| R-51 | `simulation-form/` (`countryChange`), `simulation-page/` | D-11, D-12 | C-14, C-36 |
 | R-17, R-18 | `exchange-rates-api.ts` | D-06, D-08 | C-15 |
 | R-19, R-53 a R-58, R-96 | `exchange-rates.ts`, `exchange-rates-api.ts` | D-07 | C-16, C-37, C-38, C-53 |
 | R-20, R-41 | `currency-selection.ts`, `simulation-page/` | D-08 | C-17 |

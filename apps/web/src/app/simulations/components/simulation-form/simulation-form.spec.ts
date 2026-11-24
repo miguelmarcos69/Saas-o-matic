@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SimulationInput } from '../../interfaces/simulation-input';
+import type { Country } from '../../interfaces/simulation-input';
 import { SimulationForm } from './simulation-form';
 
 // Formulario del simulador (spec 005): C-02 a C-07, C-28, C-33 y C-34 en el formulario; R-15 sin botón.
@@ -148,5 +149,39 @@ describe('SimulationForm', () => {
       expect(label?.textContent?.trim()).toBe(text);
       expect(host.querySelector(`#${id}`)).not.toBeNull();
     }
+  });
+
+  // Salida del país (T-10, spec 005: R-15, R-51; D-11): se conecta como lo hará la página.
+  function connectCountry(): Country[] {
+    const countryEmissions: Country[] = [];
+    fixture.componentInstance.countryChange.subscribe((value) => countryEmissions.push(value));
+    return countryEmissions;
+  }
+
+  async function changeCountry(value: string): Promise<void> {
+    country().value = value;
+    country().dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+  }
+
+  it('T-10 (riesgo 1): al conectarse, la primera emisión de countryChange es ES', () => {
+    const countryEmissions = connectCountry();
+    expect(countryEmissions[0]).toBe('ES');
+  });
+
+  for (const value of ['PT', 'FR', 'IT'] as const) {
+    it(`T-10 (R-15): al cambiar el país a ${value}, countryChange emite ${value}`, async () => {
+      const countryEmissions = connectCountry();
+      await changeCountry(value);
+      expect(countryEmissions.at(-1)).toBe(value);
+    });
+  }
+
+  it('T-10 (R-51, R-45): con el campo vacío, countryChange emite PT y simulationInputChange sigue en null', async () => {
+    const countryEmissions = connectCountry();
+    await typeInField('');
+    await changeCountry('PT');
+    expect(countryEmissions.at(-1)).toBe('PT');
+    expect(lastEmission()).toBeNull();
   });
 });

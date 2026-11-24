@@ -53,6 +53,11 @@ export class SimulationForm {
     ),
   );
 
+  // Emite el país aunque el campo no sea válido; startWith entrega el valor inicial (R-15, R-51; D-11).
+  readonly countryChange = outputFromObservable<Country>(
+    this.form.controls.country.valueChanges.pipe(startWith(this.form.controls.country.value)),
+  );
+
   constructor() {
     const { slider, activeUsers } = this.form.controls;
     // El slider lleva su valor al campo (R-04).

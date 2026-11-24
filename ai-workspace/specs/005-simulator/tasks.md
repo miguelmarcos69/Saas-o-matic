@@ -2,10 +2,10 @@
 
 Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo 5 archivos de producción, sin contar sus tests (`*.spec.ts`) ni los ficheros generados (solo el lockfile). Las migraciones son SQL escrito a mano y cuentan como producción. Si no cabe, se parte. Un recurso nuevo se divide por capa: en la API, una tarea por capa (`domain`, `infrastructure` y `presentation`); en la web, una tarea por servicio con su interfaz y una por página o componente (cuentan `.ts` y `.html`). Si una tarea necesita más de 5 archivos y no se puede dividir, lo justifica por escrito en una línea `Excepción de tamaño:` y el revisor lo comprueba. El test va dentro de la tarea que lo exige. Al cerrar una tarea: MEMORY.md, diff y commit propuesto.
 
-Hay nueve tareas, T-01 a T-09, una por paso del «Orden de construcción» del plan (sección 7), como fija la decisión previsible (1) de esta puerta.
+Hay diez tareas, T-01 a T-10, una por paso del «Orden de construcción» del plan (sección 7), como fija la decisión previsible (1) de esta puerta. La T-10 (paso 10) se añadió el 2026-11-24 en una puerta 4 ampliada, con la spec en `En implementación` (`sdd`, «Estados»), por la petición literal del autor que recoge la nota (2) de la cabecera de `plan.md` (bloqueo 2 de la T-07). Va al final, sin renumerar, y se hace antes de retomar la T-07.
 - Ninguna pasa de 5 archivos de producción (`package.json` cuenta; el lockfile no), así que ninguna lleva `Excepción de tamaño:`.
 - Todas las rutas son de `apps/web/src/` salvo `apps/web/package.json` y `package-lock.json`.
-- Estado de las tareas: aprobadas por el autor el 2026-11-23 (aprobación literal: «Apruebo la Puerta 4 · tareas de la spec 005-simulator: tasks.md con T-01 a T-09. Pon Estado: Planificada en spec.md y en la fila 005 del README.»). Con la misma aprobación, literal: «1. T-01 y T-08 sin fase roja: aceptado, por los motivos que da tasks.md.» y «2. Modelos del implementer: confirmados (Opus 5.5 en T-02, T-03, T-04, T-06 y T-07; Sonnet 5.5 en T-01, T-05, T-08 y T-09).»
+- Estado de las tareas: aprobadas por el autor el 2026-11-23 (aprobación literal: «Apruebo la Puerta 4 · tareas de la spec 005-simulator: tasks.md con T-01 a T-09. Pon Estado: Planificada en spec.md y en la fila 005 del README.»). Con la misma aprobación, literal: «1. T-01 y T-08 sin fase roja: aceptado, por los motivos que da tasks.md.» y «2. Modelos del implementer: confirmados (Opus 5.5 en T-02, T-03, T-04, T-06 y T-07; Sonnet 5.5 en T-01, T-05, T-08 y T-09).» La T-10 y los cambios de la T-07 de la puerta 4 ampliada (2026-11-24), aprobados por el autor el 2026-11-24 (aprobación literal: «1. Apruebo las puertas 3 y 4 ampliadas de la 005: la D-11 corregida (salida countryChange), la D-12 en lo declarado y la T-10, pequeña, con Sonnet 5.5, antes de retomar la T-07. La señal del país de la página arranca en null y entra 'ES' al conectarse; acepto la nota 1. El Estado: sigue en En implementación.»).
 
 Decisiones previsibles de la puerta 4, aceptadas por el autor el 2026-11-23. Respuesta literal: «Acepto las cuatro (Recommended)». Texto literal que se le presentó: «(1) las tareas parten del «orden de construcción» de plan.md (sección 7, nueve pasos), con la plantilla de sdd: ≤5 archivos de producción por tarea sin contar tests ni lockfile (package.json sí cuenta), y el planner parte o justifica con «Excepción de tamaño:»; (2) la tarea del formulario (paso 6) instala @angular/forms con tu orden literal (npm install @angular/forms@22.3.0 --save-exact -w apps/web), y su «Hecho cuando» incluye que npm ci funciona desde cero y que package.json y package-lock.json van en su commit; (3) cada tarea tiene en «Hecho cuando» npm run verify en verde (principio 3) y su fase roja de los tests nuevos; (4) planner con Opus 5.5 y encargo sin enseñártelo antes (ADR-016, puntos 4 y 6).»
 
@@ -178,28 +178,32 @@ Reglas comunes de esta spec:
 
 ## T-07 · simulations: página del simulador y ruta `simulator`
 - Cubre: R-01, R-11 a R-14, R-15 (parte de la página), R-16, R-17 (una petición por apertura), R-19 a R-28 y R-31 a R-32 (parte de la página), R-38, R-40, R-41, R-45, R-46, R-47 (importes), R-48, R-49, R-51, R-52, R-59 a R-63 (parte de la página), R-77, R-81 (parte de `app.routes.ts`), R-82 y R-83 (marcado), R-84, R-92, R-96 (parte de la página)
-- Depende de: T-04, T-05, T-06
-- Estado: [ ] pendiente
+- Depende de: T-04, T-05, T-06, T-10
+- Estado: [~] en curso
 - Modelo propuesto: Opus 5.5 (la tarea con más casos; `vi.mock` con el ejecutor de Angular, riesgo 2 del plan).
 - Archivos de producción (3):
-  - `app/simulations/pages/simulation-page/simulation-page.ts` (nuevo): `SimulationPage` (`app-simulation-page`). Llama a `currencySelection.load(inject(DestroyRef))` en el constructor. Guarda la entrada del formulario en una señal y calcula con `computed`, con `packages/pricing` y `toDisplayCents`/`formatCents` (D-12). Sin tarifas, límites ni tipos de IVA escritos (R-13).
+  - `app/simulations/pages/simulation-page/simulation-page.ts` (nuevo): `SimulationPage` (`app-simulation-page`). Llama a `currencySelection.load(inject(DestroyRef))` en el constructor. Guarda la entrada del formulario en una señal y calcula con `computed`, con `packages/pricing` y `toDisplayCents`/`formatCents` (D-12). Guarda también el país de `countryChange` (T-10) en otra señal, y la etiqueta del IVA sale de ella con `getTaxRateBps(country)`, también con el campo no válido (D-12, R-51). Sin tarifas, límites ni tipos de IVA escritos (R-13).
   - `app/simulations/pages/simulation-page/simulation-page.html` (nuevo), según la D-12:
     - Eyebrow y `<h1 class="simulation-page__title">`.
-    - Tarjeta 1 con el formulario, el selector de divisa, `role="status"` siempre en el DOM y `role="alert"` solo en el error.
+    - Tarjeta 1 con el formulario (escuchando `simulationInputChange` y `countryChange`), el selector de divisa, `role="status"` siempre en el DOM y `role="alert"` solo en el error.
     - Tarjeta 2 con un `<dl>` de tres importes y `aria-live="polite"` solo en el total.
     - Clases con prefijo `simulation-page__`. Sin header, hero ni stats.
   - `app/app.routes.ts`: ruta `simulator` con `loadComponent` a `./simulations/pages/simulation-page/simulation-page`. El comentario de la línea 3 pasa a «(spec 000: R-21)» (R-92).
 - Tests (nuevo): `app/simulations/pages/simulation-page/simulation-page.spec.ts`:
   - `provideHttpClientTesting()`, `HttpTestingController` con `verify()` en `afterEach` y `RouterTestingHarness` con `routes`.
   - Las peticiones de `/api/health` se atienden al pasar por `/`.
-  - `vi.mock('@saas-o-matic/pricing', importOriginal)` con un espía para R-46 (D-15).
+  - Sin `vi.mock` ni espía: R-46 se cubre con los «—» de C-06 y la revisión del código en la puerta 6 (D-15).
+    - Corrección posterior a la aprobación (2026-11-24, puerta 5): antes decía «`vi.mock('@saas-o-matic/pricing', importOriginal)` con un espía para R-46 (D-15).». Autorización literal del autor: «2. Sí, corrige las dos líneas de la T-07 que aún citan el espía, con la misma nota «Corrección posterior a la aprobación».», que sigue a la del bloqueo 1 (ver la casilla de C-06).
 - Hecho cuando:
   - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] Si `vi.mock` no funciona con el ejecutor de tests de Angular, la tarea para y lo devuelve (D-15, riesgo 2). Lo mismo si la página no recibe la primera emisión del formulario (riesgo 1).
+  - [ ] Si la página no recibe la primera emisión de `simulationInputChange` o de `countryChange`, la tarea para y lo devuelve (riesgo 1).
+    - Corrección posterior a la aprobación (2026-11-24, puerta 5): antes empezaba «Si `vi.mock` no funciona con el ejecutor de tests de Angular, la tarea para y lo devuelve (D-15, riesgo 2). Lo mismo si…». Misma autorización literal del autor que la línea de «Tests»: «2. Sí, corrige las dos líneas de la T-07 que aún citan el espía, con la misma nota «Corrección posterior a la aprobación».»
   - [ ] C-01 pasa (R-01): `simulator` tiene `loadComponent` y no `component`, y `/simulator` carga `SimulationPage`.
   - [ ] C-09, C-10, C-11 y C-23 pasan (R-11, R-12, R-15, R-28, R-32, R-40).
   - [ ] C-14 y C-36 pasan (R-16, R-51, R-52): «Coste base», «IVA (21 %)», «IVA (23 %)», «IVA (20 %)», «IVA (22 %)» y «Total mensual», sin más datos de cálculo.
-  - [ ] C-06 en la página (R-45, R-46): con cada valor no válido, «—» en los tres importes y el espía de `calculateBaseCostCents` sin llamadas con ese valor.
+  - [ ] R-51 con el campo no válido (puerta 4 ampliada, 2026-11-24): con el campo vacío, la etiqueta dice «IVA (21 %)» (`toBe`) y los tres importes «—»; al cambiar después el país a `PT`, sin tocar el campo, dice «IVA (23 %)» y los importes siguen en «—» (R-45, R-51).
+  - [ ] C-06 en la página (R-45, R-46): con cada valor no válido, «—» en los tres importes. R-46 queda cubierto con eso y con la revisión del código en la puerta 6 (plan, D-15).
+    - Corrección posterior a la aprobación (2026-11-24, puerta 5, T-07 bloqueada por el riesgo 2): antes decía «y el espía de `calculateBaseCostCents` sin llamadas con ese valor». Autorización literal del autor: «Bloqueo 1: (B). Quita el espía de la T-07 y da R-46 por cubierto con los «—» de C-06 más la revisión del código en la Puerta 6, porque el formulario emite null con un valor no válido y la página nunca recibe ese valor. Autorizo corregir tú, sin vuelta del planner, la D-15 del plan.md y la casilla de C-06 de la T-07, con una nota «Corrección posterior a la aprobación» con mi autorización literal, como con D-04 y D-07 de la 002.»
   - [ ] C-33 en la página (R-47): de vuelta en 15, los importes de C-09.
   - [ ] C-13 y C-15 pasan (R-14, R-17): un solo `GET` a la URL en toda la prueba; ninguno a `/api/simulations` ni con `POST`.
   - [ ] C-16 pasa en la página con las 16 variantes, y C-53 también (R-19, R-22, R-23, R-60, R-96): alerta, importes en EUR y selector deshabilitado con EUR.
@@ -262,6 +266,25 @@ Reglas comunes de esta spec:
   - [ ] Ningún estilo nuevo para el `<nav>` (R-90).
   - [ ] `npm run verify` desde la raíz, en verde.
 
+## T-10 · simulations: salida del país en el formulario
+- Cubre: R-51 (parte del formulario: el país, también con el campo no válido), R-15 (parte del formulario: `countryChange`)
+- Depende de: T-06
+- Estado: [x] hecha
+- Modelo: Sonnet 5.5, fijado por el autor en su petición (ADR-016, punto 6; una salida nueva con un patrón que ya existe en el mismo fichero).
+- Aprobación del autor 2026-11-24 (literal): «Signos escapados: sí, con los signos reales y anótalo. Desviaciones 1 a 3 de la T-10: aceptadas.» y «Apruebo la T-10.» `npm run verify` en verde: 766 tests en la raíz y 124 en la web (antes, 766 + 119; 5 nuevos), relanzado por la sesión principal con los ficheros de la T-07 apartados (opción (a) del autor). Fase roja íntegra en `ai-workspace/sessions/2026-11-24-07-005-simulator.md`. El riesgo 1 no se dio: la primera emisión de `countryChange` es `'ES'`.
+- Origen: puerta 4 ampliada del 2026-11-24 (bloqueo 2 de la T-07; nota (2) de la cabecera de `plan.md`). Se hace antes de retomar la T-07.
+- Archivos de producción (1):
+  - `app/simulations/components/simulation-form/simulation-form.ts`: añade `countryChange = outputFromObservable<Country>(...)` sobre `valueChanges` del control `country`, con `startWith` de su valor inicial (D-11). `simulationInputChange`, los controles, los validadores y la sincronía no cambian. `simulation-form.html` no cambia.
+- Tests (cambiado): `app/simulations/components/simulation-form/simulation-form.spec.ts`. Se añaden tests; los 19 de la T-06 no cambian ni se borran.
+- Hecho cuando:
+  - [x] Fase roja: los tests nuevos se escriben antes y fallan porque `countryChange` no existe. Salida íntegra en el registro de la sesión.
+  - [x] Al conectarse, la primera emisión de `countryChange` es `'ES'` (riesgo 1).
+  - [x] Al cambiar el país a `PT`, `FR` e `IT`, cada uno aparte, `countryChange` emite ese país (R-15).
+  - [x] Con el campo vacío, `countryChange` emite el país nuevo al cambiarlo a `PT`, mientras la última emisión de `simulationInputChange` sigue siendo `null` (R-51, R-45).
+  - [x] Los 19 tests de la T-06 siguen en verde y sin cambios (`git diff` de `simulation-form.spec.ts`: solo líneas añadidas).
+  - [x] Sin `markForCheck()` ni servicios en el componente (D-11). En `apps/` solo cambian `simulation-form.ts` y `simulation-form.spec.ts` (`git status` y `git diff --stat`; los ficheros de la T-07 en curso, aparte).
+  - [x] `npm run verify` desde la raíz, en verde.
+
 ## Cobertura
 Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobación final es manual (plan, sección 5).
 
@@ -270,7 +293,7 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-01 | T-07 |
 | R-02, R-03, R-04, R-05, R-06, R-07, R-08, R-09, R-10 | T-06 |
 | R-11, R-12, R-13, R-14 | T-07 |
-| R-15 | T-06, T-07 |
+| R-15 | T-06, T-07, T-10 |
 | R-16 | T-07 |
 | R-17 | T-03, T-07 |
 | R-18 | T-03 |
@@ -297,7 +320,8 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-47 | T-06, T-07 |
 | R-48, R-49 | T-07 |
 | R-50 | T-05, T-06 |
-| R-51, R-52 | T-07 |
+| R-51 | T-07, T-10 |
+| R-52 | T-07 |
 | R-53, R-54, R-55, R-56, R-57, R-58 | T-03 |
 | R-59, R-60, R-61 | T-04, T-05, T-07 |
 | R-62, R-63 | T-04, T-07 |
