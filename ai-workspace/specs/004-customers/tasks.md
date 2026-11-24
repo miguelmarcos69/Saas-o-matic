@@ -128,7 +128,7 @@ Reglas comunes de esta spec:
 ## T-06 · web: tipos y servicio de búsqueda
 - Cubre: R-20, R-25, R-27, R-40, R-41, R-42, R-96, R-122, R-144 (parte del servicio)
 - Depende de: —
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Opus 5.5 (servicio, según la petición del autor).
 - Archivos de producción (3):
   - `app/shared/interfaces/customer.ts` (nuevo): `Customer` y `CustomerWithLastSimulation` (D-09).
@@ -136,12 +136,13 @@ Reglas comunes de esta spec:
   - `app/customers/services/customers-api.ts` (nuevo): `CustomersApi` con `searchState` y `search(q, destroyRef)` (D-09).
 - Tests (nuevo): `app/customers/services/customers-api.spec.ts`, con `provideHttpClientTesting()`, `HttpTestingController` y `verify()`.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] `search('')` hace `GET /api/customers` sin `q`; `search('Acme')`, `GET /api/customers?q=Acme`; «100%+» sale como `%2B` (riesgo 13).
-  - [ ] `searchState` pasa por `loading`, `data` y `error`; en el error, «No se han podido cargar los clientes.» (R-122, `toBe`).
-  - [ ] Una segunda búsqueda con la primera retenida deja la primera `cancelled` (R-96, parte del servicio).
-  - [ ] `HttpClient` solo en `customers/services/customers-api.ts` dentro de `customers/` (C-25 en esta tarea, `git grep` con `--untracked`); los tipos se importan de `shared/interfaces/` (C-27 en esta tarea).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] `search('')` hace `GET /api/customers` sin `q`; `search('Acme')`, `GET /api/customers?q=Acme`; «100%+» sale como `%2B` (riesgo 13).
+  - [x] `searchState` pasa por `loading`, `data` y `error`; en el error, «No se han podido cargar los clientes.» (R-122, `toBe`).
+  - [x] Una segunda búsqueda con la primera retenida deja la primera `cancelled` (R-96, parte del servicio).
+  - [x] `HttpClient` solo en `customers/services/customers-api.ts` dentro de `customers/` (C-25 en esta tarea, `git grep` con `--untracked`); los tipos se importan de `shared/interfaces/` (C-27 en esta tarea).
+  - [x] `npm run verify` desde la raíz, en verde.
+- Aprobación del autor 2026-11-24 (literal): «Apruebo la T-06 (web: tipos y servicio de búsqueda) con las desviaciones 1, 3, 4 y 5 aceptadas, y en la 2 elijo string para country y plan en Customer (no uniones de valores). El rojo es de compilación («Could not resolve», «Cannot find module»): no lo repitas; cópialo de red.txt al registro con los signos reales. Anota en el registro, para el revisor, el fallo puntual sin reproducir de la desviación 4 (una pasada de ng test con código 1 y salida cortada, y tres pasadas siguientes en verde); si se repite, se investiga. Las capturas fase-7-004-t06-rojo y t06-verde son mías.» Desviaciones: (1) tests que la tarea no enumera (estado inicial, lista vacía, error de red, vuelta a carga tras recibir datos y cancelación con `takeUntilDestroyed`), dentro de los 12; (2) `country` y `plan` como `string` en `Customer`, elegido por el autor (no uniones de valores); (3) campos `readonly` en las tres interfaces, como `LoadState`; (4) una pasada de `ng test` del implementer con código 1 y la salida cortada tras «RUN v5.1.1», sin reproducir: las tres siguientes, en verde; anotado para el revisor en el registro de la sesión, y si se repite se investiga; (5) cita «(spec 000: T-16)» en el comentario del `beforeEach`, copiada de `health-api.spec.ts:11`. `npm run verify` en verde: 905 tests en la raíz y 192 en la web (antes, 905 + 180; 12 nuevos en `customers-api.spec.ts`), repetido por la sesión principal. C-25 comprobado con `git grep -n --untracked`. Fase roja íntegra (de compilación), copiada de `red.txt` con los signos reales, en `ai-workspace/sessions/2026-11-24-20-004-customers.md`.
 
 ## T-07 · web: formato de las vistas y tarjeta de cliente
 - Cubre: R-24, R-30, R-31, R-33, R-48 a R-51, R-68, R-73, R-75, R-99, R-100, R-101 a R-108, R-113, R-118, R-119, R-144, R-159, R-169 (parte de la plantilla)
