@@ -94,8 +94,9 @@ Reglas comunes de esta spec:
 ## T-04 · shared: estado de los tipos y divisa elegida
 - Cubre: R-20 (parte del servicio), R-22 (texto del estado de error), R-23 (parte del servicio), R-26, R-59 a R-63 (parte del servicio), R-67
 - Depende de: T-01, T-02, T-03
-- Estado: [ ] pendiente
-- Modelo propuesto: Opus 5.5 (estado compartido entre aperturas, divisa conservada y descartada).
+- Estado: [x] hecha
+- Modelo: Opus 5.5, confirmado por el autor (estado compartido entre aperturas, divisa conservada y descartada).
+- Aprobación del autor 2026-11-24 (literal): «Desviaciones 1 a 4 de la T-04: aceptadas; la 4 (un segundo load con el primero pendiente) no puede darse por la D-08, anótalo en el registro.» y «Apruebo la T-04.» `npm run verify` en verde: 766 tests en la raíz y 93 en la web (antes, 766 + 84; 9 nuevos), relanzado por la sesión principal. Fase roja íntegra en `ai-workspace/sessions/2026-11-24-04-005-simulator.md`.
 - Archivos de producción (1): `app/shared/services/currency-selection.ts` (nuevo): `CurrencySelection` (`providedIn: 'root'`), que tiene:
   - `state` (`LoadState<ExchangeRates>`, empieza en `loading`).
   - `selected` (empieza en `'EUR'`).
@@ -104,18 +105,18 @@ Reglas comunes de esta spec:
   - `load(destroyRef)`, con `takeUntilDestroyed(destroyRef)`. En el error, el `message` es el texto literal de R-22 y `selected` vuelve a `'EUR'` (D-06, D-08).
 - Tests (nuevo): `app/shared/services/currency-selection.spec.ts`, con `HttpTestingController` y un `DestroyRef` de un `EnvironmentInjector` creado y destruido en el test.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] Antes de responder: `state` en `loading`, `displayCurrency()` `'EUR'` y `displayRateMicros()` `null` (R-26, R-59).
-  - [ ] Respuesta válida:
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] Antes de responder: `state` en `loading`, `displayCurrency()` `'EUR'` y `displayRateMicros()` `null` (R-26, R-59).
+  - [x] Respuesta válida:
     - `state` en `data`.
     - `select('USD')` da `displayCurrency()` `'USD'` y `displayRateMicros()` 1 031 250.
     - `select('EUR')` vuelve a `null` (R-61, R-28).
-  - [ ] Error (500, red o esquema): `state` en `error` con `message` «No se han podido cargar los tipos de cambio. Los importes se muestran en euros.» (`toBe`). `displayCurrency()` es `'EUR'` y `displayRateMicros()` `null` (R-22, R-23, R-60).
-  - [ ] Divisa conservada (R-62, R-67): `select('USD')`, otro `load` con su respuesta válida, y `displayCurrency()` sigue en `'USD'`. Mientras carga el segundo `load` es `'EUR'`.
-  - [ ] Divisa descartada (R-63): `select('USD')`, un `load` con error y otro `load` con respuesta válida dejan `displayCurrency()` en `'EUR'`.
-  - [ ] Cancelación (R-20): destruir el `DestroyRef` antes de responder deja la petición con `cancelled` en `true`.
-  - [ ] Una petición por `load` (D-08).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Error (500, red o esquema): `state` en `error` con `message` «No se han podido cargar los tipos de cambio. Los importes se muestran en euros.» (`toBe`). `displayCurrency()` es `'EUR'` y `displayRateMicros()` `null` (R-22, R-23, R-60).
+  - [x] Divisa conservada (R-62, R-67): `select('USD')`, otro `load` con su respuesta válida, y `displayCurrency()` sigue en `'USD'`. Mientras carga el segundo `load` es `'EUR'`.
+  - [x] Divisa descartada (R-63): `select('USD')`, un `load` con error y otro `load` con respuesta válida dejan `displayCurrency()` en `'EUR'`.
+  - [x] Cancelación (R-20): destruir el `DestroyRef` antes de responder deja la petición con `cancelled` en `true`.
+  - [x] Una petición por `load` (D-08).
+  - [x] `npm run verify` desde la raíz, en verde.
 
 ## T-05 · shared: componente selector de divisa
 - Cubre: R-25 (parte del componente), R-34 (parte de `_shared.scss`), R-35 y R-36 (parte del selector de divisa), R-50 (etiqueta «Divisa»), R-59 a R-61 (parte del componente: `disabled`), R-66, R-68
