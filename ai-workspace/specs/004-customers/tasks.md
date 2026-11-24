@@ -29,7 +29,7 @@ Reglas comunes de esta spec:
 ## T-01 · domain: DTO de consulta, regla de búsqueda y entidad
 - Cubre: R-03, R-05, R-08, R-09, R-16, R-17, R-18, R-80, R-83 a R-94, R-144, R-156, R-157, R-158 (parte de `domain`, sin servidor)
 - Depende de: —
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Opus 5.5 (DTO y regla de búsqueda, según la petición del autor).
 - Archivos de producción (4):
   - `domain/dtos/customers/search-customers.dto.ts` (nuevo): `SearchCustomersDto.create(query)` (D-04).
@@ -38,14 +38,15 @@ Reglas comunes de esta spec:
   - `domain/entities/customer.entity.ts` (crece): `CustomerWithLastSimulation` (D-05, D-07).
 - Tests (nuevos): `search-customers.dto.spec.ts`, `customer-id.dto.spec.ts` y `customer-search.spec.ts`, junto a su fichero.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] C-08 pasa en los dos DTO: validan sin Express ni SQLite.
-  - [ ] DTO de `:id`, unitario: C-83 (`0`, `-1` → `TOO_SMALL`), C-84 (`9007199254740992` → `TOO_BIG`; `9007199254740991` válido), C-85 (`abc`, `1.5`), C-86 (`+1`, `1e3`, `0x10`, ` 1`), C-156 (`01`, `1.0`) → `INVALID_TYPE`, y C-157 (`-1.5` → `TOO_SMALL`; `9007199254740992.5` → `TOO_BIG`). Un solo elemento de `details[]` en `id` por caso.
-  - [ ] DTO, `details[]` juntos: con `params` `{ id: 'abc' }` y `query` `{ foo: '1' }`, un `CustomError` `VALIDATION_ERROR` con `id` (`INVALID_TYPE`) y `foo` (`UNKNOWN_FIELD`) (C-09 a nivel unitario); con `query` no vacía, `UNKNOWN_FIELD` por clave (C-90, R-90).
-  - [ ] DTO de `q`, unitario: ausente → `''`; recortado (C-87); array → `INVALID_TYPE` (C-88); 200, 201 y 200 con dos espacios a cada lado → válido, `TOO_BIG` y válido (C-89); otra clave → `UNKNOWN_FIELD` (C-90).
-  - [ ] Regla pura: C-16, C-17, C-18 (los dos órdenes, con `id` de desempate), C-91 (incluido «Ñandú Façades»), C-92 (`12.345.678-z` y `5678z`), C-93, C-94 y C-158 (las dos formas vacías → no coincide).
-  - [ ] `customer-search.ts` no importa nada fuera de `domain` (`git grep -n "^import" -- apps/api/src/domain/use-cases/customer/customer-search.ts`, con `--untracked` si aún no está preparado).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] C-08 pasa en los dos DTO: validan sin Express ni SQLite.
+  - [x] DTO de `:id`, unitario: C-83 (`0`, `-1` → `TOO_SMALL`), C-84 (`9007199254740992` → `TOO_BIG`; `9007199254740991` válido), C-85 (`abc`, `1.5`), C-86 (`+1`, `1e3`, `0x10`, ` 1`), C-156 (`01`, `1.0`) → `INVALID_TYPE`, y C-157 (`-1.5` → `TOO_SMALL`; `9007199254740992.5` → `TOO_BIG`). Un solo elemento de `details[]` en `id` por caso.
+  - [x] DTO, `details[]` juntos: con `params` `{ id: 'abc' }` y `query` `{ foo: '1' }`, un `CustomError` `VALIDATION_ERROR` con `id` (`INVALID_TYPE`) y `foo` (`UNKNOWN_FIELD`) (C-09 a nivel unitario); con `query` no vacía, `UNKNOWN_FIELD` por clave (C-90, R-90).
+  - [x] DTO de `q`, unitario: ausente → `''`; recortado (C-87); array → `INVALID_TYPE` (C-88); 200, 201 y 200 con dos espacios a cada lado → válido, `TOO_BIG` y válido (C-89); otra clave → `UNKNOWN_FIELD` (C-90).
+  - [x] Regla pura: C-16, C-17, C-18 (los dos órdenes, con `id` de desempate), C-91 (incluido «Ñandú Façades»), C-92 (`12.345.678-z` y `5678z`), C-93, C-94 y C-158 (las dos formas vacías → no coincide).
+  - [x] `customer-search.ts` no importa nada fuera de `domain` (`git grep -n "^import" -- apps/api/src/domain/use-cases/customer/customer-search.ts`, con `--untracked` si aún no está preparado).
+  - [x] `npm run verify` desde la raíz, en verde.
+- Aprobación del autor 2026-11-24 (literal): «Apruebo la T-01 (domain: DTO de consulta, regla de búsqueda y entidad) con las desviaciones 1 a 3, aceptadas. No repitas el rojo: vale el del retorno (es «Cannot find module»)». Desviaciones aceptadas: (1) tests que la tarea no enumera (`-0` y `00` de R-157, consulta sin prototipo del riesgo 4, `foldText` y `toSearchTerms` por separado, `q` solo con blancos), dentro de los 46; (2) `details[]` de `params` y `query` traducidos por separado y juntados; (3) `q` con `.optional()` y `?? ''`. `npm run verify` en verde: 812 tests en la raíz y 180 en la web (antes, 766 + 180; 46 nuevos). Fase roja íntegra, copiada del retorno, en `ai-workspace/sessions/2026-11-24-15-004-customers.md`.
 
 ## T-02 · infrastructure: tres lecturas en el datasource
 - Cubre: R-01, R-03 a R-07, R-12, R-79 a R-82, R-144 (parte del datasource)

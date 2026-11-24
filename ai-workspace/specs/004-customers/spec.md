@@ -1,6 +1,6 @@
 # Spec 004 · customers
 
-- **Estado:** Planificada
+- **Estado:** En implementación
 - **Depende de:** 002, 003, 005
 - **Cubre:** §2.B (buscador y dashboard; detalle del cliente con tarjetas e historial de simulaciones)
 
