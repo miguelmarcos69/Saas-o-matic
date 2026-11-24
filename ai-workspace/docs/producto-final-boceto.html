@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boceto del producto final</title>
+<style>body{margin:0;padding:24px 16px;background:#fff;font-family:Montserrat,sans-serif}main{max-width:760px;margin:0 auto}.nota{font-size:12px;color:#666;margin:0 0 16px}</style>
+</head>
+<body>
+<main>
+<!-- Boceto aprobado por el autor el 2026-11-24 (nació en el chat de apoyo). Los nombres, importes y fechas son solo ilustrativos. -->
+<p class="nota">Boceto aprobado el 2026-11-24. Los datos (clientes, importes, fechas) son solo ilustrativos; no fijan rutas, textos ni campos.</p>
+<h2 style="position:absolute;left:-9999px">Boceto de las tres vistas finales de la aplicación: buscador y dashboard, detalle del cliente y simulador, con una cabecera común.</h2>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+.f{background:#eef0f6;border-radius:12px;padding:14px 16px 18px;margin:0 0 16px;font-family:Montserrat,sans-serif;color:#4a4d56;font-size:13px;line-height:1.5}
+.nv{display:flex;gap:18px;align-items:center;font-weight:700;font-size:13px;margin:0 0 14px;color:#666}
+.nv b{color:#0d0d1a}.nv .r{margin-left:auto;display:flex;align-items:center;gap:6px;font-weight:500}
+.sel{border:2px solid #0d0d1a;border-radius:10px;background:#fff;padding:3px 10px;color:#0d0d1a;font-weight:500}
+.ey{color:#3838ec;font-size:12px;font-weight:500;margin:0}
+.h{color:#0d0d1a;font-weight:800;font-size:24px;line-height:1.3;margin:0 0 12px}
+.c{background:#fff;border-radius:22px;padding:16px 18px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.t{color:#0d0d1a;font-weight:700}.p{display:inline-block;background:#eef0f6;border-radius:99px;padding:1px 10px;font-size:11px;font-weight:700;color:#0d0d1a}
+.row{display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid #eef0f6}
+.lb{font-size:11px;color:#666;margin:0 0 -4px;font-weight:700}
+.cap{font-size:12px;color:#666666;margin:0 0 6px}
+</style>
+<p class="cap">1 · Buscador y dashboard</p>
+<div class="f">
+<div class="nv"><b>Estado de la API</b><b style="color:#3838ec">Clientes</b><span>Simulador</span><span class="r">Divisa <span class="sel">EUR ˅</span></span></div>
+<p class="ey">Panel comercial</p><p class="h">Buscador de clientes</p>
+<div class="sel" style="padding:11px 16px;margin:0 0 14px;color:#666">Buscar por nombre de empresa o identificador fiscal</div>
+<div class="g">
+<div class="c"><span class="t">Acme Telecom S.L.</span><br>B58818501 · <span class="p">ES</span> <span class="p">business</span><div class="row" style="margin-top:8px"><span>Última simulación</span><span class="t">169,40 €</span></div></div>
+<div class="c"><span class="t">Lusa Energia, Lda.</span><br>123456789 · <span class="p">PT</span> <span class="p">starter</span><div class="row" style="margin-top:8px"><span>Última simulación</span><span class="t">172,20 €</span></div></div>
+<div class="c"><span class="t">Maison Verte SAS</span><br>FR12345678 · <span class="p">FR</span> <span class="p">enterprise</span><div class="row" style="margin-top:8px"><span>Última simulación</span><span class="t">168,00 €</span></div></div>
+</div></div>
+<p class="cap">2 · Detalle del cliente</p>
+<div class="f">
+<div class="nv"><b>Estado de la API</b><b style="color:#3838ec">Clientes</b><span>Simulador</span><span class="r">Divisa <span class="sel">USD ˅</span></span></div>
+<p class="ey">Cliente</p><p class="h">Acme Telecom S.L.</p>
+<div class="g">
+<div class="c"><p class="lb">DATOS</p><div class="row"><span>Identificador fiscal</span><span class="t">B58818501</span></div><div class="row"><span>Email</span><span class="t">compras@acme.es</span></div><div class="row"><span>País</span><span class="t">España</span></div><div class="row"><span>Plan</span><span class="t">business</span></div></div>
+<div class="c"><p class="lb">HISTORIAL DE SIMULACIONES</p><div class="row"><span>15 usuarios · 12/11</span><span class="t">174,70 $</span></div><div class="row"><span>40 usuarios · 10/11</span><span class="t">454,65 $</span></div><div class="row"><span>100 usuarios · 08/11</span><span class="t">835,95 $</span></div></div>
+</div></div>
+<p class="cap">3 · Simulador (el que ya tienes)</p>
+<div class="f">
+<div class="nv"><b>Estado de la API</b><span>Clientes</span><b style="color:#3838ec">Simulador</b></div>
+<p class="ey">Proyección mensual</p><p class="h">Simulador de factura</p>
+<div class="g">
+<div class="c"><p class="lb">USUARIOS ACTIVOS</p><div style="height:6px;background:#eef0f6;border-radius:9px;margin:10px 0 12px;position:relative"><div style="width:6%;height:6px;background:#3838ec;border-radius:9px"></div></div><div class="sel" style="margin:0 0 8px">15</div><div class="sel" style="margin:0 0 8px">España ˅</div><div class="sel">Euro (EUR) ˅</div></div>
+<div class="c"><div class="row" style="border:0"><span>Coste base</span><span class="t">140,00 €</span></div><div class="row"><span>IVA (21 %)</span><span class="t">29,40 €</span></div><div class="row"><span>Total mensual</span><span class="t" style="font-size:18px;color:#3838ec">169,40 €</span></div></div>
+</div></div>
+</main>
+</body>
+</html>
