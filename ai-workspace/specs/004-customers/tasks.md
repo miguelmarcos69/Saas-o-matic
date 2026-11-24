@@ -147,7 +147,7 @@ Reglas comunes de esta spec:
 ## T-07 · web: formato de las vistas y tarjeta de cliente
 - Cubre: R-24, R-30, R-31, R-33, R-48 a R-51, R-68, R-73, R-75, R-99, R-100, R-101 a R-108, R-113, R-118, R-119, R-144, R-159, R-169 (parte de la plantilla)
 - Depende de: T-06
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Sonnet 5.5, según la petición («tarjetas») y la Q-01 (a), aunque trae las funciones puras de la D-11.
 - Justificación de agrupación: une la pieza pura de formato con su primer usuario, la tarjeta, como el paso 7 del plan (3 ficheros); no se parte (Q-01 (a)).
 - Archivos de producción (3):
@@ -155,11 +155,12 @@ Reglas comunes de esta spec:
   - `app/customers/components/customer-card/customer-card.ts` y `customer-card.html` (nuevos): `CustomerCard` (`app-customer-card`) (D-11).
 - Tests (nuevos): `customer-display.spec.ts` y `customer-card.spec.ts`.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] `customer-display.spec.ts`: C-118 (cuatro países), C-107 («IVA (23 %)» y «IVA (21 %)»), C-108 (las tres fechas con `'Europe/Madrid'`) y `resultsAnnouncement` con 0, 1 y 3 (C-100, C-159).
-  - [ ] `customer-card.spec.ts`: C-101, C-103 (EUR, sin fecha ni usuarios), C-104, C-105 (`<a>` a `/customers/{id}`, única parada de tabulación), C-113, C-119, la última simulación en la tarjeta (C-31 en la web) y la clase `customer-card__pill` en país y plan (C-102, parte de la plantilla).
-  - [ ] C-49 y C-50 en la tarjeta: con EUR, el formato de 169,40 €; con USD y 1 031 250, el total convertido con `toDisplayCents` y `formatCents` (C-51).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] `customer-display.spec.ts`: C-118 (cuatro países), C-107 («IVA (23 %)» y «IVA (21 %)»), C-108 (las tres fechas con `'Europe/Madrid'`) y `resultsAnnouncement` con 0, 1 y 3 (C-100, C-159).
+  - [x] `customer-card.spec.ts`: C-101, C-103 (EUR, sin fecha ni usuarios), C-104, C-105 (`<a>` a `/customers/{id}`, única parada de tabulación), C-113, C-119, la última simulación en la tarjeta (C-31 en la web) y la clase `customer-card__pill` en país y plan (C-102, parte de la plantilla).
+  - [x] C-49 y C-50 en la tarjeta: con EUR, el formato de 169,40 €; con USD y 1 031 250, el total convertido con `toDisplayCents` y `formatCents` (C-51).
+  - [x] `npm run verify` desde la raíz, en verde.
+- Aprobación del autor 2026-11-24 (literal): «Apruebo la T-07 (web: formato de las vistas y tarjeta de cliente) con las desviaciones 1 a 6 aceptadas. Anota para el revisor las desviaciones 4 (countryName devuelve el código si no es uno de los cuatro) y 5 (aserción de texto frágil en C-103). El rojo es de compilación: no lo repitas; cópialo de red.txt al registro sin códigos ANSI y con los signos reales. Las capturas fase-7-004-t07-rojo y t07-verde son mías.» Desviaciones aceptadas: (1) `currency` y `rateMicros` de `CustomerCard` como `input.required` (`rateMicros: number | null`); (2) tests que la tarea no enumera (`countryName` de PT, `it.each` de los tres planes de C-119 y C-31 con una simulación de 40 usuarios), dentro de los 24; (3) tests de la tarjeta con `provideRouter([])`, sin `app.routes` (R-75); (4) `countryName` devuelve el código tal cual si no es uno de los cuatro (el plan no lo define); (5) C-103 comprueba con una aserción de texto que la tarjeta no muestra «24/11/2026» ni «15»; (6) clases `customer-card__*` que el plan no cita (`__title`, `__link`, `__tax-id`, `__pills`, `__last`, `__term`, `__amount`), con el prefijo del componente; los estilos son de la T-10. `npm run verify` en verde, con código 0: 905 tests en la raíz y 216 en la web (antes, 905 + 192; 24 nuevos: 12 en `customer-display.spec.ts` y 12 en `customer-card.spec.ts`). Fase roja íntegra (de compilación), copiada de `red.txt` sin códigos ANSI y con los signos reales, en `ai-workspace/sessions/2026-11-24-21-004-customers.md`. Observaciones para el revisor: desviaciones 4 y 5.
 
 ## T-08 · web: componente del buscador
 - Cubre: R-22, R-24, R-29, R-68, R-75, R-112, R-144

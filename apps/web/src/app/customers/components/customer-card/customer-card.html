@@ -1,0 +1,13 @@
+<!-- Tarjeta de cliente (spec 004: D-11). El enlace del nombre es la única parada de tabulación (R-33, R-105). -->
+<article class="customer-card">
+  <h2 class="customer-card__title"><a class="customer-card__link" [routerLink]="['/customers', customer().id]">{{ customer().companyName }}</a></h2>
+  <p class="customer-card__tax-id">{{ customer().taxId }}</p>
+  <ul class="customer-card__pills">
+    <li class="customer-card__pill">{{ country() }}</li>
+    <li class="customer-card__pill">{{ customer().plan }}</li>
+  </ul>
+  <dl class="customer-card__last">
+    <dt class="customer-card__term">Última simulación</dt>
+    <dd class="customer-card__amount">{{ lastTotal() ?? 'Sin simulaciones' }}</dd>
+  </dl>
+</article>
