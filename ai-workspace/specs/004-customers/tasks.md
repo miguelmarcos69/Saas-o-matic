@@ -69,7 +69,7 @@ Reglas comunes de esta spec:
 ## T-03 · puertos y repositorio de `customers`
 - Cubre: R-01, R-03, R-04, R-79, R-144 (puertos y delegación; P-02 (a))
 - Depende de: T-02
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Sonnet 5.5, por la Q-01 (a) (firmas y delegación dadas en la D-07).
 - Justificación de capas: junta los puertos de `domain` y su implementación de `infrastructure` porque, si el puerto crece sin la clase, `npm run build` falla (plan, paso 3 y riesgo 1); el recurso ya existe.
 - Archivos de producción (3):
@@ -78,10 +78,11 @@ Reglas comunes de esta spec:
   - `infrastructure/repository/customer.repository.imp.ts` (crece): delega las tres lecturas.
 - Tests (cambian, sin aserciones nuevas ni quitadas): `domain/use-cases/customer/create-customer.spec.ts:28` y `presentation/customers/controller.spec.ts:23` ganan las tres lecturas en su falso, que lanzan si se llaman, con un comentario «spec 004: …» (P-02 (a), D-16).
 - Hecho cuando:
-  - [ ] Sin tests de comportamiento nuevo: no hay fase roja (regla común). La delegación se prueba de punta a punta en la T-05.
-  - [ ] `git diff` de los dos tests de la 002 solo añade las tres lecturas y su comentario; ninguna aserción cambia (C-01 en esta tarea).
-  - [ ] `npx tsc -p apps/api/tsconfig.json --noEmit` sin errores en los dos tests que toca (Q-02 (a), riesgo 2). Si da errores en ficheros ajenos a la 004, la tarea no los corrige: los copia literales en su retorno y para.
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Sin tests de comportamiento nuevo: no hay fase roja (regla común). La delegación se prueba de punta a punta en la T-05.
+  - [x] `git diff` de los dos tests de la 002 solo añade las tres lecturas y su comentario; ninguna aserción cambia (C-01 en esta tarea).
+  - [x] `npx tsc -p apps/api/tsconfig.json --noEmit` sin errores en los dos tests que toca (Q-02 (a), riesgo 2). Si da errores en ficheros ajenos a la 004, la tarea no los corrige: los copia literales en su retorno y para.
+  - [x] `npm run verify` desde la raíz, en verde.
+- Aprobación del autor 2026-11-24 (literal): «Apruebo la T-03 (puertos y repositorio de customers) con las desviaciones 1 y 2 aceptadas. La autorización del tercer falso (sqlite-customer.datasource.spec.ts:333) queda como decisión mía, con mi texto literal, en la aprobación de la T-03. El registro vale como está: la evidencia son tus salidas repetidas de tsc (código 0), verify (824 + 180) y git diff; no hace falta pegar más.» Decisión del autor tras el bloqueo de la primera vuelta (literal): «Elijo la (a): autorizo el tercer falso, el de sqlite-customer.datasource.spec.ts:333 (describe de CustomerRepositoryImp, spec 002). Gana las tres lecturas, que lanzan si se llaman, con un comentario «spec 004: P-02 (a), D-16: …» y sin cambiar ninguna aserción. Queda como decisión del autor, con mi texto literal, en la aprobación de la T-03 (la D-16 y la P-02 (a) cubrían dos falsos y había tres); no hace falta rehacer el plan.» Desviaciones aceptadas: (1) el tercer falso, en `infrastructure/datasource/sqlite-customer.datasource.spec.ts:333` (`describe('CustomerRepositoryImp')`), que solo `tsc --noEmit` detectó (código 2 antes de la autorización); (2) los textos «spec 004: no se espera …» de los falsos, que el plan no fija. `tsc --noEmit` con código 0 y `npm run verify` en verde: 824 tests en la raíz y 180 en la web, sin tests nuevos (salidas repetidas por la sesión principal, en `ai-workspace/sessions/2026-11-24-17-004-customers.md`). Observación para el revisor: la D-16 y el riesgo 2 no contaban con el tercer falso; lo sacó `tsc`.
 
 ## T-04 · domain: casos de uso de lectura
 - Cubre: R-04, R-10, R-13, R-16 a R-20, R-79, R-81, R-144, R-158

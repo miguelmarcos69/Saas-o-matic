@@ -25,7 +25,19 @@ describe('CreateCustomer', () => {
       createdAt: '2026-11-23T10:00:00.000Z',
     };
     const create = vi.fn<CustomerRepository['create']>().mockResolvedValue(entity);
-    const repository: CustomerRepository = { create };
+    // spec 004: P-02 (a), D-16: las tres lecturas del puerto lanzan si se llaman.
+    const repository: CustomerRepository = {
+      create,
+      findAllWithLastSimulation: () => {
+        throw new Error('spec 004: no se espera findAllWithLastSimulation');
+      },
+      findById: () => {
+        throw new Error('spec 004: no se espera findById');
+      },
+      findSimulationsByCustomerId: () => {
+        throw new Error('spec 004: no se espera findSimulationsByCustomerId');
+      },
+    };
 
     const result = await new CreateCustomer(repository).execute(dto!);
 

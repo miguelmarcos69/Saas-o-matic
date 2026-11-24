@@ -335,6 +335,16 @@ describe('CustomerRepositoryImp', () => {
         calls.push(received);
         return entity;
       },
+      // spec 004: P-02 (a), D-16: las tres lecturas del puerto lanzan si se llaman.
+      findAllWithLastSimulation: () => {
+        throw new Error('spec 004: no se espera findAllWithLastSimulation');
+      },
+      findById: () => {
+        throw new Error('spec 004: no se espera findById');
+      },
+      findSimulationsByCustomerId: () => {
+        throw new Error('spec 004: no se espera findSimulationsByCustomerId');
+      },
     });
 
     await expect(repository.create(dto)).resolves.toBe(entity);

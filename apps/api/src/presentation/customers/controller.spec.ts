@@ -24,6 +24,16 @@ function fakeRepository(failWith?: unknown): CustomerRepository & { calls: Creat
   const calls: CreateCustomerDto[] = [];
   return {
     calls,
+    // spec 004: P-02 (a), D-16: las tres lecturas del puerto lanzan si se llaman.
+    findAllWithLastSimulation: () => {
+      throw new Error('spec 004: no se espera findAllWithLastSimulation');
+    },
+    findById: () => {
+      throw new Error('spec 004: no se espera findById');
+    },
+    findSimulationsByCustomerId: () => {
+      throw new Error('spec 004: no se espera findSimulationsByCustomerId');
+    },
     async create(dto: CreateCustomerDto): Promise<CustomerEntity> {
       calls.push(dto);
       if (failWith !== undefined) throw failWith;
