@@ -86,7 +86,7 @@ Decisión del autor del 2026-11-24, posterior a la guía (ADR-015). La fuente es
 - Fondo: blanco (`#fff`).
 - Borde: 2px sólido en `#0d0d1a` (`--color-ink`).
 - Esquinas: 12px (`--radius-sm`, `:55`).
-- Alto: 52px.
+- Alto: 52px (mínimo en los desplegables, que crecen si el texto ocupa más de una línea; fijo en el campo numérico).
 - Tipografía: Montserrat, 16px y peso 500, heredados de `body`.
 - Texto del control: `#0d0d1a` (`--color-ink`).
 - Relleno horizontal: 12px.
@@ -103,3 +103,4 @@ Decisión del autor del 2026-11-24, posterior a la guía (ADR-015). La fuente es
 - Opciones: relleno de 12px y texto en `#0d0d1a` (`--color-ink`); sin la marca de la opción elegida (`::checkmark`), como en la captura.
 - Opción resaltada: fondo en el azul de marca mezclado al 60% con blanco (`color-mix(in srgb, #3838ec 60%, #fff)`, `#8888f4`), con 3:1 sobre blanco y 6,3:1 con el texto `#0d0d1a`.
 - Chevron de la lista: se pinta en `::picker-icon` (el mismo SVG de `:94`, `:96`), con la misma posición que en el respaldo (texto acabando a 44px) y girado hacia arriba con la lista abierta, como en la captura.
+- Relleno vertical de los desplegables: 9px (`--control-padding-y`), el que con una línea de 30px llena justo los 52px; si el texto ocupa más de una línea, el desplegable crece en alto. Decisión del autor del 2026-11-24 (spec 005, nota (7)).

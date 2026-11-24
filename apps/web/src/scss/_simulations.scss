@@ -55,8 +55,6 @@ select.simulation-form__control {
   background-color: var(--color-white);
   border: var(--control-border-width) solid var(--color-ink);
   border-radius: var(--radius-sm);
-  height: var(--control-height);
-  padding: 0 var(--control-padding-x);
   font: inherit;
   color: var(--color-ink);
 
@@ -65,8 +63,17 @@ select.simulation-form__control {
   }
 }
 
-// Desplegable de país: sin la flecha nativa y con el chevron a la derecha.
+// Campo numérico: alto fijo (P-06 (a)).
+input[type='number'].simulation-form__control {
+  height: var(--control-height);
+  padding: 0 var(--control-padding-x);
+}
+
+// Desplegable de país: alto mínimo, crece si el texto ocupa más de una línea (nota (7), P-05 (a)); sin la flecha nativa y con el chevron a la derecha.
 select.simulation-form__control {
+  min-height: var(--control-height);
+  padding-block: var(--control-padding-y);
+  padding-inline: var(--control-padding-x);
   appearance: none;
   background-image: var(--control-chevron);
   background-repeat: no-repeat;

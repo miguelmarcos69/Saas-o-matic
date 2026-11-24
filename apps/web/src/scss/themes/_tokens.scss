@@ -28,6 +28,8 @@
   --control-height: 52px; // style-guide.md:89
   --control-border-width: 2px; // style-guide.md:87
   --control-padding-x: 12px; // style-guide.md:92
+  // Relleno vertical de los desplegables (style-guide.md:106): con una línea de 30 px llenan justo el alto mínimo (9 px).
+  --control-padding-y: calc((var(--control-height) - 2 * var(--control-border-width) - var(--line-height-base)) / 2);
   --control-chevron-size: 16px; // style-guide.md:94
   --control-chevron-offset: 16px; // style-guide.md:94
   // Chevron hacia abajo, de 16px y trazo de 2px (style-guide.md:94), en #0d0d1a: es el valor de --color-ink, escrito

@@ -18,8 +18,9 @@ app-currency-selector label {
   background-color: var(--color-white);
   border: var(--control-border-width) solid var(--color-ink);
   border-radius: var(--radius-sm);
-  height: var(--control-height);
-  padding: 0 var(--control-padding-x);
+  min-height: var(--control-height);
+  padding-block: var(--control-padding-y);
+  padding-inline: var(--control-padding-x);
   padding-right: calc(var(--control-padding-x) + var(--control-chevron-size) + var(--control-chevron-offset));
   font: inherit;
   color: var(--color-ink);
