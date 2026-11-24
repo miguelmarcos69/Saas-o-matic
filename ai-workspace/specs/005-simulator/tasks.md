@@ -142,8 +142,9 @@ Reglas comunes de esta spec:
 ## T-06 · simulations: `@angular/forms` y componente del formulario
 - Cubre: R-02 a R-10, R-15 (parte del formulario), R-35 y R-36 (parte de los tres controles), R-42, R-43, R-44, R-47 (parte del formulario), R-50 (tres etiquetas)
 - Depende de: —
-- Estado: [ ] pendiente
-- Modelo propuesto: Opus 5.5 (primera spec con Reactive Forms en zoneless: `toSignal`, sincronía y `outputFromObservable`; riesgo 1 del plan).
+- Estado: [x] hecha
+- Modelo: Opus 5.5, confirmado por el autor (primera spec con Reactive Forms en zoneless: `toSignal`, sincronía y `outputFromObservable`; riesgo 1 del plan).
+- Aprobación del autor 2026-11-24 (literal): «Signos escapados: sí, copia el rojo y la salida de npm ci con los signos reales y anótalo. Desviaciones 1 a 7 de la T-06: aceptadas; la 5 (doble emisión al mover el slider) no rompe nada con computed, anótalo en el registro.» y «Apruebo la T-06.» `npm run verify` en verde: 766 tests en la raíz y 119 en la web (antes, 766 + 100; 19 nuevos), relanzado por la sesión principal. Fase roja íntegra y salida de `npm ci` desde cero en `ai-workspace/sessions/2026-11-24-06-005-simulator.md`. El riesgo 1 no se dio: la primera emisión llega como `{ activeUsers: 15, country: 'ES' }`.
 - Instalación (decisión previsible (2) y D-02, orden literal del autor): `npm install @angular/forms@22.3.0 --save-exact -w apps/web`.
 - Archivos de producción (4; el lockfile no cuenta):
   - `apps/web/package.json`: `"@angular/forms": "22.3.0"` en `dependencies`.
@@ -157,23 +158,23 @@ Reglas comunes de esta spec:
 - Generado (no cuenta): `package-lock.json`, con `@angular/forms` y `@standard-schema/spec`.
 - Tests (nuevo): `app/simulations/components/simulation-form/simulation-form.spec.ts`.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] Instalación hecha con la orden literal. `package.json` dice `"@angular/forms": "22.3.0"`, sin `^`, y todos los `@angular/*` siguen en 22.3.0.
-  - [ ] `npm ci` desde cero funciona (sin `node_modules`, ADR-014), con su salida en el registro de la sesión. Si el implementer no puede lanzarlo, para y lo devuelve, y lo repite el autor.
-  - [ ] `package.json` y `package-lock.json` van en el commit de esta tarea.
-  - [ ] C-02 pasa (R-02): `type="range"`, `min` 0, `max` 100000 y `step` 1.
-  - [ ] C-03 en el formulario (R-03, R-06): slider y campo en 15. La primera emisión de `simulationInputChange` es `{ activeUsers: 15, country: 'ES' }`.
-  - [ ] C-04 y C-05 pasan (R-04, R-05).
-  - [ ] C-06 en el formulario (R-07, R-42 a R-44):
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] Instalación hecha con la orden literal. `package.json` dice `"@angular/forms": "22.3.0"`, sin `^`, y todos los `@angular/*` siguen en 22.3.0.
+  - [x] `npm ci` desde cero funciona (sin `node_modules`, ADR-014), con su salida en el registro de la sesión. Si el implementer no puede lanzarlo, para y lo devuelve, y lo repite el autor.
+  - [x] `package.json` y `package-lock.json` van en el commit de esta tarea.
+  - [x] C-02 pasa (R-02): `type="range"`, `min` 0, `max` 100000 y `step` 1.
+  - [x] C-03 en el formulario (R-03, R-06): slider y campo en 15. La primera emisión de `simulationInputChange` es `{ activeUsers: 15, country: 'ES' }`.
+  - [x] C-04 y C-05 pasan (R-04, R-05).
+  - [x] C-06 en el formulario (R-07, R-42 a R-44):
     - Con vacío, `-1`, `100001` y `1.5`, cada uno aparte: el texto «Introduce un número entero entre 0 y 100 000.» (`toBe`) junto al campo.
     - `aria-invalid="true"` y `aria-describedby` con el `id` de ese texto.
     - El slider en 15 y la emisión `null`.
-  - [ ] C-33 en el formulario (R-47): al escribir 15 desaparecen el texto y `aria-invalid`, el slider vuelve a 15 y emite `{ activeUsers: 15, country: 'ES' }`.
-  - [ ] C-07 pasa (R-08, R-09): cuatro opciones en orden, con sus textos, y `ES` seleccionado.
-  - [ ] Al cambiar el país, emite con el país nuevo, sin botón (R-15).
-  - [ ] C-28 y C-34 en el formulario (R-35, R-50): «Usuarios activos», «Usuarios activos (número)» y «País», cada una con su `<label for>`.
-  - [ ] Sin `UntypedFormControl` ni `markForCheck()` en el componente (R-10; la revisión de C-08 queda para la puerta 6).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] C-33 en el formulario (R-47): al escribir 15 desaparecen el texto y `aria-invalid`, el slider vuelve a 15 y emite `{ activeUsers: 15, country: 'ES' }`.
+  - [x] C-07 pasa (R-08, R-09): cuatro opciones en orden, con sus textos, y `ES` seleccionado.
+  - [x] Al cambiar el país, emite con el país nuevo, sin botón (R-15).
+  - [x] C-28 y C-34 en el formulario (R-35, R-50): «Usuarios activos», «Usuarios activos (número)» y «País», cada una con su `<label for>`.
+  - [x] Sin `UntypedFormControl` ni `markForCheck()` en el componente (R-10; la revisión de C-08 queda para la puerta 6).
+  - [x] `npm run verify` desde la raíz, en verde.
 
 ## T-07 · simulations: página del simulador y ruta `simulator`
 - Cubre: R-01, R-11 a R-14, R-15 (parte de la página), R-16, R-17 (una petición por apertura), R-19 a R-28 y R-31 a R-32 (parte de la página), R-38, R-40, R-41, R-45, R-46, R-47 (importes), R-48, R-49, R-51, R-52, R-59 a R-63 (parte de la página), R-77, R-81 (parte de `app.routes.ts`), R-82 y R-83 (marcado), R-84, R-92, R-96 (parte de la página)

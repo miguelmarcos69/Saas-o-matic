@@ -1,0 +1,33 @@
+<form [formGroup]="form">
+  <label class="simulation-form__label" for="simulation-form-slider">Usuarios activos</label>
+  <input
+    id="simulation-form-slider"
+    class="simulation-form__control"
+    type="range"
+    min="0"
+    max="100000"
+    step="1"
+    formControlName="slider"
+  />
+
+  <label class="simulation-form__label" for="simulation-form-active-users">Usuarios activos (número)</label>
+  <input
+    id="simulation-form-active-users"
+    class="simulation-form__control"
+    type="number"
+    formControlName="activeUsers"
+    [attr.aria-invalid]="activeUsersInvalid() ? 'true' : null"
+    [attr.aria-describedby]="activeUsersInvalid() ? 'simulation-form-active-users-error' : null"
+  />
+  @if (activeUsersInvalid()) {
+    <p id="simulation-form-active-users-error" class="simulation-form__error">Introduce un número entero entre 0 y 100 000.</p>
+  }
+
+  <label class="simulation-form__label" for="simulation-form-country">País</label>
+  <select id="simulation-form-country" class="simulation-form__control" formControlName="country">
+    <option value="ES">España</option>
+    <option value="PT">Portugal</option>
+    <option value="FR">Francia</option>
+    <option value="IT">Italia</option>
+  </select>
+</form>
