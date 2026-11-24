@@ -1,6 +1,6 @@
 # Spec 005 · simulator
 
-- **Estado:** En implementación
+- **Estado:** Cerrada
 - **Depende de:** 001, 003
 - **Cubre:** §2.B
 

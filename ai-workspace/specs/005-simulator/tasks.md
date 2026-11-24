@@ -328,7 +328,7 @@ Reglas comunes de esta spec:
   - [x] Ninguna regla de `outline`, y fuera de `@supports (appearance: base-select)` ninguna regla de `option`, `::picker(select)` ni `::picker-icon` (D-14; riesgos 12 y 13).
   - [x] Valores no fijados: si hace falta un valor que no esté en la D-14, se elige el más cercano a la captura y se anota en «Desviaciones», sin cambiar las medidas de la nota (5).
   - [x] `npm run verify` desde la raíz, en verde, con la salida íntegra en el retorno (la literal, en el `verify.txt` del implementer, copiada al registro de la sesión: 766 + 180).
-  - [ ] C-30, C-32 (Lighthouse en móvil y escritorio, otra vez, petición del autor) y el resto de la puerta 6 se repiten al volver a ella. (Sin marcar al aprobar la T-11: se hace en la puerta 6, tras el commit.)
+  - [x] C-30, C-32 (Lighthouse en móvil y escritorio, otra vez, petición del autor) y el resto de la puerta 6 se repiten al volver a ella. (Sin marcar al aprobar la T-11: se hace en la puerta 6, tras el commit.) Hecho en la puerta 6 (2026-11-24): `npm run verify` en verde (766 + 180); Lighthouse con 100 en accesibilidad en móvil y escritorio (SEO 90 por `meta-description`, como decidió el autor), capturas `fase-7-005-lighthouse-movil-final.png` y `fase-7-005-lighthouse-escritorio-final.png`; C-30 a 320 px con USD y `base-select`: Divisa en 112 px sin desbordar (`clientHeight` 108 = `scrollHeight` 108), País y campo numérico en 52 px, sin desplazamiento horizontal (`scrollWidth` 305 = `clientWidth` 305), captura `fase-7-005-p6-c30-320-usd-final.png`.
 
 ## Cobertura
 Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobación final es manual (plan, sección 5).

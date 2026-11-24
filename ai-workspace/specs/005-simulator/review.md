@@ -212,3 +212,121 @@ Puerta 2 (2026-11-23), texto literal del autor:
 > 3. Con esa corrección hecha, apruebo la Puerta 2 · clarificación de la spec 005-simulator con las reservas H-03 (requisitos compuestos; corregirlo cambia requisitos), H-05 (app.config.ts no se toca en esta spec) y H-08 (el formulario sigue funcionando en EUR mientras no haya respuesta), y con H-12 cerrada por el ADR-017 y H-16 corregida sin que el revisor la vea. Pon Estado: Aprobada en spec.md y en el README, y añade a review.md mi aprobación literal.
 
 Nota (punto 2 del mismo mensaje del autor): H-16 se corrigió tras la ronda 3 poniendo «no válidos:» delante de (13) y (14) en la columna «Entrada» de C-42 (spec.md:427). El revisor no ha visto esta corrección y debe seguirla en la Puerta 6.
+
+## Ronda 4 (2026-11-24) · Veredicto: Conforme con reservas
+
+**Alcance:** tareas T-01 a T-11, commits 73c9e0b (T-01), 9236008 (T-02), 3c8fac0 (T-03), 3b31d4e (T-04), 9984500 (T-05), 8303465 (T-06), eb10800 (T-07 bloqueada y T-10), b8560ea (T-07), d4e6757 (T-08), 23c897b (T-09) y 63bf78d (T-11). Además, el árbol de trabajo de la puerta 6: `Estado:` en `spec.md` y `README.md`, la última casilla de la T-11 y las capturas. He leído el código de todos los ficheros de producción y de test de la lista del encargo, los parciales `.scss`, `style-guide.md` y las capturas de esta puerta. No he podido ver el `git diff` de los commits porque no viene en el encargo y no tengo Bash. Por eso C-45, C-46, C-49 y C-52 las he comprobado sobre el contenido actual de los ficheros, no sobre el diff. La limitación de la P-08 (a) (respaldo sin `base-select`, nota (8) de `plan.md`) está aceptada por el autor y no la trato como hallazgo.
+
+### Hallazgos
+| ID | Gravedad | Archivo:línea | Requisito o regla | Hallazgo |
+|---|---|---|---|---|
+| H-17 | Menor | ai-workspace/specs/005-simulator/spec.md:33-46 | ADR-016, consecuencias («Cada spec anota qué ajustes de este ADR aplicó») | La lista de ajustes del ADR-016 llega solo hasta «Puerta 5, puntos 4 y 6 […] (T-01, Sonnet 5.5)» (:46). Faltan tres cosas: (1) los modelos y encargos sin enseñar de las T-02 a T-11 (Opus 5.5 en T-02, T-03, T-04, T-06 y T-07; Sonnet 5.5 en el resto, según `tasks.md`); (2) las puertas 3 y 4 ampliadas de las notas (2), (3), (5) y (7) de `plan.md`, con el planner en Opus 5.5 y el encargo sin enseñar; (3) la puerta 6. Es el mismo patrón que las reservas H-14 de la 001, H-15 de la 002 y H-16 de la 003. |
+| H-18 | Menor | ai-workspace/specs/005-simulator/tasks.md:324 | sdd, «review.md» (el `Estado:` y el trabajo marcado deben coincidir con lo comprobado); casilla de la T-11 «con `base-select` y en la nativa» | La casilla de la lista abierta está en `[x]` e incluye la lista nativa: «la comprueba el autor en Firefox («la lista nativa muestra el texto entero», en su aprobación)». El encargo dice lo contrario: «La lista nativa abierta en Firefox está SIN VERIFICAR (la captura está pendiente del autor)». En `ai-workspace/screenshots/` no hay ninguna captura de la lista nativa abierta. La única de Firefox, `fase-7-005-t11-firefox-320.png`, es la del control cerrado. La parte «en la nativa» de la casilla se apoya en una afirmación, no en una evidencia. No afirmo que la lista nativa corte el texto: digo que la casilla da por hecho algo que el encargo da por no comprobado. |
+| H-19 | Menor | ai-workspace/screenshots/fase-7-005-p6-c30-320-usd-final.png | C-30, R-37 (evidencia de la puerta 6) | La captura no muestra la medida que la acompaña. El encargo dice: con `clientWidth` 305, Divisa mide 112 px con el texto en tres líneas. En la imagen (305 px de ancho), Divisa tiene dos líneas («Dólar estadounidense» / «(USD)») y mide unos 80 px. Además, las dos tarjetas llegan al borde derecho sin margen y sin sus esquinas redondeadas. Parece la maqueta de 320 px sin barra vertical (como `fase-7-005-simulador-320px.png`) recortada a 305 px. No parece la de 305 px de `fase-7-005-t11-despues-320-usd-base-select.png`, que sí muestra las tres líneas y 112 px. La medida de texto (`scrollWidth` = `clientWidth` en 305 y en 320) y la captura de la T-11 respaldan R-37. Lo que no la respalda es esta captura, que es la evidencia «final» de C-30. |
+| H-20 | Menor | ai-workspace/screenshots/fase-7-005-lighthouse-movil-final.png; ai-workspace/screenshots/fase-7-005-lighthouse-escritorio-final.png | R-86, C-32 (captura de cada informe) | Las dos capturas son visualmente idénticas. La parte visible del informe no muestra el modo (móvil o escritorio), que Lighthouse indica al pie del informe. Las dos enseñan 100 en accesibilidad, pero no permiten distinguir qué captura corresponde a R-39 y cuál a R-85. Qué modo es cada una depende de la palabra de la sesión principal y de unos `report.json` que no están en las rutas del encargo. |
+| H-21 | Menor | apps/web/src/app/simulations/components/simulation-form/simulation-form.ts:43-46, :49-59; ai-workspace/specs/005-simulator/spec.md:86 frente a :397 | R-10 frente a C-08; `frontend-conventions`, «Formularios» («convierte `value` y `status` en señales con `toSignal`») | `toSignal` solo se aplica a `statusChanges` del campo (:43). Los valores salen por `outputFromObservable` (:49-59) y la página los guarda con `signal.set` (`simulation-page.ts:78-84`). C-08 se cumple, porque admite «sobre `valueChanges` (o `statusChanges`)». La D-11 aprobada lo fija así. Pero R-10 dice «con sus valores leídos como señales mediante `toSignal`», y la convención pide `value` y `status`. La spec no es coherente entre R-10 y C-08, y la D-11 no anota que se aparta de la convención. La plantilla no lee ningún valor del formulario, así que en zoneless no hay fallo. No lo resuelvo: el autor decide qué texto manda. |
+| H-22 | Menor | apps/web/src/scss/themes/_tokens.scss:2 | Legibilidad (comentario falso) | El comentario dice «Solo los que usa la página de health (decisión del autor P-1)». El fichero ya contiene los tokens del simulador y de los controles (:8-45). La segunda mitad de la línea («cada spec de interfaz añade los suyos») no corrige la primera. |
+| H-23 | Menor | ai-workspace/specs/005-simulator/tasks.md:5 | Coherencia de `tasks.md` | Dice «Hay diez tareas, T-01 a T-10». La misma línea añade después la T-11, y el fichero tiene once (:305). |
+| H-24 | Menor | apps/web/src/app/simulations/pages/simulation-page/simulation-page.spec.ts:5, :65-69 | `architecture.md:75` («web: funcionalidad» no importa otra funcionalidad); checklist, «Ninguna funcionalidad importa otra funcionalidad» | El test de `simulations/` importa `app.routes` y, con él, la página de `health/` (carga diferida). Además depende de que esa página pida `/api/health` (`goHome`, :67). Así, un cambio en `health/` puede romper los tests del simulador. Lo eligieron las tareas (`tasks.md:195-196`) para C-39 y C-40 («navegar a `/`»), y hay un precedente de la 000 (`health-page.spec.ts:103`). La tabla de `architecture.md` no dice si cubre los `*.spec.ts`. No afirmo que la incumpla: lo señalo porque es un acoplamiento entre funcionalidades que la 004 repetiría. |
+
+**Observación del autor (no es hallazgo nuevo):** los enlaces del `<nav>` salen pegados («Estado de la APISimulador»). Se ve en `fase-7-005-simulador-con-estilos.png`, en `fase-7-005-simulador-320px.png` y en `fase-7-005-p6-c30-320-usd-final.png`. `app.html:2-5` cumple R-78 a R-90, y R-90 prohíbe darle estilos. El autor lo deja para la cabecera común de la 004 y ya consta en MEMORY.md.
+
+### Checklists
+
+**Comprobaciones de proceso de la puerta 6 (reviewer.md, sdd)**
+
+| Comprobación | Resultado | Nota |
+|---|---|---|
+| Cada `R-nn` tiene tarea, código y test | Cumple | La tabla «Cobertura» de `tasks.md:333` y siguientes asigna tarea a cada requisito. He contrastado el código y los tests de cada uno. Los manuales (C-08, C-12, C-25 (3), C-29, C-30, C-32, C-44 y la revisión de C-26, C-27, C-45, C-46, C-49, C-51 y C-52) los reviso abajo. |
+| Tests y build en verde, según la salida literal | Cumple | `npm run verify` con código 0: `ng build` correcto, «Test Files 29 passed (29) · Tests 766 passed (766)» en la raíz y «Test Files 10 passed (10) · Tests 180 passed (180)» en la web. Los 10 ficheros de test de la web coinciden con los que existen en `apps/web/src/app`. |
+| `Estado:` coincide con el trabajo real | Cumple | `En revisión` (spec.md:3) y la fila 005 del README (:13) dicen lo mismo. Las T-01 a T-11 están en `[x]`. Hay que tener en cuenta la casilla de la T-11 señalada en H-18. |
+| Tareas de más de 5 archivos de producción con `Excepción de tamaño:` | Cumple | No hay ninguna: T-01 tiene 4, T-02 2, T-03 2, T-04 1, T-05 4, T-06 4, T-07 3, T-08 4, T-09 2, T-10 1 y T-11 3 (`tasks.md:6`). |
+| Ficheros del `git status` frente al alcance | Cumple | En el árbol solo cambian `spec.md`, `tasks.md`, `README.md` (una línea cada uno) y cinco capturas sin seguimiento. No hay código cambiado desde 63bf78d. |
+| Lighthouse 100 en móvil y escritorio (R-39, R-85, R-86) | Cumple con reservas | Las dos capturas muestran 100 en accesibilidad. No distinguen el modo (H-20). El SEO 90 por `meta-description` queda fuera de R-39 y R-85, como decidió el autor. |
+| C-30 / R-37 a 320 px | Cumple con reservas | La medida del encargo (`scrollWidth` 305 = `clientWidth` 305; 320 = 320 sin barra) y `fase-7-005-t11-despues-320-usd-base-select.png` muestran Divisa entera en tres líneas y sin desplazamiento horizontal. La captura final no coincide con esa medida (H-19). Sin `base-select` el control cerrado corta el texto: es la limitación aceptada (P-08 (a)). |
+| C-29 / R-36 (teclado y foco) | Cumple | La T-11 solo cambió `min-height`, `padding-block` y `padding-inline`. No hay ninguna regla de `outline` en `src/scss` (grep), y `:focus` con `border-color` está en `_simulations.scss:61-63` y `_shared.scss:33-35`. Lo he contrastado con `fase-7-005-p6-lista-teclado-abierta.png` y `-elegida.png`, de la sesión 11, que cita el encargo. |
+| R-46 en el código (D-15, decisión (B)) | Cumple | `simulation-form.ts:73-79` devuelve `null` si `activeUsers` no es válido o es `null`. `simulationInputChange` solo lleva esa salida (:49-54). En la página, `eurCents` (`simulation-page.ts:37-48`) sale con `null` antes de cualquier llamada a `packages/pricing`. `taxLabel` (:56-59) llama a `getTaxRateBps` con el país de `countryChange` (:57-58), nunca con el valor del campo. El slider solo lleva valores enteros de 0 a 100 000 al campo (:64), así que no introduce valores no válidos. |
+| C-12 / R-13 (búsqueda de texto que fijo) | Cumple | Grep de dígitos en `simulations/`, sin los `.spec.ts`. Solo aparecen 0, 100000 y 1 del slider y de los validadores (R-02, R-07), 15 inicial (R-06) y `/ 100` de la etiqueta del IVA (R-51). No hay tarifas, límites de tramo ni tipos de IVA. |
+| C-25 (3) / R-30 | Cumple | `currency-conversion.ts:26-33`: `amountCents * rateMicros + 500_000`, comprobación de `Number.isSafeInteger` y cociente por resto `(shifted - shifted % 1_000_000) / 1_000_000`, sin `Math.floor` ni valores no enteros. |
+| C-44 / R-72 | Cumple | `health-page.ts:5`: «(spec 000: R-12, R-22)». |
+| C-26 / R-33, R-67 a R-71, R-77 | Cumple | Existen los seis ficheros de `shared/`. No existen `health/interfaces/load-state.ts` ni `simulations/services/` (Glob). `health-api.ts:4` importa de `../../shared/interfaces/load-state`. |
+| C-45 / R-73, R-98 | Cumple en lo que puedo ver | `load-state.ts:2` tiene el literal de R-73. Sin el `git diff -M` no puedo comparar las demás líneas con el original. MEMORY.md dice que se confirmó con `git show -M --stat` (T-01), pero no lo he visto yo. |
+| C-46 / R-74 a R-76 | Cumple en lo que puedo ver | `health-api.ts:6` y `:9` siguen sin calificar, como pide :31 de la spec. Los tests de la 000 están en verde (180) y el grep de `skip`, `todo` y `xit` en `apps/web/src` sale vacío. El diff de `health/` no viene en el encargo. |
+| C-49, C-52 / R-81, R-91 a R-95 | Cumple en lo que puedo ver | `app.routes.ts:3` cita «(spec 000: R-21)». `app.ts:4` tiene el texto de R-91. `app.html:1` es el comentario de la 000. `app.spec.ts:7` cita «(spec 000: T-14)» y `:22` «(decisión del autor 2026-11-22, spec 000: T-18)». Los dos tests de la 000 (:17-30) siguen con sus aserciones. Sin el diff no puedo afirmar que no haya nada más. |
+| C-51 / R-90 | Cumple | Ningún selector ni token de `nav` en `src/scss` (grep). |
+| Limitación aceptada P-08 (a) | No es hallazgo | Nota (8) de `plan.md:38-41` y T-11 (`tasks.md:308`, `:320`). |
+
+**Lista de revisión del frontend (`frontend-conventions/checklist.md`)**
+
+| Casilla | Resultado | Nota |
+|---|---|---|
+| Carpetas `pages/`, `components/`, `interfaces/`, `services/` solo las usadas; página o componente = `.ts`, `.html` y `.spec.ts` | Cumple | `simulations/` tiene `pages/`, `components/` e `interfaces/`, sin `services/` (R-77). `simulation-page/`, `simulation-form/` y `currency-selector/` tienen los tres ficheros. |
+| Ninguna funcionalidad importa otra ni `apps/api` | Cumple | El código de producción no lo hace (grep). El test de la página pasa por `app.routes`: H-24. |
+| `app.*` solo importa páginas (rutas diferidas) y `shared` | Cumple | `app.routes.ts:7`, `:11-12` (`loadComponent`). `app.ts` solo importa el router. `app.config.ts` no se toca (reserva H-05). |
+| `shared/` solo con lo que usan dos funcionalidades y sin importarlas | No cumple la letra, por decisión del autor | Solo `simulations/` usa las piezas de divisa. Lo decidió el autor (Decisión 2026-11-23 #12, D-04, `spec.md:32`), y el ajuste de la skill está pendiente al cerrar. No es hallazgo. `shared/` no importa ninguna funcionalidad (grep). |
+| Kebab-case sin sufijos; idioma | Cumple | Identificadores en inglés; textos y comentarios en español. |
+| Un concepto por archivo | Cumple | — |
+| Páginas inyectan; componentes presentacionales | Cumple | `SimulationPage` inyecta `CurrencySelection` (:27). `SimulationForm` y `CurrencySelector` solo usan `input()` y `output()`/`outputFromObservable`, y no inyectan nada. |
+| `HttpClient` solo en `services/` | Cumple | `exchange-rates-api.ts:1`, `:12` (y `health-api.ts`, de la 000). |
+| `@Injectable({providedIn: 'root'})` e `inject()` | Cumple | `ExchangeRatesApi` y `CurrencySelection`. `currency-conversion.ts` está en `services/` como funciones puras, sin `@Injectable`, como fija R-69 (la spec manda). |
+| Sin lógica de negocio ni de tramos en componentes o páginas | Cumple | C-12 (arriba). |
+| Carga, error y vacío | Cumple | `simulation-page.html:13-18`. El vacío no aplica (`spec.md:381`). La petición sin respuesta sigue siendo la reserva H-08. |
+| Buscador cancela la anterior | No aplica | No hay buscador. |
+| Error en español visible | Cumple | `currency-selection.ts:9-10` y `simulation-page.html:17`. |
+| Tipos de cambio por Zod antes de usarse | Cumple | `exchange-rates-api.ts:18` (`parse`) y `exchange-rates.ts:12-26`. |
+| API propia tipada, sin `any` | No aplica | El simulador no usa la API propia (R-14). |
+| Sin `.scss` ni `styles` en componentes | Cumple | Grep de `styleUrl` y `styles:` vacío. |
+| Colores y medidas de los tokens | Cumple | En los parciales no hay hexadecimales ni medidas sueltas (grep). Los únicos literales son los pesos de fuente, `100%`, `0` y `180deg`. Los SVG llevan el color escrito dentro de `_tokens.scss`, justificado en :35-39. |
+| Clases con prefijo | Cumple | `simulation-page__*`, `simulation-form__*` y `currency-selector__select`. `app-currency-selector label` es un selector de tipo acotado por el componente, decisión del autor (D-14). |
+| Teclado y foco visible | Cumple | C-29 (arriba). |
+| Etiquetas, contraste, móvil | Cumple con reservas | Las etiquetas tienen `for`/`id` (C-28, tests). Contrastes de la nota (5) según el encargo: 3,055:1, 6,31:1 y 5,74:1. Móvil: H-19 y la limitación P-08 (a). |
+| Lighthouse sin fallos sin justificar | Cumple con reservas | 100 en accesibilidad. Captura sin el modo visible: H-20. |
+| Carga y error con `role="status"` y `role="alert"` | Cumple | `simulation-page.html:13`, `:17`. |
+| Reactive Forms tipados; `value` y `status` como señales (`toSignal`); sin `markForCheck()` | Cumple con reservas | El `FormGroup` es tipado (`simulation-form.ts:31-40`). `toSignal` solo sobre `statusChanges`. No hay `markForCheck()` (grep). Ver H-21. |
+| Cada campo con etiqueta y error | Cumple | `simulation-form.html:13-24`, con `aria-invalid` y `aria-describedby`. |
+| Angular 22 (sin `standalone`, `changeDetection`, `CommonModule`, `ngClass`, `ngStyle`, `@HostBinding`, `@HostListener`) | Cumple | Grep vacío. |
+| Sin zone.js ni `provideZoneChangeDetection` | Cumple | Grep vacío. |
+| Control flow nativo; `@for` con `track` | Cumple | Hay `@if` y `@let`, y ningún `@for`. |
+| Señales y `computed()`; sin `mutate` | Cumple | `simulation-page.ts:31`, `:37`, `:56`, `:62`; `currency-selection.ts:24`, `:29`. |
+| Manejadores con nombre de acción; `protected` y `readonly` | Cumple | `updateInput`, `updateCountry`, `selectCurrency` y `changeCurrency` son `protected`. Las entradas y salidas son `readonly`. |
+| Importes enteros; la conversión solo afecta a lo que se muestra | Cumple | Comprobado contra el ADR-017: `formatCents` divide entre 100 solo dentro de `format(...)` (`currency-conversion.ts:49`), sin guardar el resultado. `eurCents` queda en céntimos de euro. |
+| Conversión en una única función pura con un solo redondeo | Cumple | `convertCents` es el único punto de redondeo de la conversión. Con C-42 (1) a (14) (`currency-conversion.spec.ts:62-87`): (1) a (9), (13) y (14) dan `RangeError` con el mensaje de R-65 (`toBe` e `instanceof`), y (10) a (12) devuelven 0. (9) y (14) exigen el mensaje de R-65 y no el de R-64, y el código lo cumple porque comprueba la entrada antes de calcular `shifted` (:16-23). |
+| Sin `httpResource`; estados con `LoadState<T>` | Cumple | `currency-selection.ts:17`. Grep de `httpResource` vacío. |
+| Test de cada componente, página y servicio, con carga y error | Cumple | Hay specs de `CurrencySelector`, `SimulationForm`, `SimulationPage`, `ExchangeRatesApi`, `CurrencySelection`, conversión y esquema. Carga y error: C-18, C-19, C-22 y C-16 en la página y en el servicio. |
+| Sin repetir los límites de los tramos | Cumple | Solo los importes concretos de C-09, C-10, C-11, C-19, C-20 y C-37. |
+| Ningún test en rojo ni desactivado | Cumple | 180 en verde. Grep de `skip`, `todo` y `xit` vacío. |
+| Cada cambio cubre un `R-nn` | Cumple | Cada fichero cita sus requisitos en el comentario de cabecera. |
+
+Nota sobre R-51: hasta que el formulario emite `'ES'`, la etiqueta dice «IVA» sin tipo (`simulation-page.ts:58`). El autor lo aceptó («La señal del país de la página arranca en null y entra 'ES' al conectarse; acepto la nota 1», nota (2) de `plan.md`), y C-14 y C-36 lo cubren tras la conexión. No abro hallazgo.
+
+**Lista de revisión del backend (`backend-conventions/checklist.md`)**: no aplica. La spec no toca `apps/api` (R-14, `spec.md:23`), y el encargo no trae cambios en `apps/api`.
+
+### Seguimiento de la ronda anterior
+| ID | Estado | Nota |
+|---|---|---|
+| H-01 | Resuelto | En la ronda 2, con el ADR-017. En el código: `currency-conversion.ts:4`, `:42` y la casilla de importes de arriba. |
+| H-02 | Resuelto | En la ronda 2. Los casos tienen tests: C-16 (1) a (16) en `exchange-rates.spec.ts:26-49`, C-41 en `currency-conversion.spec.ts:47-59` y C-42 en `:62-87`. |
+| H-03 | Abierto (reserva aceptada por el autor) | «requisitos compuestos; corregirlo cambia requisitos». |
+| H-04 | Resuelto | En la ronda 2. |
+| H-05 | Abierto (reserva aceptada por el autor) | «app.config.ts no se toca en esta spec». No está en la lista de ficheros cambiados del encargo. |
+| H-06 | Resuelto | En la ronda 2. En el código, `toDisplayCents` (`currency-conversion.ts:37-39`) no convierte sin tipo. |
+| H-07 | Resuelto | En la ronda 2. En el código, `-0` pasa (`:19-20`) y C-54 lo prueba (`currency-conversion.spec.ts:90-98`). |
+| H-08 | Abierto (reserva aceptada por el autor) | «el formulario sigue funcionando en EUR mientras no haya respuesta». `CurrencySelection.load` no tiene plazo (`currency-selection.ts:42-55`), como se aceptó. |
+| H-09 | Resuelto | En la ronda 2. |
+| H-10 | Resuelto | En la ronda 2. |
+| H-11 | Resuelto | En la ronda 2. Desde la puerta 3 la lista vuelve a estar incompleta: H-17. |
+| H-12 | Resuelto | Cerrado con el ADR-017. `formatCents` lo sigue (`currency-conversion.ts:42-49`). |
+| H-13 | Resuelto | En la ronda 3. Los tests (13) y (14) de C-42 existen y exigen el mensaje de R-65. |
+| H-14 | Resuelto | En la ronda 3. |
+| H-15 | Resuelto | En la ronda 3. |
+| H-16 | Resuelto | Corregido tras la ronda 3, sin que yo lo viera. C-42 (`spec.md:431`) dice ahora «límites aceptados: (11) …; (12) …; no válidos: (13) 100, `Infinity`; (14) 100, 9 007 199 254 740 992 (2^53)». La columna «Entrada» ya no contradice a «Resultado esperado». |
+
+## Aprobación del autor
+Aprobación del autor 2026-11-24, puerta 6 (cierre de la spec 005-simulator), tras la ronda 4, texto literal:
+
+> Guarda la ronda 4 al final de review.md como «## Ronda 4», con los signos reales (<nav>, LoadState<T>) y anótalo en el registro.
+> Apruebo cerrar la 005 como «Conforme con reservas». Reservas aceptadas, con su motivo: H-17 (ajustes del ADR-016 sin anotar en la spec: mismo patrón que H-14, H-15 y H-16; va a la pasada única del miércoles); H-21 (R-10 frente a C-08 sobre toSignal: la D-11 aprobada fija lo implementado y cambiar el texto exige /sdd-change); H-22 (comentario falso de _tokens.scss:2: solo comentario, para la pasada del miércoles); H-23 («diez tareas» en tasks.md:5: una línea de texto, para la pasada del miércoles); H-24 (el test de simulations/ importa app.routes: precedente de la 000; queda anotado como entrada para la spec 004).
+> H-18 se resuelve con evidencia: te paso la captura de la lista nativa abierta en Firefox y la guardas como fase-7-005-t11-firefox-lista-abierta; hasta que esté, la casilla sigue marcada y lo anotas en el registro como pendiente de su captura.
+> H-19 y H-20: rehaz las capturas sin tocar código y sustituyendo las actuales, que no están commiteadas: C-30 a 320 × 800 px con la barra vertical (que se vea Divisa en tres líneas, 112 px) y los pies de los dos informes de Lighthouse con el modo visible (móvil y escritorio).
+> Comprueba tú C-45, C-46, C-49 y C-52 con git diff bc0caa1 63bf78d y git show -M, y anótalo en el registro (el revisor no pudo verlo).
+> Después, cierra la spec (Estado: Cerrada, README y MEMORY.md, máximo 50 líneas), enséñame el diff y, antes del commit, yo lanzo /sdd-session 7 005-simulator.
