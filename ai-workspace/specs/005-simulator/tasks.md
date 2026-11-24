@@ -262,8 +262,9 @@ Reglas comunes de esta spec:
 ## T-09 · navegación en la carcasa (`app.*`)
 - Cubre: R-78, R-79, R-80, R-81 (parte de `app.html` y `app.ts`), R-87, R-88, R-89, R-90, R-91, R-93, R-94, R-95; R-75 y R-76 (`app.spec.ts`)
 - Depende de: T-07
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo propuesto: Sonnet 5.5 (marcado y comentarios literales en D-13).
+- Aprobación del autor de la T-09, 2026-11-24 (literal): «Apruebo la T-09 (navegación en la carcasa). El rojo repetido es válido y la desviación 1 queda aceptada con la cita ya calificada «spec 005: R-95».» Desviaciones 2, 3 y 4, aceptadas por el autor (literal: «acepto la 2, la 3 y la 4»). El rojo del retorno no era íntegro; lo repitió la sesión principal con `app.html` y `app.ts` como en `HEAD` (decisión del autor), con la salida en `ai-workspace/sessions/2026-11-24-10-005-simulator.md`. `npm run verify` en verde: 766 tests en la raíz y 180 en la web (antes, 766 + 177; 3 nuevos), relanzado por la sesión principal.
 - Archivos de producción (2):
   - `app/app.html`: el `<nav aria-label="Navegación principal">` de la D-13 antes de `<main>`, con `routerLinkActive` sin clases y `ariaCurrentWhenActive="page"`. `exact` solo en el de `/`. El comentario de la línea 1 no cambia.
   - `app/app.ts`: `RouterLink` y `RouterLinkActive` en `imports`. Línea 4: `// Componente raíz: carcasa con la navegación principal y las rutas.` (R-91).
@@ -273,14 +274,14 @@ Reglas comunes de esta spec:
   - Tests nuevos de C-47, C-48 y C-50.
   - Sus dos tests actuales no cambian, salvo la configuración (R-95).
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] C-47 pasa (R-78, R-79): dos `<a>` con `routerLink`, «Estado de la API» a `/` (`HealthPage`) y «Simulador» a `/simulator` (`SimulationPage`). En `app.html` no hay más selectores de componente que `<router-outlet>`.
-  - [ ] C-48 pasa (R-80, R-87): `<nav aria-label="Navegación principal">` antes de `<main>` y fuera de él, con un único `<main>` que envuelve `<router-outlet>`.
-  - [ ] C-50 pasa (R-88, R-89): `aria-current="page"` solo en el enlace activo, y el de `/` no se activa en `/simulator`.
-  - [ ] Los dos tests anteriores de `app.spec.ts` siguen en verde, sin aserciones borradas ni desactivadas (R-75, R-95).
-  - [ ] En `app.html` y `app.ts` solo cambian el `<nav>`, los `import` y el comentario de `app.ts:4` (R-81, R-91). El diff de `app.spec.ts` es el de R-93 a R-95.
-  - [ ] Ningún estilo nuevo para el `<nav>` (R-90).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] C-47 pasa (R-78, R-79): dos `<a>` con `routerLink`, «Estado de la API» a `/` (`HealthPage`) y «Simulador» a `/simulator` (`SimulationPage`). En `app.html` no hay más selectores de componente que `<router-outlet>`.
+  - [x] C-48 pasa (R-80, R-87): `<nav aria-label="Navegación principal">` antes de `<main>` y fuera de él, con un único `<main>` que envuelve `<router-outlet>`.
+  - [x] C-50 pasa (R-88, R-89): `aria-current="page"` solo en el enlace activo, y el de `/` no se activa en `/simulator`.
+  - [x] Los dos tests anteriores de `app.spec.ts` siguen en verde, sin aserciones borradas ni desactivadas (R-75, R-95).
+  - [x] En `app.html` y `app.ts` solo cambian el `<nav>`, los `import` y el comentario de `app.ts:4` (R-81, R-91). El diff de `app.spec.ts` es el de R-93 a R-95.
+  - [x] Ningún estilo nuevo para el `<nav>` (R-90).
+  - [x] `npm run verify` desde la raíz, en verde.
 
 ## T-10 · simulations: salida del país en el formulario
 - Cubre: R-51 (parte del formulario: el país, también con el campo no válido), R-15 (parte del formulario: `countryChange`)

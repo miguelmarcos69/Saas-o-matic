@@ -1,4 +1,8 @@
 <!-- Carcasa de la aplicación: un único <main> envuelve todas las páginas (Lighthouse landmark-one-main, decisión del autor 2026-11-22). -->
+<nav aria-label="Navegación principal">
+  <a routerLink="/" routerLinkActive ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{ exact: true }">Estado de la API</a>
+  <a routerLink="/simulator" routerLinkActive ariaCurrentWhenActive="page">Simulador</a>
+</nav>
 <main>
   <router-outlet />
 </main>
