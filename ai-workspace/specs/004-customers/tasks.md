@@ -51,19 +51,20 @@ Reglas comunes de esta spec:
 ## T-02 · infrastructure: tres lecturas en el datasource
 - Cubre: R-01, R-03 a R-07, R-12, R-79 a R-82, R-144 (parte del datasource)
 - Depende de: T-01
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Opus 5.5 (datasource, según la petición del autor).
 - Archivos de producción (2):
   - `infrastructure/datasource/sqlite-customer.datasource.ts` (crece): `findAllWithLastSimulation`, `findById` y `findSimulationsByCustomerId`, con el SQL de la D-06 y parámetros. El puerto aún no las pide (plan, paso 2).
   - `infrastructure/datasource/sqlite-simulation.datasource.ts`: solo `export` en `SimulationRow` (`:6`) y `toEntity` (`:20`) (D-06, D-16).
 - Tests (crece): `infrastructure/datasource/sqlite-customer.datasource.spec.ts`.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] C-05 (la de 40 usuarios y, con el mismo `created_at` escrito a mano con el formato de `database.md:19`, la de mayor `id`), C-06 (fila a mano con importes distintos de `packages/pricing` que respetan el `CHECK`) y C-80 (`lastSimulation` `null`) pasan sobre `findAllWithLastSimulation`.
-  - [ ] C-82 pasa sobre `findSimulationsByCustomerId`; con un cliente sin simulaciones, `[]` (R-81). `findById` devuelve `undefined` si no hay fila.
-  - [ ] El SQL nuevo usa `?` y ningún valor concatenado (R-12; el revisor lo comprueba).
-  - [ ] Los tests de la 002 y la 003 del datasource siguen en verde, sin aserciones quitadas (C-01 en esta tarea).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] C-05 (la de 40 usuarios y, con el mismo `created_at` escrito a mano con el formato de `database.md:19`, la de mayor `id`), C-06 (fila a mano con importes distintos de `packages/pricing` que respetan el `CHECK`) y C-80 (`lastSimulation` `null`) pasan sobre `findAllWithLastSimulation`.
+  - [x] C-82 pasa sobre `findSimulationsByCustomerId`; con un cliente sin simulaciones, `[]` (R-81). `findById` devuelve `undefined` si no hay fila.
+  - [x] El SQL nuevo usa `?` y ningún valor concatenado (R-12; el revisor lo comprueba).
+  - [x] Los tests de la 002 y la 003 del datasource siguen en verde, sin aserciones quitadas (C-01 en esta tarea).
+  - [x] `npm run verify` desde la raíz, en verde.
+- Aprobación del autor 2026-11-24 (literal): «Apruebo la T-02 (infrastructure: tres lecturas en el datasource) con las desviaciones 1 a 5 aceptadas, incluida la 2: el DELETE FROM simulations del beforeEach del spec de la 002 es necesario por la clave foránea, no quita ninguna aserción (167 añadidas y 0 quitadas) y encaja con la D-16, que prohíbe quitar o desactivar aserciones. No repitas el rojo (es «is not a function», no de aserciones); anota en el registro que el transcrito del subagente estaba vacío y que el rojo se copió del retorno, con los signos reales. Anota también como observación para el revisor las citas «spec 004: R-80; plan D-06» (R-144).» Desviaciones aceptadas: (1) tests que la tarea no enumera (sin clientes, `created_at` frente a `id`, varios clientes, R-06 en el historial, simulación de otro cliente en C-82), dentro de los 12; (2) `DELETE FROM simulations` en el `beforeEach`; (3) filas de C-05 y C-82 escritas a mano, con importes a mano que respetan el `CHECK`; (4) la mitad de C-06 con `POST /simulations` queda para la T-05; (5) `findAllWithLastSimulation` sin parámetros. `npm run verify` en verde: 824 tests en la raíz y 180 en la web (antes, 812 + 180; 12 nuevos). Fase roja íntegra, copiada del retorno, en `ai-workspace/sessions/2026-11-24-16-004-customers.md`. Observación para el revisor (R-144): citas «spec 004: R-80; plan D-06» y «spec 004: R-05, R-80; plan D-05 y D-06» en `sqlite-customer.datasource.ts`.
 
 ## T-03 · puertos y repositorio de `customers`
 - Cubre: R-01, R-03, R-04, R-79, R-144 (puertos y delegación; P-02 (a))

@@ -3,7 +3,7 @@ import type { NewSimulation, SimulationEntity } from '../../domain/entities/simu
 import { customerNotFoundError } from '../../domain/errors/customer-not-found.error.js';
 import { getDatabase, type SqliteConnection } from '../sqlite-connection.js';
 
-interface SimulationRow {
+export interface SimulationRow {
   id: number;
   customer_id: number;
   active_users: number;
@@ -17,7 +17,7 @@ interface SimulationRow {
 }
 
 // Fila snake_case → entidad camelCase: único sitio del mapeo (backend-conventions).
-function toEntity(row: SimulationRow): SimulationEntity {
+export function toEntity(row: SimulationRow): SimulationEntity {
   return {
     id: row.id,
     customerId: row.customer_id,
