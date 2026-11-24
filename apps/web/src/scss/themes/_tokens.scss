@@ -5,13 +5,40 @@
   --color-bg: #eef0f6;
   --color-text: #4a4d56;
   --color-white: #fff;
+  --color-brand: #3838ec; // style-guide.md:51 (también :28 y :23)
+  --color-ink: #0d0d1a; // style-guide.md:52 (también :18 y :29)
+  --color-muted: #666666; // style-guide.md:52 (`#666` en el CSS base; también :29)
 
   // Tipografía
   --font-family-base: 'Montserrat', sans-serif;
   --font-size-base: 16px;
   --line-height-base: 30px;
+  --font-size-eyebrow: 14px; // style-guide.md:23 (también :65)
+  --font-size-title: 38px; // style-guide.md:19 (H2; también :59)
+  --line-height-title: 60px; // style-guide.md:19 (H2; también :59)
 
   // Espaciado y radios
   --space-lg: 32px;
   --radius-lg: 32px;
+  --radius-sm: 12px; // style-guide.md:55 (también :88)
+  --space-sm: 8px; // style-guide.md:98 (etiqueta hasta el control; también :99, error bajo el campo)
+  --space-md: 24px; // style-guide.md:98 (entre grupos)
+
+  // Controles de formulario (sección «Controles de formulario» de la guía)
+  --control-height: 52px; // style-guide.md:89
+  --control-border-width: 2px; // style-guide.md:87
+  --control-padding-x: 12px; // style-guide.md:92
+  --control-chevron-size: 16px; // style-guide.md:94
+  --control-chevron-offset: 16px; // style-guide.md:94
+  // Chevron hacia abajo, de 16px y trazo de 2px (style-guide.md:94), en #0d0d1a: es el valor de --color-ink, escrito
+  // aquí porque una variable CSS no se puede usar dentro de un url() (riesgo 10 del plan).
+  --control-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%230d0d1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6l5 5 5-5'/%3E%3C/svg%3E");
+  // Mismo chevron en #666666, el valor de --color-muted (style-guide.md:96), para el selector deshabilitado.
+  --control-chevron-disabled: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6l5 5 5-5'/%3E%3C/svg%3E");
+  // Lista de opciones redondeada (solo con appearance: base-select).
+  --control-option-padding: 12px; // style-guide.md:103
+  // Borde de la lista: marca al 60% sobre blanco (#8888f4), 3:1 sobre blanco (style-guide.md:102).
+  --control-picker-border-color: color-mix(in srgb, var(--color-brand) 60%, var(--color-white));
+  // Fondo de la opción resaltada: marca al 60% sobre blanco (#8888f4), 3:1 sobre blanco y 6,3:1 con --color-ink (style-guide.md:104).
+  --control-option-highlight-color: color-mix(in srgb, var(--color-brand) 60%, var(--color-white));
 }

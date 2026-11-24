@@ -2,7 +2,7 @@
 
 Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo 5 archivos de producción, sin contar sus tests (`*.spec.ts`) ni los ficheros generados (solo el lockfile). Las migraciones son SQL escrito a mano y cuentan como producción. Si no cabe, se parte. Un recurso nuevo se divide por capa: en la API, una tarea por capa (`domain`, `infrastructure` y `presentation`); en la web, una tarea por servicio con su interfaz y una por página o componente (cuentan `.ts` y `.html`). Si una tarea necesita más de 5 archivos y no se puede dividir, lo justifica por escrito en una línea `Excepción de tamaño:` y el revisor lo comprueba. El test va dentro de la tarea que lo exige. Al cerrar una tarea: MEMORY.md, diff y commit propuesto.
 
-Hay diez tareas, T-01 a T-10, una por paso del «Orden de construcción» del plan (sección 7), como fija la decisión previsible (1) de esta puerta. La T-10 (paso 10) se añadió el 2026-11-24 en una puerta 4 ampliada, con la spec en `En implementación` (`sdd`, «Estados»), por la petición literal del autor que recoge la nota (2) de la cabecera de `plan.md` (bloqueo 2 de la T-07). Va al final, sin renumerar, y se hace antes de retomar la T-07.
+Hay diez tareas, T-01 a T-10, una por paso del «Orden de construcción» del plan (sección 7), como fija la decisión previsible (1) de esta puerta. La T-10 (paso 10) se añadió el 2026-11-24 en una puerta 4 ampliada, con la spec en `En implementación` (`sdd`, «Estados»), por la petición literal del autor que recoge la nota (2) de la cabecera de `plan.md` (bloqueo 2 de la T-07). Va al final, sin renumerar, y se hace antes de retomar la T-07. La T-08 se amplió el mismo día en otra puerta 4 ampliada, por la decisión del autor sobre los controles que recoge la nota (3) de `plan.md`: sigue con su número y en `[~]`. Se volvió a ampliar el mismo día, en otras puertas 3 y 4 ampliadas, con la decisión del autor que recoge la nota (5) de `plan.md` (lista de opciones redondeada con `appearance: base-select`), que sustituye a sus mensajes anteriores sobre los controles: sigue con su número y en `[~]`.
 - Ninguna pasa de 5 archivos de producción (`package.json` cuenta; el lockfile no), así que ninguna lleva `Excepción de tamaño:`.
 - Todas las rutas son de `apps/web/src/` salvo `apps/web/package.json` y `package-lock.json`.
 - Estado de las tareas: aprobadas por el autor el 2026-11-23 (aprobación literal: «Apruebo la Puerta 4 · tareas de la spec 005-simulator: tasks.md con T-01 a T-09. Pon Estado: Planificada en spec.md y en la fila 005 del README.»). Con la misma aprobación, literal: «1. T-01 y T-08 sin fase roja: aceptado, por los motivos que da tasks.md.» y «2. Modelos del implementer: confirmados (Opus 5.5 en T-02, T-03, T-04, T-06 y T-07; Sonnet 5.5 en T-01, T-05, T-08 y T-09).» La T-10 y los cambios de la T-07 de la puerta 4 ampliada (2026-11-24), aprobados por el autor el 2026-11-24 (aprobación literal: «1. Apruebo las puertas 3 y 4 ampliadas de la 005: la D-11 corregida (salida countryChange), la D-12 en lo declarado y la T-10, pequeña, con Sonnet 5.5, antes de retomar la T-07. La señal del país de la página arranca en null y entra 'ES' al conectarse; acepto la nota 1. El Estado: sigue en En implementación.»).
@@ -223,27 +223,41 @@ Reglas comunes de esta spec:
   - [x] En `app.routes.ts` solo cambian la ruta y el comentario de la línea 3 (R-81, R-92). `health-page.spec.ts` sigue en verde.
   - [x] `npm run verify` desde la raíz, en verde.
 
-## T-08 · estilos del simulador y tokens
-- Cubre: R-34, R-37 (preparado; C-30 en la puerta 6), R-82 y R-83 (estilos), R-39, R-85 y R-86 (preparados; C-32 en la puerta 6)
-- Depende de: T-07
-- Estado: [ ] pendiente
-- Modelo propuesto: Sonnet 5.5 (valores dados en D-14 y D-18).
-- Archivos de producción (3):
-  - `scss/themes/_tokens.scss`: tokens nuevos, todos de la guía. Son `--color-brand: #3838ec`, `--color-ink: #0d0d1a`, `--font-size-eyebrow: 14px`, `--font-size-title: 38px` y `--line-height-title: 60px` (D-14, D-18).
-  - `scss/_simulations.scss` (nuevo):
-    - `.simulation-page__card`: fondo blanco, `--radius-lg` y `--space-lg`.
-    - `.simulation-page__eyebrow`: color de marca, 14 px, peso 500.
-    - `.simulation-page__title`: `--color-ink`, peso 800, 38/60, sin media query.
-    - `.simulation-form__*`: etiquetas en bloque y controles con `width: 100%` y `max-width: 100%`.
-    - Separación entre tarjetas con `--space-lg`.
-  - `styles.scss`: `@use 'scss/simulations';` después de `shared`.
-- Tests: ninguno nuevo (solo `.scss`), así que no hay fase roja.
+## T-08 · estilos del simulador, controles del formulario y tokens
+- Cubre: R-34, R-35 y R-36 (estilos de etiquetas y del foco; C-29 en la puerta 6), R-37 (preparado; C-30 en la puerta 6), R-59 y R-60 (aspecto del selector deshabilitado), R-82 y R-83 (estilos), R-39, R-85 y R-86 (preparados; C-32 en la puerta 6)
+- Depende de: T-07. Sin espera por dudas: P-02, P-03, P-04 y el riesgo 9 están decididos (nota (4) de `plan.md`) y la decisión de la nota (5) no abre dudas nuevas. (Corrección posterior a la aprobación, 2026-11-24: notas (4) y (5) de la cabecera de `plan.md`, con la autorización literal del autor: «anota tú mis respuestas en la sección 9 del plan y quita el bloqueo de «Depende de» de la T-08, con una nota «Corrección posterior a la aprobación» y mi autorización literal, sin abrir más rondas de dudas: si falta un valor, que el implementer decida lo más cercano a la captura y lo anote».)
+- Aprobación del autor de la ampliación anterior, 2026-11-24 (literal; historial, nota (4)): «Apruebo las puertas 3 y 4 ampliadas de la 005 con la T-08 ampliada (4 ficheros de producción; style-guide.md y la captura como documentación); el Estado: sigue en En implementación.» Aprobación del autor de la ampliación de la nota (5), 2026-11-24 (literal): «Apruebo las puertas 3 y 4 ampliadas de la 005, con la nota (5), la D-14 reescrita y la T-08 ampliada; el Estado: sigue en En implementación. Contraste de la lista abierta: que el implementer elija el tono más cercano a la captura que cumpla 3:1 sobre blanco para el borde y el resaltado y 4,5:1 para el texto sobre el resaltado, lo calcule y lo anote en «Desviaciones»; si no encuentra ninguno parecido a la captura que cumpla, que pare y lo devuelva.»
+- Estado: [x] hecha
+- Modelo: Sonnet 5.5, fijado por el autor en su petición (nota (5): «que el implementer, con Sonnet 5.5, vaya después»).
+- Aprobación del autor de la T-08, 2026-11-24 (literal): «Apruebo la T-08 con sus desviaciones 1 a 8 aceptadas (la 1, el borde y el resaltado de la lista al 60 % por mi regla de 3:1; la 4, sin marca en la opción elegida).» `--control-picker-border-color` y `--control-option-highlight-color` con `color-mix(in srgb, var(--color-brand) 60%, var(--color-white))` (`#8888f4`): 3,055:1 sobre blanco y 6,31:1 con `--color-ink`, recalculados por la sesión principal (el 59 % da 2,99:1). `npm run verify` en verde: 766 tests en la raíz y 177 en la web (sin cambios), relanzado por la sesión principal. Retorno literal del implementer, con los signos reales, en `ai-workspace/sessions/2026-11-24-09-005-simulator.md`.
+  - Cambio del autor posterior a la aprobación de la T-08 (2026-11-24): `align-items: center;` dentro del bloque `@supports (appearance: base-select)`, en `select.simulation-form__control` (`_simulations.scss`) y en `.currency-selector__select` (`_shared.scss`), para centrar el texto de los desplegables. El autor lo añadió a mano; la línea de `_simulations.scss` estaba en `.simulation-form__control`, fuera del bloque, y la sesión principal la movió dentro, con el sangrado correcto. `npm run verify` relanzado en verde. Autorización literal del autor: «Las dos líneas de align-items: center son mías: las añadí a mano al mirar la lista de opciones en el navegador, para centrar el texto de los desplegables. Opción (a): se quedan, pero mueve la de _simulations.scss al bloque @supports (appearance: base-select), dentro de select.simulation-form__control, con el sangrado correcto, y anótalas en tasks.md y en el registro como cambio mío posterior a la aprobación de la T-08, con esta autorización literal; vuelve a pasar npm run verify y enséñame el diff antes del commit.»
+- Origen de la ampliación: puertas 3 y 4 ampliadas del 2026-11-24 con la decisión del autor de la nota (5) de `plan.md`, que sustituye a las notas (3) y (4). Lo que ya está en el árbol de la vuelta anterior (sin commit) se conserva y se ajusta; no se rehace. Lo nuevo es la lista de opciones redondeada como mejora progresiva (D-14, «Lista de opciones redondeada»).
+- Archivos de producción (4):
+  - `scss/themes/_tokens.scss`:
+    - Se conservan sin cambios los del árbol: `--color-brand`, `--color-ink`, `--color-muted`, `--font-size-eyebrow`, `--font-size-title`, `--line-height-title`, `--radius-sm`, `--space-sm`, `--space-md`, `--control-height`, `--control-border-width`, `--control-padding-x`, `--control-chevron-size`, `--control-chevron-offset`, `--control-chevron` y `--control-chevron-disabled` (D-14, D-18), con sus citas.
+    - Nuevos (D-14, nota (5)): `--control-option-padding: 12px`, `--control-picker-border-color` y `--control-option-highlight-color` (los dos con `color-mix` sobre `var(--color-brand)` y `var(--color-white)`; porcentajes elegidos por el implementer, lo más cercanos a la captura). Cada uno cita la línea nueva de `style-guide.md` que lo describe.
+  - `scss/_simulations.scss`: se conserva lo del árbol (tarjetas, eyebrow, título, etiquetas, controles, slider, foco, chevron de `background-image` y error) y se añade un bloque `@supports (appearance: base-select)` para `select.simulation-form__control`, según la D-14: `appearance: base-select` en el `<select>` y en `::picker(select)`; `background-image: none` y chevron en `::picker-icon`; lista blanca con `--radius-sm` y borde de `--control-border-width` en `--control-picker-border-color`; opciones con `--control-option-padding` y resaltado con `--control-option-highlight-color`. El comentario de la línea 3 deja de decir «ni de `option` (lista nativa)».
+  - `scss/_shared.scss`: se conserva lo del árbol (`app-currency-selector label`, `.currency-selector__select`, `:focus` y `:disabled` con `opacity: 1`) y se añade el mismo bloque `@supports` para `.currency-selector__select`, con `background-image: none` también en `:disabled` y `.currency-selector__select:disabled::picker-icon` con `--control-chevron-disabled`. El comentario de la línea 2 deja de decir «ni de `option` (lista nativa)».
+  - `styles.scss`: `@use 'scss/simulations';` después de `shared` (ya en el árbol, sin más cambios).
+- Documentación (no cuenta como producción; decisión del autor, nota (5)):
+  - `ai-workspace/docs/style-guide.md`: la sección «Controles de formulario» ya está al final (líneas 81 a 100, vuelta anterior). Se ajusta así: la línea 97, «Lista de opciones: la nativa del navegador.», pasa a describir la mejora progresiva en una sola línea (lista redondeada con `appearance: base-select` donde el navegador lo admite, bajo `@supports`, y la nativa como respaldo); los detalles (`::picker(select)` blanco, esquinas de 12px, borde de 2px en un tono derivado de `#3838ec` con `color-mix`, opciones con 12px de relleno, resaltado derivado de `#3838ec` con `color-mix`, chevron con `::picker-icon`, y los valores que elija el implementer) van en líneas nuevas después de la 100. Así no se mueven las citas de los tokens de la vuelta anterior (riesgo 11).
+  - `ai-workspace/docs/style-guide-controles.png`: la captura del autor, ya en el árbol; entra en el commit de esta tarea.
+- Tests: ninguno nuevo ni cambiado (solo `.scss` y documentación), así que no hay fase roja.
 - Hecho cuando:
-  - [ ] Sin tests nuevos: no hay fase roja (regla común).
-  - [ ] Ningún `.scss` en componentes. Ningún selector ni token para el `<nav>` ni sus enlaces (R-34, R-90). `_base.scss` y `_health.scss` sin cambios.
-  - [ ] Cada token nuevo sale de `style-guide.md` (D-14, D-18).
-  - [ ] `npm run verify` desde la raíz, en verde. El build compila los parciales.
-  - [ ] C-27, C-30 y C-32 quedan para la puerta 6 (revisión, 320 px y Lighthouse en móvil y escritorio, con captura de cada informe).
+  - [x] Sin tests nuevos: no hay fase roja (regla común).
+  - [x] Ningún `.scss` en componentes. Ningún selector ni token para el `<nav>` ni sus enlaces (R-34, R-90). `_base.scss` y `_health.scss` sin cambios.
+  - [x] HTML y tests sin cambios: `git status` y `git diff --stat` de `apps/` muestran solo `_tokens.scss`, `_simulations.scss`, `_shared.scss` y `styles.scss` (decisión del autor: «Solo .scss, sin cambiar el HTML ni los tests»).
+  - [x] Cada token nuevo lleva en su comentario la línea de `style-guide.md` de la que sale, y esa línea dice ese valor (comprobado con `grep -n`): `:52` en `--color-muted`, `:55` en `--radius-sm` y la línea real de la sección «Controles de formulario» en los demás. Las citas de la vuelta anterior siguen apuntando a la línea correcta tras ajustar la sección (D-14, D-18; riesgo 11).
+  - [x] `style-guide.md` tiene la sección «Controles de formulario» al final, con la captura como fuente y como decisión del autor posterior a la guía (ADR-015). La línea de la lista de opciones describe la mejora progresiva y el respaldo nativo, y los detalles de la lista redondeada están en la sección. `git diff` de `style-guide.md` frente a `HEAD`: solo líneas añadidas tras la última; las líneas 1 a 80 no cambian.
+  - [x] Ninguna regla de `outline` en los parciales: el contorno del navegador se mantiene (D-14; R-36).
+  - [x] Lista redondeada bajo `@supports (appearance: base-select)` en `_simulations.scss` y en `_shared.scss`: `appearance: base-select` en el `<select>` y en `::picker(select)`; `::picker(select)` con `--color-white`, `--radius-sm` y borde de `--control-border-width` en `--control-picker-border-color`; `option` con `--control-option-padding` y resaltado con `--control-option-highlight-color` (D-14).
+  - [x] Un solo chevron con `base-select`: dentro del bloque, `background-image: none` en el `<select>` y en `:disabled`, y el chevron en `::picker-icon` con `--control-chevron` (`--control-chevron-disabled` en la divisa deshabilitada), a 16 px del borde derecho y con el texto acabando a 44 px, como en el respaldo (riesgo 13).
+  - [x] Respaldo: fuera del bloque `@supports` no hay ninguna regla de `option`, `::picker(select)` ni `::picker-icon`, y lo que había en el árbol sigue igual (comprobado con `grep -n` de `option`, `::picker` y `base-select`; riesgo 12).
+  - [x] `.currency-selector__select:disabled` lleva `opacity: 1` (riesgo 9, decisión del autor).
+  - [x] Valores no fijados: si hace falta un valor que no esté en la D-14 (los `color-mix`, la separación de la lista, el giro del chevron, la marca de la opción elegida u otro), se elige el más cercano a la captura y se anota en «Desviaciones», sin parar (riesgo 16; petición del autor, nota (5); antes, nota (4)). El contraste de los tonos elegidos se calcula y se anota (riesgo 14).
+  - [x] Si el build falla por la sintaxis nueva, la tarea para y lo devuelve; si solo avisa, el aviso va literal en el retorno (riesgo 15).
+  - [x] `npm run verify` desde la raíz, en verde, con la salida íntegra en el retorno. El build compila los parciales.
+  - [x] C-27, C-29, C-30, C-32 y la fila de la nota (5) de la sección 5 del plan quedan para la puerta 6 (revisión, teclado y foco, 320 px con «Dólar estadounidense (USD)» elegido —P-04 (a): si se recorta, vuelve al autor—, Lighthouse en móvil y escritorio con captura de cada informe, y la lista redondeada y su respaldo en un navegador de cada tipo, con su contraste).
 
 ## T-09 · navegación en la carcasa (`app.*`)
 - Cubre: R-78, R-79, R-80, R-81 (parte de `app.html` y `app.ts`), R-87, R-88, R-89, R-90, R-91, R-93, R-94, R-95; R-75 y R-76 (`app.spec.ts`)
@@ -312,7 +326,7 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-31, R-32 | T-02, T-07 |
 | R-33 | T-03 |
 | R-34 | T-05, T-08 |
-| R-35, R-36 | T-05, T-06 (R-36: C-29 en la puerta 6) |
+| R-35, R-36 | T-05, T-06, T-08 (estilos de etiquetas y foco; R-36: C-29 en la puerta 6) |
 | R-37 | T-08 (C-30 en la puerta 6) |
 | R-38 | T-07 |
 | R-39 | T-08 (C-32 en la puerta 6) |
@@ -325,7 +339,8 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-51 | T-07, T-10 |
 | R-52 | T-07 |
 | R-53, R-54, R-55, R-56, R-57, R-58 | T-03 |
-| R-59, R-60, R-61 | T-04, T-05, T-07 |
+| R-59, R-60 | T-04, T-05, T-07, T-08 (aspecto del deshabilitado) |
+| R-61 | T-04, T-05, T-07 |
 | R-62, R-63 | T-04, T-07 |
 | R-64, R-65 | T-02 |
 | R-66 | T-05 |

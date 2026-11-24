@@ -77,3 +77,29 @@ Componentes, de arriba abajo:
 4. `<app-split-section>` ×N: texto e imagen, alternando el lado.
 5. `<app-feature-columns>`: dos columnas con checks y una caja destacada.
 6. `<app-footer>`: pie oscuro.
+
+## Controles de formulario
+Decisión del autor del 2026-11-24, posterior a la guía (ADR-015). La fuente es su captura de los desplegables de Roams; los valores que la captura no fija los decidió el autor (spec 005: plan, D-14 y P-02 a P-04). La aplican el campo numérico y los desplegables del simulador.
+
+![Controles de formulario de referencia](style-guide-controles.png)
+
+- Fondo: blanco (`#fff`).
+- Borde: 2px sólido en `#0d0d1a` (`--color-ink`).
+- Esquinas: 12px (`--radius-sm`, `:55`).
+- Alto: 52px.
+- Tipografía: Montserrat, 16px y peso 500, heredados de `body`.
+- Texto del control: `#0d0d1a` (`--color-ink`).
+- Relleno horizontal: 12px.
+- Ancho: el mismo en todos los controles, el del contenedor.
+- Desplegables: sin la flecha nativa y con un chevron hacia abajo a la derecha, en `#0d0d1a`, de 16px, a 16px del borde derecho y con trazo de 2px. El relleno derecho es de 44px (12 + 16 + 16).
+- Foco: borde en el azul de marca `#3838ec` (`--color-brand`, `:51`), sin quitar el contorno del navegador, que sigue siendo el indicador de foco.
+- Deshabilitado (selector de divisa): borde y texto en `#666666` (`--color-muted`, `:52`), chevron en `#666666`, cursor `not-allowed` y `opacity: 1` para que el navegador no aclare el color.
+- Lista de opciones: redondeada con `appearance: base-select` donde el navegador lo admite (mejora progresiva bajo `@supports`, detalles desde `:101`) y la nativa del navegador como respaldo.
+- Etiquetas: encima del control, en negrita 700 y `#0d0d1a`, con 8px hasta el control y 24px entre un grupo y el siguiente.
+- Texto de error: 8px bajo el campo.
+- Slider: nativo, con `accent-color` en el azul de marca.
+- Lista redondeada (`::picker(select)`, solo con `base-select`): fondo blanco (`--color-white`), esquinas de 12px (`--radius-sm`, `:55`) y borde de 2px (`--control-border-width`, `:87`), a 8px (`--space-sm`) del control.
+- Borde de la lista: el azul de marca mezclado al 60% con blanco (`color-mix(in srgb, #3838ec 60%, #fff)`, `#8888f4`), el tono más claro y cercano a la captura que llega a 3:1 sobre blanco (WCAG 1.4.11).
+- Opciones: relleno de 12px y texto en `#0d0d1a` (`--color-ink`); sin la marca de la opción elegida (`::checkmark`), como en la captura.
+- Opción resaltada: fondo en el azul de marca mezclado al 60% con blanco (`color-mix(in srgb, #3838ec 60%, #fff)`, `#8888f4`), con 3:1 sobre blanco y 6,3:1 con el texto `#0d0d1a`.
+- Chevron de la lista: se pinta en `::picker-icon` (el mismo SVG de `:94`, `:96`), con la misma posición que en el respaldo (texto acabando a 44px) y girado hacia arriba con la lista abierta, como en la captura.

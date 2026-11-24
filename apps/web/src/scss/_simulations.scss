@@ -1,0 +1,129 @@
+// Estilos del simulador (spec 005, R-34, R-36, R-37, R-82, R-83; D-14, D-18).
+// Sin selectores para el <nav> ni sus enlaces (R-90).
+// Sin reglas de `outline` (el contorno del navegador se mantiene, R-36).
+// La lista redondeada (`option`, `::picker`) solo va dentro de `@supports (appearance: base-select)`; fuera, la lista es la nativa.
+
+// Etiqueta sobre el título: azul de marca, 14 px, peso 500 (style-guide.md:23).
+.simulation-page__eyebrow {
+  color: var(--color-brand);
+  font-size: var(--font-size-eyebrow);
+  font-weight: 500;
+}
+
+// Título con los tamaños del H2 de la guía en todos los anchos, sin media query (D-18).
+.simulation-page__title {
+  color: var(--color-ink);
+  font-weight: 800;
+  font-size: var(--font-size-title);
+  line-height: var(--line-height-title);
+}
+
+// Tarjeta blanca, como `.card` de la guía; separación entre tarjetas con --space-lg.
+.simulation-page__card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+// Etiqueta encima del control: negrita, color de títulos, 8 px hasta el control y 24 px entre grupos.
+.simulation-form__label {
+  display: block;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: 0 0 var(--space-sm);
+
+  &:not(:first-child) {
+    margin-top: var(--space-md);
+  }
+}
+
+// Controles al ancho de su contenedor, con borde y relleno dentro del 100 % (R-37).
+.simulation-form__control {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.simulation-form__control[type='range'] {
+  accent-color: var(--color-brand);
+}
+
+// Campo numérico y desplegable de país: aspecto de los controles de la guía.
+input[type='number'].simulation-form__control,
+select.simulation-form__control {
+  background-color: var(--color-white);
+  border: var(--control-border-width) solid var(--color-ink);
+  border-radius: var(--radius-sm);
+  height: var(--control-height);
+  padding: 0 var(--control-padding-x);
+  font: inherit;
+  color: var(--color-ink);
+
+  &:focus {
+    border-color: var(--color-brand);
+  }
+}
+
+// Desplegable de país: sin la flecha nativa y con el chevron a la derecha.
+select.simulation-form__control {
+  appearance: none;
+  background-image: var(--control-chevron);
+  background-repeat: no-repeat;
+  background-position: right var(--control-chevron-offset) center;
+  background-size: var(--control-chevron-size) var(--control-chevron-size);
+  padding-right: calc(var(--control-padding-x) + var(--control-chevron-size) + var(--control-chevron-offset));
+}
+
+// Mejora progresiva: lista de opciones redondeada donde el navegador admite `base-select` (D-14, nota (5)).
+// Un solo chevron: el del respaldo se quita y se pinta en `::picker-icon`, con el texto acabando a 44 px.
+@supports (appearance: base-select) {
+  select.simulation-form__control {
+    appearance: base-select;
+    background-image: none;
+    justify-content: space-between;
+    gap: 0;
+    padding-right: var(--control-chevron-offset);
+    align-items: center;
+
+    &::picker-icon {
+      content: '';
+      flex: none;
+      width: var(--control-chevron-size);
+      height: var(--control-chevron-size);
+      margin-inline-start: var(--control-padding-x);
+      background: var(--control-chevron) no-repeat center / var(--control-chevron-size) var(--control-chevron-size);
+    }
+
+    &:open::picker-icon {
+      rotate: 180deg;
+    }
+
+    &::picker(select) {
+      appearance: base-select;
+      background: var(--color-white);
+      border: var(--control-border-width) solid var(--control-picker-border-color);
+      border-radius: var(--radius-sm);
+      margin-block: var(--space-sm);
+    }
+
+    option {
+      padding: var(--control-option-padding);
+      color: var(--color-ink);
+
+      &:hover,
+      &:focus {
+        background-color: var(--control-option-highlight-color);
+      }
+
+      &::checkmark {
+        display: none;
+      }
+    }
+  }
+}
+
+// Texto de error: 8 px bajo el campo y sin margen inferior (el grupo siguiente separa con sus 24 px).
+.simulation-form__error {
+  margin: var(--space-sm) 0 0;
+}

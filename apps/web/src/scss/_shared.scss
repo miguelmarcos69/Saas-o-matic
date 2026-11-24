@@ -1,6 +1,100 @@
-// Estilos de los componentes de shared/ (spec 005, R-34, R-37; D-14).
-// El selector de divisa ocupa el ancho de su contenedor sin desbordarlo.
+// Estilos de los componentes de shared/ (spec 005, R-34, R-36, R-37, R-59, R-60; D-14).
+// Sin reglas de `outline` (el contorno del navegador se mantiene, R-36).
+// La lista redondeada (`option`, `::picker`) solo va dentro de `@supports (appearance: base-select)`; fuera, la lista es la nativa.
+
+// Etiqueta «Divisa»: como las del formulario, con 24 px encima porque es un grupo nuevo (el HTML no cambia).
+app-currency-selector label {
+  display: block;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: var(--space-md) 0 var(--space-sm);
+}
+
+// El selector de divisa ocupa el ancho de su contenedor sin desbordarlo y lleva el mismo aspecto que el de país.
 .currency-selector__select {
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
+  background-color: var(--color-white);
+  border: var(--control-border-width) solid var(--color-ink);
+  border-radius: var(--radius-sm);
+  height: var(--control-height);
+  padding: 0 var(--control-padding-x);
+  padding-right: calc(var(--control-padding-x) + var(--control-chevron-size) + var(--control-chevron-offset));
+  font: inherit;
+  color: var(--color-ink);
+  appearance: none;
+  background-image: var(--control-chevron);
+  background-repeat: no-repeat;
+  background-position: right var(--control-chevron-offset) center;
+  background-size: var(--control-chevron-size) var(--control-chevron-size);
+
+  &:focus {
+    border-color: var(--color-brand);
+  }
+
+  // Deshabilitado: borde, texto y chevron en gris; `opacity: 1` evita que el navegador lo aclare (riesgo 9).
+  &:disabled {
+    border-color: var(--color-muted);
+    color: var(--color-muted);
+    background-image: var(--control-chevron-disabled);
+    cursor: not-allowed;
+    opacity: 1;
+  }
+}
+
+// Mejora progresiva: lista de opciones redondeada donde el navegador admite `base-select` (D-14, nota (5)).
+// Un solo chevron: el del respaldo se quita (también en `:disabled`) y se pinta en `::picker-icon`.
+@supports (appearance: base-select) {
+  .currency-selector__select {
+    appearance: base-select;
+    background-image: none;
+    justify-content: space-between;
+    gap: 0;
+    padding-right: var(--control-chevron-offset);
+    align-items: center;
+
+    &:disabled {
+      background-image: none;
+    }
+
+    &::picker-icon {
+      content: '';
+      flex: none;
+      width: var(--control-chevron-size);
+      height: var(--control-chevron-size);
+      margin-inline-start: var(--control-padding-x);
+      background: var(--control-chevron) no-repeat center / var(--control-chevron-size) var(--control-chevron-size);
+    }
+
+    &:disabled::picker-icon {
+      background-image: var(--control-chevron-disabled);
+    }
+
+    &:open::picker-icon {
+      rotate: 180deg;
+    }
+
+    &::picker(select) {
+      appearance: base-select;
+      background: var(--color-white);
+      border: var(--control-border-width) solid var(--control-picker-border-color);
+      border-radius: var(--radius-sm);
+      margin-block: var(--space-sm);
+    }
+
+    option {
+      padding: var(--control-option-padding);
+      color: var(--color-ink);
+
+      &:hover,
+      &:focus {
+        background-color: var(--control-option-highlight-color);
+      }
+
+      &::checkmark {
+        display: none;
+      }
+    }
+  }
 }
