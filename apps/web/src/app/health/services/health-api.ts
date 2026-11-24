@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { HealthStatus } from '../interfaces/health-status';
-import { LoadState } from '../interfaces/load-state';
+import { LoadState } from '../../shared/interfaces/load-state';
 
 // Texto del estado de error (R-22, Decisión 2026-11-20 #19); la página lo muestra tal cual.
 const ERROR_MESSAGE = 'API: no responde';

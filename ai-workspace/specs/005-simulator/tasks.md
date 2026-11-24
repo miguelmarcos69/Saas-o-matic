@@ -33,8 +33,9 @@ Reglas comunes de esta spec:
 ## T-01 · shared: traslado de `LoadState<T>` y cambios de `health/`
 - Cubre: R-70, R-71, R-72, R-73, R-98; R-74 a R-76 (en esta tarea)
 - Depende de: —
-- Estado: [ ] pendiente
-- Modelo propuesto: Sonnet 5.5 (cambios literales dados en el plan).
+- Estado: [x] hecha
+- Modelo: Sonnet 5.5, confirmado por el autor (cambios literales dados en el plan).
+- Aprobación del autor 2026-11-24 (literal): «Apruebo la T-01.» `npm run verify` en verde: 766 tests en la raíz y 14 en la web (antes, 766 + 14), relanzado por la sesión principal.
 - Archivos de producción (4):
   - `app/shared/interfaces/load-state.ts` (nuevo): el contenido de `health/interfaces/load-state.ts`, salvo la línea 2, que pasa a `// Movido de health/ a shared/ en la spec 005 (Decisión 2026-11-23 #12), como fija architecture.md.` (D-16).
   - `app/health/interfaces/load-state.ts` (borrado).
@@ -42,11 +43,11 @@ Reglas comunes de esta spec:
   - `app/health/pages/health-page/health-page.ts`: solo la línea 5, `// Página de inicio: muestra el estado de la API (spec 000: R-12, R-22).`.
 - Tests: ninguno nuevo ni cambiado. Por eso no hay fase roja. Los de `health/` y `app.spec.ts` siguen igual y en verde.
 - Hecho cuando:
-  - [ ] Sin tests nuevos: no hay fase roja (regla común).
-  - [ ] `git diff -M --stat` muestra el traslado como renombrado de `health/interfaces/load-state.ts` a `shared/interfaces/load-state.ts`. `git diff -M` de ese par solo cambia la línea 2 (R-73, R-98; C-45).
-  - [ ] En `health/` solo cambian el traslado, la línea 4 de `health-api.ts` y la línea 5 de `health-page.ts` (R-71, R-72, R-74; C-46 en esta tarea).
-  - [ ] `health-api.spec.ts`, `health-page.spec.ts` y `app.spec.ts` sin cambios y en verde (R-75, R-76).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Sin tests nuevos: no hay fase roja (regla común).
+  - [x] `git diff -M --stat` muestra el traslado como renombrado de `health/interfaces/load-state.ts` a `shared/interfaces/load-state.ts`. `git diff -M` de ese par solo cambia la línea 2 (R-73, R-98; C-45). Sin `git add`, git no ve el renombrado antes del commit. Por eso, antes del commit se comprobó con `diff` entre `git show HEAD:apps/web/src/app/health/interfaces/load-state.ts` y el fichero nuevo, y solo cambia la línea 2. El renombrado se comprueba tras el commit con `git show -M --stat` (decisión del autor) y se anota en el registro de la sesión.
+  - [x] En `health/` solo cambian el traslado, la línea 4 de `health-api.ts` y la línea 5 de `health-page.ts` (R-71, R-72, R-74; C-46 en esta tarea).
+  - [x] `health-api.spec.ts`, `health-page.spec.ts` y `app.spec.ts` sin cambios y en verde (R-75, R-76).
+  - [x] `npm run verify` desde la raíz, en verde.
 
 ## T-02 · shared: conversión entera y formato de divisa
 - Cubre: R-28 (parte de la función: `toDisplayCents` sin tipo), R-29, R-30, R-31 (parte de la función), R-32 (parte de la función), R-64, R-65, R-69, R-97, R-99

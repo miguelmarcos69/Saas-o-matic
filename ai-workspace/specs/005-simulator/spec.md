@@ -1,6 +1,6 @@
 # Spec 005 · simulator
 
-- **Estado:** Planificada
+- **Estado:** En implementación
 - **Depende de:** 001, 003
 - **Cubre:** §2.B
 
@@ -43,6 +43,7 @@ En la web, conectar con una API pública de tipos de cambio (`open.er-api.com/v6
   - Puerta 3, punto 3: cuatro decisiones previsibles propuestas por la sesión principal antes de lanzar al planner y aceptadas por el autor (plan, D-02 a D-05); la (1) chocó con R-10 y el autor la corrigió con la Q-01 (D-02).
   - Puerta 3, puntos 4, 5 y 6: encargo del planner sin enseñarlo antes, «Rutas a leer» acotadas y planner con Opus 5.5.
   - Puerta 4, puntos 3, 4 y 6: cuatro decisiones previsibles aceptadas por el autor (cabecera de tasks.md), encargo sin enseñarlo antes y planner con Opus 5.5; modelo del implementer por tarea, confirmado por el autor.
+  - Puerta 5, puntos 4 y 6: encargo del implementer sin enseñarlo antes y el modelo de cada tarea, el que confirmó el autor (T-01, Sonnet 5.5).
 
 ## 2. Requisitos
 Una sola afirmación comprobable por requisito. Patrones EARS:

@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { calculateBaseCostCents } from '@saas-o-matic/pricing';
 import { HealthApi } from '../../services/health-api';
 
-// Página de inicio: muestra el estado de la API (R-12, R-22).
+// Página de inicio: muestra el estado de la API (spec 000: R-12, R-22).
 @Component({
   selector: 'app-health-page',
   templateUrl: './health-page.html',
