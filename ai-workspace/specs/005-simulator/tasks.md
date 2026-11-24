@@ -75,20 +75,21 @@ Reglas comunes de esta spec:
 ## T-03 · shared: esquema y servicio de tipos de cambio
 - Cubre: R-17 (parte del servicio), R-18, R-19, R-33, R-53, R-54, R-55, R-56, R-57, R-58, R-96
 - Depende de: —
-- Estado: [ ] pendiente
-- Modelo propuesto: Opus 5.5 (esquema Zod 4.6.7 con `transform` y rechazo del 0; forma a elegir y probar, D-07).
+- Estado: [x] hecha
+- Modelo: Opus 5.5, confirmado por el autor (esquema Zod 4.6.7 con `transform` y rechazo del 0; forma a elegir y probar, D-07).
+- Aprobación del autor 2026-11-24 (literal): «Desviaciones 1 a 4 de la T-03: aceptadas (test de control, bucle for…of en C-16, refine sin mensaje propio).» y «Apruebo la T-03.» `npm run verify` en verde: 766 tests en la raíz y 84 en la web (antes, 766 + 55; 29 nuevos), relanzado por la sesión principal. Fase roja íntegra en `ai-workspace/sessions/2026-11-24-03-005-simulator.md`.
 - Archivos de producción (2):
   - `app/shared/schemas/exchange-rates.ts` (nuevo): `exchangeRatesSchema` (`z.object` no estricto) y `type ExchangeRates = z.output<typeof exchangeRatesSchema>`, `{ USD: number; GBP: number }` en millonésimas (D-07).
   - `app/shared/services/exchange-rates-api.ts` (nuevo): `ExchangeRatesApi` (`providedIn: 'root'`), con `fetch(): Observable<ExchangeRates>`. Hace un `GET` a `https://open.er-api.com/v6/latest/EUR`, pasa la respuesta por el esquema y, si no lo supera, termina en error. Sin estado (D-06).
 - Tests (nuevos): `app/shared/schemas/exchange-rates.spec.ts` y `app/shared/services/exchange-rates-api.spec.ts`, este con `provideHttpClientTesting()`, `HttpTestingController` y `verify()`.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] C-16 en el esquema (R-19, R-53 a R-56): las 16 variantes, cada una aparte, no superan el esquema. La (16), 100,0000004, se rechaza aunque redondee a 100 000 000.
-  - [ ] C-37 en el esquema (R-55 a R-57): USD 100 y GBP 100 con `time_last_update_unix` y `rates.JPY` se aceptan. La salida es `{ USD: 100000000, GBP: 100000000 }`, sin los campos de más.
-  - [ ] C-38 pasa (R-58): 1 031 250, 875 000, 100 000 000 y 1 005 000.
-  - [ ] C-53 en el esquema (R-96): `rates.USD` 0,0000004 y, aparte, `rates.GBP` 0,0000004 no superan el esquema.
-  - [ ] Servicio (R-17, R-18, R-19): `fetch()` hace un solo `GET` a la URL exacta. Un cuerpo válido emite las millonésimas. Un cuerpo no válido, un 500 y un error de red terminan en error. `exchange-rates-api.ts` es el único fichero de la tarea con `HttpClient`.
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] C-16 en el esquema (R-19, R-53 a R-56): las 16 variantes, cada una aparte, no superan el esquema. La (16), 100,0000004, se rechaza aunque redondee a 100 000 000.
+  - [x] C-37 en el esquema (R-55 a R-57): USD 100 y GBP 100 con `time_last_update_unix` y `rates.JPY` se aceptan. La salida es `{ USD: 100000000, GBP: 100000000 }`, sin los campos de más.
+  - [x] C-38 pasa (R-58): 1 031 250, 875 000, 100 000 000 y 1 005 000.
+  - [x] C-53 en el esquema (R-96): `rates.USD` 0,0000004 y, aparte, `rates.GBP` 0,0000004 no superan el esquema.
+  - [x] Servicio (R-17, R-18, R-19): `fetch()` hace un solo `GET` a la URL exacta. Un cuerpo válido emite las millonésimas. Un cuerpo no válido, un 500 y un error de red terminan en error. `exchange-rates-api.ts` es el único fichero de la tarea con `HttpClient`.
+  - [x] `npm run verify` desde la raíz, en verde.
 
 ## T-04 · shared: estado de los tipos y divisa elegida
 - Cubre: R-20 (parte del servicio), R-22 (texto del estado de error), R-23 (parte del servicio), R-26, R-59 a R-63 (parte del servicio), R-67
