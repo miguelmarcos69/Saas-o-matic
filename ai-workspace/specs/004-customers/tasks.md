@@ -1,0 +1,451 @@
+# Tareas · spec 004 · customers
+
+Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo 5 archivos de producción, sin contar sus tests (`*.spec.ts`) ni los ficheros generados (solo el lockfile). Las migraciones son SQL escrito a mano y cuentan como producción. Si no cabe, se parte. Un recurso nuevo se divide por capa: en la API, una tarea por capa (`domain`, `infrastructure` y `presentation`); en la web, una tarea por servicio con su interfaz y una por página o componente (cuentan `.ts` y `.html`). Si una tarea necesita más de 5 archivos y no se puede dividir, lo justifica por escrito en una línea `Excepción de tamaño:` y el revisor lo comprueba. El test va dentro de la tarea que lo exige. Al cerrar una tarea: MEMORY.md, diff y commit propuesto.
+
+Hay quince tareas, T-01 a T-15: una por paso del «Orden de construcción» de `plan.md` (sección 7), en el mismo orden y sin agrupar ni partir ninguno. Petición literal del autor: «Para la puerta 4: tareas a partir de los 15 pasos del plan, en el orden por valor (pasos 1 a 5, API de lectura; 6 a 10, buscador y dashboard; 11 a 13, detalle con historial; 14 y 15, cabecera con estilos y seed), una tarea por paso salvo que el planner justifique agrupar. Marca en tasks.md cuáles son el mínimo imprescindible (los pasos 1 a 13) y cuáles van al final (14 y 15). Opus 5.5 para lo que tenga lógica (DTOs, regla de búsqueda, datasources, casos de uso, servicio y detalle) y Sonnet 5.5 para lo sencillo (tarjetas, estilos, cabecera, seed), como en la 005. Antes de enseñarme el retorno, cuenta en el fichero las tareas y las dudas y dame los números. Dudas en bloque, cada una con una recomendada.»
+- **Mínimo imprescindible** (pasos 1 a 13, según la petición del autor): T-01 a T-13. Bloque 1, API de lectura: T-01 a T-05. Bloque 2, buscador y dashboard: T-06 a T-10. Bloque 3, detalle con historial: T-11 a T-13.
+- **Al final** (pasos 14 y 15): T-14 (cabecera con estilos) y T-15 (seed). Cubren requisitos de la spec (cabecera, navegación, seed y Lighthouse), así que la spec no se cierra sin ellas. «Al final» indica el orden, no que sean opcionales.
+- Ninguna pasa de 5 archivos de producción (`package.json` cuenta; el lockfile no, y ninguna tarea lo cambia), así que ninguna lleva `Excepción de tamaño:`. La T-15 tiene justo 5. `CLAUDE.md` y `architecture.md` son documentación y no cuentan (plan, sección 2).
+- Las rutas son de `apps/api/src/` en T-01 a T-05, de `apps/web/src/` en T-06 a T-14, y las que indica la T-15.
+- Estado de las tareas: pendientes de la aprobación del autor (puerta 4). Dudas de esta puerta: Q-01 a Q-03, decididas por el autor en la segunda vuelta (las tres en (a)), al final del fichero; sin dudas abiertas. Desde otro fichero se citan como «tasks.md Q-01».
+
+Reglas comunes de esta spec:
+- **Fase roja** en cada tarea con tests nuevos o cambiados de comportamiento nuevo:
+  - Los tests se escriben antes que el código de producción y fallan porque ese código no existe.
+  - El implementer da en su retorno la salida íntegra del rojo, sin reescribir ninguna línea. La sesión principal la copia al registro de la sesión en el momento.
+  - La T-03 (puertos y falsos) y la T-10 (solo `.scss`) no traen tests de comportamiento nuevo. Su «Hecho cuando» lo dice y no tienen fase roja.
+- **Cierre:** cada tarea se cierra con `npm run verify` desde la raíz (`build` y `test`, principio 3), en verde. El implementer da los recuentos de la raíz y de la web, antes y después (antes de la T-01: 766 + 180, según `MEMORY.md`).
+- **Dependencias:** ninguna tarea instala nada (plan, sección 4; principio 4).
+- **Ficheros:** de `apps/` y `packages/` solo cambian los que nombra cada tarea (`git status` y `git diff --stat`). `packages/pricing`, `apps/api/migrations/`, `database.md`, `simulations/`, `health/`, `_simulations.scss`, `_health.scss`, `_base.scss` y `app.config.ts` no cambian en ninguna (R-21, R-66, R-67, R-95; plan, D-16 y H-15).
+- **Regla de parada (plan, D-16):** ninguna aserción de otra spec se borra ni se desactiva (sin `skip`, `todo`, `xit` ni `expect` comentado). Si falla un test de otra spec que no está en la lista cerrada de la D-16, o hace falta tocar un fichero fuera de ella, la tarea para y lo devuelve.
+- **Reservas aceptadas** (H-04, H-10, H-14, H-15 y H-21): no se resuelven aquí y ninguna tarea las empeora. `:id` se convierte con `Number()` (H-04, riesgo 3), la web no pone `maxlength` en el buscador (H-10) y `database.md` no se toca (H-15).
+- **Citas** (R-144, D-16): toda cita de un requisito o una decisión que la tarea cree o toque en el código lleva su spec («spec 004: R-16»).
+- **Textos literales** de la spec (etiquetas, títulos, estados, anuncios y mensajes de error de D-08) se comparan en los tests con `toBe`.
+- **Importes en la web:** formato esperado sacado de `formatCents` y `toDisplayCents` (`shared/services/currency-conversion.ts`), no de un literal escrito a mano (plan, sección 5). Ningún test de `customers/` prueba límites de los tramos (R-73) ni importa `packages/pricing`.
+- **Tests de `customers/`:** rutas definidas en el propio test, solo con páginas de `customers/`, sin importar `app.routes` (R-75).
+- **Comprobación manual:** lo que el plan marca como «Manual» (sección 5) lo comprueba el revisor o el autor en la puerta 6 y no se marca en ninguna tarea: C-02, C-23, C-24, C-27, C-38, C-39, C-63 a C-65, C-68 a C-74, C-78, C-102 (estilo), C-138 a C-141, C-144, C-146 a C-148, C-170 y C-174. Las tareas dejan el `git diff` que esa revisión necesita.
+- **Modelo del implementer** (ADR-016, punto 6): va en cada tarea, según la petición del autor y, en las que no encajaban claramente en ella, según la Q-01 (a), decidida por el autor. El autor lo confirma al aprobar la puerta.
+
+## T-01 · domain: DTO de consulta, regla de búsqueda y entidad
+- Cubre: R-03, R-05, R-08, R-09, R-16, R-17, R-18, R-80, R-83 a R-94, R-144, R-156, R-157, R-158 (parte de `domain`, sin servidor)
+- Depende de: —
+- Estado: [ ] pendiente
+- Modelo: Opus 5.5 (DTO y regla de búsqueda, según la petición del autor).
+- Archivos de producción (4):
+  - `domain/dtos/customers/search-customers.dto.ts` (nuevo): `SearchCustomersDto.create(query)` (D-04).
+  - `domain/dtos/customers/customer-id.dto.ts` (nuevo): `CustomerIdDto.create(params, query)`, con el orden de comprobaciones 1 a 5 de la D-04.
+  - `domain/use-cases/customer/customer-search.ts` (nuevo): `foldText`, `toSearchTerms`, `matchesCustomer` y `compareCustomers` (D-05), sin Zod ni nada fuera de `domain`.
+  - `domain/entities/customer.entity.ts` (crece): `CustomerWithLastSimulation` (D-05, D-07).
+- Tests (nuevos): `search-customers.dto.spec.ts`, `customer-id.dto.spec.ts` y `customer-search.spec.ts`, junto a su fichero.
+- Hecho cuando:
+  - [ ] Fase roja: salida íntegra en el registro de la sesión.
+  - [ ] C-08 pasa en los dos DTO: validan sin Express ni SQLite.
+  - [ ] DTO de `:id`, unitario: C-83 (`0`, `-1` → `TOO_SMALL`), C-84 (`9007199254740992` → `TOO_BIG`; `9007199254740991` válido), C-85 (`abc`, `1.5`), C-86 (`+1`, `1e3`, `0x10`, ` 1`), C-156 (`01`, `1.0`) → `INVALID_TYPE`, y C-157 (`-1.5` → `TOO_SMALL`; `9007199254740992.5` → `TOO_BIG`). Un solo elemento de `details[]` en `id` por caso.
+  - [ ] DTO, `details[]` juntos: con `params` `{ id: 'abc' }` y `query` `{ foo: '1' }`, un `CustomError` `VALIDATION_ERROR` con `id` (`INVALID_TYPE`) y `foo` (`UNKNOWN_FIELD`) (C-09 a nivel unitario); con `query` no vacía, `UNKNOWN_FIELD` por clave (C-90, R-90).
+  - [ ] DTO de `q`, unitario: ausente → `''`; recortado (C-87); array → `INVALID_TYPE` (C-88); 200, 201 y 200 con dos espacios a cada lado → válido, `TOO_BIG` y válido (C-89); otra clave → `UNKNOWN_FIELD` (C-90).
+  - [ ] Regla pura: C-16, C-17, C-18 (los dos órdenes, con `id` de desempate), C-91 (incluido «Ñandú Façades»), C-92 (`12.345.678-z` y `5678z`), C-93, C-94 y C-158 (las dos formas vacías → no coincide).
+  - [ ] `customer-search.ts` no importa nada fuera de `domain` (`git grep -n "^import" -- apps/api/src/domain/use-cases/customer/customer-search.ts`, con `--untracked` si aún no está preparado).
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-02 · infrastructure: tres lecturas en el datasource
+- Cubre: R-01, R-03 a R-07, R-12, R-79 a R-82, R-144 (parte del datasource)
+- Depende de: T-01
+- Estado: [ ] pendiente
+- Modelo: Opus 5.5 (datasource, según la petición del autor).
+- Archivos de producción (2):
+  - `infrastructure/datasource/sqlite-customer.datasource.ts` (crece): `findAllWithLastSimulation`, `findById` y `findSimulationsByCustomerId`, con el SQL de la D-06 y parámetros. El puerto aún no las pide (plan, paso 2).
+  - `infrastructure/datasource/sqlite-simulation.datasource.ts`: solo `export` en `SimulationRow` (`:6`) y `toEntity` (`:20`) (D-06, D-16).
+- Tests (crece): `infrastructure/datasource/sqlite-customer.datasource.spec.ts`.
+- Hecho cuando:
+  - [ ] Fase roja: salida íntegra en el registro de la sesión.
+  - [ ] C-05 (la de 40 usuarios y, con el mismo `created_at` escrito a mano con el formato de `database.md:19`, la de mayor `id`), C-06 (fila a mano con importes distintos de `packages/pricing` que respetan el `CHECK`) y C-80 (`lastSimulation` `null`) pasan sobre `findAllWithLastSimulation`.
+  - [ ] C-82 pasa sobre `findSimulationsByCustomerId`; con un cliente sin simulaciones, `[]` (R-81). `findById` devuelve `undefined` si no hay fila.
+  - [ ] El SQL nuevo usa `?` y ningún valor concatenado (R-12; el revisor lo comprueba).
+  - [ ] Los tests de la 002 y la 003 del datasource siguen en verde, sin aserciones quitadas (C-01 en esta tarea).
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-03 · puertos y repositorio de `customers`
+- Cubre: R-01, R-03, R-04, R-79, R-144 (puertos y delegación; P-02 (a))
+- Depende de: T-02
+- Estado: [ ] pendiente
+- Modelo: Sonnet 5.5, por la Q-01 (a) (firmas y delegación dadas en la D-07).
+- Justificación de capas: junta los puertos de `domain` y su implementación de `infrastructure` porque, si el puerto crece sin la clase, `npm run build` falla (plan, paso 3 y riesgo 1); el recurso ya existe.
+- Archivos de producción (3):
+  - `domain/datasources/customer.datasource.ts` (crece): las tres firmas, con `Promise` (D-07).
+  - `domain/repository/customer.repository.ts` (crece): las mismas firmas.
+  - `infrastructure/repository/customer.repository.imp.ts` (crece): delega las tres lecturas.
+- Tests (cambian, sin aserciones nuevas ni quitadas): `domain/use-cases/customer/create-customer.spec.ts:28` y `presentation/customers/controller.spec.ts:23` ganan las tres lecturas en su falso, que lanzan si se llaman, con un comentario «spec 004: …» (P-02 (a), D-16).
+- Hecho cuando:
+  - [ ] Sin tests de comportamiento nuevo: no hay fase roja (regla común). La delegación se prueba de punta a punta en la T-05.
+  - [ ] `git diff` de los dos tests de la 002 solo añade las tres lecturas y su comentario; ninguna aserción cambia (C-01 en esta tarea).
+  - [ ] `npx tsc -p apps/api/tsconfig.json --noEmit` sin errores en los dos tests que toca (Q-02 (a), riesgo 2). Si da errores en ficheros ajenos a la 004, la tarea no los corrige: los copia literales en su retorno y para.
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-04 · domain: casos de uso de lectura
+- Cubre: R-04, R-10, R-13, R-16 a R-20, R-79, R-81, R-144, R-158
+- Depende de: T-01, T-03
+- Estado: [ ] pendiente
+- Modelo: Opus 5.5 (casos de uso, según la petición del autor).
+- Archivos de producción (3):
+  - `domain/use-cases/customer/search-customers.ts` (nuevo): `SearchCustomers` (D-05).
+  - `domain/use-cases/customer/get-customer.ts` (nuevo): `GetCustomer`, con `customerNotFoundError()` (D-07).
+  - `domain/use-cases/customer/list-customer-simulations.ts` (nuevo): `ListCustomerSimulations`, que lee antes el cliente (D-07).
+- Tests (nuevos): `search-customers.spec.ts`, `get-customer.spec.ts` y `list-customer-simulations.spec.ts`, con repositorio falso.
+- Hecho cuando:
+  - [ ] Fase roja: salida íntegra en el registro de la sesión.
+  - [ ] C-13 pasa: los tres casos de uso, sin Express ni SQLite; `git grep -n "^import" -- apps/api/src/domain/use-cases/customer/` (con `--untracked`) no muestra nada fuera de `domain` y `packages/pricing`.
+  - [ ] `SearchCustomers`: con `q` `''`, todos en el orden de R-18 (C-18, C-20 a nivel unitario); con texto, solo los que coinciden, en ese orden; sin límite (R-19).
+  - [ ] `GetCustomer` y `ListCustomerSimulations`: con `findById` en `undefined`, `NOT_FOUND` con «No existe el cliente indicado.» (R-10), y el segundo no llama a `findSimulationsByCustomerId`; con cliente sin simulaciones, `[]` (R-81).
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-05 · presentation: lecturas, ruta inexistente y textos
+- Cubre: R-01, R-03 a R-12, R-14 a R-21, R-72, R-79 a R-95, R-144, R-156, R-157
+- Depende de: T-04
+- Estado: [ ] pendiente
+- Modelo: Opus 5.5, por la Q-01 (a) (la tarea con más casos de la API y la ruta inexistente).
+- Archivos de producción (4):
+  - `presentation/customers/controller.ts` (crece): `search`, `findById` y `listSimulations` (D-07).
+  - `presentation/customers/routes.ts` (crece): `GET /`, `GET /:id` y `GET /:id/simulations`, sin `express.json` (D-07).
+  - `presentation/middlewares/error-handler.ts`: `ROUTE_NOT_FOUND_MESSAGE` y `notFoundHandler`; comentario de la línea 8 con «spec 004: D-08» (D-08).
+  - `presentation/routes.ts`: monta `notFoundHandler` después de `/simulations` y antes de `errorHandler`; comentario de las líneas 24-25 (D-08).
+- Tests (crecen): `presentation/customers/routes.spec.ts`, `presentation/customers/controller.spec.ts`, `presentation/middlewares/error-handler.spec.ts` y `presentation/routes.spec.ts`.
+- Hecho cuando:
+  - [ ] Fase roja: salida íntegra en el registro de la sesión.
+  - [ ] Integración en `customers/routes.spec.ts` (`fetch` y `:memory:`): C-03, C-04, C-05, C-06, C-07, C-10, C-12, C-16 a C-20, C-79 a C-94, C-156, C-157 y C-163 a C-167.
+  - [ ] C-09 y C-15: `details[]` y cada `message`, con los textos de la tabla de la D-08 (`toBe`).
+  - [ ] `controller.spec.ts`: C-08 (con un parámetro no válido, el repositorio falso no recibe ninguna llamada) y C-11 (repositorio que falla con un `Error` → 500 `INTERNAL_ERROR`, sin traza).
+  - [ ] C-14 en `routes.spec.ts`: `GET /no-existe` y `DELETE /customers` → 404 JSON con «No existe la ruta indicada.», sin `details`; `GET /api/health` sigue en 404 (`routes.spec.ts:53-59`).
+  - [ ] C-72: cada endpoint de lectura tiene su éxito y sus errores en `customers/routes.spec.ts`.
+  - [ ] C-01: los tests de `POST /customers` y `POST /simulations` siguen en verde; `git diff` de sus tests sin aserciones quitadas.
+  - [ ] C-21 y C-95: `git diff --stat HEAD -- apps/api/migrations/ ai-workspace/docs/database.md` vacío y `git grep -n "CREATE INDEX"` sin líneas nuevas.
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-06 · web: tipos y servicio de búsqueda
+- Cubre: R-20, R-25, R-27, R-40, R-41, R-42, R-96, R-122, R-144 (parte del servicio)
+- Depende de: —
+- Estado: [ ] pendiente
+- Modelo: Opus 5.5 (servicio, según la petición del autor).
+- Archivos de producción (3):
+  - `app/shared/interfaces/customer.ts` (nuevo): `Customer` y `CustomerWithLastSimulation` (D-09).
+  - `app/shared/interfaces/simulation.ts` (nuevo): `Simulation` (D-09).
+  - `app/customers/services/customers-api.ts` (nuevo): `CustomersApi` con `searchState` y `search(q, destroyRef)` (D-09).
+- Tests (nuevo): `app/customers/services/customers-api.spec.ts`, con `provideHttpClientTesting()`, `HttpTestingController` y `verify()`.
+- Hecho cuando:
+  - [ ] Fase roja: salida íntegra en el registro de la sesión.
+  - [ ] `search('')` hace `GET /api/customers` sin `q`; `search('Acme')`, `GET /api/customers?q=Acme`; «100%+» sale como `%2B` (riesgo 13).
+  - [ ] `searchState` pasa por `loading`, `data` y `error`; en el error, «No se han podido cargar los clientes.» (R-122, `toBe`).
+  - [ ] Una segunda búsqueda con la primera retenida deja la primera `cancelled` (R-96, parte del servicio).
+  - [ ] `HttpClient` solo en `customers/services/customers-api.ts` dentro de `customers/` (C-25 en esta tarea, `git grep` con `--untracked`); los tipos se importan de `shared/interfaces/` (C-27 en esta tarea).
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-07 · web: formato de las vistas y tarjeta de cliente
+- Cubre: R-24, R-30, R-31, R-33, R-48 a R-51, R-68, R-73, R-75, R-99, R-100, R-101 a R-108, R-113, R-118, R-119, R-144, R-159, R-169 (parte de la plantilla)
+- Depende de: T-06
+- Estado: [ ] pendiente
+- Modelo: Sonnet 5.5, según la petición («tarjetas») y la Q-01 (a), aunque trae las funciones puras de la D-11.
+- Justificación de agrupación: une la pieza pura de formato con su primer usuario, la tarjeta, como el paso 7 del plan (3 ficheros); no se parte (Q-01 (a)).
+- Archivos de producción (3):
+  - `app/customers/services/customer-display.ts` (nuevo): `countryName`, `formatSimulationDate`, `taxLabel` y `resultsAnnouncement` (D-11).
+  - `app/customers/components/customer-card/customer-card.ts` y `customer-card.html` (nuevos): `CustomerCard` (`app-customer-card`) (D-11).
+- Tests (nuevos): `customer-display.spec.ts` y `customer-card.spec.ts`.
+- Hecho cuando:
+  - [ ] Fase roja: salida íntegra en el registro de la sesión.
+  - [ ] `customer-display.spec.ts`: C-118 (cuatro países), C-107 («IVA (23 %)» y «IVA (21 %)»), C-108 (las tres fechas con `'Europe/Madrid'`) y `resultsAnnouncement` con 0, 1 y 3 (C-100, C-159).
+  - [ ] `customer-card.spec.ts`: C-101, C-103 (EUR, sin fecha ni usuarios), C-104, C-105 (`<a>` a `/customers/{id}`, única parada de tabulación), C-113, C-119, la última simulación en la tarjeta (C-31 en la web) y la clase `customer-card__pill` en país y plan (C-102, parte de la plantilla).
+  - [ ] C-49 y C-50 en la tarjeta: con EUR, el formato de 169,40 €; con USD y 1 031 250, el total convertido con `toDisplayCents` y `formatCents` (C-51).
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-08 · web: componente del buscador
+- Cubre: R-22, R-24, R-29, R-68, R-75, R-112, R-144
+- Depende de: —
+- Estado: [ ] pendiente
+- Modelo: Opus 5.5, por la Q-01 (a) (`outputFromObservable` con `debounceTime` en zoneless y temporizadores falsos, riesgo 10).
+- Archivos de producción (2): `app/customers/components/customer-search/customer-search.ts` y `customer-search.html` (nuevos): `CustomerSearch` (`app-customer-search`) (D-10).
+- Tests (nuevo): `customer-search.spec.ts`, con temporizadores falsos de Vitest.
+- Hecho cuando:
+  - [ ] Fase roja: salida íntegra en el registro de la sesión.
+  - [ ] C-29 y C-112: `<label for="customer-search-input">` con «Buscar por nombre de empresa o identificador fiscal» (`toBe`) e `<input id="customer-search-input" type="search">`.
+  - [ ] C-22 en el componente: ninguna emisión antes de 300 ms tras la última tecla y una sola después, con «Acme».
+  - [ ] `initialQuery` se pone en el control sin emitir.
+  - [ ] Si los temporizadores falsos no funcionan con el ejecutor de Angular, la tarea para y lo devuelve (riesgo 10).
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-09 · web: página del buscador y ruta `customers`
+- Cubre: R-23, R-28, R-30, R-32, R-40, R-41, R-42, R-47 a R-53, R-57, R-61, R-67, R-68, R-73, R-74, R-75, R-96 a R-100, R-110, R-111, R-120 a R-123, R-132 a R-134, R-144, R-159, R-165 (parte de la plantilla), R-166, R-167
+- Depende de: T-06, T-07, T-08
+- Estado: [ ] pendiente
+- Modelo: Opus 5.5, por la Q-01 (a) (URL con `replaceUrl`, cancelación y cinco estados).
+- Archivos de producción (3):
+  - `app/customers/pages/customers-page/customers-page.ts` y `customers-page.html` (nuevos): `CustomersPage` (D-10, D-12).
+  - `app/app.routes.ts`: ruta `customers` con `loadComponent`, después de `simulator` (D-13).
+- Tests (nuevo): `customers-page.spec.ts`, con `HttpTestingController`, `Location` y rutas propias del test.
+- Hecho cuando:
+  - [ ] Fase roja: salida íntegra en el registro de la sesión.
+  - [ ] Estados: C-40, C-121 y C-47 (carga en `role="status"`), C-41, C-122 y C-120 (error en `role="alert"`, sin tarjetas), C-42 y C-123 (vacío, sin tarjetas y fuera de toda región viva).
+  - [ ] Datos: C-30 (dos tarjetas en `<ul class="customers-page__grid">`), C-32 (sin cifras resumen), C-99, C-100 y C-159 (anuncio en el `role="status"` con la clase `customers-page__announcement`), C-110 y C-111.
+  - [ ] URL: C-97, C-98, C-171 y C-172 (`replaceUrl`, comprobado con `Location`); C-96 de punta a punta (la primera petición, `cancelled`; solo los resultados de «Acme»).
+  - [ ] Divisa: C-132, C-133 y C-134 dentro de la página; `currencySelection.load` una vez al abrir (R-57).
+  - [ ] C-74 y C-75: el test cubre carga, error y vacío y no importa `app.routes` (`git grep -n "app.routes" -- apps/web/src/app/customers/`, con `--untracked`, vacío).
+  - [ ] `app.spec.ts` sigue en verde sin cambios (el `<nav>` sigue con dos enlaces hasta la T-14); `git diff` de `app.routes.ts` solo añade la ruta `customers` (R-67).
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-10 · estilos del buscador
+- Cubre: R-26, R-32, R-38, R-39, R-68, R-102, R-144, R-165, R-169 (estilos; C-38, C-39, C-170 y C-174 en la puerta 6)
+- Depende de: T-09
+- Estado: [ ] pendiente
+- Modelo: Sonnet 5.5 (estilos, según la petición del autor).
+- Archivos de producción (3):
+  - `scss/_customers.scss` (nuevo): eyebrow, título, tarjetas, rejilla `min(100%, 17rem)`, píldoras con `--color-soft` y peso 700, `overflow-wrap: anywhere` y anuncio oculto (D-14).
+  - `scss/themes/_tokens.scss`: `--color-soft`, `--radius-pill` y `--font-size-pill`, cada uno con su línea de `style-guide.md` (D-14).
+  - `styles.scss`: `@use 'scss/customers';` después de `@use 'scss/health';`.
+- Tests: ninguno nuevo ni cambiado (solo `.scss`). Por eso no hay fase roja.
+- Hecho cuando:
+  - [ ] Sin tests nuevos: no hay fase roja (regla común).
+  - [ ] C-26: ningún `.scss` en `customers/` y `styles.scss` carga `scss/_customers.scss`.
+  - [ ] Ninguna regla de `outline` (R-68); `_shared.scss`, `_simulations.scss`, `_health.scss` y `_base.scss` sin cambios.
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-11 · web: detalle en el servicio
+- Cubre: R-25, R-43, R-44, R-46, R-125, R-128, R-144, R-163, R-164 (parte del servicio)
+- Depende de: T-06
+- Estado: [ ] pendiente
+- Modelo: Opus 5.5 (servicio y detalle, según la petición del autor).
+- Archivos de producción (3):
+  - `app/customers/interfaces/customer-detail.ts` (nuevo): `CustomerDetail` y `CustomerDetailState` (D-09).
+  - `app/customers/services/customer-id.ts` (nuevo): `isCanonicalCustomerId`, pura (D-09).
+  - `app/customers/services/customers-api.ts` (crece): `detailState` y `loadDetail(idText, destroyRef)`, con `catchError` por petición y `forkJoin` (D-09, riesgo 7).
+- Tests: `customer-id.spec.ts` (nuevo) y `customers-api.spec.ts` (crece).
+- Hecho cuando:
+  - [ ] Fase roja: salida íntegra en el registro de la sesión.
+  - [ ] `customer-id.spec.ts`: `abc`, `0`, `01` y `9007199254740992` → `false`; `1` y `9007199254740991` → `true` (C-128, parte de la función).
+  - [ ] `loadDetail`: con un id rechazado, `not-found` sin ninguna petición (C-128 en el servicio); con uno válido, las dos peticiones pendientes a la vez (C-168).
+  - [ ] Cliente 404 con el historial en 404 o en 500 → `not-found` (C-169); datos 200 e historial 500, y al revés → `error` con «No se ha podido cargar el cliente.» (C-44, R-125); las dos 200 → `data` (R-43).
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-12 · web: componente del historial
+- Cubre: R-24, R-36, R-37, R-45, R-48 a R-51, R-73, R-74, R-75, R-106 a R-109, R-126, R-144
+- Depende de: T-07
+- Estado: [ ] pendiente
+- Modelo: Sonnet 5.5, por la Q-01 (a) (presentacional, como la tarjeta).
+- Archivos de producción (2): `app/customers/components/simulation-history/simulation-history.ts` y `simulation-history.html` (nuevos): `SimulationHistory` (`app-simulation-history`) (D-11).
+- Tests (nuevo): `simulation-history.spec.ts`.
+- Hecho cuando:
+  - [ ] Fase roja: salida íntegra en el registro de la sesión.
+  - [ ] C-36 y C-37 (tres simulaciones, en el orden recibido, en un `<ol>`), C-106, C-107 (etiqueta con el tipo guardado), C-109 y la fecha con `<time [attr.datetime]>` (R-108).
+  - [ ] C-45 y C-126: con la lista vacía, «Este cliente no tiene simulaciones guardadas.» (`toBe`).
+  - [ ] C-48: importes que no coinciden con `packages/pricing` se muestran tal cual; C-49 y C-50 por importe, con `formatCents` y `toDisplayCents` (C-51).
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-13 · web: página del detalle, ruta `customers/:id` y sus estilos
+- Cubre: R-02, R-23, R-26, R-28, R-33 a R-36, R-38, R-39, R-43 a R-53, R-57, R-67, R-68, R-73, R-74, R-75, R-77, R-114 a R-120, R-124, R-125, R-127, R-128, R-129, R-132 a R-134, R-137, R-144, R-154, R-155, R-160, R-163, R-164
+- Depende de: T-09, T-10, T-11, T-12
+- Estado: [ ] pendiente
+- Modelo: Opus 5.5 (detalle, según la petición del autor).
+- Archivos de producción (4):
+  - `app/customers/pages/customer-detail-page/customer-detail-page.ts` y `customer-detail-page.html` (nuevos): `CustomerDetailPage` (D-11, D-12).
+  - `app/app.routes.ts`: ruta `customers/:id` con `loadComponent`, después de `customers` (D-13).
+  - `scss/_customers.scss` (crece): filas `dt`/`dd` del detalle y del historial (D-14; P-05 (a)).
+- Tests: `customer-detail-page.spec.ts` (nuevo) y `customers-page.spec.ts` (crece con C-33 y C-57, con las dos páginas en las rutas del test).
+- Hecho cuando:
+  - [ ] Fase roja: salida íntegra en el registro de la sesión.
+  - [ ] Estados: C-43 (los dos casos), C-124 y C-47 (carga en `role="status"`), C-44, C-125 y C-120 (error en `role="alert"`), C-45 (tarjeta de datos y vacío del historial), C-46, C-129, C-127 y C-160 (`not-found` con «Volver a Clientes» a `/customers`), C-169 en la página.
+  - [ ] C-128 en la página: `/customers/abc`, `/customers/0`, `/customers/01` y `/customers/9007199254740992` dan el estado de R-46, sin peticiones de `customers-api` y sin quedarse en «Cargando cliente…».
+  - [ ] Datos: C-34, C-35, C-114, C-115, C-116, C-117, C-118 y C-119 en el detalle, C-36 con el historial dentro.
+  - [ ] C-77 (parte de la página), C-154 y C-155: `<a>` «Ir al simulador» con `href` `/simulator`, sin consulta ni fragmento.
+  - [ ] C-33: activar el nombre de una tarjeta del buscador abre el detalle de ese cliente; C-57: abrir el buscador y luego el detalle hace dos peticiones a `https://open.er-api.com/v6/latest/EUR`.
+  - [ ] Divisa: C-132, C-133 y C-134 dentro de la página; importes del historial en la divisa de `CurrencySelection` (R-52, R-53).
+  - [ ] C-74, C-75 y C-25: sin `app.routes` en los tests de `customers/` y `HttpClient` solo en `customers-api.ts` (`git grep`, con `--untracked`).
+  - [ ] `git diff` de `app.routes.ts` solo añade la ruta `customers/:id` (R-67); ningún formulario de alta en `apps/web` (R-02; C-02 en la puerta 6).
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-14 · cabecera común con sus estilos (al final)
+- Cubre: R-28, R-52 a R-56, R-58 a R-71, R-77, R-78, R-130, R-131, R-135 a R-149 (C-63 a C-71, C-78, C-138 a C-141 y C-146 a C-148 en la puerta 6)
+- Depende de: T-09, T-13
+- Estado: [ ] pendiente
+- Modelo: Sonnet 5.5, según la petición del autor («cabecera») y la Q-01 (a); `isActiveChange` en zoneless es el riesgo 9, con su regla de parada abajo.
+- Archivos de producción (3):
+  - `app/app.html`: `<header class="app-header">` con el `<nav>` de tres enlaces y el `<app-currency-selector>` dentro de `@if (customersActive())`, como la D-13; el comentario de la línea 1 no cambia.
+  - `app/app.ts`: `CurrencySelector` en `imports`, `CurrencySelection` inyectado (P-01 (a)), `displayCurrency`, `currencyDisabled`, `selectCurrency` y `customersActive`; línea 4 con «spec 004:» (D-13).
+  - `scss/_shared.scss` (crece): `.app-header`, `.app-header__nav`, `.app-header__link` (con `[aria-current='page']`) y `.app-header__currency`, más la regla de la etiqueta dentro de la cabecera, sin cambiar la de `_shared.scss:10` ni ninguna de `outline` (D-14).
+- Tests (crece): `app/app.spec.ts` (D-13; P-03 (a)).
+- Hecho cuando:
+  - [ ] Fase roja: salida íntegra en el registro de la sesión.
+  - [ ] C-47 de la 005: `toHaveLength(3)` con «spec 004: R-142» y título «tres enlaces»; la aserción de selectores no cambia y el comentario de la línea 46 añade «spec 004: R-145: el selector de divisa solo se pinta en las vistas de clientes» (C-142, C-145).
+  - [ ] Tests nuevos en `app.spec.ts`: C-28, C-52, C-53, C-54, C-55 (orden en el DOM), C-56, C-58 a C-62, C-77, C-130, C-131, C-135, C-136, C-137 y C-149.
+  - [ ] C-143: `git diff` de `app.spec.ts` sin aserciones de la 000 quitadas ni desactivadas.
+  - [ ] C-66, C-67 y C-78: `git diff --stat HEAD -- apps/web/src/app/simulations/ apps/web/src/scss/_simulations.scss apps/web/src/app/app.config.ts` vacío; cada cambio de `app.*` sirve a la cabecera, a las rutas o a «Clientes».
+  - [ ] C-65: sin componente de cabecera (D-13); nada nuevo en `shared/components/`.
+  - [ ] Si `isActiveChange` no llega en la primera navegación y fallan C-55 o C-56, la tarea para y lo devuelve (riesgo 9).
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-15 · seed de demostración (al final)
+- Cubre: R-21, R-76, R-95, R-144, R-150 a R-153, R-161, R-162, R-168, R-170
+- Depende de: T-05
+- Estado: [ ] pendiente
+- Modelo: Sonnet 5.5 (seed, según la petición del autor).
+- Archivos de producción (5):
+  - `apps/api/src/seed.ts` (nuevo): entrada como `app.ts` (`config` y `presentation`), con «Seed: N customers inserted.» y `process.exit(1)` ante un error (D-15; P-04 (ii)).
+  - `apps/api/src/seed/seed-data.ts` (nuevo): clientes y simulaciones con las condiciones de la D-15 (un cliente por país y por plan, uno sin simulaciones, uno con tres o más en tramos distintos, nombres con tildes, `ñ` o `ç`, e identificadores válidos de la 002).
+  - `apps/api/src/seed/run-seed.ts` (nuevo): `runSeed(baseUrl): Promise<number>`, con 201, 409 y error según la D-15.
+  - `apps/api/package.json`: `"seed": "tsx src/seed.ts"`.
+  - `package.json` (raíz): `"seed": "npm run build:pricing && npm run seed -w apps/api"`.
+- Documentación (no cuenta): `CLAUDE.md`, «Comandos», con `seed` en la lista de scripts de la raíz (R-162); `ai-workspace/docs/architecture.md`, `seed.ts` y `seed/` en «Carpetas» y la fila `seed` en «Reglas de dependencia» (autorizado por el autor: D-15, D-17).
+- Tests (nuevo): `apps/api/src/seed/run-seed.spec.ts`, con `Server` sobre `:memory:` y puerto 0.
+- Hecho cuando:
+  - [ ] Fase roja: salida íntegra en el registro de la sesión.
+  - [ ] C-150: `GET /customers` → `[]` antes del seed, y `app.ts` no llama al seed.
+  - [ ] C-76, C-151, C-173 y C-175: `runSeed` devuelve la longitud de los clientes de `seed-data.ts` (todos con 201).
+  - [ ] C-152: los importes leídos de cada simulación coinciden con los de `packages/pricing` para sus usuarios y el país de su cliente.
+  - [ ] C-153 y C-161: una segunda vuelta devuelve 0 y no cambia el número de filas de `customers` ni de `simulations`.
+  - [ ] `npm run seed` lanzado dos veces con `DATABASE_PATH` en un fichero del scratchpad (nunca la base por defecto), con la salida literal en el registro de la sesión: la primera, «Seed: N customers inserted.» con N la longitud de los clientes de `seed-data.ts`; la segunda, «Seed: 0 customers inserted.» (Q-03 (a); C-76 y C-161 de punta a punta).
+  - [ ] C-162: `git grep -n "seed" CLAUDE.md` muestra la línea de «Comandos».
+  - [ ] C-21 y C-95: sin migración ni `CREATE INDEX` nuevos.
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## Cobertura
+Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobación final es manual (plan, sección 5). R-144 (citas calificadas) aplica a todas las tareas (regla común).
+
+| Requisito | Tareas |
+|---|---|
+| R-01 | T-02, T-03, T-05 |
+| R-02 | T-13 (C-02 en la puerta 6) |
+| R-03 | T-01, T-02, T-03, T-05 |
+| R-04 | T-02, T-03, T-04, T-05 |
+| R-05 | T-01, T-02, T-05 |
+| R-06, R-07 | T-02, T-05 |
+| R-08, R-09 | T-01, T-05 |
+| R-10 | T-04, T-05 |
+| R-11 | T-05 |
+| R-12 | T-02, T-05 |
+| R-13 | T-04 |
+| R-14, R-15 | T-05 |
+| R-16, R-17, R-18 | T-01, T-04, T-05 |
+| R-19 | T-04, T-05 |
+| R-20 | T-04, T-05, T-06 |
+| R-21 | T-05, T-15 |
+| R-22 | T-08 |
+| R-23 | T-09, T-13 (C-23 en la puerta 6) |
+| R-24 | T-07, T-08, T-12 (C-24 en la puerta 6) |
+| R-25 | T-06, T-11, T-13 |
+| R-26 | T-10, T-13 |
+| R-27 | T-06 |
+| R-28 | T-09, T-13, T-14 |
+| R-29 | T-08 |
+| R-30 | T-07, T-09 |
+| R-31 | T-07 |
+| R-32 | T-09, T-10 |
+| R-33 | T-07, T-13 |
+| R-34, R-35 | T-13 |
+| R-36 | T-12, T-13 |
+| R-37 | T-12 |
+| R-38, R-39 | T-10, T-13 (C-38 y C-39 en la puerta 6) |
+| R-40, R-41, R-42 | T-06, T-09 |
+| R-43, R-44 | T-11, T-13 |
+| R-45 | T-12, T-13 |
+| R-46 | T-11, T-13 |
+| R-47 | T-09, T-13 |
+| R-48, R-49, R-50, R-51 | T-07, T-09, T-12, T-13 |
+| R-52, R-53 | T-09, T-13, T-14 |
+| R-54, R-55, R-56 | T-14 |
+| R-57 | T-09, T-13 |
+| R-58, R-59, R-60 | T-14 |
+| R-61 | T-09, T-14 |
+| R-62 | T-14 |
+| R-63, R-64 | T-14 (C-63 y C-64 en la puerta 6) |
+| R-65 | T-14 (C-65 en la puerta 6) |
+| R-66 | T-14 (regla común de ficheros) |
+| R-67 | T-09, T-13, T-14 |
+| R-68 | T-07, T-08, T-09, T-10, T-13, T-14 (C-68 en la puerta 6) |
+| R-69, R-70, R-71 | T-14 (C-69 a C-71 en la puerta 6) |
+| R-72 | T-05 |
+| R-73 | T-07, T-09, T-12, T-13 |
+| R-74 | T-09, T-12, T-13 |
+| R-75 | T-07, T-08, T-09, T-12, T-13 |
+| R-76 | T-15 |
+| R-77 | T-13, T-14 |
+| R-78 | T-14 (C-78 en la puerta 6) |
+| R-79 | T-02, T-03, T-04, T-05 |
+| R-80 | T-01, T-02, T-05 |
+| R-81 | T-02, T-04, T-05 |
+| R-82 | T-02, T-05 |
+| R-83, R-84, R-85, R-86, R-87, R-88, R-89, R-90 | T-01, T-05 |
+| R-91, R-92, R-93, R-94 | T-01, T-05 |
+| R-95 | T-05, T-15 |
+| R-96 | T-06, T-09 |
+| R-97, R-98 | T-09 |
+| R-99, R-100 | T-07, T-09 |
+| R-101 | T-07 |
+| R-102 | T-07, T-10 (estilo en la puerta 6) |
+| R-103, R-104, R-105 | T-07 |
+| R-106, R-107, R-108 | T-07, T-12 |
+| R-109 | T-12 |
+| R-110, R-111 | T-09 |
+| R-112 | T-08 |
+| R-113 | T-07 |
+| R-114, R-115, R-116, R-117 | T-13 |
+| R-118, R-119 | T-07, T-13 |
+| R-120 | T-09, T-13 |
+| R-121 | T-09 |
+| R-122 | T-06, T-09 |
+| R-123 | T-09 |
+| R-124 | T-13 |
+| R-125 | T-11, T-13 |
+| R-126 | T-12 |
+| R-127 | T-13 |
+| R-128 | T-11, T-13 |
+| R-129 | T-13 |
+| R-130, R-131 | T-14 |
+| R-132, R-133, R-134 | T-09, T-13 |
+| R-135, R-136 | T-14 |
+| R-137 | T-13, T-14 |
+| R-138, R-139, R-140, R-141 | T-14 (C-138 a C-141 en la puerta 6) |
+| R-142, R-143 | T-14 |
+| R-144 | T-01 a T-15 (C-144 en la puerta 6) |
+| R-145 | T-14 |
+| R-146, R-147, R-148 | T-14 (C-146 a C-148 en la puerta 6) |
+| R-149 | T-14 |
+| R-150, R-151, R-152, R-153 | T-15 |
+| R-154, R-155 | T-13 |
+| R-156, R-157 | T-01, T-05 |
+| R-158 | T-01, T-04 |
+| R-159 | T-07, T-09 |
+| R-160 | T-13 |
+| R-161, R-162 | T-15 |
+| R-163, R-164 | T-11, T-13 |
+| R-165 | T-09, T-10 (C-170 en la puerta 6) |
+| R-166, R-167 | T-09 |
+| R-168 | T-15 |
+| R-169 | T-07, T-10 (C-174 en la puerta 6) |
+| R-170 | T-15 |
+
+## Dudas de la puerta 4 (Q-nn), decididas
+Tres dudas, presentadas en bloque, cada una con una recomendada. Ninguna es un hueco del reto ni un choque entre fuentes: son de cómo se ejecutan las tareas. Las decidió el autor en la segunda vuelta y se conservan abajo tal como se le presentaron. Sin dudas abiertas.
+
+### Decididas por el autor (puerta 4, segunda vuelta)
+- Texto literal del autor (2026-11-24): «Respuestas a las dudas de la puerta 4 de la 004-customers: Q-01 (a); Q-02 (a); Q-03 (a). Las dudas de tasks.md se quedan como Q-nn (precedente de la 000); cuando se citen desde otro fichero se escribe «tasks.md Q-01».»
+- Cómo se aplica:
+  - Q-01 (a): modelos de T-03 (Sonnet 5.5), T-05 (Opus 5.5), T-08 (Opus 5.5), T-09 (Opus 5.5) y T-12 (Sonnet 5.5) fijados; T-07 y T-14 siguen en Sonnet 5.5 y la T-07 no se parte.
+  - Q-02 (a): `npx tsc -p apps/api/tsconfig.json --noEmit` en «Hecho cuando» de la T-03, con su regla de parada.
+  - Q-03 (a): `npm run seed` dos veces con `DATABASE_PATH` en el scratchpad, con la salida literal, en «Hecho cuando» de la T-15.
+
+| Q | Duda | Decisión del autor |
+|---|---|---|
+| Q-01 | Modelo en las tareas que no encajan en la petición | (a) |
+| Q-02 | Comprobación de tipos de los falsos en la T-03 | (a) |
+| Q-03 | Mensaje del seed y `npm run seed` de verdad en la T-15 | (a) |
+
+**Q-01 (decidida: (a)) · Modelo del implementer en las tareas que no encajan claramente en la petición.** La petición nombra Opus 5.5 para «DTOs, regla de búsqueda, datasources, casos de uso, servicio y detalle» y Sonnet 5.5 para «tarjetas, estilos, cabecera, seed». Encajan sin duda T-01, T-02, T-04, T-06, T-11 y T-13 (Opus) y T-10 y T-15 (Sonnet).
+- (a) Propuesta del planner: T-03 Sonnet (solo firmas y delegación dadas en la D-07); T-05 Opus (la tarea con más casos de la API y la ruta inexistente); T-08 Opus (`outputFromObservable` con `debounceTime` en zoneless y temporizadores falsos, riesgo 10); T-09 Opus (URL con `replaceUrl`, cancelación y cinco estados); T-12 Sonnet (presentacional, como la tarjeta). T-07 y T-14 siguen la letra de la petición (Sonnet), aunque la T-07 trae las funciones puras de la D-11 y la T-14 el riesgo 9. Pros: cada tarea con lógica nueva va con Opus; respeta la letra en T-07 y T-14. Contras: T-07 y T-14 tienen piezas con algo de lógica con Sonnet.
+- (b) Como (a), pero T-07 y T-14 con Opus. Pros: menos riesgo en el formato de fecha (C-108) y en `isActiveChange` (C-55, C-56). Contras: se aparta de la letra de la petición («tarjetas», «cabecera»).
+- (c) Como (a), pero la T-07 se parte en dos sin renumerar el resto (T-07 con `customer-display.ts`, Opus, y una tarea nueva al final para la tarjeta, Sonnet). Pros: cada parte con su modelo. Contras: rompe «una tarea por paso» y el orden del plan.
+- Recomendada: **(a)**. El plan da las funciones y la plantilla de la T-07 y la T-14 casi literales, y las dos paran si falla su riesgo.
+
+**Q-02 (decidida: (a)) · Comprobación de tipos de los falsos en la T-03 (riesgo 2 del plan).** Vitest no comprueba tipos y `tsconfig.build.json` excluye los `.spec.ts`, así que `npm run verify` pasa aunque los falsos de la P-02 (a) no cumplan el puerto.
+- (a) La T-03 añade a «Hecho cuando» `npx tsc -p apps/api/tsconfig.json --noEmit` sin errores en los dos tests que toca. Si da errores en ficheros ajenos a la 004, la tarea no los corrige: los copia en su retorno y para. Pros: comprueba lo que la P-02 (a) quiere conseguir. Contras: un comando que el plan no fija como verificación; puede sacar errores ya existentes.
+- (b) Solo `npm run verify`, como el resto. Pros: el mismo criterio de cierre en todas. Contras: la P-02 (a) queda sin comprobar de forma automática; la revisa el revisor a ojo.
+- Recomendada: **(a)**.
+
+**Q-03 (decidida: (a)) · Mensaje del seed (R-161) y `npm run seed` de verdad en la T-15.** `run-seed.spec.ts` prueba el número que devuelve `runSeed`, pero no el mensaje de `seed.ts` ni el script `npm run seed` (C-76, C-161).
+- (a) La T-15 añade a «Hecho cuando» lanzar `npm run seed` dos veces con `DATABASE_PATH` apuntando a un fichero del scratchpad (nunca la base por defecto), con la salida literal en el registro de la sesión: la primera, «Seed: N customers inserted.» con N la longitud de `seed-data.ts`; la segunda, «Seed: 0 customers inserted.». Pros: prueba el script, el mensaje y la base configurada de punta a punta. Contras: un paso manual más; el cortafuegos de Windows puede preguntar (riesgo 12).
+- (b) Solo el test de `runSeed`; el mensaje lo mira el revisor en el código. Pros: todo automático. Contras: el script y el mensaje no se ejecutan antes de la puerta 6.
+- Recomendada: **(a)**.
