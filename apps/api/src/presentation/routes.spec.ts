@@ -58,6 +58,23 @@ describe('createRoutes', () => {
     expect(response.status).toBe(404);
   });
 
+  // spec 004: C-14 (R-14; plan D-08): ruta o método sin manejador → 404 en JSON, no el HTML de Express.
+  it.each([
+    ['GET', '/no-existe'],
+    ['DELETE', '/customers'],
+    ['GET', '/api/health'],
+  ])('spec 004: C-14 (R-14): %s %s da 404 NOT_FOUND en JSON con «No existe la ruta indicada.», sin details', async (method, route) => {
+    const baseUrl = await listenWithRoutes();
+
+    const response = await fetch(`${baseUrl}${route}`, { method });
+    const body = (await response.json()) as { error: object };
+
+    expect(response.status).toBe(404);
+    expect(response.headers.get('content-type')).toMatch(/application\/json/);
+    expect(body).toEqual({ error: { code: 'NOT_FOUND', message: 'No existe la ruta indicada.' } });
+    expect(body.error).not.toHaveProperty('details');
+  });
+
   it('devuelve una función de cierre que cierra la base sin error', () => {
     const { close } = createRoutes(':memory:');
 

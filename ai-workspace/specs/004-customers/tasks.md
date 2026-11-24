@@ -105,7 +105,7 @@ Reglas comunes de esta spec:
 ## T-05 · presentation: lecturas, ruta inexistente y textos
 - Cubre: R-01, R-03 a R-12, R-14 a R-21, R-72, R-79 a R-95, R-144, R-156, R-157
 - Depende de: T-04
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Opus 5.5, por la Q-01 (a) (la tarea con más casos de la API y la ruta inexistente).
 - Archivos de producción (4):
   - `presentation/customers/controller.ts` (crece): `search`, `findById` y `listSimulations` (D-07).
@@ -114,15 +114,16 @@ Reglas comunes de esta spec:
   - `presentation/routes.ts`: monta `notFoundHandler` después de `/simulations` y antes de `errorHandler`; comentario de las líneas 24-25 (D-08).
 - Tests (crecen): `presentation/customers/routes.spec.ts`, `presentation/customers/controller.spec.ts`, `presentation/middlewares/error-handler.spec.ts` y `presentation/routes.spec.ts`.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] Integración en `customers/routes.spec.ts` (`fetch` y `:memory:`): C-03, C-04, C-05, C-06, C-07, C-10, C-12, C-16 a C-20, C-79 a C-94, C-156, C-157 y C-163 a C-167.
-  - [ ] C-09 y C-15: `details[]` y cada `message`, con los textos de la tabla de la D-08 (`toBe`).
-  - [ ] `controller.spec.ts`: C-08 (con un parámetro no válido, el repositorio falso no recibe ninguna llamada) y C-11 (repositorio que falla con un `Error` → 500 `INTERNAL_ERROR`, sin traza).
-  - [ ] C-14 en `routes.spec.ts`: `GET /no-existe` y `DELETE /customers` → 404 JSON con «No existe la ruta indicada.», sin `details`; `GET /api/health` sigue en 404 (`routes.spec.ts:53-59`).
-  - [ ] C-72: cada endpoint de lectura tiene su éxito y sus errores en `customers/routes.spec.ts`.
-  - [ ] C-01: los tests de `POST /customers` y `POST /simulations` siguen en verde; `git diff` de sus tests sin aserciones quitadas.
-  - [ ] C-21 y C-95: `git diff --stat HEAD -- apps/api/migrations/ ai-workspace/docs/database.md` vacío y `git grep -n "CREATE INDEX"` sin líneas nuevas.
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] Integración en `customers/routes.spec.ts` (`fetch` y `:memory:`): C-03, C-04, C-05, C-06, C-07, C-10, C-12, C-16 a C-20, C-79 a C-94, C-156, C-157 y C-163 a C-167.
+  - [x] C-09 y C-15: `details[]` y cada `message`, con los textos de la tabla de la D-08 (`toBe`).
+  - [x] `controller.spec.ts`: C-08 (con un parámetro no válido, el repositorio falso no recibe ninguna llamada) y C-11 (repositorio que falla con un `Error` → 500 `INTERNAL_ERROR`, sin traza).
+  - [x] C-14 en `routes.spec.ts`: `GET /no-existe` y `DELETE /customers` → 404 JSON con «No existe la ruta indicada.», sin `details`; `GET /api/health` sigue en 404 (`routes.spec.ts:53-59`).
+  - [x] C-72: cada endpoint de lectura tiene su éxito y sus errores en `customers/routes.spec.ts`.
+  - [x] C-01: los tests de `POST /customers` y `POST /simulations` siguen en verde; `git diff` de sus tests sin aserciones quitadas.
+  - [x] C-21 y C-95: `git diff --stat HEAD -- apps/api/migrations/ ai-workspace/docs/database.md` vacío y `git grep -n "CREATE INDEX"` sin líneas nuevas.
+  - [x] `npm run verify` desde la raíz, en verde.
+- Aprobación del autor 2026-11-24 (literal): «Apruebo la T-05 (presentation: lecturas, ruta inexistente y textos) con las desviaciones 1 a 5 aceptadas. Las capturas fase-7-004-t05-rojo y fase-7-004-t05-verde son mías, no del implementer. No repitas el rojo: los fallos son «Unexpected token '<'» y «is not a function», y el único AssertionError falla solo porque el export aún no existía. Rojo copiado de red.txt (264 líneas) al registro, con los signos reales.» Desviaciones aceptadas: (1) tests que la tarea no enumera (éxito de los tres métodos y 404 del cliente en el controlador, simulación de otro cliente en C-04, cuerpo JSON del 404 de `GET /api/health` en C-14, orden de C-82 en integración), dentro de los 68; (2) `fakeReadRepository` nuevo en `controller.spec.ts`, sin cambiar el falso de la 002, con `create` que lanza «spec 004: no se espera create»; (3) C-05 y C-06 en integración con filas de `POST /simulations` (las de mismo `created_at` e importes a mano siguen en el spec del datasource de la T-02); queda cubierta la mitad de C-06 que dejó la T-02; (4) C-18 en un solo test con los siete nombres; (5) las dos capturas sin seguimiento son del autor. `tsc --noEmit` de `apps/api` con código 0 y `npm run verify` en verde: 905 tests en la raíz y 180 en la web (antes, 837 + 180; 68 nuevos: 49 + 14 + 2 + 3), repetidos por la sesión principal. Tests de las specs 002 y 003: 113 aserciones añadidas y 0 quitadas; solo cambian dos líneas de `import`. Fase roja íntegra, copiada de `red.txt` con los signos reales, en `ai-workspace/sessions/2026-11-24-19-004-customers.md`.
 
 ## T-06 · web: tipos y servicio de búsqueda
 - Cubre: R-20, R-25, R-27, R-40, R-41, R-42, R-96, R-122, R-144 (parte del servicio)

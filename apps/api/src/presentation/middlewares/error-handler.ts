@@ -1,11 +1,14 @@
-import type { ErrorRequestHandler } from 'express';
+import type { ErrorRequestHandler, RequestHandler } from 'express';
 import { CustomError, type ErrorDetail } from '../../domain/errors/custom.error.js';
 
 // Textos de D-03 (plan): M-12 (JSON ilegible) y M-14 (error interno).
 const INVALID_JSON_MESSAGE = 'El cuerpo no es un JSON válido.';
 const INTERNAL_MESSAGE = 'Error interno del servidor.';
 
-// Tabla code → estado HTTP: solo los códigos que usan las specs 002 (D-11) y 003 (D-12). La ruta inexistente sigue sin 404 propio (spec 002: D-14).
+// Texto de la ruta inexistente (spec 004: R-14; Decisión 2026-11-24 #22; plan D-08).
+export const ROUTE_NOT_FOUND_MESSAGE = 'No existe la ruta indicada.';
+
+// Tabla code → estado HTTP: solo los códigos que usan las specs 002 (D-11) y 003 (D-12). La ruta inexistente usa la fila NOT_FOUND (spec 004: D-08).
 export const STATUS_BY_CODE: Readonly<Record<string, number>> = Object.freeze({
   VALIDATION_ERROR: 400,
   INVALID_JSON: 400,
@@ -45,6 +48,13 @@ export function toHttpError(error: unknown): HttpError {
 function isJsonParseFailure(error: unknown): boolean {
   return typeof error === 'object' && error !== null && (error as { type?: unknown }).type === 'entity.parse.failed';
 }
+
+// Ruta o método sin manejador: NOT_FOUND 404 en JSON, sin details (spec 004: R-14; Decisión
+// 2026-11-24 #23; plan D-08). Lo que no llega a un controlador va aquí (architecture.md).
+export const notFoundHandler: RequestHandler = (_req, res) => {
+  const { status, body } = toHttpError(new CustomError('NOT_FOUND', ROUTE_NOT_FOUND_MESSAGE));
+  res.status(status).json(body);
+};
 
 // Middleware de errores: solo lo que no llega a un controlador (architecture.md). El JSON ilegible
 // sale como INVALID_JSON (R-13); los demás errores del parser, como INTERNAL_ERROR (D-13).

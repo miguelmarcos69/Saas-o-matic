@@ -2,7 +2,13 @@ import type { NextFunction, Request, Response } from 'express';
 import { describe, expect, it, vi } from 'vitest';
 import { CustomError } from '../../domain/errors/custom.error.js';
 import { customerNotFoundError } from '../../domain/errors/customer-not-found.error.js';
-import { errorHandler, STATUS_BY_CODE, toHttpError } from './error-handler.js';
+import {
+  errorHandler,
+  notFoundHandler,
+  ROUTE_NOT_FOUND_MESSAGE,
+  STATUS_BY_CODE,
+  toHttpError,
+} from './error-handler.js';
 
 // Textos literales de D-03 (plan): M-11, M-12, M-13 y M-14.
 const VALIDATION_MESSAGE = 'Hay datos no válidos.';
@@ -151,5 +157,27 @@ describe('errorHandler', () => {
 
     expect(sent.status).toBe(500);
     expect(sent.body).toEqual({ error: { code: 'INTERNAL_ERROR', message: INTERNAL_MESSAGE } });
+  });
+});
+
+// spec 004: R-14, R-15; plan D-08 (Decisiones 2026-11-24 #22 y #23).
+describe('notFoundHandler', () => {
+  // Texto literal de la tabla de la D-08 (spec 004: #22).
+  const ROUTE_NOT_FOUND_TEXT = 'No existe la ruta indicada.';
+
+  it('spec 004: ROUTE_NOT_FOUND_MESSAGE es «No existe la ruta indicada.» (D-08)', () => {
+    expect(ROUTE_NOT_FOUND_MESSAGE).toBe(ROUTE_NOT_FOUND_TEXT);
+  });
+
+  it('spec 004: responde 404 NOT_FOUND con «No existe la ruta indicada.», sin details y sin llamar a next (R-14)', () => {
+    const { res, sent } = fakeResponse();
+    const next = vi.fn();
+
+    notFoundHandler({} as Request, res, next as unknown as NextFunction);
+
+    expect(sent.status).toBe(404);
+    expect(sent.body).toEqual({ error: { code: 'NOT_FOUND', message: ROUTE_NOT_FOUND_TEXT } });
+    expect((sent.body as { error: object }).error).not.toHaveProperty('details');
+    expect(next).not.toHaveBeenCalled();
   });
 });

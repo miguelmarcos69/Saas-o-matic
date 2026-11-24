@@ -16,6 +16,10 @@ export class CustomerRoutes {
     const router = Router();
     // strict: false para que null, un array o un valor simple lleguen al DTO como INVALID_TYPE (D-05, R-12).
     router.post('/', express.json({ strict: false }), controller.create);
+    // Lecturas sin cuerpo, así que sin express.json (spec 004: R-03, R-04, R-79; D-07).
+    router.get('/', controller.search);
+    router.get('/:id', controller.findById);
+    router.get('/:id/simulations', controller.listSimulations);
     return router;
   }
 }

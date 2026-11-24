@@ -1,7 +1,8 @@
 import type { Request, Response } from 'express';
 import { describe, expect, it } from 'vitest';
 import type { CreateCustomerDto } from '../../domain/dtos/customers/create-customer.dto.js';
-import type { CustomerEntity } from '../../domain/entities/customer.entity.js';
+import type { CustomerEntity, CustomerWithLastSimulation } from '../../domain/entities/customer.entity.js';
+import type { SimulationEntity } from '../../domain/entities/simulation.entity.js';
 import { CustomError } from '../../domain/errors/custom.error.js';
 import type { CustomerRepository } from '../../domain/repository/customer.repository.js';
 import { CustomerController } from './controller.js';
@@ -204,4 +205,148 @@ describe('CustomerController.create', () => {
     expect(sent.status).toBe(409);
     expect(sent.body).toEqual({ error: { code: 'CONFLICT', message: CONFLICT_MESSAGE } });
   });
+});
+
+// spec 004: lecturas del controlador (R-03, R-04, R-08, R-10, R-11, R-79; plan D-07).
+const storedCustomer: CustomerEntity = {
+  id: 1,
+  ...validBody,
+  createdAt: '2026-11-24T10:00:00.000Z',
+};
+
+const storedSimulation: SimulationEntity = {
+  id: 7,
+  customerId: 1,
+  activeUsers: 15,
+  storage: 100,
+  apiCalls: 50000,
+  baseCostCents: 14000,
+  taxRateBps: 2100,
+  taxAmountCents: 2940,
+  totalCents: 16940,
+  createdAt: '2026-11-24T10:05:00.000Z',
+};
+
+// Texto de NOT_FOUND del cliente (spec 004: D-08; spec 003: D-03).
+const CUSTOMER_NOT_FOUND_MESSAGE = 'No existe el cliente indicado.';
+
+// spec 004: C-08 y C-11. Repositorio falso de lectura: cuenta cada llamada y puede fallar a propósito.
+function fakeReadRepository(
+  options: { failWith?: unknown; customer?: CustomerEntity | undefined } = {},
+): CustomerRepository & { readCalls: string[] } {
+  const readCalls: string[] = [];
+  const customer = 'customer' in options ? options.customer : storedCustomer;
+  const read = <T>(name: string, value: T): Promise<T> => {
+    readCalls.push(name);
+    if (options.failWith !== undefined) return Promise.reject(options.failWith);
+    return Promise.resolve(value);
+  };
+  return {
+    readCalls,
+    create: () => {
+      throw new Error('spec 004: no se espera create');
+    },
+    findAllWithLastSimulation: () =>
+      read<CustomerWithLastSimulation[]>('findAllWithLastSimulation', [
+        { ...storedCustomer, lastSimulation: storedSimulation },
+      ]),
+    findById: () => read('findById', customer),
+    findSimulationsByCustomerId: () => read('findSimulationsByCustomerId', [storedSimulation]),
+  };
+}
+
+type ReadHandler = 'search' | 'findById' | 'listSimulations';
+
+async function read(
+  controller: CustomerController,
+  handler: ReadHandler,
+  request: { params?: Record<string, string>; query?: Record<string, unknown> },
+) {
+  const { res, sent } = fakeResponse();
+  await controller[handler]({ params: request.params ?? {}, query: request.query ?? {} } as unknown as Request, res);
+  return sent;
+}
+
+describe('spec 004: CustomerController, lecturas', () => {
+  it('spec 004: search con q válido → 200 con el array del caso de uso en la raíz (R-03)', async () => {
+    const repository = fakeReadRepository();
+
+    const sent = await read(new CustomerController(repository), 'search', { query: { q: 'acme' } });
+
+    expect(sent.status).toBe(200);
+    expect(sent.body).toEqual([{ ...storedCustomer, lastSimulation: storedSimulation }]);
+    expect(repository.readCalls).toEqual(['findAllWithLastSimulation']);
+  });
+
+  it('spec 004: findById con un id válido → 200 con el cliente en la raíz (R-79)', async () => {
+    const repository = fakeReadRepository();
+
+    const sent = await read(new CustomerController(repository), 'findById', { params: { id: '1' } });
+
+    expect(sent.status).toBe(200);
+    expect(sent.body).toEqual(storedCustomer);
+    expect(repository.readCalls).toEqual(['findById']);
+  });
+
+  it('spec 004: listSimulations con un id válido → 200 con el array en la raíz (R-04)', async () => {
+    const repository = fakeReadRepository();
+
+    const sent = await read(new CustomerController(repository), 'listSimulations', { params: { id: '1' } });
+
+    expect(sent.status).toBe(200);
+    expect(sent.body).toEqual([storedSimulation]);
+    expect(repository.readCalls).toEqual(['findById', 'findSimulationsByCustomerId']);
+  });
+
+  it.each<ReadHandler>(['findById', 'listSimulations'])(
+    'spec 004: %s sin el cliente → 404 NOT_FOUND con «No existe el cliente indicado.», sin details (R-10)',
+    async (handler) => {
+      const repository = fakeReadRepository({ customer: undefined });
+
+      const sent = await read(new CustomerController(repository), handler, { params: { id: '999' } });
+
+      expect(sent.status).toBe(404);
+      expect(sent.body).toEqual({ error: { code: 'NOT_FOUND', message: CUSTOMER_NOT_FOUND_MESSAGE } });
+      expect(repository.readCalls).toEqual(['findById']);
+    },
+  );
+
+  describe('spec 004: C-08 (R-08): con un parámetro no válido no se llama al repositorio', () => {
+    it.each<readonly [string, ReadHandler, { params?: Record<string, string>; query?: Record<string, unknown> }]>([
+      ['search con q repetido', 'search', { query: { q: ['a', 'b'] } }],
+      ['search con un parámetro desconocido', 'search', { query: { foo: '1' } }],
+      ['findById con id abc', 'findById', { params: { id: 'abc' } }],
+      ['findById con un parámetro de consulta', 'findById', { params: { id: '1' }, query: { q: 'a' } }],
+      ['listSimulations con id 0', 'listSimulations', { params: { id: '0' } }],
+      ['listSimulations con id 01', 'listSimulations', { params: { id: '01' } }],
+    ])('%s: 400 VALIDATION_ERROR y ninguna llamada al repositorio', async (_name, handler, request) => {
+      const repository = fakeReadRepository();
+
+      const sent = await read(new CustomerController(repository), handler, request);
+
+      expect(sent.status).toBe(400);
+      expect(sent.body).toMatchObject({ error: { code: 'VALIDATION_ERROR', message: VALIDATION_MESSAGE } });
+      expect(repository.readCalls).toHaveLength(0);
+    });
+  });
+
+  it.each<readonly [ReadHandler, { params?: Record<string, string>; query?: Record<string, unknown> }]>([
+    ['search', { query: {} }],
+    ['findById', { params: { id: '1' } }],
+    ['listSimulations', { params: { id: '1' } }],
+  ])(
+    'spec 004: C-11 (R-11): %s con el repositorio que lanza Error → 500 INTERNAL_ERROR, sin traza ni mensaje interno',
+    async (handler, request) => {
+      const repository = fakeReadRepository({ failWith: new Error('disco lleno en /var/lib/secreto') });
+
+      const sent = await read(new CustomerController(repository), handler, request);
+
+      expect(sent.status).toBe(500);
+      expect(sent.body).toEqual({ error: { code: 'INTERNAL_ERROR', message: INTERNAL_MESSAGE } });
+      const text = JSON.stringify(sent.body);
+      expect(text).not.toContain('disco lleno');
+      expect(text).not.toContain('stack');
+      expect(text).not.toContain('details');
+    },
+  );
 });
