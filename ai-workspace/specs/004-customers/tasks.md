@@ -201,7 +201,7 @@ Reglas comunes de esta spec:
 ## T-10 · estilos del buscador
 - Cubre: R-26, R-32, R-38, R-39, R-68, R-102, R-144, R-165, R-169 (estilos; C-38, C-39, C-170 y C-174 en la puerta 6)
 - Depende de: T-09
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Sonnet 5.5 (estilos, según la petición del autor).
 - Archivos de producción (3):
   - `scss/_customers.scss` (nuevo): eyebrow, título, tarjetas, rejilla `min(100%, 17rem)`, píldoras con `--color-soft` y peso 700, `overflow-wrap: anywhere` y anuncio oculto (D-14).
@@ -209,10 +209,11 @@ Reglas comunes de esta spec:
   - `styles.scss`: `@use 'scss/customers';` después de `@use 'scss/health';`.
 - Tests: ninguno nuevo ni cambiado (solo `.scss`). Por eso no hay fase roja.
 - Hecho cuando:
-  - [ ] Sin tests nuevos: no hay fase roja (regla común).
-  - [ ] C-26: ningún `.scss` en `customers/` y `styles.scss` carga `scss/_customers.scss`.
-  - [ ] Ninguna regla de `outline` (R-68); `_shared.scss`, `_simulations.scss`, `_health.scss` y `_base.scss` sin cambios.
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Sin tests nuevos: no hay fase roja (regla común).
+  - [x] C-26: ningún `.scss` en `customers/` y `styles.scss` carga `scss/_customers.scss`.
+  - [x] Ninguna regla de `outline` (R-68); `_shared.scss`, `_simulations.scss`, `_health.scss` y `_base.scss` sin cambios.
+  - [x] `npm run verify` desde la raíz, en verde.
+- Aprobación del autor 2026-11-24 (literal): «Apruebo la T-10 (estilos del buscador) con las desviaciones 1 a 6 aceptadas y el punto 1 aceptado como desviación 7 (reglas de .customer-search__label y .customer-search__input, según style-guide.md:95 y el patrón de _simulations.scss). Sin fase roja, por no haber tests. Anota para el revisor que los tres tokens nuevos citan líneas de style-guide.md (:53, :64, :55) y que debe comprobar que dicen lo citado; y que C-38, C-39, C-170, C-174 y el recorrido con Tab (R-68) se comprueban en la puerta 6. La próxima vez, el implementer da el git diff literal, no resumido. Las capturas fase-7-004-t10-buscador y fase-7-004-t10-buscador-320px son mías.» Desviaciones aceptadas: (1) `@use 'scss/customers';` en la línea 5 de `styles.scss`, justo después de `@use 'scss/health';` y antes de `shared` y `simulations`; (2) cada token nuevo en su grupo de `_tokens.scss` (colores, tipografía, radios), con su comentario `// style-guide.md:NN (también :MM)`; (3) «outline» solo en el comentario de `_customers.scss:2`, sin ninguna regla; (4) sin `.customer-card__email`, que no existe en las plantillas (el email y el detalle son de la T-13); (5) sin reglas propias para `customers-page__rates-status`, `__rates-alert`, `__status`, `__alert` y `__empty`, que la D-14 no pide; (6) `style-guide.md`, `_shared.scss`, `_simulations.scss`, `_health.scss` y `_base.scss` sin cambios; (7) reglas de `.customer-search__label` y `.customer-search__input` (altura, borde y radio del campo, y en el foco un borde con el color de marca), que la D-14 no pide, según `style-guide.md:95` y el patrón de `_simulations.scss:61`. Sin tests nuevos ni fase roja. `npm run verify` en verde, con código 0, repetido por la sesión principal: 905 tests en la raíz y 244 en la web (igual que antes). Observaciones para el revisor: los tres tokens nuevos citan `style-guide.md:53` (`--color-soft`), `:64` (`--font-size-pill`) y `:55` (`--radius-pill`), y hay que comprobar que esas líneas dicen lo citado; C-38, C-39, C-170, C-174 y el recorrido con Tab (R-68) se comprueban en la puerta 6.
 
 ## T-11 · web: detalle en el servicio
 - Cubre: R-25, R-43, R-44, R-46, R-125, R-128, R-144, R-163, R-164 (parte del servicio)

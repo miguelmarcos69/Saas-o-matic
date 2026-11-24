@@ -1,0 +1,130 @@
+// Estilos del buscador de clientes (spec 004: R-26, R-32, R-38, R-39, R-102, R-165, R-169; D-14, D-17).
+// Sin reglas de `outline` (el contorno del navegador se mantiene, spec 004: R-68).
+
+// Etiqueta sobre el título: mismos tokens que el simulador (_simulations.scss:7-11).
+.customers-page__eyebrow {
+  color: var(--color-brand);
+  font-size: var(--font-size-eyebrow);
+  font-weight: 500;
+}
+
+// Título con los tamaños del H2 de la guía (_simulations.scss:14-19).
+.customers-page__title {
+  color: var(--color-ink);
+  font-weight: 800;
+  font-size: var(--font-size-title);
+  line-height: var(--line-height-title);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+// Rejilla de tarjetas: lista sin viñetas; 17 rem propuestos por el planner y aprobados por el autor (spec 004: D-17).
+.customers-page__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+}
+
+.customers-page__item {
+  min-width: 0;
+}
+
+// Anuncio de resultados: visualmente oculto, presente para los lectores de pantalla (spec 004: R-165).
+.customers-page__announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// Buscador: etiqueta encima del campo y campo al ancho de su contenedor.
+.customer-search__label {
+  display: block;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: var(--space-md) 0 var(--space-sm);
+}
+
+.customer-search__input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  height: var(--control-height);
+  padding: 0 var(--control-padding-x);
+  background-color: var(--color-white);
+  border: var(--control-border-width) solid var(--color-ink);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  color: var(--color-ink);
+
+  &:focus {
+    border-color: var(--color-brand);
+  }
+}
+
+// Tarjeta blanca, como `.card` de la guía (spec 004: R-39).
+.customer-card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  min-width: 0;
+}
+
+// Textos largos (nombre de 200 caracteres e identificador; el email es del detalle, T-13) sin desplazamiento horizontal (spec 004: R-38).
+.customer-card__title,
+.customer-card__tax-id {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.customer-card__title {
+  margin: 0;
+  color: var(--color-ink);
+}
+
+.customer-card__link {
+  color: inherit;
+}
+
+.customer-card__tax-id {
+  margin: 0;
+}
+
+.customer-card__pills {
+  list-style: none;
+  margin: var(--space-sm) 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+// Píldora: fondo suave de la guía (style-guide.md:31), peso 700 (spec 004: R-102, R-169; D-17).
+.customer-card__pill {
+  background: var(--color-soft);
+  color: var(--color-ink);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  font-size: var(--font-size-pill);
+  font-weight: 700;
+}
+
+.customer-card__last {
+  margin: 0;
+}
+
+.customer-card__term {
+  color: var(--color-muted);
+}
+
+.customer-card__amount {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
+}

@@ -8,12 +8,14 @@
   --color-brand: #3838ec; // style-guide.md:51 (también :28 y :23)
   --color-ink: #0d0d1a; // style-guide.md:52 (también :18 y :29)
   --color-muted: #666666; // style-guide.md:52 (`#666` en el CSS base; también :29)
+  --color-soft: #e4e4fc; // style-guide.md:53 (también :31)
 
   // Tipografía
   --font-family-base: 'Montserrat', sans-serif;
   --font-size-base: 16px;
   --line-height-base: 30px;
   --font-size-eyebrow: 14px; // style-guide.md:23 (también :65)
+  --font-size-pill: 13px; // style-guide.md:64
   --font-size-title: 38px; // style-guide.md:19 (H2; también :59)
   --line-height-title: 60px; // style-guide.md:19 (H2; también :59)
 
@@ -21,6 +23,7 @@
   --space-lg: 32px;
   --radius-lg: 32px;
   --radius-sm: 12px; // style-guide.md:55 (también :88)
+  --radius-pill: 9999px; // style-guide.md:55 (también :35)
   --space-sm: 8px; // style-guide.md:98 (etiqueta hasta el control; también :99, error bajo el campo)
   --space-md: 24px; // style-guide.md:98 (entre grupos)
 
