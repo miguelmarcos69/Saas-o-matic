@@ -11,4 +11,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./simulations/pages/simulation-page/simulation-page').then((m) => m.SimulationPage),
   },
+  // Buscador de clientes (spec 004: R-61; D-13).
+  {
+    path: 'customers',
+    loadComponent: () =>
+      import('./customers/pages/customers-page/customers-page').then((m) => m.CustomersPage),
+  },
 ];

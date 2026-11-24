@@ -181,21 +181,22 @@ Reglas comunes de esta spec:
 ## T-09 · web: página del buscador y ruta `customers`
 - Cubre: R-23, R-28, R-30, R-32, R-40, R-41, R-42, R-47 a R-53, R-57, R-61, R-67, R-68, R-73, R-74, R-75, R-96 a R-100, R-110, R-111, R-120 a R-123, R-132 a R-134, R-144, R-159, R-165 (parte de la plantilla), R-166, R-167
 - Depende de: T-06, T-07, T-08
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Opus 5.5, por la Q-01 (a) (URL con `replaceUrl`, cancelación y cinco estados).
 - Archivos de producción (3):
   - `app/customers/pages/customers-page/customers-page.ts` y `customers-page.html` (nuevos): `CustomersPage` (D-10, D-12).
   - `app/app.routes.ts`: ruta `customers` con `loadComponent`, después de `simulator` (D-13).
 - Tests (nuevo): `customers-page.spec.ts`, con `HttpTestingController`, `Location` y rutas propias del test.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] Estados: C-40, C-121 y C-47 (carga en `role="status"`), C-41, C-122 y C-120 (error en `role="alert"`, sin tarjetas), C-42 y C-123 (vacío, sin tarjetas y fuera de toda región viva).
-  - [ ] Datos: C-30 (dos tarjetas en `<ul class="customers-page__grid">`), C-32 (sin cifras resumen), C-99, C-100 y C-159 (anuncio en el `role="status"` con la clase `customers-page__announcement`), C-110 y C-111.
-  - [ ] URL: C-97, C-98, C-171 y C-172 (`replaceUrl`, comprobado con `Location`); C-96 de punta a punta (la primera petición, `cancelled`; solo los resultados de «Acme»).
-  - [ ] Divisa: C-132, C-133 y C-134 dentro de la página; `currencySelection.load` una vez al abrir (R-57).
-  - [ ] C-74 y C-75: el test cubre carga, error y vacío y no importa `app.routes` (`git grep -n "app.routes" -- apps/web/src/app/customers/`, con `--untracked`, vacío).
-  - [ ] `app.spec.ts` sigue en verde sin cambios (el `<nav>` sigue con dos enlaces hasta la T-14); `git diff` de `app.routes.ts` solo añade la ruta `customers` (R-67).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] Estados: C-40, C-121 y C-47 (carga en `role="status"`), C-41, C-122 y C-120 (error en `role="alert"`, sin tarjetas), C-42 y C-123 (vacío, sin tarjetas y fuera de toda región viva).
+  - [x] Datos: C-30 (dos tarjetas en `<ul class="customers-page__grid">`), C-32 (sin cifras resumen), C-99, C-100 y C-159 (anuncio en el `role="status"` con la clase `customers-page__announcement`), C-110 y C-111.
+  - [x] URL: C-97, C-98, C-171 y C-172 (`replaceUrl`, comprobado con `Location`); C-96 de punta a punta (la primera petición, `cancelled`; solo los resultados de «Acme»).
+  - [x] Divisa: C-132, C-133 y C-134 dentro de la página; `currencySelection.load` una vez al abrir (R-57).
+  - [x] C-74 y C-75: el test cubre carga, error y vacío y no importa `app.routes` (`git grep -n "app.routes" -- apps/web/src/app/customers/`, con `--untracked`, vacío).
+  - [x] `app.spec.ts` sigue en verde sin cambios (el `<nav>` sigue con dos enlaces hasta la T-14); `git diff` de `app.routes.ts` solo añade la ruta `customers` (R-67).
+  - [x] `npm run verify` desde la raíz, en verde.
+- Aprobación del autor 2026-11-24 (literal): «Apruebo la T-09 (web: página del buscador y ruta customers) con las desviaciones 1 a 10 aceptadas. No repitas el rojo (es de compilación) ni el temporal de C-172: anótalo en el registro como copiado de la consola, no de un fichero. Anota para el revisor la desviación 9 (R-68 a mano con Tab en la puerta 6; R-165 depende del CSS de la T-10) y que C-172 se prueba con las entradas de SpyLocation, no con location.back(). Rojo copiado de red-t09.txt, sin ANSI y con los signos reales. Las capturas fase-7-004-t09-rojo y t09-verde son mías.» Desviaciones aceptadas: (1) dos tests de más, «C-41: con un error de red» y «con USD elegido y tipos válidos, el total convertido» (R-50, R-52); (2) las búsquedas tecleadas, C-96 incluida, esperan 350 ms con reloj real, según el aprendizaje de la T-08; (3) `provideLocationMocks()` de `@angular/common/testing` (ya instalado), con `Location` como `SpyLocation`; (4) clases `customers-page__eyebrow`, `__title`, `__rates-status`, `__rates-alert`, `__status`, `__alert`, `__empty` e `__item`, que el plan no cita (los estilos son de la T-10); (5) el `<p role="status">` de los tipos, siempre en el DOM como en `simulation-page.html:13-18` (D-12), y «Cargando clientes…» solo durante la carga (D-10); (6) `AFTER_DEBOUNCE_MS = 350` en el test, `initialQuery` desde `route.snapshot.queryParamMap`, `announcement` (`computed`) y alias `searchState`, `ratesState`, `displayCurrency` y `displayRateMicros`; `currencySelection.load` y la primera `runSearch` en el constructor; (7) R-57 con `expectOne` al abrir y `http.match(RATES_URL)` vacío tras otra búsqueda; (8) comentario `// Buscador de clientes (spec 004: R-61; D-13).` en `app.routes.ts`; (9) R-68 sin test y R-165 solo con la clase y la presencia en el DOM; (10) la primera `runSearch`, con la misma URL, no deja entrada en `urlChanges`. `npm run verify` en verde, con código 0: 905 tests en la raíz y 244 en la web (antes, 905 + 221; 23 nuevos en `customers-page.spec.ts`). Fase roja de compilación copiada de `red-t09.txt` con los signos reales y sin ANSI, en `ai-workspace/sessions/2026-11-24-23-004-customers.md`; rojo no repetido por decisión del autor. Rojo temporal de C-172 (`replaceUrl: false` un momento) copiado de la consola, no de un fichero, sin repetir por decisión del autor. Observaciones para el revisor: desviación 9 (R-68 a mano con Tab en la puerta 6; R-165 depende del CSS de la T-10) y C-172 se prueba con las entradas de `SpyLocation` (todas `replace:`, ninguna de `go`), no con `location.back()`.
 
 ## T-10 · estilos del buscador
 - Cubre: R-26, R-32, R-38, R-39, R-68, R-102, R-144, R-165, R-169 (estilos; C-38, C-39, C-170 y C-174 en la puerta 6)

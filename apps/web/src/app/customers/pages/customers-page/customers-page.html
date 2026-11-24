@@ -1,0 +1,40 @@
+<!-- Buscador de clientes (spec 004: D-10, D-12). El vacío va fuera de toda región viva para no anunciarse dos veces con el anuncio de resultados (R-123, R-159). -->
+@let search = searchState();
+@let rates = ratesState();
+<p class="customers-page__eyebrow">Panel comercial</p>
+<h1 class="customers-page__title">Buscador de clientes</h1>
+
+<app-customer-search [initialQuery]="initialQuery" (search)="runSearch($event)" />
+
+<!-- Tipos de cambio dentro de la página, como simulation-page.html (spec 004: R-133, R-134). -->
+<p class="customers-page__rates-status" role="status">
+  @if (rates.status === 'loading') {Cargando tipos de cambio…}
+</p>
+@if (rates.status === 'error') {
+  <p class="customers-page__rates-alert" role="alert">{{ rates.message }}</p>
+}
+
+@switch (search.status) {
+  @case ('loading') {
+    <p class="customers-page__status" role="status">Cargando clientes…</p>
+  }
+  @case ('error') {
+    <p class="customers-page__alert" role="alert">{{ search.message }}</p>
+  }
+  @case ('data') {
+    @if (search.data.length === 0) {
+      <p class="customers-page__empty">Ningún cliente coincide con la búsqueda.</p>
+    } @else {
+      <ul class="customers-page__grid">
+        @for (customer of search.data; track customer.id) {
+          <li class="customers-page__item">
+            <app-customer-card [customer]="customer" [currency]="displayCurrency()" [rateMicros]="displayRateMicros()" />
+          </li>
+        }
+      </ul>
+    }
+  }
+}
+
+<!-- Siempre en el DOM y visualmente oculto (spec 004: R-99, R-165; estilos en la T-10). -->
+<p class="customers-page__announcement" role="status">{{ announcement() }}</p>
