@@ -1,0 +1,54 @@
+<!-- Detalle del cliente (spec 004: D-11, D-12). Un único estado de carga, error o «no existe» para toda la vista (R-43, R-44, R-46). -->
+@let detail = detailState();
+@let rates = ratesState();
+<p class="customer-detail-page__eyebrow">Cliente</p>
+@if (detail.status === 'data') {
+  <h1 class="customer-detail-page__title">{{ detail.data.customer.companyName }}</h1>
+}
+
+<!-- Tipos de cambio dentro de la página, como simulation-page.html (spec 004: R-133, R-134). -->
+<p class="customer-detail-page__rates-status" role="status">
+  @if (rates.status === 'loading') {Cargando tipos de cambio…}
+</p>
+@if (rates.status === 'error') {
+  <p class="customer-detail-page__rates-alert" role="alert">{{ rates.message }}</p>
+}
+
+@switch (detail.status) {
+  @case ('loading') {
+    <p class="customer-detail-page__status" role="status">Cargando cliente…</p>
+  }
+  @case ('error') {
+    <p class="customer-detail-page__alert" role="alert">{{ detail.message }}</p>
+  }
+  @case ('not-found') {
+    <!-- Estado propio, distinto del error (spec 004: R-46, R-127, R-129, R-160). -->
+    <p class="customer-detail-page__alert" role="alert">No existe el cliente indicado.</p>
+    <a class="customer-detail-page__link" routerLink="/customers">Volver a Clientes</a>
+  }
+  @case ('data') {
+    <section class="customer-detail-page__card">
+      <h2 class="customer-detail-page__card-title">Datos</h2>
+      <dl class="customer-detail-page__details">
+        <dt class="customer-detail-page__term">Identificador fiscal</dt>
+        <dd class="customer-detail-page__value">{{ detail.data.customer.taxId }}</dd>
+        <dt class="customer-detail-page__term">Email</dt>
+        <dd class="customer-detail-page__value">{{ detail.data.customer.email }}</dd>
+        <dt class="customer-detail-page__term">País</dt>
+        <dd class="customer-detail-page__value">{{ country() }}</dd>
+        <dt class="customer-detail-page__term">Plan</dt>
+        <dd class="customer-detail-page__value">{{ detail.data.customer.plan }}</dd>
+      </dl>
+    </section>
+    <section class="customer-detail-page__card">
+      <h2 class="customer-detail-page__card-title">Historial de simulaciones</h2>
+      <app-simulation-history
+        [simulations]="detail.data.simulations"
+        [currency]="displayCurrency()"
+        [rateMicros]="displayRateMicros()"
+      />
+    </section>
+    <!-- Sin consulta ni fragmento: no precarga nada en el simulador (spec 004: R-77, R-154, R-155). -->
+    <a class="customer-detail-page__link" routerLink="/simulator">Ir al simulador</a>
+  }
+}

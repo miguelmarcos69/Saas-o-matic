@@ -17,4 +17,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./customers/pages/customers-page/customers-page').then((m) => m.CustomersPage),
   },
+  // Detalle de un cliente (spec 004: R-137; D-13).
+  {
+    path: 'customers/:id',
+    loadComponent: () =>
+      import('./customers/pages/customer-detail-page/customer-detail-page').then((m) => m.CustomerDetailPage),
+  },
 ];

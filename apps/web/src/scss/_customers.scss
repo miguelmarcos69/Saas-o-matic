@@ -1,15 +1,18 @@
-// Estilos del buscador de clientes (spec 004: R-26, R-32, R-38, R-39, R-102, R-165, R-169; D-14, D-17).
+// Estilos del buscador y del detalle de clientes (spec 004: R-26, R-32, R-38, R-39, R-102, R-165, R-169; D-14, D-17).
 // Sin reglas de `outline` (el contorno del navegador se mantiene, spec 004: R-68).
 
-// Etiqueta sobre el título: mismos tokens que el simulador (_simulations.scss:7-11).
-.customers-page__eyebrow {
+// Etiqueta sobre el título de las dos páginas: mismos tokens que el simulador (_simulations.scss:7-11).
+.customers-page__eyebrow,
+.customer-detail-page__eyebrow {
   color: var(--color-brand);
   font-size: var(--font-size-eyebrow);
   font-weight: 500;
 }
 
-// Título con los tamaños del H2 de la guía (_simulations.scss:14-19).
-.customers-page__title {
+// Título de las dos páginas con los tamaños del H2 de la guía (_simulations.scss:14-19); el del detalle es
+// el nombre de empresa, que puede ser largo (spec 004: R-38).
+.customers-page__title,
+.customer-detail-page__title {
   color: var(--color-ink);
   font-weight: 800;
   font-size: var(--font-size-title);
@@ -127,4 +130,59 @@
   font-weight: 700;
   color: var(--color-ink);
   overflow-wrap: anywhere;
+}
+
+// Detalle: tarjetas «Datos» e «Historial de simulaciones», como `.card` de la guía y como el simulador
+// (_simulations.scss:21-26) (spec 004: R-34, R-36, R-39, R-116).
+.customer-detail-page__card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  min-width: 0;
+}
+
+.customer-detail-page__card-title {
+  margin: 0 0 var(--space-md);
+  color: var(--color-ink);
+}
+
+// Filas dt/dd del detalle y del historial con los tokens de espaciado que ya existen (spec 004: D-14).
+.customer-detail-page__details,
+.simulation-history__details {
+  margin: 0;
+}
+
+.customer-detail-page__term,
+.simulation-history__term {
+  color: var(--color-muted);
+  margin-top: var(--space-sm);
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+// Identificador y email largos (254 caracteres a 320 px) sin desplazamiento horizontal (spec 004: R-38).
+.customer-detail-page__value,
+.simulation-history__value {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-ink);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+// Historial: cada simulación separada de la siguiente; el <ol> conserva su numeración (spec 004: R-37).
+.simulation-history__list {
+  margin: 0;
+  padding-left: var(--space-md);
+}
+
+.simulation-history__item + .simulation-history__item {
+  margin-top: var(--space-md);
+}
+
+.simulation-history__empty {
+  margin: 0;
 }

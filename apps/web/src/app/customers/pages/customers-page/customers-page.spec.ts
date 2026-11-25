@@ -8,6 +8,7 @@ import { CustomerWithLastSimulation } from '../../../shared/interfaces/customer'
 import { Simulation } from '../../../shared/interfaces/simulation';
 import { formatCents, toDisplayCents } from '../../../shared/services/currency-conversion';
 import { CurrencySelection } from '../../../shared/services/currency-selection';
+import { CustomerDetailPage } from '../customer-detail-page/customer-detail-page';
 import { CustomersPage } from './customers-page';
 
 // Página del buscador (spec 004: D-10, D-12): estados, datos, URL y divisa (R-30, R-32, R-40 a R-42, R-47 a R-53,
@@ -69,7 +70,11 @@ describe('CustomersPage', () => {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClientTesting(),
-        provideRouter([{ path: 'customers', component: CustomersPage }]),
+        // Las dos páginas de customers/, para pasar del buscador al detalle (spec 004: R-33, R-57, R-75).
+        provideRouter([
+          { path: 'customers', component: CustomersPage },
+          { path: 'customers/:id', component: CustomerDetailPage },
+        ]),
         provideLocationMocks(),
       ],
     });
@@ -384,6 +389,48 @@ describe('CustomersPage', () => {
       await flush(customersRequest('Acme'), [ACME]);
 
       expect(http.match({ method: 'GET', url: RATES_URL })).toHaveLength(0);
+    });
+  });
+
+  describe('del buscador al detalle (spec 004: R-33, R-57)', () => {
+    // Activa el enlace del nombre de la tarjeta de ese cliente y espera a la navegación.
+    async function openCard(name: string): Promise<void> {
+      const anchor = Array.from(page().querySelectorAll('app-customer-card h2 a')).find(
+        (a) => a.textContent?.trim() === name,
+      ) as HTMLAnchorElement;
+      anchor.click();
+      await stable();
+    }
+
+    it('C-33: activar el nombre de una tarjeta abre el detalle de ese cliente', async () => {
+      await openWith([ACME, BETA]);
+
+      await openCard('Beta Labs');
+
+      expect(location.path()).toBe('/customers/2');
+      expect(harness.routeDebugElement?.componentInstance).toBeInstanceOf(CustomerDetailPage);
+      await flush(ratesRequest(), VALID_RATES);
+      const simulationsReq = http.expectOne({ method: 'GET', url: '/api/customers/2/simulations' });
+      await flush(http.expectOne({ method: 'GET', url: '/api/customers/2' }), BETA);
+      await flush(simulationsReq, []);
+      expect(texts('h1')).toEqual(['Beta Labs']);
+    });
+
+    it('C-57: abrir el buscador y luego el detalle hace dos peticiones de tipos, una al abrir cada vista', async () => {
+      await open();
+      const rates: TestRequest[] = [ratesRequest()];
+      await flush(customersRequest(), [ACME]);
+      await flush(rates[0], VALID_RATES);
+
+      await openCard('Acme Cloud');
+      rates.push(ratesRequest());
+      await flush(rates[1], VALID_RATES);
+      const simulationsReq = http.expectOne({ method: 'GET', url: '/api/customers/1/simulations' });
+      await flush(http.expectOne({ method: 'GET', url: '/api/customers/1' }), ACME);
+      await flush(simulationsReq, []);
+
+      expect(rates).toHaveLength(2);
+      expect(rates.every((request) => request.request.url === RATES_URL)).toBe(true);
     });
   });
 });
