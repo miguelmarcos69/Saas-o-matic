@@ -617,3 +617,136 @@ Aprobación del autor 2026-11-25, puerta 6 (cierre de la spec 004-customers), tr
 > 6. H-38 (ajustes del ADR-016 sin anotar en la sección 1 de spec.md): va a la pasada única de reservas, como H-14, H-15, H-16 y H-17 de las otras specs.
 > 7. H-40 (la tercera corrección no siguió SKILL.md:42): «La tercera corrección la decidí yo, de forma visible, como corrección del autor sobre la T-18, igual que las dos anteriores. No cambia código ni tests respecto a lo medido, y el rastro está en tasks.md (T-18), MEMORY.md y los registros 13 a 15, con su medida. Regularizarlo con una puerta 4 ampliada y otra ronda costaría unos 45 minutos de papeleo sin mejorar el software. Acepto que no sigue SKILL.md:42.»
 > 8. H-41 (C-238 con el CSS final): con el texto corregido arriba.
+
+## Ronda 6 (2026-11-25) · Veredicto: Conforme con reservas
+
+**Alcance:** spec.md (puerta 2), limitada a lo que cambian las Decisiones 2026-11-25 #7, #8 y #9.
+
+He leído:
+- de `spec.md`: las líneas 1-90, 676-705, 890-1069, 1100-1341 (por tramos y por Grep) y 1390-1469. Por Grep, cada `R-nn` y `C-nn` que cito.
+- `review.md`: las rondas 3 a 5 y sus aprobaciones, y por Grep los ID de las rondas 1, 2 y 4.
+- `reto.md` (§2.B, por Grep) y la constitución.
+- `templates/review.md` y `frontend-conventions/checklist.md`.
+- `style-guide.md:15-59` y el ADR-015 (`decisions.md:164-176`).
+- `app.html`, `app.spec.ts:176-178` y `:245-274`, `simulation-history.html`, `customer-card.html`, `customer-detail-page.html`, `_customers.scss`, `_shared.scss` y `themes/_tokens.scss`.
+- `tasks.md:1-16` y la fila 004 de `specs/README.md`.
+
+La checklist del backend no la he leído, porque el cambio no toca `apps/api`.
+
+Recuentos hechos con Grep sobre el fichero:
+- 264 líneas `**R-nn.**` y 264 `- Origen:`. No son vigentes R-139 a R-141 (sustituidos, `:544-550`) ni R-259 y R-260 (retirados, `:1001`, `:1004`). Quedan **259 vigentes**.
+- 271 filas `| C-nn |`. No son vigentes C-139 a C-141 (sustituidos, `:1209-1211`) ni C-266 y C-267 (retirados, `:1336-1337`). Quedan **266 vigentes**.
+- 56 filas `| Q-nn |`, las 56 en «Decidida».
+- 46 apariciones de `PENDIENTE`, todas en textos «antes: …» o «Texto anterior» y en los literales de la #2 y la #5 (`:1392`, `:1395`). Ninguna está activa.
+
+Los recuentos coinciden con los del planner y con los del encargo. No abro como hallazgo nuevo las reservas que el autor ya aceptó: H-04, H-10, H-14, H-15, H-21, H-36 a H-38, H-40 y H-41. Tampoco abro el recorte de R-264 «frente a R-38», que el autor acepta en la #8; H-42 trata de lo que esa reserva no nombra.
+
+### Hallazgos
+| ID | Gravedad | Archivo:línea | Requisito o regla | Hallazgo |
+|---|---|---|---|---|
+| H-42 | Importante | ai-workspace/specs/004-customers/spec.md:1018, :318, :321, :1308, :1309, :1461; apps/web/src/scss/_customers.scss:44, :100, :107; apps/web/src/scss/themes/_tokens.scss:23, :28, :51 | Nada contradice reto > constitución > spec (puerta 2); R-103, R-104; C-238, C-239; constitución, principio 7 (WCAG 2.2, 1.4.4 y 1.4.10) | **R-264 recorta el importe, y la reserva aceptada solo nombra R-38. R-38 es justo lo que R-264 sí cumple: «sin desplazamiento horizontal (R-38)».** Hay tres choques que la reserva no cubre. **(1) Con R-103 y R-104.** R-103 pide que la tarjeta «deberá mostrar el total» y R-104 que muestre «Sin simulaciones». El recorte no es un caso de borde, según las cifras de la propia Q-48: etiqueta de unos 150 px e importe de unos 70 px en EUR, unos 220 px más el hueco. Las cuentas salen del CSS: rejilla `minmax(min(100%, 17rem), 1fr)` con hueco de 24 px, relleno de 32 px, borde de 1 px y contenedor de 75 rem con 24 px a cada lado. El contenido de la tarjeta mide unos 206 px a 320 px, 290 − 66 = 224 px a 1280 px (4 columnas) y 282 − 66 = 216 px a 1600 px (4 columnas). Con el texto por defecto, la fila no cabe a 320 px ni a 1600 px, y a 1280 px queda en el límite según el hueco que fije el plan. Con «Sin simulaciones» en negrita o con un importe en USD es más ancho todavía. **(2) Con C-238 y C-239.** Esperan que «la fila de R-204 y las píldoras se ven enteras, sin cortarse ni solaparse», al 200 % y con el espaciado de 1.4.12. Con R-264 la fila no se parte: se recorta. Con texto al 200 % (etiqueta de unos 300 px) no cabe a ningún ancho, así que C-238 falla por construcción. Su columna «Requisito» no incluye R-204 ni R-264, y ni la #7 ni la #8 los tocaron. **(3) Con el principio 7.** La ronda 3 (Punto D) admitió el recorte del nombre porque R-199 y R-200 aseguran que se ve entero en otro sitio. Para el importe, el texto completo sigue en el DOM y, a una activación del enlace, en el historial: R-37 y R-82 con el criterio de «más reciente» de la #19 y la #37, y R-256 y R-257 sin recorte. Pero ningún requisito lo dice como lo dicen R-199 y R-200 para el nombre. No es Bloqueante, porque el autor decidió el recorte a sabiendas y la información sigue disponible. Es Importante porque la spec queda con requisitos y casos que se contradicen y con un criterio AA sin nombrar en la reserva. No lo resuelvo: lo decide el autor. |
+| H-43 | Menor | ai-workspace/specs/004-customers/spec.md:916, :1314 frente a :919, :1315 | Coherencia con los vecinos (el patrón de H-27) | R-237 prohíbe cambiar «ningún fichero `.ts` de `apps/web`» salvo el orden de `app.html`. C-244 espera, en el `git diff --stat`, «solo `app.html` y ficheros de `src/scss/`; ningún otro `.html` ni `.ts`». R-238 y C-245 obligan a cambiar `apps/web/src/app/app.spec.ts`, que es un `.ts` de `apps/web`: el test de C-55, su título y los comentarios de `:255` y `:265`. Leídos al pie de la letra, C-244 falla en la puerta 6 si se cumple C-245. La excepción de R-238 no está en R-237 ni en C-244. |
+| H-44 | Menor | ai-workspace/specs/004-customers/spec.md:1311 frente a :907, :691 | Una afirmación comprobable; límites en los casos | C-241 pide, a 320 px, 768 px y 1280 px, que «el centro vertical del `<nav>` y el del selector coinciden con el de la caja de contenido de la cabecera». A 320 px, R-180 los apila: el selector arriba y el `<nav>` debajo. Así, sus centros verticales no pueden coincidir entre sí, y los dos no pueden coincidir con el de la caja. Por debajo de 48 rem, el caso no se puede cumplir tal como está escrito. Tampoco dice qué significa «centrar en vertical» (R-234, «a cualquier ancho») con el contenido apilado. |
+| H-45 | Menor | ai-workspace/specs/004-customers/spec.md:306 frente a :955, :947; ai-workspace/docs/style-guide.md:36; ai-workspace/docs/decisions.md:168 | Coherencia con los vecinos (R-39); ADR-015 | R-39 sigue diciendo que «las tarjetas de las vistas de clientes deberán seguir la guía de estilo del ADR-015». R-245 reconoce que la sombra de R-247 se aparta de `style-guide.md:36` («Sin sombras marcadas: diseño plano, como mucho un borde sutil de 1px»), y la guía no cambia. El ADR-015 hace de la guía «la fuente de estilo de la interfaz». Con lo escrito, R-39 y R-247 no se cumplen a la vez. La «Nota sobre fuentes» (`:33-42`) no anota que la #7 se aparta del ADR-015. La sección 1 (`:20`) solo nombra `:23`, no `:36`. |
+| H-46 | Menor | ai-workspace/specs/004-customers/spec.md:910, :1463; :503 | Constitución, principio 7 (WCAG 2.2 AA, criterio 2.4.5); huecos a «Dudas abiertas» | Con R-235, «Estado de la API» queda sin ningún enlace visible. La propia Q-50 dice que la vista «sigue en `/` (`README.md:209`: «la página de inicio»), solo por URL». La spec no valora el criterio 2.4.5 («Varias vías», AA) para esa vista, que sigue en el conjunto de páginas: tiene auditorías propias (R-146, R-147). Ningún caso lo comprueba, y Lighthouse no lo mide. Tampoco dice que, al abrir la aplicación en `/`, la cabecera no muestra ningún enlace activo. El autor decidió ocultar el enlace (punto 2 y Q-50). Lo que falta es su decisión frente a 2.4.5. |
+| H-47 | Menor | ai-workspace/specs/004-customers/spec.md:1325 frente a :860, :1290; :1134 frente a :519; :20, :21, :1056 frente a :919-921; :686, :692, :699; :693-696, :700-702 | Coherencia interna; legibilidad | (1) **Comprobación 4 del autor.** C-255 dice «fondo y píldoras con el énfasis», en plural. R-215 está en singular desde la Q-51 (b), y C-220 dice «Píldora del país». Como C-255 remite a C-215 a C-220, el resultado lo fija C-220 y la prueba no cambia. Pero su resumen nombra en plural algo que R-263 oculta. (2) C-64 se amplía a los antetítulos, las tarjetas y el historial («los de la Decisión 2026-11-25 #7 (R-239)»), pero R-64 solo habla de «la cabecera y sus enlaces» y no se modificó. El caso comprueba más que su requisito, y lo hace de nuevo, porque eso ya lo cubren R-239 y C-246. (3) La sección 1 (`:20` y `:21`) y la sección 3 (`:1056`) dicen que solo cambian «las dos aserciones de orden» del test de C-55. R-238 y C-245 cambian además su título y los comentarios de `:255` y `:265`. Además, `:20` sigue contando R-37 entre los modificados, y `:21` dice que no cambia. (4) Hay orígenes que citan textos que el requisito ya contradice: R-179 y R-231 citan la #6 («con el selector de divisa a su derecha»), y R-180 cita la #5 («el selector de divisa debajo»). Los «Modificado por» de R-180 (#8, #7, #2, #5) y de R-231 (#8, #6, #7) no van en orden cronológico. |
+
+### Checklists
+
+**Comprobaciones de la puerta 2, sobre lo cambiado**
+
+| Comprobación | Resultado | Nota |
+|---|---|---|
+| Cada requisito tiene origen (§ o Decisión) | Cumple | 264 requisitos y 264 orígenes. R-233 a R-264 citan la #7, y los decididos en la puerta 2, también la #8 o la #9. Las referencias a ficheros (`_customers.scss:6-12`, `app.spec.ts:265-267`, `style-guide.md:35` y `:55`) acompañan a la decisión, no la sustituyen. «Aplicada en» ↔ «Origen»: las filas #7, #8 y #9 listan lo que las cita. |
+| Una sola afirmación comprobable por requisito | Cumple con reservas | Los nuevos compuestos (R-238, R-253, R-257, R-264, y R-55 con R-178, R-179 y R-236, que se repiten en parte) siguen el patrón de la reserva H-14 y no los abro. C-241 no se puede cumplir a 320 px (H-44). |
+| EARS | Cumple | R-253 y R-264 con «Si …, entonces …»; R-179 y R-180 con «Mientras …»; el resto, «deberá». |
+| Cada `R-nn` tiene al menos un caso | Cumple | Fila a fila: R-233 a R-264 tienen C-240 a C-271 (desfase de 7; reserva H-21). R-259 y R-260, retirados con C-266 y C-267. R-119 y R-215, con C-119 y C-220 modificados. |
+| Límites en los casos | Cumple con reservas | Están 320, 768 (48 rem exactos), 767, 1024, 1280 y 1600 px (C-236, C-240, C-241, C-264, C-271), el identificador de 20 y el email de 254 a 320 px (C-260), EUR y USD (C-264, C-271) y tarjetas con simulaciones y sin ellas (C-271). C-238 y C-239 no tienen en cuenta R-264 (H-42). |
+| Ningún hueco rellenado con un valor «razonable» | Cumple | Cada valor nuevo sale del literal de la #7 (70 px, 12 px, 700, 0,08em, `--color-muted`, 24 px, « usuarios», « · ») o de una Q-nn decidida: sombra de la Q-52 (a), líneas de la Q-55 (a), px de la Q-49 (a), `::after` de la Q-45 (b), filas de la Q-56 (b) y de la Q-54 (b), recorte «Las dos partes» de la Q-48. La tolerancia de ±1 px de C-241 es de medida, no de negocio. Hueco sin Q-nn: 2.4.5 (H-46). |
+| Seis secciones, con `No aplica` donde corresponde | Cumple | Están las seis. |
+| `§` citados como en CLAUDE.md | Cumple | Lo cambiado no cita ningún `§` nuevo. |
+| Nada contradice reto > constitución > spec | No cumple | Con el reto no hay choque: §2.B pide «Tarjetas responsive» y el historial «con sus simulaciones de coste guardadas». El total sigue visible, y el coste base y el IVA siguen en el árbol de accesibilidad (R-106, R-261), así que §2.B no pide nada más. Con la constitución y dentro de la spec: H-42 (Importante), H-43, H-45 y H-46. |
+| Lo sustituido, modificado o retirado conserva número y texto anterior | Cumple | Los requisitos y casos modificados por la #7 y la #8 llevan «antes: …». R-37 y C-37 anotan su vuelta al texto anterior. R-259, R-260, C-266 y C-267 llevan «Texto anterior». La nota del planner en R-264 está quitada, como pidió la #9. |
+| `Estado:` encaja con la puerta | Cumple | `En clarificación` (`:3`), igual que la fila 004 de `specs/README.md:12`. La #7 reabre la spec cerrada y la primera puerta afectada es la 1 (`sdd`, «Estados»). Ninguna duda abierta y ningún `PENDIENTE` activo. |
+| Ajustes del ADR-016 anotados | Cumple | `:71-81`, puertas 1 y 2 rehechas tras la #7, con la vuelta corta de la #9. |
+| Registro de sesión de las filas #7 a #9 | Observación | Las tres filas dicen «(pendiente de /sdd-session)» (`:1397-1399`). No lo abro: se completa al cerrar la sesión. |
+
+**Comprobaciones pedidas por el autor**
+
+| Comprobación | Resultado | Nota |
+|---|---|---|
+| 1. Recuentos | Cumple | 259 requisitos vigentes de 264 y 266 casos vigentes de 271, contados arriba. |
+| 2. Q-54 (b) frente a la Q-48 | Cumple, sin choque | R-257 (historial) y R-264 (tarjeta del buscador) rigen elementos distintos, y cada uno es una elección expresa del autor. Ninguno remite al otro. El pro de la Q-54 (b) «mismo criterio que la tarjeta del buscador si eliges la Q-48 (a)» ya no vale, porque la Q-48 no salió en (a). El otro pro, «el total siempre en el mismo sitio», sí se cumple. La diferencia, de hecho, ayuda: como el historial nunca recorta el total, el importe completo de la última simulación se ve allí. Es el respaldo que H-42 echa en falta escrito. |
+| 3. Nombre de `--shadow-card` | Cumple; la spec no lo fija | R-247 fija el valor («`0 2px 8px` en el color de `--color-ink` al 6 % de opacidad, como token»). R-239, C-246 y C-254 exigen un token de `_tokens.scss` leído con `var(--…)`, sin nombre. El «p. ej.» de la Q-52 (a) iba en el nombre y en el literal (`rgb(13 13 26 / 6%)`), y el autor eligió los valores. Es coherente con los tokens de la #1, cuyos nombres fijó la D-14 del plan (salvo `--color-nav-hover`, que nombró el autor). Igual pasa con el radio de 24 px: R-246 cita `--radius-md` de `style-guide.md:55` como origen, sin exigir ese nombre, y `_tokens.scss` aún no lo tiene. La familia `--shadow-…` no está entre las del ADR-015, pero ya hay precedentes fuera de ellas (`--control-…`, `--container-…`, `--border-width-…`, `--transition-…`). |
+| 4. «píldoras» en C-255 | Menor | H-47 (1). |
+
+**Factibilidad solo con CSS (R-237), sobre las plantillas actuales**
+
+| Retoque | Resultado | Nota |
+|---|---|---|
+| Cabecera (R-233 a R-236) | Factible | Mover el bloque `@if` de `app.html:8-10` antes del `<nav>` (`:3`). «Estado de la API» se puede ocultar por atributo (`data-label`, `app.html:4`) o por `routerLink`. C-47 (spec 005) cuenta tres enlaces del DOM y no cambia (R-142). Comprobado: ningún test de `apps/web` usa `getComputedStyle` ni medidas, y `headerSelector` (`app.spec.ts:176-178`) no depende del orden. Solo fallan `:266-267`, como dice la Q-53. |
+| Antetítulos y títulos de tarjetas (R-241 a R-244, R-249) | Factible | Clases propias (`_customers.scss:7-8`, `.customer-detail-page__card-title`). `textContent` no cambia con `text-transform`. `--color-muted` sobre `--color-bg`, recalculado: unos 5,0:1, que cumple el 4,5:1 de C-250. |
+| Tarjeta del buscador (R-209, R-263, R-264) | Factible | `.customer-card__tax-id` y `.customer-card__pills` son hermanos (`customer-card.html:4-5`), así que la fila pide repartir el `<article>` en columnas. El plan es el segundo `li` (`:7`). El recorte proporcional de `dt` y `dd` (`:9-12`) es el `flex-shrink` por defecto. |
+| «Datos» en filas (R-250 a R-253) | Factible, con riesgo para el plan | `dt` y `dd` son hermanos, sin un contenedor por par (`customer-detail-page.html:32-41`). Un `flex-wrap` sobre el `dl` solo no obliga a que cada `dt` abra fila («País» y «Plan» cabrían juntos a 1280 px). R-253 nombra `flex-wrap` como técnica, y hará falta combinarlo con bases de ancho o con otra técnica. |
+| Historial compacto (R-254 a R-262) | Factible, con riesgo para el plan | El `::after` va en el primer `dd` (`simulation-history.html:10`). Las etiquetas y los `dd` 3 y 4 se ocultan con `:nth-of-type` (`:13-16`). «N usuarios» y la fecha son dos `dd` distintos (`:10`, `:12`), y el total, un tercero (`:18`). Por eso, en R-257, «partido en líneas a su izquierda» se partirá por elemento y no como un texto seguido. Así está escrito el requisito. |
+
+**Lista de revisión del frontend (`frontend-conventions/checklist.md`)**: en la puerta 2 no aplica, porque el cambio aún no tiene código. Solo comento lo que fija la spec.
+
+| Casilla | Resultado | Nota |
+|---|---|---|
+| Carpetas por funcionalidad; página o componente = carpeta con `.ts`, `.html` y `.spec.ts` | No aplica | Sin ficheros nuevos. |
+| Ninguna funcionalidad importa otra ni `apps/api` | No aplica | — |
+| `app.*` solo importa páginas y `shared` | No aplica | R-236 solo mueve marcado en `app.html`. |
+| `shared/` solo con lo que usan dos funcionalidades | No aplica | Sin cambios (#10 y #38). |
+| Kebab-case sin sufijos; idioma | No aplica | — |
+| Un concepto por archivo | No aplica | — |
+| Páginas inyectan servicios; componentes presentacionales | No aplica | — |
+| `HttpClient` solo en `services/` | No aplica | — |
+| `@Injectable({providedIn: 'root'})` e `inject()` | No aplica | — |
+| Sin lógica de negocio ni de tramos en páginas | No aplica | — |
+| Carga, error y vacío | No aplica | Sin cambios. |
+| Buscador cancela la anterior | No aplica | — |
+| Error en español visible | No aplica | — |
+| Tipos de cambio por Zod | No aplica | — |
+| API propia tipada, sin `any` | No aplica | La ausencia de Zod no es hallazgo (ADR-013). |
+| Sin `.scss` en componentes | No aplica | R-237 lleva todo a `src/scss/`. |
+| Colores y medidas con tokens | No aplica | R-239, R-240, C-246 y C-247. Las negritas de R-251 y R-256 no van como token (lo mismo que la reserva H-37). |
+| Clases con prefijo | No aplica | Se usan las clases que ya existen. |
+| Teclado y foco visible | No aplica | R-236 hace coincidir el orden del foco con el visual (2.4.3, 1.3.2). El enlace oculto no recibe el foco (C-242). |
+| Etiquetas, contraste, móvil | No aplica | Contraste de R-243, en C-250. Móvil: H-42 y H-44. |
+| Lighthouse sin fallos sin justificar | No aplica | Lighthouse no mide 2.4.5 (H-46). |
+| Carga y error con `role="status"` y `role="alert"` | No aplica | — |
+| Reactive Forms tipados con `toSignal` | No aplica | — |
+| Cada campo con etiqueta y error | No aplica | — |
+| Angular 22 | No aplica | — |
+| Importes enteros; conversión solo para mostrar | No aplica | El recorte de R-264 es visual: no toca el importe (H-42). |
+| Conversión en una única función pura | No aplica | — |
+| Sin `httpResource`; `LoadState<T>` | No aplica | — |
+| Tests de página, componente y servicio | No aplica | R-238: solo cambia el test de C-55. |
+| Sin repetir los límites de los tramos | No aplica | — |
+| Ningún test en rojo ni desactivado | No aplica | — |
+| Cada cambio cubre un `R-nn` | No aplica | R-233 a R-264. |
+
+**Lista de revisión del backend (`backend-conventions/checklist.md`)**: no aplica, porque el cambio no toca `apps/api`.
+
+### Seguimiento de la ronda anterior
+
+| ID | Estado | Nota |
+|---|---|---|
+| H-40 | Abierto (reserva aceptada por el autor) | Motivo en la aprobación de la ronda 5. Esta vez el cambio va por `/sdd-change` y la spec vuelve a la puerta 1, como prevé `sdd`. |
+| H-41 | Abierto (reserva aceptada por el autor) | C-238 tendrá que repetirse en la puerta 6 con el CSS nuevo. Hoy, tal como está escrito, choca con R-264 (H-42). |
+| D1 y D2 de R-204 | Resueltas en la spec, por comprobar en la puerta 6 | R-204 (`:818-820`) las deja sin efecto, y R-264 fija qué pasa si no caben. |
+| H-33 | Resuelto (ronda 5) | R-264 mantiene la fila en una línea y las separadoras alineadas (R-206). Se mide de nuevo en la puerta 6 (C-271). |
+| H-35 | Resuelto | `tasks.md:14` dice «las dieciocho, T-01 a T-18, en `[x]`». |
+| H-36, H-37, H-38 | Abierto (reserva aceptada por el autor) | Motivos en la aprobación de la ronda 5. |
+| H-29 | Resuelto (puerta 6) | Por C-184. Con R-235 solo se ven dos enlaces. |
+| H-04, H-10, H-15 | Abierto (reserva aceptada por el autor) | Lo cambiado no les afecta. |
+| H-14 | Abierto (reserva aceptada por el autor) | Hay compuestos nuevos del mismo patrón (ver «Una sola afirmación»). Por el encargo, no los abro. |
+| H-21 | Abierto (reserva aceptada por el autor) | Los casos nuevos van con un desfase de 7 (C-240 a C-271 para R-233 a R-264). |
+
+No hay ningún hallazgo Bloqueante. H-42 es Importante: R-264 recorta el importe a los anchos normales, según las cifras de la Q-48, y la reserva aceptada solo nombra R-38. Quedan sin decidir sus choques con R-103 y R-104, con C-238 y C-239 y con el principio 7. Por el ADR-016, punto 1, un Importante abre otra ronda si el autor la pide. Lo decide él, igual que si acepta H-42 como reserva nombrando esos requisitos. H-43 a H-47 son Menores. Siguen abiertas, como reservas aceptadas, H-04, H-10, H-14, H-15, H-21, H-36 a H-38, H-40 y H-41.
+
+## Aprobación del autor (ronda 6, 2026-11-25)
+Aprobación del autor 2026-11-25, puerta 2 rehecha tras la Decisión 2026-11-25 #7, tras la ronda 6 y la vuelta corta de la Decisión 2026-11-25 #10, texto literal:
+
+> Apruebo la puerta 2. Acepto como reservas: H-42 (con R-103, R-104, C-238, C-239 y el principio 7), H-46 (2.4.5, con el motivo que ya consta en R-235) y, como Menores, los cinco puntos que señala el planner (citas a C-64 que la puerta 3 pasa a C-246; R-265 sin «Sin simulaciones»; C-238 y C-239 sin R-265; «ningún enlace activo en /»; R-265 compuesto). Siguen abiertas H-04, H-10, H-14, H-15, H-21, H-36, H-37, H-38, H-40 y H-41. Descarto la captura. Añade la aprobación literal al final de review.md y pasa el Estado a Aprobada en spec.md y en el README de specs.
