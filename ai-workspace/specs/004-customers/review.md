@@ -534,3 +534,86 @@ H-22 a H-28 y H-30 a H-32, corregidos o decididos por el autor (Decisiones 2026-
 | H-32 | Resuelto | C-226 queda redactado con resultado y medido con `base-select` (`measure-lines.json`: 108 = 108) y sin él (capturas de Firefox). |
 
 No hay ningún Bloqueante abierto. H-33 y H-34 son Importantes y, por el ADR-016, punto 1, hace falta otra ronda limitada a ellos cuando estén corregidos o medidos. Si la medida de H-33 confirma que las separadoras no se alinean, el hallazgo pasa a Bloqueante (R-206), salvo que el autor extienda a R-206 la reserva de R-204. H-35 a H-39 son Menores, y el autor decide si los acepta como reserva. Siguen abiertas, como reservas aceptadas, H-04, H-10, H-14, H-15 y H-21, y las dos desviaciones de R-204.
+
+## Ronda 5 (2026-11-25) · Veredicto: Conforme con reservas
+
+**Alcance:** H-33, H-34 y H-39 de la ronda 4, con la tercera corrección del autor sobre la T-18 (commit `9530787`, sobre `1e08acd`). He leído `review.md` (ronda 4, `:406-536`); `spec.md` (`:3`, R-38, R-68, R-196, R-204 a R-206, C-33, C-68, C-201, C-209 a C-211, C-217, C-238 y C-239); `tasks.md` (`:14`, `:387` y `:411-417`); el riesgo 15 de `plan.md` (`:520`); `_customers.scss` (`:120-209`); `customer-card.html`; `.claude/skills/sdd/SKILL.md:42`; y el registro `sessions/2026-11-25-15-004-customers.md` (`:108-123`). De las medidas he leído `h33-base-ampliada.json`, `h33-final.json` con su script `h33-final.js`, `text-spacing-column.json` con su script `text-spacing.js`, `active.js` y `active-short.js`. He mirado las capturas `fase-7-004-p6-h34-foco-tarjeta.png` y `fase-7-004-p6-c238-firefox-escritorio.png`, `-media.png` y `-movil.png`. No reabro las reservas ya aceptadas: H-04, H-10, H-14, H-15, H-21, H-36, H-37, H-38 y las dos desviaciones de R-204.
+
+### Hallazgos
+| ID | Gravedad | Archivo:línea | Requisito o regla | Hallazgo |
+|---|---|---|---|---|
+| H-40 | Importante | .claude/skills/sdd/SKILL.md:42; ai-workspace/specs/004-customers/spec.md:3; ai-workspace/specs/README.md:12; ai-workspace/specs/004-customers/tasks.md:387, :415 | sdd, «Estados»: «Veredicto `Conforme con reservas` en la puerta 6 y el autor decide corregir una reserva antes de cerrar: la spec vuelve de `En revisión` a `En implementación`, la tarea nueva se añade en una puerta 4 ampliada […] y, hecha, la ronda siguiente del revisor se limita a esa tarea» | **La tercera corrección es un cambio de código hecho después del veredicto de la ronda 4, y no sigue la ruta que fija `sdd`.** Corrige un hallazgo abierto (H-33) antes de cerrar. Al hacerla, la spec no pasó por `En implementación`: `spec.md:3` y el README siguen en `En revisión` sin ese tránsito. Tampoco hay tarea nueva ni puerta 4 ampliada: la última tarea sigue siendo la T-18 (`:387`), y la corrección consta solo como nota de la T-18 (`:415`), sin casillas ni aprobación propia de tarea. Hay un agravante: la ronda 4 dejó escrito que, si la medida confirmaba el desalineado, H-33 pasaba a Bloqueante (R-206). `h33-base-ampliada.json` lo confirma: 2 de 6 filas desalineadas a 768 px y 2 de 4 a 1024 px, a 219 y 181 px. Por `sdd`, eso también devolvía la spec a `En implementación`. La Decisión del autor (H-33, punto 1) eligió «tercera corrección del autor sobre la T-18», igual que las dos anteriores (sesiones 13 y 14, hechas antes de la ronda 4). Lo que choca son esa decisión y `SKILL.md:42`, y no lo resuelvo. El código, los tests y el estado final (`En revisión` con la corrección hecha) no cambian por esto. Lo que falta es el rastro del método: la tarea, sus casillas y los cambios de estado. |
+| H-41 | Menor | ai-workspace/sessions/2026-11-25-15-004-customers.md:121, :114, :156; ai-workspace/screenshots/fase-7-004-p6-c238-firefox-movil.png, -escritorio.png; apps/web/src/scss/_customers.scss:181 | C-238 (R-38, R-196, R-206; WCAG 1.4.4): «la fila de R-204 y las píldoras se ven enteras, sin cortarse ni solaparse» | **La premisa de la nota del autor sobre C-238 no cuadra con dos de las tres capturas.** La nota dice que las tres capturas del 200 % tienen «la fila ya en dos líneas a esos anchos». Solo `-media` lo muestra: «Última simulación» encima de «Sin simulaciones» y de «60.204,00 €». En `-movil` («Última simulación Sin simulaciones») y en `-escritorio` («… Sin simulaciones» y «Última simulación 60.204,00 €») la fila va en una sola línea. Eso es lo que hacía `1e08acd` (`flex-wrap: wrap`), no lo que hace el CSS final (`:181`, `flex-direction: column`, siempre en dos líneas). Con el CSS final, C-238 solo tiene evidencia en el ancho medio. Es el de tarjetas más estrechas de los tres, así que es previsible que en los otros dos también quepa, pero no está visto. Además, `-escritorio` sale cortada por la izquierda («uscar por nombre…», con la tarjeta pegada al borde). Por la imagen no sé si es un recorte de la captura o desplazamiento horizontal. El registro dice en `:114` «lo repito en Firefox con el CSS final», y en `:156` lo deja sin captura. El autor decide si basta. |
+
+### Checklists
+
+**Comprobaciones de este alcance**
+
+| Comprobación | Resultado | Nota |
+|---|---|---|
+| H-33: R-206 y C-211 (fila al pie, alineada en cada fila de la rejilla) | Cumple | **En el código**, `.customer-card__last` (`_customers.scss:178-186`) lleva `margin: auto 0 0` y `flex-direction: column`. Su contenido son siempre dos líneas, `<dt>` y `<dd>` (`customer-card.html:9-12`), y el importe lleva `white-space: nowrap` (`:197`). Con tarjetas de la misma altura (R-196), la separadora queda a la misma distancia del borde superior sea cual sea el contenido. **En la medida**, `h33-final.json` da a 320, 360, 768, 1024, 1280 y 1600 px: `misalignedRows: 0`, `separatorTops: [181]`, `cardHeights: [291]`, `noHScroll: true` y `problems: []`. El script (`h33-final.js:28-34`) comprueba, en las 12 tarjetas, una línea por elemento, que no se solapen, que no se salgan de la tarjeta y que el importe no esté recortado. Los datos tienen filas que mezclan nombres de una y de dos líneas (`h33-base-ampliada.json`, 768 y 1024 px), que es el caso de C-211. |
+| R-196 y C-201 tras la corrección | Cumple | `cardHeights: [291]` en los seis anchos. |
+| R-205 y C-210 | Cumple | `border-top` sin cambios (`:184`). |
+| R-38 y C-38 a 320 px | Cumple | `noHScroll: true` a 320 px, en `h33-final.json` y en `text-spacing-column.json`. |
+| R-204 y C-209 | Reserva aceptada | La D1 se aplica ahora en todos los anchos (la fila siempre va en dos líneas) y la D2 sigue igual (`tasks.md:416-417`). No la reabro. |
+| H-34: C-33 (Intro sobre el nombre abre el detalle) | Cumple | La sesión principal pulsó Intro sobre «Aurora Digital» y se abrió `/customers/3`. El autor lo repitió en Firefox (literal en `sessions/…-15-…:122`). |
+| H-34: C-68 y R-68 (Tab y activación con teclado) | Cumple | Orden de Tab: los tres enlaces de la cabecera, el selector, el buscador y la tarjeta, todos con `:focus-visible` (`active.js:12`). El selector se abre y elige USD con las flechas e Intro, y el foco vuelve a él. En el buscador, «Aurora» da 1 resultado y `?q=Aurora`. «Ir al simulador» y «Volver a Clientes» se activan con Intro. En Firefox, el autor. Las salidas crudas de `active.js` no están en ningún fichero: la evidencia es el resumen del encargo, la captura y el literal del autor. |
+| H-34: C-217 y riesgo 15 (contorno entero sobre `--color-soft`, sin reglas de `outline`) | Cumple | En `fase-7-004-p6-h34-foco-tarjeta.png` se ve el contorno entero alrededor de «Aurora Digital», sobre el fondo de `:focus-within`. El `overflow: hidden` está en el propio `<a>` (`:140`), como prevé el riesgo 15 (`plan.md:520`). No hay ninguna regla de `outline` en el diff. La tercera corrección no toca el enlace ni la tarjeta, y `.customer-card__last` no tiene nada que pueda recibir el foco. |
+| H-34: «Hecho cuando» de la T-08, la T-09 y la T-13 | Cumple | Cubierto por las tres filas anteriores. |
+| H-39: C-239 con el CSS final | Cumple, con un límite de la medida | `text-spacing-column.json`, a 320, 768 y 1280 px: `noHScroll: true` y `problems: []` en el buscador; tarjetas de una sola altura en cada ancho (322, 282,5 y 322); en `/customers/9`, `titleClipped: false`, `valuesClipped: []`, y una columna a 320 px y dos desde 768. El límite: `text-spacing.js:25-30` comprueba `.customer-card__last` dentro de la tarjeta y que etiqueta e importe no se solapen. No comprueba los bordes del propio importe (`nowrap`, centrado) ni la alineación de las separadoras con ese espaciado. Con el espaciado por defecto sí se comprueban los dos (`h33-final.js:31-34`). No hay evidencia de fallo, así que no lo abro como hallazgo. |
+| H-39: C-238 con el CSS final | No cumple | H-41. |
+| Tests y build en verde, según su salida literal | Cumple | `npm run verify`: 36 ficheros y 913 tests en la raíz, y 18 ficheros y 324 tests en la web, todos `passed`. `ng build` completo, con el aviso de presupuesto ya aceptado (723.37 kB). |
+| `Estado:` coincide con el trabajo real | No cumple | H-40. |
+| Ficheros del `git status` y del `git diff --stat` = los del alcance | Cumple | El `diff --stat` de `1e08acd..9530787 -- apps` da solo `_customers.scss` (2 líneas añadidas y 3 quitadas), que coincide con el diff literal y con `tasks.md:415`. El `git status` da solo el registro de la sesión 15. |
+| Tareas de más de 5 archivos con `Excepción de tamaño:` | No aplica | Un fichero. |
+| Lighthouse | Cumple | No se repitió. El diff solo cambia `flex-direction` y `align-items`, sin colores, textos ni marcado, así que las auditorías de la ronda 4 siguen valiendo. |
+
+**Lista de revisión del frontend (`frontend-conventions/checklist.md`), casillas que toca el diff**
+
+| Casilla | Resultado | Nota |
+|---|---|---|
+| Sin `.scss` ni `styles` en componentes | Cumple | El cambio está en `src/scss/_customers.scss`. |
+| Colores y medidas con tokens | Cumple | El diff no añade valores sueltos: `gap`, `border-top` y `padding-top` siguen con `var(--…)`. Lo de H-37 sigue como reserva. |
+| Clases con prefijo | Cumple | `.customer-card__last`. |
+| Teclado y foco visible | Cumple | H-34 resuelto. Ninguna regla de `outline`. |
+| Etiquetas, contraste y móvil | Cumple | Sin cambios de color. A 320 px no hay desplazamiento horizontal. |
+| Lighthouse sin fallos sin justificar | Cumple | Ver la tabla anterior. |
+| Ningún test en rojo ni desactivado | Cumple | 324 en verde. |
+| Cada cambio cubre un `R-nn` | Cumple | R-204 a R-206; el comentario de `:177` los cita con «spec 004:». |
+| Resto de casillas (estructura, dependencias, `HttpClient`, estados, formularios, Angular 22, importes, tests por componente) | No aplica | Ni `.ts` ni `.html` cambian desde la ronda 4. |
+
+**Lista de revisión del backend (`backend-conventions/checklist.md`):** no aplica a ninguna casilla, porque la tercera corrección no toca `apps/api`.
+
+**Observación (no es hallazgo):** con `flex-direction: column` dejan de tener efecto `min-width: 0` en `.customer-card__term` (`:190`) y `flex-shrink: 0` y `min-width: 0` en `.customer-card__amount` (`:198-199`). Se quedan porque el autor decidió «`.customer-card__amount` como está».
+
+### Seguimiento de la ronda anterior
+
+| ID | Estado | Nota |
+|---|---|---|
+| H-33 | Resuelto | Por corrección, en el commit `9530787` (`_customers.scss:181-182`). Medido en `h33-final.json`: 0 filas desalineadas y separadora a 181 px en los seis anchos. La forma de la corrección, en H-40. |
+| H-34 | Resuelto | Las cuatro partes tienen evidencia: C-33, C-68 y C-217, y el «Hecho cuando» de la T-08, la T-09 y la T-13, en Chrome (sesión principal), con la captura de `fase-7-004-p6-h34-foco-tarjeta.png` y en Firefox (autor). |
+| H-35 | Abierto | Se corrige en el commit de cierre (Decisión del autor, punto 3). `tasks.md:14` sigue igual. |
+| H-36 | Abierto (reserva aceptada por el autor) | Motivo: cada comentario nombra su spec con «spec 004:», así que vale la lectura «calificada una vez por comentario». |
+| H-37 | Abierto (reserva aceptada por el autor) | Motivo: el plan aprobado (D-14, D-17 y riesgo 14) manda sobre la casilla. |
+| H-38 | Abierto (reserva aceptada por el autor) | Motivo: va a la pasada única de reservas, como H-14, H-15, H-16 y H-17 de las otras specs. |
+| H-39 | Resuelto en parte | C-239 está medido con el CSS final (`text-spacing-column.json`). C-238 con el CSS final queda en H-41. |
+
+Siguen abiertas, como reservas aceptadas, H-04, H-10, H-14, H-15 y H-21, y las dos desviaciones de R-204. No queda ningún Bloqueante abierto. H-40 es Importante: el choque entre la Decisión del autor sobre H-33 y `sdd` (`SKILL.md:42`) lo decide el autor, igual que si hace falta otra ronda (ADR-016, punto 1). H-41 es Menor, y el autor decide si basta con la evidencia de C-238 que hay o si hace falta otra captura en Firefox con el CSS final.
+
+## Aprobación del autor (ronda 5, 2026-11-25)
+Aprobación del autor 2026-11-25, puerta 6 (cierre de la spec 004-customers), tras la ronda 5, texto literal (con la corrección del texto de H-41 a la que remite el punto 8):
+
+> ## Corrección del texto de H-41
+> Sustituye mi resultado de H-41 por este: «Las dos capturas finales de Firefox, al 200 % y con el CSS final, muestran la cabecera y el título. La de escritorio muestra además el buscador, el nombre largo recortado a 2 líneas y el identificador entero, sin corte lateral ni desplazamiento horizontal visible (el corte izquierdo de la captura anterior era un recorte de la captura); la de móvil acaba en la etiqueta del buscador y no enseña ni el campo ni las tarjetas. La fila «Última simulación» no entra en el encuadre de ninguna; su disposición en dos líneas está medida en Chrome (h33-final.json) y la fija el CSS.» Actualiza el registro 15 y MEMORY.md con esta frase.
+>
+> ## Aprobación de cierre de la spec 004-customers
+> Apruebo el cierre de la spec 004-customers con el veredicto «Conforme con reservas» de la ronda 5 (sin Bloqueantes abiertos), y acepto como reservas, cada una con su motivo:
+>
+> 1. H-04, H-10, H-14, H-15 y H-21 (de la puerta 2): las acepto con los motivos con que constan en review.md desde las rondas 2 y 3.
+> 2. Desviación D1 de R-204 («en una misma fila»): ««Última simulación» y su importe no caben en una fila con el texto y el ancho de las tarjetas aprobados, y no se cambia el texto ni la rejilla. A cambio no hay palabras partidas, ni solapes, ni desplazamiento horizontal, y las tarjetas mantienen la misma altura. El requisito R-204 («misma fila») se reescribirá en el cambio de requisitos posterior (filas «etiqueta → valor»).»
+> 3. Desviación D2 de R-204 («con el importe a la derecha»): «Prefiero el importe centrado: con la fila partida en dos líneas, etiqueta e importe centrados se ven más ordenados que con el importe a un lado.»
+> 4. H-36 (citas «spec 004:»): cada comentario nombra su spec con «spec 004:», así que acepto la lectura de R-144 «calificada una vez por comentario».
+> 5. H-37 (medidas sin token): el plan aprobado (D-14, D-17 y riesgo 14) fija esos valores y manda sobre la casilla de la checklist.
+> 6. H-38 (ajustes del ADR-016 sin anotar en la sección 1 de spec.md): va a la pasada única de reservas, como H-14, H-15, H-16 y H-17 de las otras specs.
+> 7. H-40 (la tercera corrección no siguió SKILL.md:42): «La tercera corrección la decidí yo, de forma visible, como corrección del autor sobre la T-18, igual que las dos anteriores. No cambia código ni tests respecto a lo medido, y el rastro está en tasks.md (T-18), MEMORY.md y los registros 13 a 15, con su medida. Regularizarlo con una puerta 4 ampliada y otra ronda costaría unos 45 minutos de papeleo sin mejorar el software. Acepto que no sigue SKILL.md:42.»
+> 8. H-41 (C-238 con el CSS final): con el texto corregido arriba.
