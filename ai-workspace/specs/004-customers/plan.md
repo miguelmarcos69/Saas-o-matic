@@ -2,7 +2,7 @@
 
 - **Spec:** `ai-workspace/specs/004-customers/spec.md` (`Estado: Aprobada`)
 - **Puerta:** 3 (plan). Solo plan y tareas; sin código.
-- **Estado del plan:** pendiente de aprobación del autor. Sin dudas abiertas: las P-01 a P-05 de la primera vuelta las decidió el autor en la segunda (D-17, sección 9). Puerta 3 ampliada del 2026-11-25: D-10 cambiada (nota tras la D-10), sin dudas abiertas (P-06 y P-07 decididas por el autor, sección 9), pendiente de aprobación del autor.
+- **Estado del plan:** pendiente de aprobación del autor. Sin dudas abiertas: las P-01 a P-05 de la primera vuelta las decidió el autor en la segunda (D-17, sección 9). Puerta 3 ampliada del 2026-11-25: D-10 cambiada (nota tras la D-10), sin dudas abiertas (P-06 y P-07 decididas por el autor, sección 9), pendiente de aprobación del autor. Segunda puerta 3 ampliada del 2026-11-25: verificación de la D-10 para `/customers?q=%20Acme%20` cambiada (segunda nota tras la D-10), sin cambio de código ni dudas nuevas, pendiente de aprobación del autor.
 - **Formato:** «Temas + D-nn», breve (D-01). Los 170 requisitos van agrupados en pasos (sección 7) y la trazabilidad va por rangos (sección 10).
 
 ## 1. Contexto y fuentes
@@ -206,7 +206,7 @@ Tests nuevos: uno `.spec.ts` junto a cada fichero o carpeta nuevos de la tabla. 
 - `CustomersPage` (inyecta `CustomersApi`, `CurrencySelection`, `Router`, `ActivatedRoute` y `DestroyRef`):
   - Al abrir: lee `q` de `queryParamMap` (instantánea), lo pasa a `initialQuery` y lanza `runSearch(q)` sin espera (R-98). Llama a `currencySelection.load(destroyRef)` (D-12).
   - `runSearch(texto)`: `q = texto.trim()`; el `q` que pide la URL es `q === '' ? null : q`, y el actual, `route.snapshot.queryParamMap.get('q')` (`null` si la URL no trae `q`). Solo si son distintos, `router.navigate([], { relativeTo: route, queryParams: { q: q === '' ? null : q }, replaceUrl: true })` (R-97, R-166, R-167); si son iguales, la URL ya es la correcta y no navega. En los dos casos, después, `customersApi.search(q, destroyRef)` (R-20, R-98). La comparación distingue la URL sin `q` (`null`) de `q` vacío (`''`): `/customers?q=` y `/customers?q=%20%20` navegan a `/customers` (R-166). Se compara solo `get('q')`: si coincide, los demás parámetros de la URL y los `q` repetidos se quedan como estaban (P-06 (a)). La página solo lee la URL al abrir, así que reescribirla no lanza otra búsqueda.
-  - Verificación del cambio (2026-11-25): al abrir `/customers` y `/customers?q=Acme`, `runSearch` no navega y la navegación que abre la página termina (`NavigationEnd`, sin `NavigationCancel` ni `NavigationSkipped`); al abrir `/customers?q=%20Acme%20`, la URL queda en `/customers?q=Acme`, esa navegación termina y hay una sola petición de tipos (R-57) y una sola de búsqueda; C-97, C-98, C-171 y C-172 siguen en verde sin cambiar sus aserciones. Si algo de esto no se cumple, la tarea para y lo devuelve.
+  - Verificación del cambio (2026-11-25): al abrir `/customers` y `/customers?q=Acme`, `runSearch` no navega y la navegación que abre la página termina (`NavigationEnd`, sin `NavigationCancel` ni `NavigationSkipped`); al abrir `/customers?q=%20Acme%20`, la navegación que abre la página termina en un único `NavigationCancel`, con código `SupersededByNewNavigation`, porque la sustituye la de `runSearch`; la navegación que corrige la URL termina con `NavigationEnd` en `/customers?q=Acme`, no hay ningún `NavigationSkipped` y hay una sola petición de tipos (R-57) y una sola de búsqueda, con `q=Acme` (cambio del 2026-11-25, segunda nota tras la D-10); C-97, C-98, C-171 y C-172 siguen en verde sin cambiar sus aserciones. Si algo de esto no se cumple, la tarea para y lo devuelve.
   - Plantilla: eyebrow `<p>` «Panel comercial» y `<h1>` «Buscador de clientes» (R-110, R-111); el buscador; los textos de los tipos de cambio (D-12); según `searchState`:
     - carga: `<p role="status">Cargando clientes…</p>` (R-40, R-47, R-121);
     - error: `<p role="alert">` con el mensaje (R-41, R-120, R-122);
@@ -222,6 +222,28 @@ Tests nuevos: uno `.spec.ts` junto a cada fichero o carpeta nuevos de la tabla. 
 > - Ficheros: `customers-page.ts` y `customers-page.spec.ts` (paso 9). La tarea la fija la puerta 4 ampliada.
 > - Dudas de la ampliación, decididas por el autor el 2026-11-25 (sección 9): P-06 (a), comparar solo `get('q')`, y P-07 (b), línea añadida al final del riesgo 9.
 > - Registro de sesión: `sessions/2026-11-25-03-004-customers.md`.
+
+> **Nota · cambio de la verificación de la D-10 para `/customers?q=%20Acme%20` (2026-11-25, puerta 3 ampliada, sin cambio de requisitos; spec en `En implementación`).**
+> - Qué cambia: solo el caso `/customers?q=%20Acme%20` de la «Verificación del cambio». El código de `runSearch` y los casos de `/customers` y `/customers?q=Acme` quedan como se aprobaron en la nota anterior.
+> - Antes: «esa navegación termina», sin `NavigationCancel` ni `NavigationSkipped`. Ahora: se acepta un único `NavigationCancel`, con código `SupersededByNewNavigation`, de la navegación que abre la página, y se exige que la navegación que corrige la URL termine con `NavigationEnd` en `/customers?q=Acme`, sin `NavigationSkipped`, con una petición de tipos y una de búsqueda.
+> - Motivo: en la T-16 el implementer devolvió `Bloqueado`, porque con `' Acme '` la `runSearch` del constructor sí navega (el `q` recortado es distinto del de la URL) y cancela la navegación que abre la página. Diagnóstico de la sesión principal (salida literal del test de `%20Acme%20`, desde `/customers/1`, con `customers-page.ts` del árbol):
+>   ```
+>   NavigationStart id=2 url=/customers?q=%20Acme%20 trigger=imperative
+>   NavigationCancel id=2 url=/customers?q=%20Acme%20 code=1 reason=Navigation ID 2 is not equal to the current navigation id 3
+>   NavigationStart id=3 url=/customers?q=Acme trigger=imperative
+>   NavigationEnd id=3 url=/customers?q=Acme urlAfterRedirects=/customers?q=Acme
+>   location.path()=/customers?q=Acme
+>   router.url=/customers?q=Acme
+>   página activa=_CustomersPage
+>   isActive('/customers', subset)=true
+>   peticiones de tipos=1
+>   peticiones de búsqueda=1 q=Acme
+>   ```
+>   La navegación 2 (la que abre la página) queda cancelada y la 3 (la que corrige la URL) termina. `code=1` es `NavigationCancellationCode.SupersededByNewNavigation` (`node_modules/@angular/router/fesm2022/_router-chunk.mjs:1935`). A diferencia de la T-14, sí hay un `NavigationEnd`, así que no se repite el fallo del riesgo 9.
+> - «Clientes» marcado: `RouterLinkActive` llama a `update()` en cada `NavigationEnd` y, sin `exact`, usa `subsetMatchOptions` (comprobado por la sesión principal en `_router_module-chunk.mjs` y `_router-chunk.mjs`). Que «Clientes» quede marcado en este caso es una deducción de la sesión principal, no probada con la cabecera (apartada con la T-14), hasta C-56 y C-135 de la T-14. Nota para el revisor.
+> - Petición del autor (literal): «Elijo la (b): cambiar la verificación, no el código.» Opción (b) tal como se le presentó: «Para `/customers?q=%20Acme%20` aceptaría un solo `NavigationCancel`, con código `SupersededByNewNavigation`, de la navegación que abre la página. Exigiría también que la navegación que corrige la URL termine con `NavigationEnd` en `/customers?q=Acme`, sin `NavigationSkipped`, con una petición de tipos y una de búsqueda. […] Implementación: solo cambian las aserciones del test de `%20Acme%20` en `customers-page.spec.ts`. `customers-page.ts` se queda como está ahora en el árbol.»
+> - Ficheros: solo `customers-page.spec.ts` (aserciones del test de `%20Acme%20`), en la T-16. Sin dudas nuevas.
+> - Registro de sesión: `sessions/2026-11-25-04-004-customers.md`.
 
 **D-11 · Tarjeta, historial, detalle y formato (R-30, R-31, R-33 a R-37, R-77, R-101 a R-109, R-113 a R-119, R-124 a R-129, R-154, R-155, R-160).**
 - `customer-display.ts`, funciones puras:
