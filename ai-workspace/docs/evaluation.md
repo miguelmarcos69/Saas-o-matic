@@ -22,22 +22,22 @@ Las cifras se contaron en los ficheros el 2026-11-25, salvo que se indique otra 
 | [001 `pricing-tiers`](../specs/001-pricing-tiers/spec.md) | 20 | 27 | 13 | 6 | 4 |
 | [002 `customers-create`](../specs/002-customers-create/spec.md) | 35 | 52 | 34 | 14 | 7 |
 | [003 `simulations-create`](../specs/003-simulations-create/spec.md) | 41 | 41 | 25 | 16 | 6 |
-| [004 `customers`](../specs/004-customers/spec.md) | 232 | 239 | 51 | 17 | 18 |
+| [004 `customers`](../specs/004-customers/spec.md) | 265 | 272 | 55 | 17 | 20 |
 | [005 `simulator`](../specs/005-simulator/spec.md) | 99 | 54 | 32 | 18 | 11 |
-| **Total** | **459** | **454** | **193** | **89** | **70** |
+| **Total** | **492** | **487** | **197** | **89** | **72** |
 
 - **Requisitos:** en formato EARS, cada uno con su origen (un § del reto o una decisión del autor).
 - **Ambigüedades del reto:** no se resolvieron por adelantado. Cada una se decidió al aplicarla, en la spec que le tocaba.
-- **Registro del proceso:** 118 sesiones en [sessions/](../sessions/), con capturas en [screenshots/](../screenshots/).
+- **Registro del proceso:** 123 sesiones en [sessions/](../sessions/), con capturas en [screenshots/](../screenshots/).
 - **Spec de demostración:** la 999-demo se conserva como prueba del flujo (fase 5) y queda fuera del reparto.
 
 ## 2. Criterio técnico y control de calidad (25 %)
 
 - **Revisor independiente:** es un agente que solo puede leer (`Read`, `Grep` y `Glob`; ADR-003 y `.claude/agents/reviewer.md`). Revisa la spec en la puerta 2 y la implementación en la puerta 6. Su informe se guarda tal cual en el `review.md` de cada spec.
-- **Rondas:** 27 en total. Por spec: 8 en la 000, 3 en la 001, 4 en la 002, 3 en la 003, 5 en la 004 y 4 en la 005.
+- **Rondas:** 30 en total. Por spec: 8 en la 000, 3 en la 001, 4 en la 002, 3 en la 003, 8 en la 004 y 4 en la 005. La 004 se reabrió el 2026-11-25 (Decisión #7) y sumó las rondas 6 a 8.
 - **Veredictos:**
-  - 1 `Cambios requeridos`: la ronda 1 de la 000, con H-01 `Bloqueante` ([review.md](../specs/000-skeleton/review.md), línea 16).
-  - 26 `Conforme con reservas`.
+  - 2 `Cambios requeridos`: la ronda 1 de la 000, con H-01 `Bloqueante` ([review.md](../specs/000-skeleton/review.md), línea 16), y la ronda 7 de la 004, con H-48 `Bloqueante` (faltaban las capturas finales de Lighthouse; se resolvió en la ronda 8).
+  - 28 `Conforme con reservas`.
   - Ninguna ronda salió `Conforme`.
 - **Cierres:** las seis specs se cerraron con la aprobación literal del autor, que está al final de cada `review.md` y nombra cada reserva aceptada con su motivo. Las reservas abiertas siguen como pendientes en [MEMORY.md](../../MEMORY.md), «Próximos pasos».
 - **Casos de corrección:**
@@ -79,11 +79,11 @@ Las cifras se contaron en los ficheros el 2026-11-25, salvo que se indique otra 
   - Los tipos de cambio de open.er-api.com se validan con Zod antes de usarse (principio 5).
 - **Accesibilidad:** el objetivo es WCAG 2.2 AA (principio 7). Se comprobó con:
   - **Lighthouse,** 100 en accesibilidad en móvil y escritorio:
-    - En la 004, ocho auditorías: cuatro vistas por dos modos (capturas `fase-7-004-p6-lighthouse-*`). El revisor miró una de las ocho; el 100 de las otras siete consta en el encargo ([review.md](../specs/004-customers/review.md), líneas 433 y 494).
+    - En la 004, ocho auditorías: cuatro vistas por dos modos. Se repitieron tras la Decisión #7 (capturas `fase-7-004-p6-lighthouse-final-*`) y el revisor las comprobó una a una contra su informe en la ronda 8 ([review.md](../specs/004-customers/review.md)). Las de antes de la #7 (`fase-7-004-p6-lighthouse-*`) se conservan.
     - En la 005, el simulador, con capturas de móvil y escritorio que muestran el modo en el pie (H-20, resuelta tras la ronda 4 con capturas rehechas).
     - Lighthouse no comprueba por sí solo todo el nivel AA.
   - **Teclado a mano** en las puertas 6.
-  - **Texto al 200 % en Firefox** (C-238 de la 004, con la reserva H-41).
+  - **Texto al 200 % en Firefox** (C-238 de la 004, con la reserva H-41). Con el CSS de la Decisión #7 no se repitió: queda como reserva.
 
 ## 4. README y despliegue (10 %)
 
@@ -99,12 +99,15 @@ Las cifras se contaron en los ficheros el 2026-11-25, salvo que se indique otra 
 
 ## Lo que no se cumple o queda pendiente
 
-- **R-204 de la 004,** dos desviaciones aceptadas como reservas:
-  - D1: la fila «Última simulación» va en dos líneas, no «en una misma fila».
-  - D2: el importe va centrado, no «a la derecha».
-  - R-204 se reescribirá en el cambio de requisitos pendiente.
+- **Retoques de interfaz de la Decisión #7 en la 004** (cerrados el 2026-11-25 con reservas, por el plazo de entrega):
+  - **C-260 / riesgo 24:** en «Datos» del detalle, a 320 px y con un identificador de 20 caracteres y un email de 254, el valor se parte junto a su etiqueta en lugar de bajar. Sin desplazamiento horizontal.
+  - **H-49 (`Importante`):** los casos de navegador de la #7 (cabecera a varios anchos, teclado, geometría de la tarjeta, árbol de accesibilidad de lo oculto) no se midieron a mano; solo se repitieron los tests, Lighthouse y las medidas de la T-20.
+  - **Historial a 320 px con datos extremos:** «usuarios» y la fecha se parten a trozos.
+  - **Defectos de trazabilidad (H-50 a H-54, `Menor`):** un «Modificado por» mal colocado, un cambio de R-253 sin número de decisión, tres títulos de test atrasados, una fase roja sin ver en `:267` y desviaciones de la T-20 sin aceptar por escrito.
+  - **«Estado de la API»:** su enlace del menú está oculto con `display: none` (R-235), pero la plantilla conserva los tres enlaces.
+  - D1 y D2 de R-204 quedan resueltas en la spec (R-204 y R-264).
 - **H-40 de la 004** (`Importante`, aceptada como reserva): la tercera corrección de la T-18 no siguió `SKILL.md:42`. El código y los tests no cambian por ello, pero falta el rastro del método: la tarea, sus casillas y los cambios de estado.
-- **Aviso de presupuesto de `ng build`:** el bundle inicial ocupa 723,37 kB frente a 500 kB (`main` 710,24 kB), sobre todo por Zod en la carga inicial.
+- **Aviso de presupuesto de `ng build`:** el bundle inicial ocupa 725,16 kB frente a 500 kB, sobre todo por Zod en la carga inicial.
 - **Web de solo lectura para los clientes:** no da de alta clientes ni guarda simulaciones; eso se hace por la API.
 - **Selector de divisa a 320 px:** en navegadores sin `appearance: base-select`, el control cerrado corta el texto.
 - **Puerto 3000 ocupado:** la API no arranca (`EADDRINUSE`), pero la web sigue en marcha con el proxy a ese puerto. Está anotado en el README.

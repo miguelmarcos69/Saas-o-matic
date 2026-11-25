@@ -206,7 +206,7 @@ Para España, 140 € + 29,40 € de IVA = 169,40 € (`totalCents: 16940`). Los
 - **Detalle** (`/customers/:id`): datos del cliente e historial de sus simulaciones guardadas.
 - **Simulador** (`/simulator`): usuarios activos con un slider o con su número, país y divisa, con la factura mensual (base, IVA y total) recalculada en el navegador en tiempo real.
 - **Selector de divisa**: EUR, USD y GBP, en el simulador y en las vistas de clientes. Los tipos salen de [open.er-api.com/v6/latest/EUR](https://open.er-api.com/v6/latest/EUR) y se validan antes de usarse.
-- **Estado de la API** (`/`, la página de inicio): comprobación de que la web llega a la API.
+- **Estado de la API** (`/`, la página de inicio): comprobación de que la web llega a la API. Su enlace del menú está oculto con CSS desde la Decisión 2026-11-25 #7 (spec 004, R-235): la página se abre escribiendo la URL.
 - La fuente Montserrat se carga desde Google Fonts, así que también necesita red.
 
 ## Tests
@@ -252,9 +252,11 @@ Repaso con la evidencia de cada criterio: [evaluation.md](ai-workspace/docs/eval
 Límites conocidos:
 
 - **La web es de solo lectura para los clientes** (decisión de las specs 004 y 005): no da de alta clientes ni guarda simulaciones; eso se hace por la API.
-- **Aviso de presupuesto de `ng build`**: el bundle inicial ocupa 723,37 kB frente a un presupuesto de 500 kB (`main` 710,24 kB), sobre todo por Zod en la carga inicial.
+- **Aviso de presupuesto de `ng build`**: el bundle inicial ocupa 725,16 kB frente a un presupuesto de 500 kB, sobre todo por Zod en la carga inicial.
 - **Selector de divisa a 320 px**: en navegadores sin `appearance: base-select`, el control cerrado corta el texto.
-- **Tarjeta de cliente (R-204 de la spec 004)**: la fila «Última simulación» va en dos líneas, no «en una misma fila», y el importe va centrado, no «a la derecha». Son dos desviaciones aceptadas como reservas.
+- **Detalle del cliente a 320 px con datos extremos (C-260 de la spec 004)**: con un identificador fiscal de 20 caracteres y un email de 254, el valor se parte junto a su etiqueta en lugar de bajar debajo. No hay desplazamiento horizontal. Es una reserva aceptada por el autor por el plazo de entrega.
+- **Historial a 320 px con datos extremos**: «usuarios» y la fecha se parten a trozos (`overflow-wrap: anywhere`). Se deja como observación.
+- **Retoques de interfaz sin comprobar a mano (H-49 de la spec 004)**: tras la Decisión 2026-11-25 #7 solo se repitieron los tests, Lighthouse (100 en accesibilidad en las cuatro vistas, móvil y escritorio) y las medidas de la T-20. Faltan las pruebas a mano de la cabecera, el teclado y varios anchos, y la revisión en Firefox al 200 %.
 
 Mejoras previstas:
 
