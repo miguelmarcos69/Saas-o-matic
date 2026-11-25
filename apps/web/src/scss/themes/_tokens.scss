@@ -57,6 +57,9 @@
   --font-weight-nav-emphasis: 700; // R-185; el 700 fijo del enlace activo (R-192) usa el mismo token
   --color-nav-hover: #000; // R-188; C-193
   --transition-nav: 0.3s ease-out; // R-184
+
+  // Retoques de la Decisión 2026-11-25 #7 (spec 004: R-239, R-240; D-14)
+  --header-min-height: 70px; // R-233, R-240
 }
 
 // Umbral de las dos columnas y de la cabecera en fila (spec 004: R-179, R-216, R-218; 48 rem exactos, respuesta C de la Decisión 2026-11-25 #1).

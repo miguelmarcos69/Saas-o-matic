@@ -12,7 +12,7 @@ app-currency-selector label {
   margin: var(--space-md) 0 var(--space-sm);
 }
 
-// Cabecera común (spec 004: R-63, R-64, R-138, R-171 a R-187, R-191 a R-193, R-231; D-14). Sin reglas de `outline` (se mantiene el foco del navegador, R-68).
+// Cabecera común (spec 004: R-63, R-64, R-138, R-171 a R-187, R-191 a R-193, R-231, R-233 a R-235; D-14). Sin reglas de `outline` (se mantiene el foco del navegador, R-68).
 
 // Sin el margen de 8 px del navegador la cabecera llega de borde a borde (spec 004: R-175; riesgo 17).
 body {
@@ -28,7 +28,9 @@ body {
 .app-header {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: stretch;
+  justify-content: center;
+  min-height: var(--header-min-height);
   gap: var(--space-md);
   padding-block: var(--space-sm);
   margin-bottom: var(--space-lg);
@@ -36,12 +38,11 @@ body {
   border-bottom: var(--border-width-subtle) solid var(--color-soft);
   box-shadow: none;
 
-  // Selector a la derecha del <nav> y en la línea de su último enlace (spec 004: R-55, R-179).
+  // Selector a la izquierda y <nav> a la derecha, centrados en vertical (spec 004: R-55, R-179, R-234).
   @media (min-width: tokens.$breakpoint-wide) {
     flex-direction: row;
-    justify-content: flex-end;
-    align-items: flex-end;
-    align-items: last baseline; // respaldo por cascada: lo que no lo admite conserva `flex-end`
+    justify-content: flex-start;
+    align-items: center;
   }
 }
 
@@ -56,6 +57,7 @@ body {
   @media (min-width: tokens.$breakpoint-wide) {
     flex: 0 1 auto;
     min-width: 0;
+    margin-inline-start: auto; // lo lleva a la derecha también sin selector (spec 004: R-178, C-183)
   }
 }
 
@@ -99,11 +101,17 @@ body {
   }
 }
 
-// Selector de divisa: por debajo de 48 rem, debajo del <nav> con «Divisa» encima (spec 004: R-180, R-182).
+// «Estado de la API» sigue en el DOM; solo se oculta con CSS (spec 004: R-235, C-242).
+.app-header__link[data-label='Estado de la API'] {
+  display: none;
+}
+
+// Selector de divisa: por debajo de 48 rem, encima del <nav> y a la izquierda, con «Divisa» encima (spec 004: R-180, R-182).
 .app-header__currency {
+  align-self: flex-start;
   width: min(100%, 18rem);
 
-  // Desde 48 rem, a la derecha del <nav>, con «Divisa» a su izquierda (spec 004: R-181; riesgo 21).
+  // Desde 48 rem, a la izquierda del <nav>, con «Divisa» a su izquierda (spec 004: R-181; riesgo 21).
   @media (min-width: tokens.$breakpoint-wide) {
     width: auto;
     flex: none;

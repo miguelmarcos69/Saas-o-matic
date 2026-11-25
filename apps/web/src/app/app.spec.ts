@@ -252,8 +252,8 @@ describe('App', () => {
       expect(selector.nativeElement).toBe(headerSelector(s.root));
     });
 
-    // C-55 (spec 004: R-55). «Alineado a la derecha» es CSS: se mira a mano en la puerta 6.
-    it('C-55: en una vista de clientes, el selector va después de los enlaces del <nav>', async () => {
+    // C-55 (spec 004: R-55). «A la izquierda del <nav>» es CSS: se mira a mano en la puerta 6.
+    it('C-55: en una vista de clientes, el selector va antes de los enlaces del <nav>', async () => {
       const s = setup();
       await open(s, '/customers');
       const header = s.root.querySelector('header') as HTMLElement;
@@ -262,9 +262,9 @@ describe('App', () => {
       expect(selector).not.toBeNull();
       expect(selector.parentElement).toBe(header);
       expect(nav.parentElement).toBe(header);
-      // DOCUMENT_POSITION_FOLLOWING (4): el selector sigue al <nav>.
-      expect(nav.compareDocumentPosition(selector) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-      expect(header.lastElementChild).toBe(selector);
+      // spec 004: Decisión 2026-11-25 #7. DOCUMENT_POSITION_PRECEDING (2): el selector precede al <nav>.
+      expect(nav.compareDocumentPosition(selector) & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+      expect(header.firstElementChild).toBe(selector);
     });
 
     // C-56 (spec 004: R-56).

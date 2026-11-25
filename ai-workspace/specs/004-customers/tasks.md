@@ -6,29 +6,31 @@ Hay quince tareas, T-01 a T-15: una por paso del «Orden de construcción» de `
 - **Puerta 4 ampliada del 2026-11-25** (cambio de la D-10, sin cambio de requisitos; spec en `En implementación`): una tarea nueva, T-16, añadida sin renumerar, así que hay dieciséis, T-01 a T-16. Va al final del fichero por su número, pero se hace antes de la T-14, que depende de ella. Cambia el código del paso 9 (nota tras la D-10 de `plan.md`).
 - **Segunda puerta 4 ampliada del 2026-11-25** (cambio de la verificación de la D-10 para `/customers?q=%20Acme%20`, sin cambio de requisitos ni de código; segunda nota tras la D-10 de `plan.md`): ninguna tarea nueva; en la T-16 cambian la casilla del test de `%20Acme%20` (que añade que `customers-page.ts` no cambia en la relanzada) y su regla de parada, y se añade una observación para el revisor. Siguen siendo dieciséis, T-01 a T-16.
 - **Puerta 4 rehecha del 2026-11-25** (tras el cambio de requisitos de las Decisiones 2026-11-25 #1 a #6 y la puerta 3 rehecha, pasos 16 y 17 del plan; P-08 (b) del autor; spec en `Aprobada`): dos tareas nuevas, T-17 (paso 16) y T-18 (paso 17), añadidas sin renumerar y sin reabrir ninguna tarea `[x]`, así que hay dieciocho, T-01 a T-18. Van después de la T-15 y antes de la puerta 6, las dos con Sonnet 5.5. Petición literal del autor: «2. Puerta 4 rehecha, planner Opus 5.5, encargo sin enseñar, solo tasks.md: se añaden la T-17 (contenedor, cabecera y fuentes: app.html, _shared.scss, _tokens.scss, index.html; con fase roja y la orden de parar del riesgo 16) y la T-18 (tarjetas, detalle y simulador: _customers.scss y _simulations.scss; sin fase roja; depende de la T-17), las dos con Sonnet 5.5, sin renumerar y sin reabrir ninguna tarea [x]. 3. Cada tarea lleva su «Hecho cuando» con los casos que cubre (C-176 a C-239), los tests nuevos de app.spec.ts de la T-17 y las pruebas manuales de la puerta 6 (C-184 a 768 px, C-226, C-238, C-239, C-38 en las cuatro vistas y Lighthouse), con los comandos de siempre (npm run verify) y la regla de que style-guide.md solo cambia en :8, :17, :22 y :48, e index.html solo en :10 y :11. 4. Regla del autor (#4): las consecuencias directas en comentarios o documentación ya autorizados se aplican y se anotan, sin abrir dudas Q-nn. Las dudas reales, en bloque, con recomendada; ninguna decisión de valores se rellena sola.» Consecuencias directas en este fichero (regla de la Decisión 2026-11-25 #4): la regla común de «Ficheros» (`_simulations.scss` cambia en la T-18), las de «Fase roja» y «Comprobación manual», la línea de rutas y la «Cobertura» (R-38, R-55, R-63, R-64, R-66 a R-71, R-101, R-105, R-138, R-144 y R-146 a R-148 ganan T-17 o T-18; R-139 a R-141, sustituidos). Ajustes del ADR-016 aplicados: punto 2 (dudas en bloque, cada una con su recomendada), punto 4 (encargo del planner sin enseñar), punto 5 (rutas a leer acotadas) y punto 6 (planner con Opus 5.5; implementer con Sonnet 5.5 en las dos tareas, como fija el autor).
+- **Puerta 4 rehecha tras la Decisión 2026-11-25 #7** (2026-11-25; cambio de requisitos con `/sdd-change` y Decisiones 2026-11-25 #8 a #10; puerta 3 rehecha y aprobada, bloque 6 del plan, pasos 18 y 19; spec en `Aprobada`): dos tareas nuevas, T-19 (paso 18, cabecera) y T-20 (paso 19, vistas de clientes), una por paso, añadidas sin renumerar y sin reabrir ninguna tarea `[x]`, así que hay veinte, T-01 a T-20. Van después de la T-18 y antes de la puerta 6; la T-20 va después de la T-19 por el orden de los commits y porque añade sus tokens al bloque que abre la T-19. Petición literal del autor: «/sdd-tasks 004-customers» y, al aprobar la puerta 3: «Apruebo la puerta 3. (1) Deja el cambio de R-253 como «petición del autor», sin número de decisión; si el revisor lo marca, lo acepto como reserva Menor. (2) Deja el orden de las notas como está. Seguimos con /sdd-tasks 004-customers.» R-253 se cubre con el texto que dejó esa petición del autor, sin «(`flex-wrap`)» (`spec.md:987`), en la T-20. Modelo del implementer propuesto por el planner (ADR-016, punto 6), con su motivo en cada tarea: Sonnet 5.5 en la T-19 y Opus 5.5 en la T-20, confirmados por el autor en la vuelta corta («Modelos: Sonnet 5.5 en la T-19 y Opus 5.5 en la T-20.»). Consecuencias directas en este fichero (regla de la Decisión 2026-11-25 #4): las líneas de bloques, tamaño, rutas y estado de esta cabecera, las reglas comunes de «Fase roja», «Ficheros», «Regla de parada», «Reservas aceptadas» y «Comprobación manual», y la «Cobertura» (R-233 a R-265 nuevos; R-37, R-38, R-39, R-55, R-59, R-67, R-68, R-69 a R-71, R-101, R-102, R-106, R-109, R-119, R-142, R-144, R-146 a R-148, R-169, R-178 a R-180, R-204 a R-206, R-209, R-215, R-231 y R-232 ganan la T-19 o la T-20; R-259 y R-260, retirados). Una duda, Q-07 (quién comprueba las órdenes de parar de los riesgos 24, 27 y 32 en la T-20), abierta en la primera vuelta y decidida por el autor en la vuelta corta, en (a) con la variante de la Q-05, al final del fichero; sin dudas abiertas. Ajustes del ADR-016 aplicados: punto 2 (dudas en bloque, cada una con su recomendada), punto 4 (encargo del planner sin enseñar), punto 5 (rutas a leer acotadas) y punto 6 (planner con Opus 5.5; modelo del implementer propuesto por tarea).
 - **Mínimo imprescindible** (pasos 1 a 13, según la petición del autor): T-01 a T-13, y la T-16, que corrige el paso 9. Bloque 1, API de lectura: T-01 a T-05. Bloque 2, buscador y dashboard: T-06 a T-10 y T-16. Bloque 3, detalle con historial: T-11 a T-13.
 - **Al final** (pasos 14 y 15): T-14 (cabecera con estilos) y T-15 (seed). Cubren requisitos de la spec (cabecera, navegación, seed y Lighthouse), así que la spec no se cierra sin ellas. «Al final» indica el orden, no que sean opcionales.
 - **Bloque 5, retoques visuales** (pasos 16 y 17, puerta 4 rehecha): T-17 (contenedor, cabecera y fuentes) y T-18 (tarjetas, detalle y simulador), después de la T-15 y antes de la puerta 6; la T-18 depende de la T-17. Cubren requisitos de la spec (R-171 a R-232 y los modificados), así que la spec tampoco se cierra sin ellas.
-- Ninguna pasa de 5 archivos de producción (`package.json` cuenta; el lockfile no, y ninguna tarea lo cambia), así que ninguna lleva `Excepción de tamaño:`. La T-15 tiene justo 5; la T-17, 4, y la T-18, 2 (P-08 (b)). `CLAUDE.md`, `architecture.md` y `style-guide.md` son documentación y no cuentan (plan, sección 2).
-- Las rutas son de `apps/api/src/` en T-01 a T-05, de `apps/web/src/` en T-06 a T-14 y en T-16 a T-18 (`index.html` es `apps/web/src/index.html`), y las que indica la T-15; `style-guide.md` es `ai-workspace/docs/style-guide.md`.
-- Estado de las tareas: las dieciocho, T-01 a T-18, en `[x]`, cada una con su aprobación literal del autor; la T-18, con tres correcciones del autor en la puerta 6 (notas tras su aprobación). Dudas: Q-01 a Q-04, decididas por el autor (Q-01 a Q-03 en la segunda vuelta de la puerta 4, las tres en (a); la Q-04 en la puerta 4 ampliada del 2026-11-25, en (a)), al final del fichero. Q-05 y Q-06, decididas por el autor en la segunda vuelta de la puerta 4 rehecha del 2026-11-25 (las dos en (a), la Q-05 con una variante), al final del fichero. Sin dudas abiertas. Desde otro fichero se citan como «tasks.md Q-01».
+- **Bloque 6, retoques de interfaz** (pasos 18 y 19, puerta 4 rehecha tras la Decisión 2026-11-25 #7): T-19 (cabecera de 70 px, selector a la izquierda y «Estado de la API» oculto) y T-20 (antetítulos, tarjetas, «Datos» e historial compacto), después de la T-18 y antes de la puerta 6. Cubren requisitos de la spec (R-233 a R-265 y los modificados por las Decisiones 2026-11-25 #7 a #10), así que la spec tampoco se cierra sin ellas.
+- Ninguna pasa de 5 archivos de producción (`package.json` cuenta; el lockfile no, y ninguna tarea lo cambia), así que ninguna lleva `Excepción de tamaño:`. La T-15 tiene justo 5; la T-17, 4, y la T-18, 2 (P-08 (b)); la T-19, 3, y la T-20, 2 (plan, sección 7, pasos 18 y 19). `CLAUDE.md`, `architecture.md` y `style-guide.md` son documentación y no cuentan (plan, sección 2).
+- Las rutas son de `apps/api/src/` en T-01 a T-05, de `apps/web/src/` en T-06 a T-14 y en T-16 a T-20 (`index.html` es `apps/web/src/index.html`), y las que indica la T-15; `style-guide.md` es `ai-workspace/docs/style-guide.md`.
+- Estado de las tareas: las dieciocho, T-01 a T-18, en `[x]`, cada una con su aprobación literal del autor; la T-18, con tres correcciones del autor en la puerta 6 (notas tras su aprobación). Dudas: Q-01 a Q-04, decididas por el autor (Q-01 a Q-03 en la segunda vuelta de la puerta 4, las tres en (a); la Q-04 en la puerta 4 ampliada del 2026-11-25, en (a)), al final del fichero. Q-05 y Q-06, decididas por el autor en la segunda vuelta de la puerta 4 rehecha del 2026-11-25 (las dos en (a), la Q-05 con una variante), al final del fichero. T-19, en `[x]`, con su aprobación literal del autor; T-20, en `[ ]` (puerta 4 rehecha tras la Decisión 2026-11-25 #7). Q-07, decidida por el autor en la vuelta corta de la puerta 4 rehecha tras la Decisión 2026-11-25 #7 (en (a), con la variante de la Q-05), al final del fichero. Sin dudas abiertas. Desde otro fichero se citan como «tasks.md Q-01».
 
 Reglas comunes de esta spec:
 - **Fase roja** en cada tarea con tests nuevos o cambiados de comportamiento nuevo:
   - Los tests se escriben antes que el código de producción y fallan porque ese código no existe.
   - El implementer da en su retorno la salida íntegra del rojo, sin reescribir ninguna línea. La sesión principal la copia al registro de la sesión en el momento.
-  - La T-03 (puertos y falsos), la T-10 y la T-18 (solo `.scss`) no traen tests de comportamiento nuevo. Su «Hecho cuando» lo dice y no tienen fase roja.
+  - La T-03 (puertos y falsos), la T-10, la T-18 y la T-20 (solo `.scss`) no traen tests de comportamiento nuevo. Su «Hecho cuando» lo dice y no tienen fase roja. La T-19 no añade tests: su fase roja sale de las dos aserciones de orden del test de C-55, que cambian (R-238, D-13).
 - **Cierre:** cada tarea se cierra con `npm run verify` desde la raíz (`build` y `test`, principio 3), en verde. El implementer da los recuentos de la raíz y de la web, antes y después (antes de la T-01: 766 + 180, según `MEMORY.md`).
 - **Dependencias:** ninguna tarea instala nada (plan, sección 4; principio 4).
-- **Ficheros:** de `apps/` y `packages/` solo cambian los que nombra cada tarea (`git status` y `git diff --stat`). `packages/pricing`, `apps/api/migrations/`, `database.md`, `simulations/`, `health/`, `_simulations.scss`, `_health.scss`, `_base.scss` y `app.config.ts` no cambian en ninguna (R-21, R-66, R-67, R-95; plan, D-16 y H-15), salvo `_simulations.scss` en la T-18, solo con lo que permiten R-66, R-220 y C-66 (plan, D-14 y D-16, puerta 3 rehecha). `index.html` solo cambia en la T-17, en `:10` y `:11`, y `style-guide.md` solo en la T-17, en `:8`, `:17`, `:22` («Menú») y `:48` (D-16).
-- **Regla de parada (plan, D-16):** ninguna aserción de otra spec se borra ni se desactiva (sin `skip`, `todo`, `xit` ni `expect` comentado). Si falla un test de otra spec que no está en la lista cerrada de la D-16, o hace falta tocar un fichero fuera de ella, la tarea para y lo devuelve.
-- **Reservas aceptadas** (H-04, H-10, H-14, H-15 y H-21): no se resuelven aquí y ninguna tarea las empeora. `:id` se convierte con `Number()` (H-04, riesgo 3), la web no pone `maxlength` en el buscador (H-10) y `database.md` no se toca (H-15).
+- **Ficheros:** de `apps/` y `packages/` solo cambian los que nombra cada tarea (`git status` y `git diff --stat`). `packages/pricing`, `apps/api/migrations/`, `database.md`, `simulations/`, `health/`, `_simulations.scss`, `_health.scss`, `_base.scss` y `app.config.ts` no cambian en ninguna (R-21, R-66, R-67, R-95; plan, D-16 y H-15), salvo `_simulations.scss` en la T-18, solo con lo que permiten R-66, R-220 y C-66 (plan, D-14 y D-16, puerta 3 rehecha). `index.html` solo cambia en la T-17, en `:10` y `:11`, y `style-guide.md` solo en la T-17, en `:8`, `:17`, `:22` («Menú») y `:48` (D-16). En la T-19 y la T-20 la lista se acota más (D-16, puerta 3 rehecha tras la Decisión 2026-11-25 #7): solo `app.html` (la posición del `@if`), `app.spec.ts` (el test de C-55), `_shared.scss`, `_customers.scss` y `_tokens.scss`; `app.ts`, `app.routes.ts`, `index.html`, `styles.scss`, `_base.scss`, `_simulations.scss`, `style-guide.md` y las plantillas, `.ts` y `.spec.ts` de `customers/` y `simulations/` no cambian (R-237, R-238, R-244, R-245).
+- **Regla de parada (plan, D-16):** ninguna aserción de otra spec se borra ni se desactiva (sin `skip`, `todo`, `xit` ni `expect` comentado). Si falla un test de otra spec que no está en la lista cerrada de la D-16, o hace falta tocar un fichero fuera de ella, la tarea para y lo devuelve. En la T-19 y la T-20 vale además la regla de parada de los pasos 18 y 19 (D-16): si un retoque de la #7 necesita tocar algo fuera de su lista, si falla cualquier test que no sea el de C-55 o si el de C-55 necesita más cambios que los de la D-13, la tarea para y lo devuelve.
+- **Reservas aceptadas** (H-04, H-10, H-14, H-15 y H-21): no se resuelven aquí y ninguna tarea las empeora. `:id` se convierte con `Number()` (H-04, riesgo 3), la web no pone `maxlength` en el buscador (H-10) y `database.md` no se toca (H-15). De la puerta 2 rehecha tras la Decisión 2026-11-25 #7 (aprobación de la ronda 6, `review.md:752`): H-42 (la T-20 aplica R-264 tal cual y deja el total entero en el historial, R-265), H-46 (la T-19 oculta «Estado de la API» como pide R-235) y los cinco Menores; tampoco se resuelven aquí.
 - **Citas** (R-144, D-16): toda cita de un requisito o una decisión que la tarea cree o toque en el código lleva su spec («spec 004: R-16»).
 - **Textos literales** de la spec (etiquetas, títulos, estados, anuncios y mensajes de error de D-08) se comparan en los tests con `toBe`.
 - **Importes en la web:** formato esperado sacado de `formatCents` y `toDisplayCents` (`shared/services/currency-conversion.ts`), no de un literal escrito a mano (plan, sección 5). Ningún test de `customers/` prueba límites de los tramos (R-73) ni importa `packages/pricing`.
 - **Tests de `customers/`:** rutas definidas en el propio test, solo con páginas de `customers/`, sin importar `app.routes` (R-75).
-- **Comprobación manual:** lo que el plan marca como «Manual» (sección 5) lo comprueba el revisor o el autor en la puerta 6 y no se marca en ninguna tarea: C-02, C-23, C-24, C-27, C-38, C-39, C-63 a C-65, C-68 a C-74, C-78, C-102 (estilo), C-138 a C-141, C-144, C-146 a C-148, C-170 y C-174. De la puerta 3 rehecha: C-38 en las cuatro vistas, C-55 (posición), C-63, C-64, C-101, C-105, C-176 a C-192 y C-196 a C-224 (salvo la parte automática de C-176 y C-198, que va en la T-17), C-226, C-227, C-231 a C-233 y C-236 a C-239, y las Lighthouse de las cuatro vistas tras la T-18 (C-69 a C-71 y C-146 a C-148; plan, sección 5 y riesgo 17). Las tareas dejan el `git diff` que esa revisión necesita.
-- **Modelo del implementer** (ADR-016, punto 6): va en cada tarea, según la petición del autor y, en las que no encajaban claramente en ella, según la Q-01 (a), decidida por el autor. El autor lo confirma al aprobar la puerta.
+- **Comprobación manual:** lo que el plan marca como «Manual» (sección 5) lo comprueba el revisor o el autor en la puerta 6 y no se marca en ninguna tarea: C-02, C-23, C-24, C-27, C-38, C-39, C-63 a C-65, C-68 a C-74, C-78, C-102 (estilo), C-138 a C-141, C-144, C-146 a C-148, C-170 y C-174. De la puerta 3 rehecha: C-38 en las cuatro vistas, C-55 (posición), C-63, C-64, C-101, C-105, C-176 a C-192 y C-196 a C-224 (salvo la parte automática de C-176 y C-198, que va en la T-17), C-226, C-227, C-231 a C-233 y C-236 a C-239, y las Lighthouse de las cuatro vistas tras la T-18 (C-69 a C-71 y C-146 a C-148; plan, sección 5 y riesgo 17). De la puerta 3 rehecha tras la Decisión 2026-11-25 #7: C-37, C-38 en las cuatro vistas, C-39, C-55 (posición), C-59, C-101, C-102, C-106, C-109, C-174, C-183 a C-185, C-209 a C-211, C-214, C-215 a C-220 repetidos (C-255), C-236, C-237, C-240 a C-243 (C-243, con Tab), C-248 a C-250, C-253 a C-265, C-268, C-270 a C-272, C-238 y C-239 con el CSS final, y las Lighthouse de las cuatro vistas tras la T-20 (plan, sección 5). Las tareas dejan el `git diff` que esa revisión necesita.
+- **Modelo del implementer** (ADR-016, punto 6): va en cada tarea, según la petición del autor y, en las que no encajaban claramente en ella, según la Q-01 (a), decidida por el autor. En la T-19 y la T-20 lo propone el planner, con su motivo. El autor lo confirma al aprobar la puerta.
 
 ## T-01 · domain: DTO de consulta, regla de búsqueda y entidad
 - Cubre: R-03, R-05, R-08, R-09, R-16, R-17, R-18, R-80, R-83 a R-94, R-144, R-156, R-157, R-158 (parte de `domain`, sin servidor)
@@ -416,6 +418,74 @@ Reglas comunes de esta spec:
   - Desviación de R-204 («en una misma fila») aceptada por el autor, no un cambio de requisitos, como reserva `Menor` en todos los anchos; desde la tercera corrección se aplica literalmente: la fila va siempre en dos líneas. Motivo literal del autor: ««Última simulación» y su importe no caben en una fila con el texto y el ancho de las tarjetas aprobados, y no se cambia el texto ni la rejilla. A cambio no hay palabras partidas, ni solapes, ni desplazamiento horizontal, y las tarjetas mantienen la misma altura. El requisito R-204 («misma fila») se reescribirá en el cambio de requisitos posterior (filas «etiqueta → valor»).»
   - Segunda desviación de R-204 («con el importe a la derecha») aceptada por el autor, no un cambio de requisitos, como reserva `Menor`: el importe va centrado. Motivo literal del autor: «Prefiero el importe centrado: con la fila partida en dos líneas, etiqueta e importe centrados se ven más ordenados que con el importe a un lado.» Registros: `sessions/2026-11-25-13-004-customers.md`, `sessions/2026-11-25-14-004-customers.md` y `sessions/2026-11-25-15-004-customers.md`.
 
+## T-19 · web: cabecera de 70 px, selector a la izquierda y «Estado de la API» oculto (retoques de interfaz)
+- Origen: puerta 4 rehecha tras la Decisión 2026-11-25 #7 (2026-11-25), paso 18 del plan (bloque 6), por las Decisiones 2026-11-25 #7 a #10. Va después de la T-18 y antes de la puerta 6.
+- Cubre: R-55, R-59, R-142, R-178 a R-180 y R-231 (modificados por las Decisiones 2026-11-25 #7 y #8), R-67, R-68, R-144, R-233 a R-238, R-239 y R-240 (solo el token de 70 px) y R-245 (C-245 con test; C-243, la plantilla con `git diff` y el orden del foco en la puerta 6; el resto, con `git diff`, `git grep` o en la puerta 6)
+- Depende de: T-18 (orden de los commits; `_shared.scss` y `_tokens.scss` tal como los dejaron la T-17 y la T-18)
+- Estado: [x] hecha
+- Modelo: Sonnet 5.5, confirmado por el autor en la vuelta corta de la puerta 4 rehecha tras la Decisión 2026-11-25 #7. Motivo del planner: el plan da casi literal el cambio de `app.html` y el del test de C-55 (D-13) y las reglas de `_shared.scss` (D-14), y el riesgo 25 lo detectan tests que ya existen, con orden de parar; es el mismo tipo de tarea que la T-17.
+- Convenciones a leer: `.claude/skills/frontend-conventions/SKILL.md` (estilos solo en `src/scss`, tokens en `themes/_tokens.scss`, clases con prefijo de componente, tests con Vitest).
+- Archivos de producción (3):
+  - `app/app.html`: solo el bloque `@if (customersActive()) { <app-currency-selector … /> }` pasa, sin cambiar ni una letra, de detrás del `</nav>` a delante del `<nav>`, dentro de `<header>` (R-236, D-13). Nada más cambia: ni el comentario de la línea 1, ni las clases, ni los `data-label`, ni el `<main>` (R-237).
+  - `scss/_shared.scss`, como la D-14 (cambio tras la Decisión 2026-11-25 #7):
+    - `.app-header`: `min-height: var(--header-min-height)` (R-233); por debajo de 48 rem, `flex-direction: column`, `align-items: stretch` y `justify-content: center` (R-234); desde 48 rem, `flex-direction: row`, `justify-content: flex-start` y `align-items: center` (R-55, R-179, R-234). Se quitan `align-items: flex-end` y `align-items: last baseline`; se conservan `gap`, `padding-block`, `margin-bottom`, fondo, borde y `box-shadow: none`.
+    - `.app-header__currency`: por debajo de 48 rem, `align-self: flex-start` con `width: min(100%, 18rem)` y «Divisa» encima (R-180, R-182); desde 48 rem, sin cambios (R-181).
+    - `.app-header__nav`: se conserva lo que tiene; desde 48 rem añade `margin-inline-start: auto` (R-178, C-183).
+    - `.app-header__link[data-label='Estado de la API'] { display: none; }` (R-235), sin `aria-hidden` y sin quitar el enlace del DOM.
+    - Comentarios que dejan de ser ciertos, con el texto de la D-14 (consecuencia directa, regla de la Decisión 2026-11-25 #4): `:15`, `:39`, `:102` y `:106`.
+  - `scss/themes/_tokens.scss`: el bloque «Retoques de la Decisión 2026-11-25 #7 (spec 004: R-239, R-240; D-14)» con `--header-min-height: 70px` y su requisito en un comentario (R-233, R-240). Los otros cinco tokens del bloque van en la T-20 (paso 19). El comentario de la línea 2 no se toca (H-22 de la 005).
+- Tests (cambia): `app/app.spec.ts`, solo el test de C-55 (`:255-268`), con el texto literal de la D-13: comentario de `:255`, título, comentario de `:265` y las aserciones de `:266` y `:267`. Las de `parentElement` (`:263-264`) y el resto del fichero no cambian (R-238, C-245). Ningún test nuevo.
+- Hecho cuando:
+  - [x] Fase roja: el test de C-55 se cambia antes que `app.html` y, con `app.html` como en `HEAD`, fallan justo sus dos aserciones de orden (`:266` y `:267`); salida íntegra en el registro de la sesión. Es un rojo de aserciones. Si no falla, o falla otra aserción, la tarea para y lo devuelve.
+  - [x] C-55 y C-245: el test de C-55 en verde; `git diff apps/web/src/app/app.spec.ts` solo en `:255-268`, con el texto de la D-13.
+  - [x] Riesgo 25 (orden de parar): C-56, C-62, C-135 y el resto de `app.spec.ts` en verde sin cambios; si falla alguno, la tarea para y lo devuelve (riesgo 9).
+  - [x] Riesgo 29: el test de `app.spec.ts:470-475` (cada `data-label` igual al texto de su enlace) sigue en verde sin cambios; C-142 y C-47 de la 005 siguen contando tres enlaces en el DOM (R-142).
+  - [x] C-243 (plantilla) y C-244: `git diff apps/web/src/app/app.html` solo con el bloque `@if` movido delante del `<nav>`; de `apps/web` solo cambian `app.html`, `app.spec.ts`, `_shared.scss` y `_tokens.scss` (`git status` y `git diff --stat`).
+  - [x] C-241: `git grep -n "last baseline" apps/web/src/scss/_shared.scss` vacío.
+  - [x] C-246 y C-247 (el token de 70 px): `--header-min-height: 70px` en `_tokens.scss` y leído con `var(--header-min-height)` en `_shared.scss`; `git grep -n "70px" apps/web/src/scss` sin ese valor fuera de `_tokens.scss` (si ya había alguno, se anota en el retorno).
+  - [x] Ninguna regla de `outline` en el `git diff` de `_shared.scss` (R-68).
+  - [x] C-252: `git diff ai-workspace/docs/style-guide.md` vacío (R-245).
+  - [x] `app.ts`, `app.routes.ts`, `app.config.ts`, `index.html`, `styles.scss`, `_base.scss`, `_customers.scss`, `_simulations.scss`, `_health.scss`, `customers/`, `simulations/` y `health/`, sin cambios. Regla de parada de los pasos 18 y 19 (D-16; regla común): si un retoque necesita tocar algo fuera de la lista, si falla cualquier test que no sea el de C-55 o si el de C-55 necesita más cambios que los de la D-13, la tarea para y lo devuelve.
+  - [x] `npm run verify` desde la raíz, en verde, con los recuentos de la raíz y de la web antes (913 + 324, según `MEMORY.md`) y después (iguales: el test cambia, no se añade).
+  - Puerta 6, a mano (no se marcan en esta tarea; regla común «Comprobación manual»): C-38 en las cuatro vistas, con el foco en cada enlace visible; C-55 (posición) y C-59; C-183 a C-185 y C-236 (C-184 a 768 px exactos, H-29); C-240 y C-241 (alto y centros verticales a 320, 767, 768 y 1280 px); C-242 (estilo calculado, árbol de accesibilidad en Chrome y en Firefox y Tab; en `/`, ningún enlace visible activo, reserva H-46); C-243 con Tab desde el principio de `/customers`; y Lighthouse de las cuatro vistas, tras la T-20.
+- Observaciones para el revisor (2026-11-25):
+  - Fase roja: con `app.html` como en `HEAD` falla solo C-55, en la aserción de `:266`; la de `:267` no llega a ejecutarse porque Vitest para el test en la primera aserción que falla (la casilla dice «fallan justo sus dos aserciones de orden»). El retorno traía los signos escapados en HTML, así que la sesión principal repitió el rojo (copia de `app.html` en el scratchpad, devuelta y comprobada con `cmp`): 1 failed y 323 passed. Salida literal en el registro de la sesión.
+  - El implementer dio el `git diff` resumido; la sesión principal lo sacó con `git diff apps/web/` y lo cruzó con `plan.md:291-295` (test de C-55, literal) y con la D-14 (`plan.md:393-395` y `:421`).
+  - `ng build` repite el aviso de presupuesto ya aceptado en la T-14 («total of 723.53 kB»; antes, 723.37 kB).
+- Aprobación del autor 2026-11-25 (literal): «Acepto las dos desviaciones. Apruebo la T-19. Marca [x] y las casillas, actualiza MEMORY.md y enséñame el diff; luego lanzo /sdd-session y apruebo el commit. La T-20 empieza después.» Desviaciones aceptadas: (1) comentario en línea tras `margin-inline-start: auto` en `.app-header__nav` («// lo lleva a la derecha también sin selector (spec 004: R-178, C-183)»); (2) comentario de una línea sobre la regla que oculta «Estado de la API» («// «Estado de la API» sigue en el DOM; solo se oculta con CSS (spec 004: R-235, C-242).»), las dos por la regla de citas (R-144). Ningún test nuevo; `npm run verify` en verde (913 + 324, antes y después). Registro: `sessions/2026-11-25-20-004-customers.md`.
+
+## T-20 · web: antetítulos, tarjetas, «Datos» e historial compacto (retoques de interfaz)
+- Origen: puerta 4 rehecha tras la Decisión 2026-11-25 #7 (2026-11-25), paso 19 del plan (bloque 6), por las Decisiones 2026-11-25 #7 a #10 y la P-09 (a) del autor. Va antes de la puerta 6.
+- Cubre: R-37 (sin cambio, Decisión 2026-11-25 #8), R-38 (C-238 y C-239, modificados por la Decisión 2026-11-25 #10), R-39 (anotado por la #10), R-101, R-102, R-106, R-109, R-169, R-204, R-209 y R-215 (modificados por las Decisiones 2026-11-25 #7 y #8), R-68, R-119 (sus tests, sin cambios), R-144, R-205, R-206, R-232, R-237 a R-240 (los otros cinco tokens), R-241 a R-258, R-261 a R-265, con R-253 con el texto de la petición del autor en la puerta 3 rehecha, sin «(`flex-wrap`)» (`spec.md:987`; sin número de decisión, por el punto (1) de la aprobación de la puerta 3). R-259 y R-260, retirados, sin tarea. Casos con `git diff` o `git grep`, y el resto en la puerta 6
+- Depende de: T-19 (orden de los commits y bloque de tokens de la #7 que abre en `_tokens.scss`)
+- Estado: [ ] pendiente
+- Modelo: Opus 5.5, confirmado por el autor en la vuelta corta de la puerta 4 rehecha tras la Decisión 2026-11-25 #7. Motivo del planner: cinco grupos de reglas que interactúan (rejilla de la tarjeta, fila en una línea con recorte proporcional, flotantes de «Datos», historial flexible con `:nth-of-type` y `::after`, y ocultación con la regla de R-165), tres órdenes de parar (riesgos 24, 27 y 32), y la fila de la tarjeta de la T-18, que necesitó tres correcciones del autor.
+- Convenciones a leer: `.claude/skills/frontend-conventions/SKILL.md` (estilos solo en `src/scss`, tokens en `themes/_tokens.scss`, clases con prefijo de componente).
+- Archivos de producción (2):
+  - `scss/_customers.scss`, como la D-14 (cambio tras la Decisión 2026-11-25 #7):
+    - antetítulos (R-241 a R-244): `.customers-page__eyebrow, .customer-detail-page__eyebrow` con `text-transform: uppercase`, `font-size: var(--font-size-eyebrow-caps)`, `font-weight: var(--font-weight-eyebrow-caps)`, `letter-spacing: var(--letter-spacing-eyebrow-caps)` y `color: var(--color-muted)`, en lugar de la regla de `:7-12`;
+    - tarjetas (R-246 a R-248): `.customer-card` y `.customer-detail-page__card` con `border-radius: var(--radius-md)` y `box-shadow: var(--shadow-card)`; la regla del énfasis no cambia;
+    - tarjeta del buscador (R-101, R-102, R-169, R-204 a R-206, R-209, R-215, R-263, R-264): `.customer-card` en rejilla (`minmax(0, 1fr) auto`, filas `auto auto 1fr`, huecos `var(--space-sm)`), con título y fila «Última simulación» a todo el ancho, identificador y píldoras en la misma fila y la fila al pie con `align-self: end`; `.customer-card__pill:nth-of-type(2) { display: none; }`; `.customer-card__last` en una línea (`flex-direction: row`, `justify-content: space-between`, `align-items: baseline`) y sus dos partes con `flex: 0 1 auto`, `min-width: 0`, `overflow: hidden`, `white-space: nowrap` y `text-overflow: ellipsis`; el importe pierde `flex-shrink: 0`;
+    - «Datos» del detalle (R-232, R-249 a R-253): título de tarjeta en mayúsculas, `.customer-detail-page__details` con `display: flow-root`, etiqueta flotante a la izquierda, valor a la derecha en 700 con `overflow-wrap: break-word` y la línea de 1 px en `--color-bg` entre filas, sin línea encima de la primera ni debajo de la última; la regla compartida de `:238-256` se parte en la del detalle y la del historial;
+    - historial (R-106, R-109, R-254 a R-258, R-261, R-262, R-265): `.simulation-history__term` y los `dd` 3 y 4 añadidos al selector de la regla de `.customers-page__announcement`, sin `display: none` ni `visibility: hidden`; `.simulation-history__details` flexible; `::after` « usuarios ·» sin texto alternativo en el `dd` 1; `dd` 1 y 2 con el peso y el color heredados del `body` (P-09 (a)); `dd` 5 a la derecha, en 700 y `--color-ink`, sin recorte; separadora de 1 px en `--color-bg` entre simulaciones; `.simulation-history__list` sin cambios (R-37, riesgo 27);
+    - comentarios que dejan de ser ciertos, con el texto de la D-14 (consecuencia directa, regla de la Decisión 2026-11-25 #4): `:1-2`, `:6`, `:61`, `:96`, `:202-203` y `:232`.
+  - `scss/themes/_tokens.scss`: dentro del bloque que abre la T-19, `--font-size-eyebrow-caps: 12px`, `--font-weight-eyebrow-caps: 700`, `--letter-spacing-eyebrow-caps: 0.08em`, `--radius-md: 24px` y `--shadow-card: 0 2px 8px color-mix(in srgb, var(--color-ink) 6%, transparent)`, cada uno con su requisito en un comentario (R-239, R-240, R-242, R-246, R-247). `--font-size-eyebrow` no cambia (R-244) y el comentario de la línea 2 no se toca (H-22 de la 005).
+- Tests: ninguno nuevo ni cambiado (solo `.scss`; R-238). Por eso no hay fase roja, como en la T-10 y la T-18.
+- Hecho cuando:
+  - [ ] Sin tests nuevos: no hay fase roja (regla común).
+  - [ ] R-238 y riesgo 33: ningún test cambia; `customer-card.spec.ts` (con `:74`, C-119), `customer-detail-page.spec.ts` (con `:302`, C-119) y `simulation-history.spec.ts` (con `:61`, C-106 y C-109) en verde sin cambios, y sus títulos no se tocan.
+  - [ ] C-244 y C-269: `git diff --stat HEAD -- apps/web/src/app/` vacío (plantillas, `.ts` y tests sin cambios); de `apps/web` solo cambian `_customers.scss` y `_tokens.scss` (`git status` y `git diff --stat`).
+  - [ ] C-251: `git diff` de `_simulations.scss` vacío y `--font-size-eyebrow` con el mismo valor (R-244).
+  - [ ] C-252: `git diff ai-workspace/docs/style-guide.md` vacío (R-245).
+  - [ ] C-246 y C-247: los seis tokens de la #7 en `_tokens.scss` (70 px y 12 px en px) y leídos con `var(--…)`; `git grep -nE "70px|12px|0\.08em|2px 8px|24px" apps/web/src/scss` sin esos valores fuera de `_tokens.scss`, salvo los que ya había, que se anotan en el retorno.
+  - [ ] C-269 (reglas) y C-270 (regla): la ocultación usa `.simulation-history__term` y `.simulation-history__value:nth-of-type(3)` y `(4)` en el selector de la regla de R-165; el plan, `.customer-card__pill:nth-of-type(2) { display: none; }`.
+  - [ ] Ninguna regla de `outline` en el `git diff` de `_customers.scss` (R-68); la tarjeta no gana `tabindex` (R-105).
+  - [ ] Riesgos 24, 27 y 32 (órdenes de parar del paso 19): a 320 px, con un cliente de identificador de 20 caracteres y email de 254, en Chrome y en Firefox, el valor de «Datos» que no cabe baja bajo su etiqueta y no se parte a su lado (C-260); el número de cada simulación del `<ol>` sale una sola vez, en la línea de «N usuarios · fecha»; y la fila «Última simulación» queda al pie de la tarjeta (C-211). Si falla alguno, la tarea queda «Bloqueado», sin buscar otra técnica dentro de la tarea (riesgo 24: otra técnica pasa por el plan; tocar la plantilla, por un cambio de requisitos). Por la Q-07 (a), con la variante de la Q-05: tras el retorno del implementer, la sesión principal crea los clientes extremos con `POST /customers` (y sus simulaciones con `POST /simulations`) en una base del scratchpad (`DATABASE_PATH`, nunca la base por defecto) y los mide en Chrome con el MCP de Chrome DevTools, y el autor mira Firefox; si el MCP no conecta, el autor lo mira en los dos navegadores. La evidencia va al registro de la sesión. El implementer no lo comprueba: la casilla se marca tras esa comprobación, antes de la aprobación del autor.
+  - [ ] `_shared.scss`, `index.html`, `styles.scss`, `app.*`, `_base.scss`, `_simulations.scss` y `_health.scss`, sin cambios. Regla de parada de los pasos 18 y 19 (D-16; regla común).
+  - [ ] `npm run verify` desde la raíz, en verde, con los recuentos antes y después (iguales: sin tests nuevos).
+  - Puerta 6, a mano (no se marcan en esta tarea; regla común «Comprobación manual»): C-37 (numeración, riesgo 27), C-38 en las cuatro vistas, C-39, C-101, C-102, C-106, C-109, C-174, C-209 a C-211, C-214, C-220, C-237, C-248 a C-250 (contraste de `--color-muted` sobre `--color-bg`), C-253 a C-255 (con C-215 a C-220 repetidos con hover forzado y Tab), C-256 a C-265, C-268 y C-270 a C-272 (recorte proporcional, riesgo 26; total entero en el historial, riesgo 28), a 320, 768, 1024, 1280 y 1600 px según cada caso, en EUR y en USD, con clientes de nombre largo, de identificador de 20 y de email de 254 creados con `POST /customers` en una base del scratchpad (plan, sección 5); C-238 y C-239 con el CSS final; el árbol de accesibilidad de lo oculto del historial (riesgos 30 y 31); y Lighthouse en móvil y escritorio de las cuatro vistas, con captura (C-69 a C-71 y C-146 a C-148).
+- Para el revisor (del plan, riesgo 33): los títulos de `customer-card.spec.ts:74` y `simulation-history.spec.ts:61` dejan de describir lo que se ve, y R-238 no deja tocarlos; cambiarlos exige un cambio de requisitos.
+
 ## Cobertura
 Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobación final es manual (plan, sección 5). R-144 (citas calificadas) aplica a todas las tareas (regla común).
 
@@ -451,9 +521,9 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-33 | T-07, T-13 |
 | R-34, R-35 | T-13 |
 | R-36 | T-12, T-13 |
-| R-37 | T-12 |
-| R-38 (modificado por la Decisión 2026-11-25 #2) | T-10, T-13, T-17, T-18 (C-38 en las cuatro vistas, C-238 y C-239 en la puerta 6) |
-| R-39 | T-10, T-13 (C-39 en la puerta 6) |
+| R-37 (sin cambio, Decisión 2026-11-25 #8) | T-12, T-20 (la numeración del `<ol>` se conserva; C-37 en la puerta 6, riesgo 27) |
+| R-38 (modificado por la Decisión 2026-11-25 #2; C-238 y C-239, por la #10) | T-10, T-13, T-17, T-18, T-19, T-20 (C-38 en las cuatro vistas, C-238 y C-239 en la puerta 6, con el CSS final) |
+| R-39 (anotado por la Decisión 2026-11-25 #10) | T-10, T-13, T-20 (radio y sombra de la #7; C-39 en la puerta 6) |
 | R-40, R-41, R-42 | T-06, T-09 |
 | R-43, R-44 | T-11, T-13 |
 | R-45 | T-12, T-13 |
@@ -462,18 +532,19 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-48, R-49, R-50, R-51 | T-07, T-09, T-12, T-13 |
 | R-52, R-53 | T-09, T-13, T-14 |
 | R-54, R-56 | T-14 |
-| R-55 (modificado por las Decisiones 2026-11-25 #1 y #6) | T-14, T-17 (posición de C-55 en la puerta 6) |
+| R-55 (modificado por las Decisiones 2026-11-25 #1, #6 y #7) | T-14, T-17, T-19 (test de C-55 cambiado en la T-19, C-245; posición de C-55 en la puerta 6) |
 | R-57 | T-09, T-13, T-16 |
-| R-58, R-59, R-60 | T-14 |
+| R-58, R-60 | T-14 |
+| R-59 (modificado por la Decisión 2026-11-25 #7) | T-14, T-19 (C-59 y C-242 en la puerta 6) |
 | R-61 | T-09, T-14 |
 | R-62 | T-14 |
 | R-63 | T-14, T-17 (C-63 en la puerta 6) |
 | R-64 (modificado por la Decisión 2026-11-25 #1) | T-14, T-17 (C-64 en la puerta 6) |
 | R-65 | T-14 (C-65 en la puerta 6) |
 | R-66 (modificado por las Decisiones 2026-11-25 #1 y #5) | T-14 (regla común de ficheros), T-18 (C-66 con `git diff`) |
-| R-67 (modificado por las Decisiones 2026-11-25 #1 a #4) | T-09, T-13, T-14, T-17 (C-67 con `git diff`) |
-| R-68 | T-07, T-08, T-09, T-10, T-13, T-14, T-17, T-18 (C-68 en la puerta 6) |
-| R-69, R-70, R-71 | T-14, T-17, T-18 (C-69 a C-71 en la puerta 6, tras la T-18) |
+| R-67 (modificado por las Decisiones 2026-11-25 #1 a #4) | T-09, T-13, T-14, T-17, T-19 (C-67 con `git diff`; en la T-19, solo el orden del `@if`, R-236) |
+| R-68 | T-07, T-08, T-09, T-10, T-13, T-14, T-17, T-18, T-19, T-20 (C-68 en la puerta 6) |
+| R-69, R-70, R-71 | T-14, T-17, T-18, T-19, T-20 (C-69 a C-71 en la puerta 6, tras la T-20) |
 | R-72 | T-05 |
 | R-73 | T-07, T-09, T-12, T-13 |
 | R-74 | T-09, T-12, T-13 |
@@ -491,17 +562,19 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-96 | T-06, T-09 |
 | R-97, R-98 | T-09, T-16 |
 | R-99, R-100 | T-07, T-09 |
-| R-101 (modificado por la Decisión 2026-11-25 #1) | T-07, T-18 (recortes: C-101 en la puerta 6) |
-| R-102 | T-07, T-10 (estilo en la puerta 6) |
+| R-101 (modificado por las Decisiones 2026-11-25 #1 y #7) | T-07, T-18, T-20 (recortes y plan oculto: C-101 y C-270 en la puerta 6) |
+| R-102 (modificado por la Decisión 2026-11-25 #7) | T-07, T-10, T-20 (estilo: C-102 en la puerta 6) |
 | R-103, R-104 | T-07 |
 | R-105 (modificado por la Decisión 2026-11-25 #1) | T-07, T-18 (C-105 en la puerta 6) |
-| R-106, R-107, R-108 | T-07, T-12 |
-| R-109 | T-12 |
+| R-106 (modificado por la Decisión 2026-11-25 #7) | T-07, T-12, T-20 (C-106 en la puerta 6; `simulation-history.spec.ts` sin cambios) |
+| R-107, R-108 | T-07, T-12 |
+| R-109 (modificado por la Decisión 2026-11-25 #7) | T-12, T-20 (C-109 en la puerta 6) |
 | R-110, R-111 | T-09 |
 | R-112 | T-08 |
 | R-113 | T-07 |
 | R-114, R-115, R-116, R-117 | T-13 |
-| R-118, R-119 | T-07, T-13 |
+| R-118 | T-07, T-13 |
+| R-119 (modificado por la Decisión 2026-11-25 #8: solo el detalle) | T-07, T-13; en la T-20, sus tests en verde sin cambios (C-119; riesgo 33) |
 | R-120 | T-09, T-13 |
 | R-121 | T-09 |
 | R-122 | T-06, T-09 |
@@ -518,10 +591,11 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-137 | T-13, T-14 |
 | R-138 | T-14, T-17 (C-138 en la puerta 6) |
 | R-139, R-140, R-141 | Sustituidos por la Decisión 2026-11-25 #1 (por R-175 a R-177 y R-183 a R-194; C-139 a C-141, sustituidos): sin tarea. Los cubría la T-14 antes del cambio; lo que los sustituye va en la T-17 |
-| R-142, R-143 | T-14 |
-| R-144 | T-01 a T-18 (C-144 en la puerta 6) |
+| R-142 (modificado por la Decisión 2026-11-25 #7) | T-14, T-19 (tres enlaces en el DOM; C-142, sin cambiar el test) |
+| R-143 | T-14 |
+| R-144 | T-01 a T-20 (C-144 en la puerta 6) |
 | R-145 | T-14 |
-| R-146, R-147, R-148 | T-14, T-17, T-18 (C-146 a C-148 en la puerta 6, tras la T-18) |
+| R-146, R-147, R-148 | T-14, T-17, T-18, T-19, T-20 (C-146 a C-148 en la puerta 6, tras la T-20) |
 | R-149 | T-14 |
 | R-150, R-151, R-152, R-153 | T-15 |
 | R-154, R-155 | T-13 |
@@ -534,25 +608,50 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-165 | T-09, T-10 (C-170 en la puerta 6) |
 | R-166, R-167 | T-09, T-16 |
 | R-168 | T-15 |
-| R-169 | T-07, T-10 (C-174 en la puerta 6) |
+| R-169 (modificado por la Decisión 2026-11-25 #7) | T-07, T-10, T-20 (C-174 en la puerta 6) |
 | R-170 | T-15 |
 | R-171 a R-175, R-177 | T-17 (C-176, plantilla, con test; C-176 a C-180 y C-182 en la puerta 6) |
 | R-176 | T-17 (`app.html` no gana logo ni migas; C-181 con `git diff` y en la puerta 6) |
-| R-178 a R-182, R-231 | T-17 (C-183 a C-187 y C-236 en la puerta 6; C-184 a 768 px exactos, H-29) |
+| R-178 a R-180, R-231 (modificados por las Decisiones 2026-11-25 #7 y #8) | T-17, T-19 (C-183 a C-185 y C-236 en la puerta 6; C-184 a 768 px exactos, H-29) |
+| R-181, R-182 | T-17 (C-186 y C-187 en la puerta 6) |
 | R-183 a R-187, R-191, R-192 | T-17 (C-188 a C-192, C-196 y C-197 en la puerta 6) |
 | R-188, R-190 | T-17 (C-193 y C-195 con `git grep`) |
 | R-189, R-224, R-225, R-229 | T-17 (`style-guide.md`, documentación; C-194, C-229, C-230 y C-234 con `git diff`) |
 | R-193 | T-17 (C-198: atributos con test; posiciones en la puerta 6) |
 | R-194, R-228 | T-17 (C-199 y C-233 en la puerta 6) |
 | R-223, R-230 | T-17 (C-228 y C-235 con `git diff`) |
-| R-195 a R-199, R-201 a R-206, R-209 a R-215 | T-18 (C-200 a C-204, C-206 a C-211 y C-214 a C-220 en la puerta 6) |
-| R-200, R-232 | T-13, T-18 (C-205 y C-237 en la puerta 6) |
+| R-195 a R-199, R-201 a R-203, R-210 a R-214 | T-18 (C-200 a C-204, C-206 a C-208 y C-215 a C-219 en la puerta 6; C-215 a C-219, repetidos tras la T-20 por C-255) |
+| R-204 (modificado por la Decisión 2026-11-25 #7: resuelve D1 y D2) | T-18, T-20 (C-209 en la puerta 6) |
+| R-205, R-206 | T-18, T-20 (separadora y fila al pie con la fila en una línea: C-210 y C-211 en la puerta 6; riesgo 32) |
+| R-209 (modificado por la Decisión 2026-11-25 #7) | T-18, T-20 (C-214 en la puerta 6) |
+| R-215 (modificado por la Decisión 2026-11-25 #8, Q-51 (b)) | T-18, T-20 (C-220 en la puerta 6) |
+| R-200 | T-13, T-18 (C-205 en la puerta 6) |
+| R-232 | T-13, T-18, T-20 (C-237 en la puerta 6, con R-253) |
 | R-207, R-208 | T-18 (C-212 y C-213 en la puerta 6) |
 | R-216, R-217, R-227 | T-18 (C-221, C-222 y C-232 en la puerta 6) |
 | R-218, R-219 | T-18 (C-223 y C-224 en la puerta 6) |
 | R-220 | T-18 (C-225 con `git diff` y `npm run verify`) |
 | R-221 | T-18 (C-226 en la puerta 6) |
 | R-222, R-226 | T-18 (C-227 y C-231 en la puerta 6) |
+| R-233, R-234 | T-19 (C-240 y C-241 en la puerta 6; `last baseline` con `git grep`) |
+| R-235 | T-19 (C-242 en la puerta 6; reserva H-46) |
+| R-236 | T-19 (C-243: plantilla con `git diff`; orden del foco en la puerta 6) |
+| R-237 | T-19, T-20 (C-244 con `git diff --stat`) |
+| R-238 | T-19 (C-245: test de C-55, con `git diff`), T-20 (ningún test cambia) |
+| R-239, R-240 | T-19 (token de 70 px), T-20 (los otros cinco) (C-246 y C-247 con `git grep` y revisión de `_tokens.scss`) |
+| R-241, R-242, R-243 | T-20 (C-248 a C-250 en la puerta 6) |
+| R-244 | T-20 (C-251 con `git diff`) |
+| R-245 | T-19, T-20 (C-252 con `git diff`) |
+| R-246, R-247, R-248 | T-20 (C-253 a C-255 en la puerta 6) |
+| R-249 a R-252 | T-20 (C-256 a C-259 en la puerta 6) |
+| R-253 (modificado por la petición del autor en la puerta 3 rehecha tras la Decisión 2026-11-25 #7: sin «(`flex-wrap`)», `spec.md:987`) | T-20 (C-260 en la puerta 6; orden de parar del riesgo 24) |
+| R-254 a R-258 | T-20 (C-261 a C-265 en la puerta 6; P-09 (a)) |
+| R-259, R-260 | Retirados por la Decisión 2026-11-25 #8 (Q-46) y la #9 (punto 1), con C-266 y C-267: sin tarea |
+| R-261 | T-20 (C-268 en la puerta 6) |
+| R-262 | T-20 (C-269 con `git diff` y revisión de `_customers.scss`) |
+| R-263 | T-20 (C-270 en la puerta 6) |
+| R-264 | T-20 (C-271 en la puerta 6; reserva H-42) |
+| R-265 | T-20 (C-272 en la puerta 6; riesgo 28) |
 
 ## Dudas de la puerta 4 (Q-nn), decididas
 Tres dudas, presentadas en bloque, cada una con una recomendada. Ninguna es un hueco del reto ni un choque entre fuentes: son de cómo se ejecutan las tareas. Las decidió el autor en la segunda vuelta y se conservan abajo tal como se le presentaron. Sin dudas abiertas.
@@ -619,4 +718,21 @@ Dos dudas, presentadas en bloque, cada una con una recomendada. Ninguna es un hu
 - (a) Se cuenta en la T-17, como dice el plan, y se repite en la T-18, cuando ya están los tres `@use`. Pros: cumple el plan y comprueba el caso completo que describe el riesgo. Contras: una casilla más en la T-18, que el plan no pone en el paso 17.
 - (b) Solo en la T-17, a la letra del plan. Pros: sin apartarse del plan. Contras: el caso de tres `@use` no se comprueba hasta la puerta 6, y solo si alguien lo mira.
 - (c) Solo en la T-18. Pros: una sola comprobación, con los tres `@use`. Contras: se aparta de «en el paso 16».
+- Recomendada: **(a)**.
+
+## Dudas de la puerta 4 rehecha tras la Decisión 2026-11-25 #7 (Q-nn), decididas
+Una duda, de cómo se ejecutan las órdenes de parar del paso 19 en la T-20. No es un hueco del reto ni una decisión de valores. La decidió el autor en la vuelta corta y se conserva abajo tal como se le presentó. Sin dudas abiertas.
+- Texto literal del autor (2026-11-25): «Q-07: (a), con la variante de la Q-05: la sesión principal crea los clientes extremos con POST /customers en una base del scratchpad y los mide en Chrome con el MCP de DevTools, yo miro Firefox; si el MCP no conecta, lo miro yo en los dos navegadores. Modelos: Sonnet 5.5 en la T-19 y Opus 5.5 en la T-20. Descarto la captura. Vuelta corta para pasar la Q-07 a tasks.md. Después apruebo la puerta 4 y paso a Planificada.»
+- Cómo se aplica:
+  - Q-07 (a), con la variante: casilla de los riesgos 24, 27 y 32 de la T-20 (Chrome por la sesión principal con el MCP de Chrome DevTools, sobre clientes extremos creados con `POST /customers` en una base del scratchpad; Firefox por el autor; si el MCP no conecta, el autor en los dos; si falla alguno, «Bloqueado»; evidencia en el registro de la sesión). La casilla se marca tras esa comprobación, antes de la aprobación del autor, porque el implementer no la hace.
+  - Modelos: Sonnet 5.5 en la T-19 y Opus 5.5 en la T-20, confirmados (cabecera y cada tarea).
+
+| Q | Duda | Decisión del autor |
+|---|---|---|
+| Q-07 | Quién comprueba los riesgos 24, 27 y 32 en la T-20, y con qué datos y evidencia | (a), con la variante de la Q-05: clientes extremos con `POST /customers` en una base del scratchpad, Chrome por la sesión principal con el MCP de DevTools y Firefox por el autor; si el MCP no conecta, el autor en los dos |
+
+**Q-07 (decidida: (a), con la variante de la Q-05, 2026-11-25) · Quién comprueba los riesgos 24, 27 y 32 en la T-20, y con qué datos y evidencia.** El plan pone tres órdenes de parar en el paso 19 (sección 8): el valor de «Datos» que baja bajo su etiqueta a 320 px, con el identificador de 20 y el email de 254, en Chrome y en Firefox (riesgo 24); el número del `<ol>` una sola vez y en la línea de «N usuarios · fecha» (riesgo 27); y la fila «Última simulación» al pie de la tarjeta (riesgo 32, C-211). Las tres se ven solo en el navegador (riesgo 23: los tests no miden estilos), y el seed no trae clientes de identificador de 20 ni de email de 254 (plan, sección 5). La Q-05 (a), con su variante, decidió esto solo para el riesgo 16 de la T-17.
+- (a) Como la Q-05 (a) con su variante: tras el retorno del implementer y antes de la aprobación del autor, la sesión principal crea los clientes de prueba con `POST /customers` (y sus simulaciones con `POST /simulations`) en una base del scratchpad (`DATABASE_PATH`, nunca la base por defecto), los mide en Chrome con el MCP de Chrome DevTools (posiciones con `getBoundingClientRect` y captura) y el autor los mira en Firefox; si el MCP no conecta, el autor en los dos. La evidencia va al registro de la sesión. Si falla alguno, la T-20 queda «Bloqueado». Pros: cumple «orden de parar del paso 19» con quien puede hacerlo, como ya se hizo en la T-17 y en las correcciones de la T-18. Contras: pasos a mano antes de aprobar.
+- (b) Lo intenta el implementer con las herramientas que tenga y, si no puede abrir los dos navegadores, lo dice en su retorno y se sigue como en (a). Pros: no presupone qué herramientas tiene. Contras: si no puede, se llega a (a) con una vuelta más (riesgo de la Q-05).
+- (c) Pasa a la puerta 6, junto con C-211, C-260 y C-37. Pros: un solo momento de pruebas a mano. Contras: se aparta del plan («orden de parar del paso 19»), así que cambiaría la puerta 3; un fallo se vería con la tarea ya aprobada y obligaría a una puerta 4 ampliada (`sdd`, «Estados»).
 - Recomendada: **(a)**.

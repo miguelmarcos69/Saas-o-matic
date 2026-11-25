@@ -1,13 +1,13 @@
 <!-- Carcasa de la aplicación: un único <main> envuelve todas las páginas (Lighthouse landmark-one-main, decisión del autor 2026-11-22). -->
 <header class="app-header app-container">
+  @if (customersActive()) {
+    <app-currency-selector class="app-header__currency" [value]="displayCurrency()" [disabled]="currencyDisabled()" (valueChange)="selectCurrency($event)" />
+  }
   <nav class="app-header__nav" aria-label="Navegación principal">
     <a class="app-header__link" data-label="Estado de la API" routerLink="/" routerLinkActive ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{ exact: true }">Estado de la API</a>
     <a class="app-header__link" data-label="Clientes" routerLink="/customers" routerLinkActive ariaCurrentWhenActive="page" (isActiveChange)="customersActive.set($event)">Clientes</a>
     <a class="app-header__link" data-label="Simulador" routerLink="/simulator" routerLinkActive ariaCurrentWhenActive="page">Simulador</a>
   </nav>
-  @if (customersActive()) {
-    <app-currency-selector class="app-header__currency" [value]="displayCurrency()" [disabled]="currencyDisabled()" (valueChange)="selectCurrency($event)" />
-  }
 </header>
 <main class="app-container">
   <router-outlet />

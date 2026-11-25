@@ -1,6 +1,6 @@
 # Spec 004 · customers
 
-- **Estado:** Aprobada
+- **Estado:** En implementación
 - **Depende de:** 002, 003, 005
 - **Cubre:** §2.B (buscador y dashboard; detalle del cliente con tarjetas e historial de simulaciones)
 
@@ -982,8 +982,9 @@ Cada requisito se ha cruzado con R-38 (sin desplazamiento horizontal a 320 px), 
 - Origen: Decisión 2026-11-25 #7 («y una línea entre filas»); Decisión 2026-11-25 #8 (Q-55 (a))
 - Modificado por la Decisión 2026-11-25 #8 (antes: «La tarjeta «Datos» deberá llevar una línea entre fila y fila, con el grosor y el color de Q-55: PENDIENTE Q-55.»).
 
-**R-253.** Si el identificador fiscal o el email no caben junto a su etiqueta, entonces el sistema deberá bajar el valor bajo la etiqueta, alineado a la derecha (`flex-wrap`), con todo el ancho de la tarjeta, sin desplazamiento horizontal (R-38) y con el identificador entero (R-232).
+**R-253.** Si el identificador fiscal o el email no caben junto a su etiqueta, entonces el sistema deberá bajar el valor bajo la etiqueta, alineado a la derecha, con todo el ancho de la tarjeta, sin desplazamiento horizontal (R-38) y con el identificador entero (R-232).
 - Origen: Decisión 2026-11-25 #7 («Sin desbordar con identificador y email largos (R-38, R-232).»); Decisión 2026-11-25 #8 (Q-56 (b))
+- Modificado por la petición del autor en la vuelta corta de la puerta 3 rehecha tras la Decisión 2026-11-25 #7 (2026-11-25), anotado como consecuencia en el propio requisito, texto literal: «Choque R-253 frente a D-14: autorizo cambiar R-253 y C-260 solo para quitar la técnica «(flex-wrap)», porque el plan usa flotantes y el comportamiento es el mismo. Anótalo en la fila #10 de la sección 5 o como consecuencia en el propio requisito, con «Modificado por» y el texto anterior.» (antes: «Si el identificador fiscal o el email no caben junto a su etiqueta, entonces el sistema deberá bajar el valor bajo la etiqueta, alineado a la derecha (`flex-wrap`), con todo el ancho de la tarjeta, sin desplazamiento horizontal (R-38) y con el identificador entero (R-232).»).
 - Modificado por la Decisión 2026-11-25 #8 (antes: «Si el identificador fiscal o el email no caben junto a su etiqueta, entonces la fila deberá mostrarse como diga Q-56, sin desplazamiento horizontal (R-38) y con el identificador entero (R-232): PENDIENTE Q-56.»).
 
 #### Historial de simulaciones
