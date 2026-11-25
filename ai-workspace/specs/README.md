@@ -9,7 +9,7 @@ Si cambia el reparto, se actualiza esta tabla.
 | 001 | `pricing-tiers` | §2.A: cálculo por tramos, `packages/pricing` | 000 | Cerrada |
 | 002 | `customers-create` | §2.A: `POST /customers` y validación del identificador fiscal | 000 | Cerrada |
 | 003 | `simulations-create` | §2.A: `POST /simulations`, IVA y redondeo | 001, 002 | Cerrada |
-| 004 | `customers` | §2.B: lectura de clientes, buscador, dashboard, tarjetas de detalle e historial de simulaciones; los endpoints de lectura siguen siendo la ambigüedad #8, en "Dudas abiertas" | 002, 003, 005 | En implementación |
+| 004 | `customers` | §2.B: lectura de clientes, buscador, dashboard, tarjetas de detalle e historial de simulaciones; los endpoints de lectura siguen siendo la ambigüedad #8, en "Dudas abiertas" | 002, 003, 005 | Cerrada |
 | 005 | `simulator` | §2.B: tipos de cambio, selector de divisa y formulario de simulación interactiva | 001, 003 | Cerrada |
 | 006 | `simulator-ui` | §2.B: formulario de simulación interactiva | 001, 005 | Fusionada en 005 (ADR-016) |
 | 007 | `customers-ui` | §2.B: buscador, dashboard, tarjetas e historial | 004, 005 | Fusionada en 004 (ADR-016) |

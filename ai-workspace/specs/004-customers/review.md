@@ -750,3 +750,252 @@ No hay ningún hallazgo Bloqueante. H-42 es Importante: R-264 recorta el importe
 Aprobación del autor 2026-11-25, puerta 2 rehecha tras la Decisión 2026-11-25 #7, tras la ronda 6 y la vuelta corta de la Decisión 2026-11-25 #10, texto literal:
 
 > Apruebo la puerta 2. Acepto como reservas: H-42 (con R-103, R-104, C-238, C-239 y el principio 7), H-46 (2.4.5, con el motivo que ya consta en R-235) y, como Menores, los cinco puntos que señala el planner (citas a C-64 que la puerta 3 pasa a C-246; R-265 sin «Sin simulaciones»; C-238 y C-239 sin R-265; «ningún enlace activo en /»; R-265 compuesto). Siguen abiertas H-04, H-10, H-14, H-15, H-21, H-36, H-37, H-38, H-40 y H-41. Descarto la captura. Añade la aprobación literal al final de review.md y pasa el Estado a Aprobada en spec.md y en el README de specs.
+
+## Ronda 7 (2026-11-25) · Veredicto: Cambios requeridos
+
+**Alcance:** T-19 y T-20, commits `be2c892` y `308d001` sobre `1a7cb8c`. La ronda se limita a lo que cambian las Decisiones 2026-11-25 #7 a #10.
+
+He leído:
+- de `spec.md`: `:1-84`; `:903-1034` (R-233 a R-265); los requisitos modificados por la #7 y la #8, por Grep (R-37, R-38, R-39, R-55, R-59, R-64, R-69 a R-71, R-101, R-102, R-106, R-109, R-119, R-142, R-146 a R-148, R-169, R-178 a R-180, R-204 a R-206, R-209, R-215, R-231); `:1069`, `:1147` y `:1318-1355` (C-235 a C-272);
+- de `plan.md`: `:286-455` (D-13, D-14, D-16), `:470-547` (secciones 5 y 6), `:584-589` (pasos 18 y 19) y `:591-627` (riesgos);
+- de `tasks.md`: `:1-34` y `:418-498`;
+- de `review.md`: `:416-417` y `:538-753`;
+- la fila 004 de `specs/README.md`;
+- el código final: `app.html`, `app.spec.ts:240-279`, `_shared.scss`, `_customers.scss` y `themes/_tokens.scss`;
+- las plantillas, para comprobar los `:nth-of-type`: `customer-card.html`, `simulation-history.html`, `customer-detail-page.html` y `customers-page.html`;
+- `customer-card.spec.ts:50-79` y `simulation-history.spec.ts:55-84`;
+- el diff `diff-t19-t20-apps.diff`;
+- los registros `sessions/2026-11-25-20-…` y `-21-…`;
+- los ocho `report.json` de Lighthouse del scratchpad: categoría `accessibility`, `finalDisplayedUrl`, `fetchTime` y `formFactor`;
+- `templates/review.md` y `frontend-conventions/checklist.md`.
+
+La checklist del backend no aplica, porque no se toca `apps/api`.
+
+No abro como hallazgo nuevo:
+- las reservas que el autor ya ha aceptado: H-04, H-10, H-14, H-15, H-21, H-36 a H-38, H-40 a H-42, H-46 y los cinco Menores de la ronda 6;
+- las tres de la T-20: el riesgo 24 (C-260), Firefox (Q-07 y C-238) y la observación del historial a 320 px.
+
+### Hallazgos
+| ID | Gravedad | Archivo:línea | Requisito o regla | Hallazgo |
+|---|---|---|---|---|
+| H-48 | Bloqueante | ai-workspace/specs/004-customers/spec.md:580, :589; ai-workspace/specs/004-customers/tasks.md:486; ai-workspace/screenshots/fase-7-004-p6-lighthouse-*.png (8); ai-workspace/sessions/2026-11-25-15-004-customers.md:197-204 | R-71 y R-148 («El informe de cada auditoría de R-69 y R-70 [R-146 y R-147] deberá guardarse como captura en `ai-workspace/screenshots/`») | **Las auditorías del CSS final no tienen captura en el repositorio.**<br>Las ocho capturas de `screenshots/` son de la sesión 15, anteriores a `be2c892` y `308d001`. La ronda 4 (`review.md:433`) las fecha a las 16:18. Las de hoy (`fetchTime` de 21:17Z a 21:18Z en los ocho `report.json`) solo están en el scratchpad, que es temporal. La T-20 las pedía «con captura» (`tasks.md:486`).<br>El encargo lo atribuye a «Descarto la captura». Esa frase tiene dos lecturas: el aviso `CAPTURA:` de la elección del alcance o los informes de Lighthouse. En las dos, R-71 y R-148 no se cumplen para las auditorías que validan R-69, R-70, R-146 y R-147 tras la #7.<br>Lo que dice el autor en el chat choca con dos requisitos de la spec, que no ha cambiado ninguna `Decisión`. No lo resuelvo: o se guardan las capturas, o se cambian los requisitos. Lo decide el autor. |
+| H-49 | Importante | ai-workspace/specs/004-customers/tasks.md:32, :450, :486; ai-workspace/specs/004-customers/plan.md:489, :494-496, :509-519, :505 | `tasks.md:32` (regla «Comprobación manual»: «lo comprueba el revisor o el autor en la puerta 6»); plan, sección 5; `frontend-conventions/checklist.md:30-31` (teclado y foco; móvil) | **Los casos de la #7 que solo se ven en el navegador no tienen evidencia en esta puerta.** Es el alcance (a) del autor.<br>Leyendo el código, todas las reglas pedidas están (ver «Comprobación 1»). Pero no está visto:<br>(1) R-38 / C-38 a 320 px en el buscador, el simulador y «Estado de la API». Solo está medido el detalle del cliente 4 (`tasks.md:489`).<br>(2) La geometría de la cabecera: C-55 (posición), C-183 a C-185, C-236, C-240 y C-241 a 320, 767, 768 y 1280 px.<br>(3) Teclado: C-243 (Tab: selector y después enlaces), C-242 (árbol de accesibilidad y Tab) y R-68.<br>(4) C-271 y C-211 a 768, 1024 y 1600 px y en USD. El riesgo 32 solo se midió a 320 y 1280 px (`tasks.md:491`).<br>(5) C-257, C-259 y C-263 a C-265 con sus medidas.<br>(6) C-262 y C-268, árbol de accesibilidad de lo oculto del historial (riesgos 30 y 31).<br>(7) C-272.<br>(8) C-239 con el CSS final. La reserva de Firefox no la cubre: C-239 se hace en DevTools (`plan.md:505`), y la medida de la ronda 5 es del CSS anterior.<br>(9) El riesgo 27 está visto «a ojo» en una captura del scratchpad (`t20-detalle-320.png`), fuera del repositorio.<br>No hay evidencia de fallo, así que no es Bloqueante. El autor decide si se hacen o si acepta como reserva cada grupo, nombrándolo. |
+| H-50 | Menor | ai-workspace/specs/004-customers/spec.md:1034, :1027-1030 | sdd (lo modificado conserva su texto anterior en su requisito); trazabilidad | Bajo R-265 hay una línea «Modificado por la Decisión 2026-11-25 #8 (antes: «Si la etiqueta «Última simulación» y su importe… como diga Q-48… PENDIENTE Q-48.»)». Ese texto anterior es el de R-264, no el de R-265, que nació con la #10 y la #8 no pudo modificar. R-264 se queda sin su «Modificado por» y R-265 cita una modificación que no tuvo. Parece un error al insertar R-265 en la vuelta de la #10, que ya no pasó por el revisor. |
+| H-51 | Menor | ai-workspace/specs/004-customers/spec.md:987; ai-workspace/specs/004-customers/tasks.md:9; ai-workspace/sessions/2026-11-25-20-004-customers.md:17 | sdd, «Cambio de requisitos (transversal)»: «línea `Decisión AAAA-MM-DD #n` en la spec» | R-253 cambia su texto (quita «(`flex-wrap`)») por «petición del autor», sin número de decisión. El origen sigue citando la #7 y la #8, pero el cambio no tiene su línea `Decisión` en la sección 5. El autor ya dijo que, si el revisor lo marca, lo acepta como reserva Menor. Lo marco para que la aprobación de cierre lo nombre. |
+| H-52 | Menor | apps/web/src/app/customers/components/customer-card/customer-card.spec.ts:74, :55; apps/web/src/app/customers/components/simulation-history/simulation-history.spec.ts:61; ai-workspace/specs/004-customers/plan.md:450, :627 | R-238 frente a R-101, R-106, R-109, R-119 y R-263; riesgo 33 | **Riesgo 33, confirmado.**<br>`customer-card.spec.ts:74` («C-119: el plan %s se muestra tal cual») mira el texto del segundo `li` (`:76`), que sigue en el DOM pero ya no se ve (R-263, `_customers.scss:196-198`).<br>`simulation-history.spec.ts:61` («… muestra usuarios, fecha, coste base, IVA y total con sus etiquetas») mira `textContent` de lo que R-261 oculta (`_customers.scss:64-74`).<br>Hay un tercer título igual que el riesgo 33 y la D-16 no nombran: `customer-card.spec.ts:55` («C-101: muestra el nombre, el identificador fiscal, el país y el plan»), con `toEqual(['España', 'business'])` en `:60`. Desde la #7, R-101 dice que el plan «sigue en el DOM de la tarjeta, sin mostrarse».<br>Los tres pasan y R-238 no deja tocarlos. Cambiarlos exige un cambio de requisitos, y lo decide el autor. |
+| H-53 | Menor | ai-workspace/specs/004-customers/tasks.md:439, :452; ai-workspace/sessions/2026-11-25-20-004-customers.md:84-106 | Casilla de la fase roja de la T-19 («fallan justo sus dos aserciones de orden (`:266` y `:267`)») | La casilla está en `[x]`, pero la salida literal solo enseña en rojo `:266` (`AssertionError … app.spec.ts:266:88`). `:267` no llega a ejecutarse, y la propia observación de `tasks.md:452` lo reconoce. Que `header.firstElementChild` fallaría con `app.html` como en `HEAD` (sería el `<nav>`) se puede deducir, pero no está visto en rojo. La casilla afirma más de lo que prueba la evidencia. |
+| H-54 | Menor | ai-workspace/specs/004-customers/tasks.md:497, frente a :455 | sdd, regla 5 (aprobación explícita) | Las desviaciones 1 a 8 de la T-20 constan como «presentadas al autor antes del cierre, sin que las nombre en su aprobación». La aprobación literal («Cierra la T-20 con esa desviación…») habla en singular de la del riesgo 24. En la T-19 el autor sí escribió «Acepto las dos desviaciones» (`:455`). He contrastado las ocho con la D-14 en el código y ninguna contradice el plan. Por ejemplo, `margin: 0` en `.customer-card__last` (`_customers.scss:205`) hace falta con la rejilla (`plan.md:400`). Aun así, su aceptación no está escrita. |
+
+### Checklists
+
+**Comprobación 1: código de la T-19 y la T-20 frente a R-233 a R-265 y los requisitos modificados, y ficheros permitidos**
+
+| Requisito o caso | Resultado | Nota |
+|---|---|---|
+| R-236, R-237, C-243 (plantilla) y C-244 | Cumple | Diff de `app.html` (`diff:5-18`): solo el bloque `@if` pasa, sin cambiar ni una letra, delante del `<nav>` (`app.html:3-5`). `git diff --stat 1a7cb8c..HEAD` de `apps/` toca solo `app.html`, `app.spec.ts`, `_customers.scss`, `_shared.scss` y `_tokens.scss`, que es la lista de la D-16 (`plan.md:446-450`) y de `tasks.md:25`. |
+| R-238 y C-245 | Cumple | Diff de `app.spec.ts` (`diff:26-47`): solo cambian el comentario de `:255`, el título, el comentario de `:265` (con «spec 004: Decisión 2026-11-25 #7») y `:266-267`, con los literales de `plan.md:291-295`. Ningún otro `.spec.ts` cambia. La fase roja tiene la matización de H-53. |
+| R-233, R-240 y C-247 | Cumple en el código | `min-height: var(--header-min-height)` (`_shared.scss:33`) y el token `70px` (`_tokens.scss:62`). La caja es `border-box` por `.app-container` (`:24`). La medida de C-240 está en H-49. |
+| R-234 | Cumple en el código | Por debajo de 48 rem, `column` con `justify-content: center` (`:30-32`); desde 48 rem, `row` con `align-items: center` (`:43-45`). No queda ningún `last baseline` en `_shared.scss`. C-241 medido: H-49. |
+| R-55, R-178 a R-180 y R-231 | Cumple en el código | El `<nav>` lleva `margin-inline-start: auto` desde 48 rem (`:60`), `flex-wrap` y `flex-end` (`:52-53`). El selector va con `align-self: flex-start` y `min(100%, 18rem)` (`:111-112`). Las medidas de C-55 (posición), C-183 a C-185 y C-236 están en H-49. |
+| R-235 y R-59 | Cumple en el código | `[data-label='Estado de la API'] { display: none; }` (`_shared.scss:105-107`). El enlace sigue en el DOM (`app.html:7`). La especificidad (0,2,0) gana a `display: inline-flex` (`:65`). C-242: H-49. Reserva H-46. |
+| R-142 | Cumple | Los tests de C-47 no cambian. 324 tests en verde. |
+| R-239 y C-246 | Cumple | Los seis tokens están en `_tokens.scss:62-67` y se leen con `var(--…)` en `_shared.scss:33` y `_customers.scss:10-12`, `:107-108` y `:240-241`. En los dos parciales que he leído no hay `70px`, `12px`, `0.08em`, `2px 8px` ni `24px` sueltos. |
+| R-241 a R-243 y C-248 a C-250 | Cumple en el código | `_customers.scss:7-14`. Contraste de `#666666` sobre `#eef0f6`, recalculado: (0,8715 + 0,05) / (0,1329 + 0,05) ≈ 5,04:1, que pasa del 4,5:1. Lighthouse no da fallos de `color-contrast` (accesibilidad 100). |
+| R-244 y C-251 | Cumple | `_simulations.scss` no está en el `--stat`. `--font-size-eyebrow: 14px` sigue igual (`_tokens.scss:17`). |
+| R-245 y C-252 | Cumple | `style-guide.md` no está en el `--stat` de los dos commits (12 ficheros). |
+| R-246 a R-248 y C-253 a C-255 | Cumple en el código | `border-radius: var(--radius-md)` y `box-shadow: var(--shadow-card)` en `.customer-card` (`:107-108`) y en `.customer-detail-page__card` (`:240-241`). El diff no toca la regla del énfasis (`:123-131`). |
+| R-249 y C-256 | Cumple | `text-transform: uppercase` (`:266`). |
+| R-250 a R-252, C-257 y C-259 | Cumple en el código | Etiqueta flotante (`:277-288`), valor a la derecha en 700 (`:291-304`) y línea solo en `:not(:first-of-type)`. La medida está en H-49. |
+| R-253 y C-260 | No cumple (reserva aceptada) | Medido: el valor se parte junto a su etiqueta (`tasks.md:489`). Reserva del autor (`tasks.md:493`). |
+| R-232 y C-237 | Cumple (medida parcial) | Identificador entero en 3 líneas a 320 px, sin desplazamiento (`tasks.md:489`). |
+| R-254, R-255, C-261 y C-262 (regla) | Cumple en el código | `::after { content: ' usuarios ·'; }` sin `/ ''` (`:328-330`), en el `dd` 1 (`simulation-history.html:10`). Árbol de accesibilidad: H-49. |
+| R-256, R-257, R-265, C-263, C-264 y C-272 | Cumple en el código | El `dd` 5 lleva `margin-inline-start: auto`, `flex: none`, `nowrap` y 700, sin `overflow` (`:333-339`). Los `dd` 1 y 2, `0 1 auto` con `anywhere` (`:315-325`). Sin desplazamiento en el detalle a 320 px (`tasks.md:489`). «Partido a trozos»: observación aceptada (`tasks.md:495`). |
+| R-258 y C-265 | Cumple | `:348-352`. |
+| R-261, R-262, C-268 y C-269 | Cumple en el código | Se añaden `.simulation-history__term` y `__value:nth-of-type(3)` y `(4)` al selector de R-165 (`:64-74`), sin `display: none`. Los índices cuadran con `simulation-history.html:10-18`: los `dd` 3 y 4 son el coste base y el IVA. La plantilla no cambia. Árbol de accesibilidad: H-49. |
+| R-37 y C-37 | Cumple en el código | `.simulation-history__list` no cambia (`:342-345`). Riesgo 27, visto a ojo: H-49 (9). |
+| R-106 y R-109 | Cumple en el código | Por R-261. |
+| R-263, R-101, R-102, R-169, R-215, C-270 y C-220 | Cumple en el código | `.customer-card__pill:nth-of-type(2) { display: none; }` (`:196-198`) sobre `customer-card.html:7`. La píldora visible va en blanco con el énfasis (`:128-130`). Los títulos de los tests, en H-52. |
+| R-209 y C-214 | Cumple en el código | Rejilla `minmax(0, 1fr) auto`: el identificador en la columna 1 y las píldoras en la 2 (`:113`, `:163-183`). |
+| R-204 a R-206, R-264, C-209 a C-211 y C-271 | Cumple en el código | La fila va en `row`, con `space-between` y `nowrap` (`:202-233`), y las dos partes con `flex: 0 1 auto`: encogen en proporción a su ancho. Fila fija de una línea, con `align-self: end` en `1fr` (`:114`, `:204`). Riesgo 32 a 320 y 1280 px (`tasks.md:491`); los otros anchos, en H-49. D1 y D2 de R-204 quedan resueltas en el código. Reserva H-42. |
+| R-119 | Cumple | El detalle sigue mostrando el plan (`customer-detail-page.html:39-40`) y los tests no cambian. |
+| R-38 | Sin evidencia completa | Solo está medido el detalle a 320 px: H-49 (1). |
+| R-68 | Cumple en el código | No hay reglas de `outline` en el diff. Tab: H-49 (3). |
+| R-69, R-70, R-146 y R-147 | Cumple | Los ocho `report.json` dan `"id": "accessibility"` con `"score": 1`, por ejemplo `customers-mobile/report.json:2648-2649` y `detail-mobile/report.json:2607-2608`. Las URL son `/customers`, `/customers/4`, `/simulator` y `/`, en `mobile` y `desktop`. Son posteriores al `verify` de las 21:14Z. |
+| R-71 y R-148 | No cumple | H-48. |
+
+**Comprobación 2: `Estado:` y `tasks.md:16`**
+
+| Comprobación | Resultado | Nota |
+|---|---|---|
+| `Estado:` coincide con el trabajo real | Cumple | `En revisión` (`spec.md:3`) y la fila 004 de `specs/README.md:12`, con el mismo texto. Las veinte tareas están en `[x]` (`tasks.md:425`, `:461`), y la puerta 6 está en curso. No está en commit. |
+| `tasks.md:16` dice el estado real | Cumple | Dice «T-19 y T-20, en `[x]`», igual que `:425` y `:461`. Las casillas de los riesgos 24, 27 y 32 de la T-20 (`:483`) están en `[x]` aunque el 24 falla y Firefox no se miró. Así lo decidió el autor («la casilla se marca con lo medido en Chrome»): no lo abro. |
+| Tareas de más de 5 archivos con `Excepción de tamaño:` | No aplica | La T-19 tiene 3 archivos y la T-20, 2 (`tasks.md:14`, `:428`, `:464`), y el diff lo confirma. |
+| Tests y build en verde, según la salida literal | Cumple | 36 ficheros y 913 tests `passed` en la raíz; 18 ficheros y 324 tests `passed` en la web. `ng build` termina, con el aviso de presupuesto (725.16 kB) ya aceptado en la T-14. |
+| Ficheros del `git status` y del `--stat` = los del alcance | Cumple | En `apps/`, solo los de la T-19 y la T-20. En el árbol, `spec.md:3`, el README, `tasks.md:16` y el registro de la sesión 22: documentación de esta puerta. |
+
+**Comprobación 3: riesgo 33.** Confirmado, y con un tercer título (`customer-card.spec.ts:55`): H-52.
+
+**Lista de revisión del frontend (`frontend-conventions/checklist.md`), sobre lo cambiado**
+
+| Casilla | Resultado | Nota |
+|---|---|---|
+| Carpetas por funcionalidad; página o componente = carpeta con `.ts`, `.html` y `.spec.ts` | No aplica | No hay ficheros nuevos. |
+| Ninguna funcionalidad importa otra ni `apps/api` | No aplica | No cambia ningún `import`. |
+| `app.*` solo importa páginas y `shared` | Cumple | `app.html` solo mueve marcado; `app.ts` no cambia. |
+| `shared/` solo con lo que usan dos funcionalidades | No aplica | Sin cambios. |
+| Kebab-case y sin sufijos; idioma | Cumple | Tokens y clases en inglés; comentarios en español. |
+| Un concepto por archivo; ningún archivo masivo | Cumple | `_customers.scss` (357 líneas) sigue siendo el parcial de una funcionalidad. |
+| Páginas inyectan; componentes presentacionales | No aplica | Ningún `.ts` cambia. |
+| `HttpClient` solo en `services/` | No aplica | — |
+| `@Injectable({providedIn: 'root'})` e `inject()` | No aplica | — |
+| Sin lógica de negocio ni de tramos en páginas | No aplica | — |
+| Carga, error y vacío | No aplica | Ninguna plantilla cambia; el vacío del historial (`:354-356`) sigue visible. |
+| El buscador cancela la anterior | No aplica | — |
+| Error en español visible | No aplica | — |
+| Tipos de cambio por Zod | No aplica | — |
+| API propia tipada, sin `any` | No aplica | Que no tenga Zod no es hallazgo (ADR-013). |
+| Sin `.scss` ni `styles` en componentes | Cumple | Todo está en `src/scss/`. |
+| Colores y medidas con tokens | Cumple | Lo nuevo va con `var(--…)`. Los `font-weight: 700` literales (`:301`, `:337`) siguen el patrón de la reserva H-37. |
+| Clases con prefijo | Cumple | `.customer-card__…`, `.customer-detail-page__…`, `.simulation-history__…` y `.app-header__…`. |
+| Teclado y foco visible | Sin evidencia | En el código, el orden del DOM coincide con el visual (R-236), el enlace oculto queda fuera del foco por `display: none` y no hay `outline`. Tab no se ha probado: H-49 (3). |
+| Etiquetas, contraste y móvil | Cumple en parte | Contraste calculado y confirmado por Lighthouse. Móvil: solo el detalle a 320 px (H-49). R-253 es reserva. |
+| Lighthouse sin fallos sin justificar | Cumple | Accesibilidad 100 en los ocho informes. SEO 90 por `meta-description` (justificado por el autor en la 005). `cumulative-layout-shift` 0,05 en el detalle en móvil es de rendimiento, no de accesibilidad. Las capturas, en H-48. |
+| Carga y error con `role="status"` y `role="alert"` | No aplica | Sin cambios. |
+| Reactive Forms tipados con `toSignal` | No aplica | — |
+| Cada campo con etiqueta y error | No aplica | — |
+| Angular 22 (sin `standalone`, `ngClass`…) | No aplica | Solo se mueve un `@if` que ya existía. |
+| Sin zone.js | No aplica | — |
+| Control flow nativo con `track` | No aplica | — |
+| Señales y `computed()` | No aplica | — |
+| Manejadores con nombre de acción; `protected` y `readonly` | No aplica | — |
+| Importes enteros; la conversión solo afecta a lo que se muestra | No aplica | El recorte de R-264 es visual; el importe entero sigue en el DOM y en el historial (R-265). |
+| Conversión en una única función pura | No aplica | — |
+| Sin `httpResource` | No aplica | — |
+| Test de cada componente, página y servicio | No aplica | No hay piezas nuevas. Los títulos que quedan atrasados, en H-52. |
+| Sin repetir los límites de los tramos | No aplica | — |
+| Ningún test en rojo ni desactivado | Cumple | 913 + 324 en verde. El diff de `app.spec.ts` no tiene `skip`, `todo` ni `expect` comentado. |
+| Cada cambio cubre un `R-nn` | Cumple | Cada regla nueva cita sus requisitos con «spec 004:» (por ejemplo `_customers.scss:195`, `:200-201`, `:327`; `_shared.scss:104`). |
+
+**Lista de revisión del backend (`backend-conventions/checklist.md`):** no aplica, porque no se toca `apps/api`.
+
+### Seguimiento de la ronda anterior
+
+| ID | Estado | Nota |
+|---|---|---|
+| H-04, H-10, H-15 | Abierto (reserva aceptada por el autor) | Lo cambiado no les afecta. |
+| H-14 | Abierto (reserva aceptada por el autor) | Sin requisitos compuestos nuevos en esta vuelta. |
+| H-21 | Abierto (reserva aceptada por el autor) | — |
+| H-29 | Resuelto (ronda 6) | Con R-235 solo se ven dos enlaces. La geometría de C-184 con el CSS final está en H-49 (2). |
+| H-33 | Resuelto | Con el CSS nuevo, la fila va siempre en una línea y al pie, en una tarjeta de alto fijo por fila (`:114`, `:204`, `:221`). Por construcción, las separadoras quedan alineadas. Solo está medido a 320 y 1280 px (`tasks.md:491`); 768 y 1024 px, donde falló antes, en H-49 (4). |
+| H-36 | Abierto (reserva aceptada por el autor) | `_tokens.scss:62-67` siguen el patrón de `:51-59`: requisito sin «spec 004:» en cada línea, con «spec 004:» en la cabecera del bloque (`:61`). |
+| H-37 | Abierto (reserva aceptada por el autor) | — |
+| H-38 | Abierto (reserva aceptada por el autor) | La sección 1 de `spec.md` sigue sin los ajustes del ADR-016 de las puertas 3 a 6 rehechas tras la #7. |
+| H-40 | Abierto (reserva aceptada por el autor) | Esta vez el cambio siguió el método (`/sdd-change`, puertas 1 a 4 rehechas y tareas nuevas). |
+| H-41 | Abierto (reserva aceptada por el autor) | C-238 sigue sin repetirse con el CSS final: reserva de Firefox de la T-20 (`tasks.md:494`), que cubre también el riesgo 28. |
+| H-42 | Abierto (reserva aceptada por el autor) | El código aplica R-264 tal cual y deja el total entero en el historial (R-265). |
+| H-43 | Resuelto | Excepción de `app.spec.ts` en R-237 (`spec.md:923`) y en C-244 (`:1327`). |
+| H-44 | Resuelto | R-234 (`:912`) y C-241 (`:1324`) dicen cómo se centra por debajo de 48 rem. |
+| H-45 | Resuelto | R-39 anotado (`:310`) y nota sobre fuentes (`:43`). |
+| H-46 | Abierto (reserva aceptada por el autor) | Aplicado en `_shared.scss:105-107`, con el motivo en R-235. |
+| H-47 | Resuelto | (1) C-255 en singular (`:1338`); (2) C-64 vuelve a su texto (`:1147`); (3) `:20`, `:21` y `:1069` nombran título y comentarios; (4) R-180 (`:696-698`) y R-231 (`:704-706`) van en orden cronológico. |
+| Cinco Menores de la ronda 6 | Abierto (reserva aceptada por el autor) | Sin cambios: C-64 sigue citado en `spec.md:905` y `:935`; R-265 no nombra «Sin simulaciones»; C-238 y C-239 no incluyen R-265; no hay caso de «ningún enlace activo en `/`»; R-265 sigue compuesto. |
+| D1 y D2 de R-204 | Resuelto | Fila en una línea con el importe a la derecha (`_customers.scss:206-209`). |
+| Reservas de la T-20 (riesgo 24 / C-260, Firefox de la Q-07 y C-238, historial a 320 px) | Abierto (aceptadas por el autor en la T-20) | Constan con su motivo literal (`tasks.md:493-495`). La aprobación de cierre tendrá que nombrarlas. |
+
+H-48 es Bloqueante: R-71 y R-148 no se cumplen para las auditorías del CSS final. Las ocho capturas que hay son anteriores a la T-19 y la T-20, y las de hoy solo están en el scratchpad. El choque entre «Descarto la captura» y esos dos requisitos lo decide el autor: o capturas, o cambio de requisitos.
+
+H-49 es Importante: los casos de navegador de la #7 no tienen evidencia, salvo lo medido en la T-20. El código, leído regla a regla, cumple lo que esos casos esperan.
+
+H-50 a H-54 son Menores. H-51 ya lo tiene aceptado de antemano el autor.
+
+Siguen abiertas, como reservas aceptadas, H-04, H-10, H-14, H-15, H-21, H-36 a H-38, H-40 a H-42, H-46, los cinco Menores de la ronda 6 y las tres reservas de la T-20.
+
+## Ronda 8 (2026-11-25) · Veredicto: Conforme con reservas
+
+**Alcance:** solo H-48 de la ronda 7, a petición del autor. No hay código nuevo ni commits nuevos. Se revisan las ocho capturas `fase-7-004-p6-lighthouse-final-<vista>-<dispositivo>.png`, todavía sin commit, frente a R-69 a R-71 y R-146 a R-148.
+
+He leído:
+- de `spec.md`: `:1-4` y `:574-590` (R-69 a R-71 y R-146 a R-148);
+- de `review.md`: la ronda 7 (`:754-911`);
+- las ocho capturas nuevas, como imagen;
+- de los ocho `report.json` del scratchpad (`lh/<vista>-<dispositivo>/`): `lighthouseVersion`, `finalDisplayedUrl`, `fetchTime`, `formFactor`, `throttling` y `screenEmulation`;
+- la fila 004 de `specs/README.md:12`;
+- `verify-clean.txt` (`:70-71` y `:90-91`);
+- `templates/review.md`.
+
+No reabro H-49 a H-54 ni ninguna otra reserva aceptada.
+
+### Hallazgos
+| ID | Gravedad | Archivo:línea | Requisito o regla | Hallazgo |
+|---|---|---|---|---|
+| — | — | — | — | Ninguno nuevo. |
+
+### Checklists
+
+**Comprobación 1: cada captura nueva frente a su informe**
+
+En cada captura he mirado la URL de la barra superior, la puntuación de Accessibility, el dispositivo del pie y la hora del pie. Luego las he comparado con el `report.json` de su carpeta.
+
+| Captura | URL en la captura | Accessibility | Pie: dispositivo · hora | `report.json`: `finalDisplayedUrl` · `formFactor` · `fetchTime` | Resultado |
+|---|---|---|---|---|---|
+| `final-clientes-movil` | `http://localhost:4300/customers` | 100 | Emulated Moto G Power · 10:17 PM GMT+1 | `/customers` · `mobile` · 21:17:37Z | Cumple |
+| `final-clientes-escritorio` | `http://localhost:4300/customers` | 100 | Emulated Desktop · 10:17 PM GMT+1 | `/customers` · `desktop` · 21:17:48Z | Cumple |
+| `final-detalle-movil` | `http://localhost:4300/customers/4` | 100 | Emulated Moto G Power · 10:17 PM GMT+1 | `/customers/4` · `mobile` · 21:17:58Z | Cumple |
+| `final-detalle-escritorio` | `http://localhost:4300/customers/4` | 100 | Emulated Desktop · 10:18 PM GMT+1 | `/customers/4` · `desktop` · 21:18:04Z | Cumple |
+| `final-simulador-movil` | `http://localhost:4300/simulator` | 100 | Emulated Moto G Power · 10:18 PM GMT+1 | `/simulator` · `mobile` · 21:18:14Z | Cumple |
+| `final-simulador-escritorio` | `http://localhost:4300/simulator` | 100 | Emulated Desktop · 10:18 PM GMT+1 | `/simulator` · `desktop` · 21:18:21Z | Cumple |
+| `final-estado-api-movil` | `http://localhost:4300/` | 100 | Emulated Moto G Power · 10:18 PM GMT+1 | `/` · `mobile` · 21:18:32Z | Cumple |
+| `final-estado-api-escritorio` | `http://localhost:4300/` | 100 | Emulated Desktop · 10:18 PM GMT+1 | `/` · `desktop` · 21:18:38Z | Cumple |
+
+Más datos que cuadran:
+- **Versión:** todas las capturas dicen Lighthouse 13.6.0 en el pie, igual que `lighthouseVersion` de los ocho `report.json`.
+- **«Passed audits» de accesibilidad:** cuadran entre móvil y escritorio de cada vista: 24 en clientes, 23 en el detalle, 22 en el simulador y 17 en «Estado de la API».
+- **Hora:** la del pie (GMT+1) es la misma que el `fetchTime` (Z) de su informe. Es posterior a `308d001` y al `verify` de la ronda 7.
+
+**Observación sin hallazgo.** El pie de las cuatro de escritorio dice «Slow 4G throttling». Cuadra con el informe: por ejemplo, `customers-desktop/report.json:2220-2228` lleva `rttMs: 150`, `cpuSlowdownMultiplier: 4` y `throttlingMethod: "simulate"`. Pero la emulación sí es de escritorio: `formFactor: "desktop"` y `screenEmulation` con `mobile: false`, 1350×940 (`:2219`, `:2229-2235`). R-70 y R-147 piden «modo escritorio», y la limitación de red y CPU no cambia la categoría de accesibilidad. Por eso no lo abro como hallazgo; lo dejo anotado por si el autor quiere que conste.
+
+**Comprobación 2: requisitos**
+
+| Requisito | Resultado | Nota |
+|---|---|---|
+| R-69 y R-70 | Cumple | Clientes y detalle, 100 en móvil y en escritorio, con las capturas de la comprobación 1. Ya lo estaba por los `report.json` (ronda 7). |
+| R-146 y R-147 | Cumple | Simulador y «Estado de la API», 100 en móvil y en escritorio. |
+| R-71 | Cumple | Las cuatro auditorías de R-69 y R-70 hechas con el CSS final tienen su captura en `ai-workspace/screenshots/`. |
+| R-148 | Cumple | Lo mismo para las cuatro de R-146 y R-147. |
+| Capturas de la sesión 15 sin tocar | Cumple | Las ocho `fase-7-004-p6-lighthouse-<vista>-<dispositivo>.png` siguen en el directorio. En el `git status` del encargo no salen como modificadas: solo las ocho `final-` salen como `??`. |
+
+**Comprobación 3: proceso**
+
+| Comprobación | Resultado | Nota |
+|---|---|---|
+| `Estado:` coincide con el trabajo real | Cumple | `spec.md:3` y `specs/README.md:12` dicen `En revisión`. Tras `Cambios requeridos` en la ronda 7, esta ronda nueva devuelve la spec a esa puerta (sdd, «Estados»). Sin commit. |
+| Tests y build en verde, según la salida literal | Cumple | `verify-clean.txt:70-71`: 36 ficheros y 913 tests `passed`. `:90-91`: 18 ficheros y 324 tests `passed`. Desde la ronda 7 no cambia ningún fichero de código: en el `git status` no hay nada de `apps/` ni de `packages/`. |
+| Ficheros del `git status` = los del alcance | Cumple | Las ocho capturas `final-`, más la documentación de la puerta: `review.md`, `spec.md:3`, `tasks.md`, `README.md` y el registro de la sesión 22. |
+| Tareas de más de 5 archivos con `Excepción de tamaño:` | No aplica | No hay tareas nuevas. |
+
+**Listas de revisión de backend y frontend:** no aplican, porque esta ronda no cambia código. Las de la ronda 7 siguen como estaban.
+
+### Seguimiento de la ronda anterior
+
+| ID | Estado | Nota |
+|---|---|---|
+| H-48 | Resuelto | El autor aclaró que «Descarto la captura» se refería solo al aviso `CAPTURA:` de la elección del alcance, así que ya no hay choque con R-71 y R-148. Las ocho capturas `final-` existen, cada una es el informe de su vista y dispositivo, con accesibilidad 100, y cuadran con su `report.json` (comprobación 1). |
+| H-49 | Abierto (reserva aceptada por el autor) | Grupos 1 a 9. Motivo del autor: el plazo de entrega y que los casos de navegador de la #7 no se han medido a mano. |
+| H-50, H-52, H-53, H-54 | Abierto (reserva aceptada por el autor) | Sin cambios. |
+| H-51 | Abierto (reserva aceptada por el autor) | Aceptada de antemano y nombrada en la aprobación de esta puerta. |
+| H-04, H-10, H-14, H-15, H-21, H-36 a H-38, H-40 a H-42, H-46, los cinco Menores de la ronda 6 y las tres reservas de la T-20 | Abierto (reservas aceptadas por el autor) | No se reabren. La aprobación de cierre tendrá que nombrarlas. |
+
+Ya no queda ningún Bloqueante: H-48 está resuelto. Siguen abiertas, como reservas aceptadas por el autor, H-49 (Importante) y H-50 a H-54 (Menores), además de las reservas anteriores de la lista. Para cerrar, la aprobación escrita del autor tiene que nombrar cada una (sdd, «Cierre de una spec», punto 2).
+
+## Aprobación del autor (ronda 8, 2026-11-25)
+Aprobación del autor 2026-11-25, puerta 6 (cierre de la spec 004-customers tras la Decisión 2026-11-25 #7), tras las rondas 7 y 8, texto literal:
+
+> Guarda la ronda 8 en review.md con los signos reales. Descarto la nota del Slow 4G y la captura de la ronda 8.
+>
+> Apruebo el cierre de la 004 con reservas, nombradas una a una:
+> - Abiertas de antes: H-04, H-10, H-14, H-15, H-21, H-36, H-37, H-38, H-40, H-41, H-42, H-46 y los cinco Menores de la ronda 6 (citas a C-64 en R-239 y spec.md:900; R-265 sin «Sin simulaciones»; C-238 y C-239 sin R-265; ningún enlace activo en «/» sin caso; R-265 compuesto).
+> - De la T-20, con mi motivo literal de tasks.md: el riesgo 24 frente a C-260, Firefox de la Q-07 y de C-238, y el historial a 320 px como observación.
+> - De la ronda 7: H-49 (Importante: los casos de navegador de la #7 sin medir a mano, grupos 1 a 9), H-50, H-51 (ya aceptada de antemano), H-52, H-53 y H-54. H-48 queda resuelto con las ocho capturas.
+> Motivo mío de las nuevas: el plazo de entrega es hoy a las 23:00 y no hay tiempo de medirlas a mano ni de rehacer las puertas 3 y 4.
+>
+> Copia esta aprobación literal al final de review.md, pasa el Estado a Cerrada en spec.md y en el README de specs, actualiza MEMORY.md y enséñame el diff.
