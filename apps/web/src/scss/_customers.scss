@@ -1,14 +1,16 @@
 // Estilos del buscador y del detalle de clientes (spec 004: R-26, R-32, R-38, R-39, R-102, R-165, R-169; D-14, D-17).
-// Retoques visuales (spec 004: R-195 a R-217, R-222, R-226, R-227, R-232; D-14).
+// Retoques visuales (spec 004: R-195 a R-217, R-222, R-226, R-227, R-232, R-241 a R-258, R-261 a R-265; D-14).
 // Sin reglas de `outline` (el contorno del navegador se mantiene, spec 004: R-68).
 @use 'themes/tokens';
 
-// Etiqueta sobre el título de las dos páginas: mismos tokens que el simulador (_simulations.scss:7-11).
+// Antetítulo de las dos páginas, en mayúsculas; se aparta de `style-guide.md:23` por la Decisión 2026-11-25 #7 (spec 004: R-241 a R-243, R-245; R-39 anotado).
 .customers-page__eyebrow,
 .customer-detail-page__eyebrow {
-  color: var(--color-brand);
-  font-size: var(--font-size-eyebrow);
-  font-weight: 500;
+  text-transform: uppercase;
+  font-size: var(--font-size-eyebrow-caps);
+  font-weight: var(--font-weight-eyebrow-caps);
+  letter-spacing: var(--letter-spacing-eyebrow-caps);
+  color: var(--color-muted);
 }
 
 // Eyebrow y título pegados (spec 004: R-207, R-208).
@@ -58,8 +60,11 @@
   flex: 1;
   min-width: 0;
 }
-// Anuncio de resultados: visualmente oculto, presente para los lectores de pantalla (spec 004: R-165).
-.customers-page__announcement {
+// Anuncio de resultados: visualmente oculto, presente para los lectores de pantalla (spec 004: R-165), y lo oculto del historial (spec 004: R-261, R-262).
+.customers-page__announcement,
+.simulation-history__term,
+.simulation-history__value:nth-of-type(3),
+.simulation-history__value:nth-of-type(4) {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -93,15 +98,22 @@
   }
 }
 
-// Tarjeta blanca, como `.card` de la guía (spec 004: R-39).
+// Tarjeta blanca, como `.card` de la guía (spec 004: R-39), con el radio y la sombra de la Decisión 2026-11-25 #7
+// (spec 004: R-246, R-247; R-39 anotado).
+// Rejilla: título y fila «Última simulación» a todo el ancho; identificador y píldora en la misma fila; la tercera
+// fila toma el alto que sobra y deja la de R-204 al pie (spec 004: R-206, R-209).
 .customer-card {
   background: var(--color-white);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
   padding: var(--space-lg);
   min-width: 0;
   flex: 1;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto 1fr;
+  column-gap: var(--space-sm);
+  row-gap: var(--space-sm);
   box-sizing: border-box;
   // Borde siempre presente y transparente: el énfasis no cambia el tamaño (spec 004: R-213, R-214).
   border: var(--border-width-subtle) solid transparent;
@@ -120,6 +132,7 @@
 
 // Nombre a 16 px / 30 px / 700 (spec 004: R-201).
 .customer-card__title {
+  grid-column: 1 / -1;
   margin: 0;
   min-width: 0;
   color: var(--color-ink);
@@ -148,6 +161,8 @@
 
 // Identificador en una línea con puntos suspensivos; el texto completo sigue en el DOM (spec 004: R-198, R-199, R-209).
 .customer-card__tax-id {
+  grid-column: 1;
+  align-self: center;
   margin: 0;
   min-width: 0;
   white-space: nowrap;
@@ -156,8 +171,11 @@
 }
 
 .customer-card__pills {
+  grid-column: 2;
+  align-self: center;
+  justify-self: end;
   list-style: none;
-  margin: var(--space-sm) 0;
+  margin: 0;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
@@ -174,36 +192,53 @@
   font-weight: 700;
 }
 
-// Fila «Última simulación» al pie de la tarjeta, alineada con las de su fila (spec 004: R-204 a R-206).
+// El plan no se ve y sigue en el DOM (spec 004: R-263).
+.customer-card__pill:nth-of-type(2) {
+  display: none;
+}
+
+// Fila «Última simulación» al pie de la tarjeta, alineada con las de su fila, en una sola línea: las dos partes se
+// recortan con puntos suspensivos en proporción a su ancho (spec 004: R-204 a R-206, R-264).
 .customer-card__last {
-  margin: auto 0 0;
+  grid-column: 1 / -1;
+  align-self: end;
+  margin: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
   gap: var(--space-sm);
+  min-width: 0;
   border-top: var(--border-width-subtle) solid var(--color-bg);
   padding-top: var(--space-sm);
 }
 
+.customer-card__term,
+.customer-card__amount {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .customer-card__term {
   color: var(--color-muted);
-  min-width: 0;
 }
 
 .customer-card__amount {
   margin: 0;
   font-weight: 700;
   color: var(--color-ink);
-  white-space: nowrap;
-  flex-shrink: 0;
-  min-width: 0;
 }
 
 // Detalle: tarjetas «Datos» e «Historial de simulaciones», como `.card` de la guía y como el simulador
-// (_simulations.scss:21-26) (spec 004: R-34, R-36, R-39, R-116).
+// (_simulations.scss:21-26) (spec 004: R-34, R-36, R-39, R-116), con el radio y la sombra de la Decisión 2026-11-25 #7
+// (spec 004: R-246, R-247; R-39 anotado).
 .customer-detail-page__card {
   background: var(--color-white);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
   padding: var(--space-lg);
   margin-bottom: var(--space-lg);
   min-width: 0;
@@ -224,35 +259,83 @@
   }
 }
 
+// Título de cada tarjeta del detalle en mayúsculas; el texto del DOM no cambia (spec 004: R-249).
 .customer-detail-page__card-title {
   margin: 0 0 var(--space-md);
   color: var(--color-ink);
+  text-transform: uppercase;
 }
 
-// Filas dt/dd del detalle y del historial con los tokens de espaciado que ya existen (spec 004: D-14).
-.customer-detail-page__details,
-.simulation-history__details {
+// Filas dt/dd del detalle y del historial con los tokens de espaciado que ya existen (spec 004: R-250 a R-258, R-261, R-262; D-14).
+// «Datos»: etiqueta flotante a la izquierda y valor a la derecha; si el valor no cabe a su lado, baja bajo la
+// etiqueta con todo el ancho (spec 004: R-250, R-253).
+.customer-detail-page__details {
   margin: 0;
+  display: flow-root;
 }
 
-.customer-detail-page__term,
-.simulation-history__term {
+.customer-detail-page__term {
   color: var(--color-muted);
-  margin-top: var(--space-sm);
+  float: left;
+  clear: left;
+  margin: 0 var(--space-sm) 0 0;
+  padding-block: var(--space-sm);
 
-  &:first-child {
-    margin-top: 0;
+  // Borde transparente: la etiqueta baja lo mismo que el valor con su línea (spec 004: C-257).
+  &:not(:first-of-type) {
+    border-top: var(--border-width-subtle) solid transparent;
   }
 }
 
 // Identificador y email largos (254 caracteres a 320 px) sin desplazamiento horizontal (spec 004: R-38).
-.customer-detail-page__value,
-.simulation-history__value {
+.customer-detail-page__value {
   margin: 0;
+  padding-block: var(--space-sm);
+  text-align: right;
   font-weight: 700;
   color: var(--color-ink);
   min-width: 0;
+  overflow-wrap: break-word;
+
+  // Línea entre filas, sin línea encima de la primera ni debajo de la última (spec 004: R-252).
+  &:not(:first-of-type) {
+    border-top: var(--border-width-subtle) solid var(--color-bg);
+  }
+}
+
+// Historial compacto: «N usuarios · fecha» a la izquierda y el total a la derecha, en la misma fila (spec 004: R-254 a R-257).
+.simulation-history__details {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  column-gap: var(--space-sm);
+}
+
+// Usuarios y fecha con el peso y el color del `body` (spec 004: P-09 (a)); se parten en líneas si no caben.
+.simulation-history__value {
+  margin: 0;
+  min-width: 0;
   overflow-wrap: anywhere;
+}
+
+.simulation-history__value:nth-of-type(1),
+.simulation-history__value:nth-of-type(2) {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+// « usuarios ·» sin texto alternativo: los lectores de pantalla lo leen tras el número (spec 004: R-254, R-255).
+.simulation-history__value:nth-of-type(1)::after {
+  content: ' usuarios ·';
+}
+
+// Total en negrita a la derecha, entero, sin recorte (spec 004: R-256, R-257, R-265).
+.simulation-history__value:nth-of-type(5) {
+  margin-inline-start: auto;
+  flex: none;
+  white-space: nowrap;
+  font-weight: 700;
+  color: var(--color-ink);
 }
 
 // Historial: cada simulación separada de la siguiente; el <ol> conserva su numeración (spec 004: R-37).
@@ -261,8 +344,11 @@
   padding-left: var(--space-md);
 }
 
+// Línea de 1 px entre simulaciones (spec 004: R-258).
 .simulation-history__item + .simulation-history__item {
-  margin-top: var(--space-md);
+  border-top: var(--border-width-subtle) solid var(--color-bg);
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
 }
 
 .simulation-history__empty {

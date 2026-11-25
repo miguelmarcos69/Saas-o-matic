@@ -60,6 +60,11 @@
 
   // Retoques de la Decisión 2026-11-25 #7 (spec 004: R-239, R-240; D-14)
   --header-min-height: 70px; // R-233, R-240
+  --font-size-eyebrow-caps: 12px; // R-242, R-240
+  --font-weight-eyebrow-caps: 700; // R-242
+  --letter-spacing-eyebrow-caps: 0.08em; // R-242
+  --radius-md: 24px; // R-246; style-guide.md:55 (también :35)
+  --shadow-card: 0 2px 8px color-mix(in srgb, var(--color-ink) 6%, transparent); // R-247; --color-ink al 6 %
 }
 
 // Umbral de las dos columnas y de la cabecera en fila (spec 004: R-179, R-216, R-218; 48 rem exactos, respuesta C de la Decisión 2026-11-25 #1).
