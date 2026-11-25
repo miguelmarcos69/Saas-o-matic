@@ -1,0 +1,23 @@
+<!-- Historial de simulaciones (spec 004: D-11). Se muestra en el orden recibido (R-37). -->
+@if (rows().length === 0) {
+  <p class="simulation-history__empty">Este cliente no tiene simulaciones guardadas.</p>
+} @else {
+  <ol class="simulation-history__list">
+    @for (row of rows(); track row.id) {
+      <li class="simulation-history__item">
+        <dl class="simulation-history__details">
+          <dt class="simulation-history__term">Usuarios activos</dt>
+          <dd class="simulation-history__value">{{ row.activeUsers }}</dd>
+          <dt class="simulation-history__term">Fecha</dt>
+          <dd class="simulation-history__value"><time [attr.datetime]="row.createdAt">{{ row.date }}</time></dd>
+          <dt class="simulation-history__term">Coste base</dt>
+          <dd class="simulation-history__value">{{ row.baseCost }}</dd>
+          <dt class="simulation-history__term">{{ row.taxLabel }}</dt>
+          <dd class="simulation-history__value">{{ row.taxAmount }}</dd>
+          <dt class="simulation-history__term">Total mensual</dt>
+          <dd class="simulation-history__value">{{ row.total }}</dd>
+        </dl>
+      </li>
+    }
+  </ol>
+}

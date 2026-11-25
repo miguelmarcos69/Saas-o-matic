@@ -236,16 +236,17 @@ Reglas comunes de esta spec:
 ## T-12 · web: componente del historial
 - Cubre: R-24, R-36, R-37, R-45, R-48 a R-51, R-73, R-74, R-75, R-106 a R-109, R-126, R-144
 - Depende de: T-07
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Sonnet 5.5, por la Q-01 (a) (presentacional, como la tarjeta).
 - Archivos de producción (2): `app/customers/components/simulation-history/simulation-history.ts` y `simulation-history.html` (nuevos): `SimulationHistory` (`app-simulation-history`) (D-11).
 - Tests (nuevo): `simulation-history.spec.ts`.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] C-36 y C-37 (tres simulaciones, en el orden recibido, en un `<ol>`), C-106, C-107 (etiqueta con el tipo guardado), C-109 y la fecha con `<time [attr.datetime]>` (R-108).
-  - [ ] C-45 y C-126: con la lista vacía, «Este cliente no tiene simulaciones guardadas.» (`toBe`).
-  - [ ] C-48: importes que no coinciden con `packages/pricing` se muestran tal cual; C-49 y C-50 por importe, con `formatCents` y `toDisplayCents` (C-51).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] C-36 y C-37 (tres simulaciones, en el orden recibido, en un `<ol>`), C-106, C-107 (etiqueta con el tipo guardado), C-109 y la fecha con `<time [attr.datetime]>` (R-108).
+  - [x] C-45 y C-126: con la lista vacía, «Este cliente no tiene simulaciones guardadas.» (`toBe`).
+  - [x] C-48: importes que no coinciden con `packages/pricing` se muestran tal cual; C-49 y C-50 por importe, con `formatCents` y `toDisplayCents` (C-51).
+  - [x] `npm run verify` desde la raíz, en verde.
+- Aprobación del autor 2026-11-25 (literal): «Apruebo la T-12 (web: componente del historial) con las desviaciones 1 a 12 aceptadas. Las dos citas sin calificar (simulation-history.html:1 y simulation-history.spec.ts:21) van como observación para el revisor, sin corregirlas ahora; anota también que el implementer no pegó el diff y tocó el índice (git add -N y git reset), sin dejar rastro, y que el título del test de C-49 dice «169,40 €» pero compara con formatCents (C-51). El rojo es de compilación: no lo repitas; cópialo de red-t12.txt sin ANSI y con los signos reales. Las capturas fase-7-004-t12-rojo y t12-verde son mías.» Desviaciones aceptadas: (1) 8 tests nuevos: C-36 y C-37 juntos, C-106 y C-109 juntos, R-108 (`<time datetime>`) aparte, C-107, C-45 y C-126 juntos, C-48, C-49, y C-50 y C-51 juntos; (2) `computed` `rows` con la interfaz privada `HistoryRow` y cada importe formateado con `show(cents)`; (3) `@for` con `track row.id`; (4) la etiqueta del IVA en el `<dt>` con `taxLabel(...)` y su importe en el `<dd>` siguiente, con las clases `simulation-history__empty`, `__list`, `__item`, `__details`, `__term` y `__value` (sus estilos, de la T-13); (5) entradas `input.required` (`simulations`, `currency` y `rateMicros: number | null`), como en `CustomerCard`; (6) `simulations` como `readonly Simulation[]`; (7) el vacío es un `<p>` sin `role`; (8) sin `provideRouter` en los tests; (9) la fecha se compara con `formatSimulationDate(createdAt)` sin `timeZone` (la zona la cubren C-108 y `customer-display.spec.ts`); (10) importes a mano en C-48 (99900, 1 y 123456), sin importar `packages/pricing`; (11) sin `app.routes` (R-75) ni límites de tramos (R-73); (12) R-24, R-74 y R-144 sin test propio. Rojo de compilación no repetido, copiado de `red-t12.txt` sin ANSI y con los signos reales. 8 tests nuevos en `simulation-history.spec.ts`. `npm run verify` en verde, con código 0: 905 tests en la raíz y 269 en la web (antes, 905 + 261). Observaciones para el revisor: citas sin calificar en `simulation-history.html:1` («(R-37)» fuera de «spec 004:») y en `simulation-history.spec.ts:21` (R-36 a R-126 delante de «(spec 004: D-11, D-12)») (R-144); el implementer no pegó el diff de los ficheros nuevos (lo sacó la sesión principal) y tocó el índice con `git add -N` y `git reset`, sin dejar rastro; el título del test de C-49 dice «169,40 €», pero compara con la salida de `formatCents` (C-51).
 
 ## T-13 · web: página del detalle, ruta `customers/:id` y sus estilos
 - Cubre: R-02, R-23, R-26, R-28, R-33 a R-36, R-38, R-39, R-43 a R-53, R-57, R-67, R-68, R-73, R-74, R-75, R-77, R-114 a R-120, R-124, R-125, R-127, R-128, R-129, R-132 a R-134, R-137, R-144, R-154, R-155, R-160, R-163, R-164
