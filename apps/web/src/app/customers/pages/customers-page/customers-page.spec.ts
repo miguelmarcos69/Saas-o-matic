@@ -2,7 +2,16 @@ import { Location } from '@angular/common';
 import { SpyLocation, provideLocationMocks } from '@angular/common/testing';
 import { HttpTestingController, TestRequest, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import {
+  Event as RouterEvent,
+  NavigationCancel,
+  NavigationCancellationCode,
+  NavigationEnd,
+  NavigationSkipped,
+  NavigationStart,
+  Router,
+  provideRouter,
+} from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { CustomerWithLastSimulation } from '../../../shared/interfaces/customer';
 import { Simulation } from '../../../shared/interfaces/simulation';
@@ -335,6 +344,101 @@ describe('CustomersPage', () => {
       expect(first.cancelled).toBe(true);
       await flush(second, [ACME]);
       expect(cardNames()).toEqual(['Acme Cloud']);
+    });
+  });
+
+  describe('abrir el buscador desde otra ruta (spec 004: R-57, R-97, R-98, R-166, R-167; D-10)', () => {
+    // Abre el detalle del cliente 1, otra página de customers/ (spec 004: R-75), y atiende sus peticiones.
+    async function openDetailFirst(): Promise<void> {
+      await harness.navigateByUrl('/customers/1', CustomerDetailPage);
+      await stable();
+      await flush(ratesRequest(), VALID_RATES);
+      const simulationsReq = http.expectOne({ method: 'GET', url: '/api/customers/1/simulations' });
+      await flush(http.expectOne({ method: 'GET', url: '/api/customers/1' }), ACME);
+      await flush(simulationsReq, []);
+    }
+
+    // Navega a `url` desde el detalle y devuelve los eventos del Router desde ese momento.
+    async function navigateFromDetail(url: string): Promise<RouterEvent[]> {
+      const router = TestBed.inject(Router);
+      const events: RouterEvent[] = [];
+      const subscription = router.events.subscribe((event) => events.push(event));
+      await router.navigateByUrl(url);
+      await stable();
+      subscription.unsubscribe();
+      return events;
+    }
+
+    // Cada navegación empezada termina con NavigationEnd, sin NavigationCancel ni NavigationSkipped (spec 004: D-10).
+    function expectAllNavigationsEnd(events: RouterEvent[]): void {
+      expect(events.filter((event) => event instanceof NavigationCancel)).toHaveLength(0);
+      expect(events.filter((event) => event instanceof NavigationSkipped)).toHaveLength(0);
+      const startIds = events.filter((event) => event instanceof NavigationStart).map((event) => event.id);
+      const endIds = events.filter((event) => event instanceof NavigationEnd).map((event) => event.id);
+      expect(startIds.length).toBeGreaterThan(0);
+      expect(endIds).toEqual(startIds);
+    }
+
+    it.each([
+      { url: '/customers', q: undefined },
+      { url: '/customers?q=Acme', q: 'Acme' },
+    ])(
+      'C-98 y D-10: desde /customers/1, abrir $url termina su navegación y runSearch no navega',
+      async ({ url, q }) => {
+        await openDetailFirst();
+
+        const events = await navigateFromDetail(url);
+
+        // Una sola navegación, la que abre la página, y termina con esa URL.
+        expect(events.filter((event) => event instanceof NavigationStart)).toHaveLength(1);
+        expectAllNavigationsEnd(events);
+        const ends = events.filter((event) => event instanceof NavigationEnd);
+        expect(ends.map((event) => event.urlAfterRedirects)).toEqual([url]);
+        expect(harness.routeDebugElement?.componentInstance).toBeInstanceOf(CustomersPage);
+        expect(location.path()).toBe(url);
+
+        await flush(ratesRequest(), VALID_RATES);
+        await flush(customersRequest(q), [ACME]);
+      },
+    );
+
+    it('D-10: desde /customers/1, abrir /customers?q=%20Acme%20 cancela una vez la navegación que abre la página (SupersededByNewNavigation), la que corrige la URL termina en /customers?q=Acme y se piden una vez tipos y búsqueda', async () => {
+      await openDetailFirst();
+
+      const opening = '/customers?q=%20Acme%20';
+      const corrected = '/customers?q=Acme';
+      const events = await navigateFromDetail(opening);
+
+      // Dos navegaciones: la que abre la página y la de runSearch, que corrige la URL (spec 004: D-10, segunda nota).
+      const starts = events.filter((event) => event instanceof NavigationStart);
+      expect(starts.map((event) => event.url)).toEqual([opening, corrected]);
+      const [openingStart, correctingStart] = starts;
+
+      // Un único NavigationCancel, de la navegación que abre la página, porque la sustituye la de runSearch.
+      const cancels = events.filter((event) => event instanceof NavigationCancel);
+      expect(cancels).toHaveLength(1);
+      expect(cancels[0].id).toBe(openingStart.id);
+      expect(cancels[0].url).toBe(opening);
+      expect(cancels[0].code).toBe(NavigationCancellationCode.SupersededByNewNavigation);
+
+      // Ningún NavigationSkipped, y la navegación que corrige la URL termina con NavigationEnd en /customers?q=Acme.
+      expect(events.filter((event) => event instanceof NavigationSkipped)).toHaveLength(0);
+      const ends = events.filter((event) => event instanceof NavigationEnd);
+      expect(ends.map((event) => event.id)).toEqual([correctingStart.id]);
+      expect(ends.map((event) => event.urlAfterRedirects)).toEqual([corrected]);
+
+      expect(location.path()).toBe(corrected);
+      expect(harness.routeDebugElement?.componentInstance).toBeInstanceOf(CustomersPage);
+
+      // Una sola petición de tipos (spec 004: R-57) y una sola de búsqueda, con q=Acme (spec 004: R-97, R-98).
+      const rates = http.match({ method: 'GET', url: RATES_URL });
+      expect(rates).toHaveLength(1);
+      const searches = http.match((req) => req.method === 'GET' && req.url === '/api/customers');
+      expect(searches).toHaveLength(1);
+      expect(searches[0].request.params.get('q')).toBe('Acme');
+
+      await flush(rates[0], VALID_RATES);
+      await flush(searches[0], [ACME]);
     });
   });
 

@@ -42,15 +42,21 @@ export class CustomersPage {
     this.runSearch(this.initialQuery);
   }
 
-  // Lleva el texto recortado a la URL sustituyendo la entrada del historial, y busca
-  // (spec 004: R-97, R-166, R-167; D-10). La búsqueda anterior la cancela el servicio (spec 004: R-96).
+  // Lleva el texto recortado a la URL sustituyendo la entrada del historial, solo si cambia el q, y busca
+  // (spec 004: R-97, R-166, R-167; D-10). Se compara solo get('q'): null si la URL no trae q (spec 004: D-10; P-06 (a)).
+  // Así la primera búsqueda, con la URL ya correcta, no navega durante la activación de la página.
+  // La búsqueda anterior la cancela el servicio (spec 004: R-96).
   protected runSearch(text: string): void {
     const q = text.trim();
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { q: q === '' ? null : q },
-      replaceUrl: true,
-    });
+    const wantedQ = q === '' ? null : q;
+    const currentQ = this.route.snapshot.queryParamMap.get('q');
+    if (wantedQ !== currentQ) {
+      void this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { q: wantedQ },
+        replaceUrl: true,
+      });
+    }
     this.customersApi.search(q, this.destroyRef);
   }
 }
