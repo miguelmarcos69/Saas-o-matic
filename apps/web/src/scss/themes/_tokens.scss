@@ -46,4 +46,19 @@
   --control-picker-border-color: color-mix(in srgb, var(--color-brand) 60%, var(--color-white));
   // Fondo de la opción resaltada: marca al 60% sobre blanco (#8888f4), 3:1 sobre blanco y 6,3:1 con --color-ink (style-guide.md:104).
   --control-option-highlight-color: color-mix(in srgb, var(--color-brand) 60%, var(--color-white));
+
+  // Contenedor y cabecera (spec 004: Decisión 2026-11-25 #1, respuesta C; R-64; D-14)
+  --container-max-width: 75rem; // R-171; style-guide.md:44
+  --border-width-subtle: 1px; // R-177, R-205, R-214; style-guide.md:36
+  --font-size-nav: 14px; // R-183
+  --line-height-nav: 24px; // R-183
+  --font-weight-nav: 600; // R-183
+  --font-size-nav-emphasis: 17px; // R-185
+  --font-weight-nav-emphasis: 700; // R-185; el 700 fijo del enlace activo (R-192) usa el mismo token
+  --color-nav-hover: #000; // R-188; C-193
+  --transition-nav: 0.3s ease-out; // R-184
 }
+
+// Umbral de las dos columnas y de la cabecera en fila (spec 004: R-179, R-216, R-218; 48 rem exactos, respuesta C de la Decisión 2026-11-25 #1).
+// Las media queries no leen variables CSS, por eso es una variable de Sass.
+$breakpoint-wide: 48rem;

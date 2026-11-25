@@ -450,5 +450,29 @@ describe('App', () => {
       expect(s.router.url).toBe('/');
       expect(s.root.querySelector('app-health-page')).not.toBeNull();
     });
+
+    // C-176, parte de la plantilla (spec 004: R-171; D-13).
+    it('spec 004: C-176: <header> y <main> llevan la clase del contenedor común', async () => {
+      const s = setup();
+      await s.fixture.whenStable();
+
+      const header = s.root.querySelector('header') as HTMLElement;
+      const main = s.root.querySelector('main') as HTMLElement;
+      expect(header.classList.contains('app-container')).toBe(true);
+      expect(main.classList.contains('app-container')).toBe(true);
+    });
+
+    // C-198, parte de los atributos (spec 004: R-193; D-13): el CSS de la reserva de ancho lee `data-label`.
+    it('spec 004: R-193: cada enlace del <nav> lleva data-label con su mismo texto', async () => {
+      const s = setup();
+      await s.fixture.whenStable();
+
+      const links = Array.from(s.root.querySelectorAll('nav a'));
+      expect(links).toHaveLength(3);
+      for (const link of links) {
+        expect(link.getAttribute('data-label')).toBe(link.textContent?.trim());
+      }
+      expect(links.map((link) => link.getAttribute('data-label'))).toEqual(['Estado de la API', 'Clientes', 'Simulador']);
+    });
   });
 });

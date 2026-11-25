@@ -5,7 +5,7 @@ Fuente de estilo de la interfaz, registrada por el ADR-015 (`decisions.md`). La 
 ## Ajustes al registrarla (por `frontend-conventions`)
 1. Los tokens siguen el formato `--color-…` y `--radius-…`: `--color-brand`, `--color-ink`, `--color-text`… y `--radius-sm`… No `--brand` ni `--r-sm`.
 2. Las clases genéricas del CSS base (`.card`, `.pill`, `.eyebrow`, `.accent`, `.stat`) llevarán prefijo de componente cuando una spec las use.
-3. `.pill` usa el peso 500 o el 700, porque el 600 no se carga.
+3. `.pill` usa el peso 500 o el 700.
 4. La fuente se carga con `<link>` de Google Fonts en `index.html`, no con el `@import` del CSS base.
 
 El CSS base de abajo ya lleva los ajustes 1 y 4. El 2 y el 3 se aplican en la spec que use esas clases.
@@ -14,12 +14,12 @@ El CSS base de abajo ya lleva los ajustes 1 y 4. El 2 y el 3 se aplican en la sp
 Usa esta guía para maquetar la página. Debe parecerse en estilo, tipografía y estructura, pero con nuestra propia marca, textos, logo e imágenes (no copiar la marca Roams).
 
 ### Tipografía
-- Fuente única: Montserrat (Google Fonts), pesos 400, 500, 700 y 800.
+- Fuente única: Montserrat (Google Fonts), pesos 500, 600, 700 y 800.
 - H1: 50px / line-height 70px / 800 / `#0d0d1a`
 - H2: 38px / 60px / 800
 - H3: 28px / 50px / 800
 - Párrafos: 16px / 30px / 500 / `#4a4d56`, texto justificado en bloques largos.
-- Menú: 16px / 700; el activo en negro y el resto en gris.
+- Menú: 14px / line-height 24px / 600, con transición de 0.3s ease-out (sin ella con movimiento reducido); con hover y con foco visible, 17px / 700 en `#000` (`--color-nav-hover`); el activo en negro y con 700, y el resto en gris.
 - «Eyebrow» (etiqueta sobre el título): 14px / 500 / azul de marca.
 - En los títulos, 1 o 2 palabras clave en azul de marca.
 - Dentro de los párrafos, las frases clave en negrita 700 y color `#0d0d1a`.
@@ -45,7 +45,7 @@ Usa esta guía para maquetar la página. Debe parecerse en estilo, tipografía y
 
 ### CSS base
 ```css
-/* Montserrat (400, 500, 700 y 800) se carga con <link> de Google Fonts en index.html, no con @import (ajuste 4). */
+/* Montserrat (500, 600, 700 y 800) se carga con <link> de Google Fonts en index.html, no con @import (ajuste 4). */
 
 :root{
   --color-brand:#3838ec; --color-brand-dark:#313087;

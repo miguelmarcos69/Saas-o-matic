@@ -1,5 +1,7 @@
 // Estilos de los componentes de shared/ (spec 005, R-34, R-36, R-37, R-59, R-60; D-14).
 // Sin reglas de `outline` (el contorno del navegador se mantiene, R-36).
+@use 'themes/tokens';
+
 // La lista redondeada (`option`, `::picker`) solo va dentro de `@supports (appearance: base-select)`; fuera, la lista es la nativa.
 
 // Etiqueta «Divisa»: como las del formulario, con 24 px encima porque es un grupo nuevo (el HTML no cambia).
@@ -10,41 +12,120 @@ app-currency-selector label {
   margin: var(--space-md) 0 var(--space-sm);
 }
 
-// Cabecera común (spec 004: R-63, R-64, R-138 a R-141; D-14). Sin reglas de `outline` (se mantiene el foco del navegador, R-68).
+// Cabecera común (spec 004: R-63, R-64, R-138, R-171 a R-187, R-191 a R-193, R-231; D-14). Sin reglas de `outline` (se mantiene el foco del navegador, R-68).
+
+// Sin el margen de 8 px del navegador la cabecera llega de borde a borde (spec 004: R-175; riesgo 17).
+body {
+  margin: 0;
+}
+
+// Contenedor común de `<header>` y `<main>`: 75 rem de contenido como máximo, centrado, con 24 px a cada lado (spec 004: R-171 a R-174).
+.app-container {
+  box-sizing: border-box;
+  padding-inline: max(var(--space-md), (100% - var(--container-max-width)) / 2);
+}
+
 .app-header {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: flex-end;
-  justify-content: space-between;
   gap: var(--space-md);
+  padding-block: var(--space-sm);
   margin-bottom: var(--space-lg);
-}
+  background: var(--color-white);
+  border-bottom: var(--border-width-subtle) solid var(--color-soft);
+  box-shadow: none;
 
-// Separa los enlaces entre sí (spec 004: R-63).
-.app-header__nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-md);
-}
-
-.app-header__link {
-  font-size: var(--font-size-base);
-  font-weight: 700;
-  color: var(--color-muted);
-  text-decoration: none;
-
-  &[aria-current='page'] {
-    color: var(--color-ink);
+  // Selector a la derecha del <nav> y en la línea de su último enlace (spec 004: R-55, R-179).
+  @media (min-width: tokens.$breakpoint-wide) {
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+    align-items: last baseline; // respaldo por cascada: lo que no lo admite conserva `flex-end`
   }
 }
 
+// Separa los enlaces entre sí (spec 004: R-63, R-178, R-231).
+.app-header__nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-md);
+
+  // Encoge y parte los enlaces en dos líneas antes que desbordar (spec 004: R-179, R-231).
+  @media (min-width: tokens.$breakpoint-wide) {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+}
+
+.app-header__link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: var(--font-size-nav);
+  line-height: var(--line-height-nav);
+  font-weight: var(--font-weight-nav);
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: var(--transition-nav);
+
+  &[aria-current='page'] {
+    color: var(--color-ink);
+    font-weight: var(--font-weight-nav-emphasis);
+  }
+
+  // Después del activo para que gane también en él (spec 004: R-185, R-186, R-188).
+  &:hover,
+  &:focus-visible {
+    font-size: var(--font-size-nav-emphasis);
+    font-weight: var(--font-weight-nav-emphasis);
+    color: var(--color-nav-hover);
+  }
+
+  // Reserva el ancho del énfasis para que el hover y el foco no muevan a los vecinos (spec 004: R-193).
+  &::after {
+    content: attr(data-label);
+    content: attr(data-label) / '';
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    font-size: var(--font-size-nav-emphasis);
+    font-weight: var(--font-weight-nav-emphasis);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+// Selector de divisa: por debajo de 48 rem, debajo del <nav> con «Divisa» encima (spec 004: R-180, R-182).
 .app-header__currency {
-  flex: 0 1 18rem;
+  width: min(100%, 18rem);
+
+  // Desde 48 rem, a la derecha del <nav>, con «Divisa» a su izquierda (spec 004: R-181; riesgo 21).
+  @media (min-width: tokens.$breakpoint-wide) {
+    width: auto;
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
 }
 
 // Dentro de la cabecera, la etiqueta no lleva los 24 px de arriba de la regla de `app-currency-selector label`.
 .app-header app-currency-selector label {
   margin-top: 0;
+
+  @media (min-width: tokens.$breakpoint-wide) {
+    margin: 0;
+  }
+}
+
+.app-header .currency-selector__select {
+  @media (min-width: tokens.$breakpoint-wide) {
+    width: auto;
+  }
 }
 
 // El selector de divisa ocupa el ancho de su contenedor sin desbordarlo y lleva el mismo aspecto que el de país.

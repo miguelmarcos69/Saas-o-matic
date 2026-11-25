@@ -353,7 +353,7 @@ Reglas comunes de esta spec:
 - Origen: puerta 4 rehecha del 2026-11-25, paso 16 del plan (bloque 5), por las Decisiones 2026-11-25 #1 a #6 y la P-08 (b) del autor. Va después de la T-15 y antes de la puerta 6.
 - Cubre: R-38 (parte de la cabecera), R-55, R-63, R-64, R-67, R-68, R-138, R-144, R-171 a R-194, R-223 a R-225, R-228 a R-231 (C-176 y C-198 en parte con test; el resto, con `git diff`, `git grep` o en la puerta 6)
 - Depende de: T-14 (cabecera); va después de la T-15 (Decisión 2026-11-25 #1 y P-08 (b))
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Sonnet 5.5, por la petición del autor y la P-08 (b).
 - Convenciones a leer: `.claude/skills/frontend-conventions/SKILL.md` (estilos solo en `src/scss`, tokens en `themes/_tokens.scss`, clases con prefijo de componente, tests con Vitest).
 - Archivos de producción (4):
@@ -364,19 +364,25 @@ Reglas comunes de esta spec:
 - Documentación (no cuenta): `style-guide.md`, solo `:8`, `:17`, `:22` («Menú») y `:48`, con el texto literal de la D-14 (C-194).
 - Tests (crece): `app/app.spec.ts`, dos tests nuevos con «spec 004:» en el título (D-13): «C-176: `<header>` y `<main>` llevan la clase del contenedor común» y «R-193: cada enlace del `<nav>` lleva `data-label` con su mismo texto».
 - Hecho cuando:
-  - [ ] Fase roja: los dos tests nuevos se escriben antes del cambio y, con `app.html` como en `HEAD`, fallan los dos; salida íntegra en el registro de la sesión. Es un rojo de aserciones (la plantilla existe, pero no lleva la clase ni los atributos). Si alguno no falla con `app.html` como en `HEAD`, la tarea para y lo devuelve.
-  - [ ] C-176 (plantilla) y C-198 (atributos): los dos tests nuevos en verde.
-  - [ ] Ninguna aserción existente de `app.spec.ts` cambia ni se desactiva (C-55, C-47 y C-48 de la 005, y los dos tests de la 000): `git diff` de `app.spec.ts` solo con líneas añadidas.
-  - [ ] C-67 y C-181: `git diff` de `app.html` solo con los dos `class` y los tres `data-label`; `app.ts`, `app.routes.ts` y `app.config.ts`, sin cambios.
-  - [ ] C-228 y C-235: `git diff apps/web/src/index.html` solo en `:10` y `:11`, con el texto de la D-14.
-  - [ ] C-194, C-229, C-230 y C-234: `git diff ai-workspace/docs/style-guide.md` solo en `:8`, `:17`, `:22` y `:48`, con el texto literal de la D-14.
-  - [ ] C-193 y C-195: `git grep -n -- "--color-nav-hover" apps/web/src` da el token en `_tokens.scss` y su uso en `_shared.scss`; `git grep -n -- "--color-nav-hover" ai-workspace/docs/style-guide.md`, solo la línea «Menú».
-  - [ ] Ninguna regla de `outline` en el `git diff` de `_shared.scss` (R-68, C-191).
-  - [ ] Riesgo 16 (orden de parar; P-08, decisión 4): el nombre accesible de cada enlace del `<nav>` en el árbol de accesibilidad de Chrome y de Firefox es su texto, una sola vez («Clientes», no «Clientes Clientes»); si sale duplicado en alguno, la T-17 queda «Bloqueado», sin buscar otra solución. Por la Q-05 (a), con la variante del autor: en Chrome lo comprueba la sesión principal con `take_snapshot` del MCP de Chrome DevTools, y en Firefox el autor con las herramientas de accesibilidad; si el MCP no conecta, el autor lo hace en los dos. La evidencia va al registro de la sesión. El implementer no lo comprueba: la casilla se marca tras esa comprobación, antes de la aprobación del autor.
-  - [ ] Riesgo 18: `npm run build` y, en el CSS de `dist/`, `--color-bg:` aparece una sola vez (Q-06 (a); se repite en la T-18).
-  - [ ] De `apps/` solo cambian los cuatro ficheros de producción y `app.spec.ts` (`git status` y `git diff --stat`); `_customers.scss`, `_simulations.scss`, `_base.scss`, `_health.scss`, `simulations/`, `customers/` y `health/`, sin cambios. Si un retoque necesita otra línea de `index.html` o de `style-guide.md`, otra plantilla o `_base.scss`, o falla un test de otra spec fuera de la lista cerrada, la tarea para y lo devuelve (D-16).
-  - [ ] `npm run verify` desde la raíz, en verde, con los recuentos de la raíz y de la web antes (913 + 322, según `MEMORY.md`) y después.
+  - [x] Fase roja: los dos tests nuevos se escriben antes del cambio y, con `app.html` como en `HEAD`, fallan los dos; salida íntegra en el registro de la sesión. Es un rojo de aserciones (la plantilla existe, pero no lleva la clase ni los atributos). Si alguno no falla con `app.html` como en `HEAD`, la tarea para y lo devuelve.
+  - [x] C-176 (plantilla) y C-198 (atributos): los dos tests nuevos en verde.
+  - [x] Ninguna aserción existente de `app.spec.ts` cambia ni se desactiva (C-55, C-47 y C-48 de la 005, y los dos tests de la 000): `git diff` de `app.spec.ts` solo con líneas añadidas.
+  - [x] C-67 y C-181: `git diff` de `app.html` solo con los dos `class` y los tres `data-label`; `app.ts`, `app.routes.ts` y `app.config.ts`, sin cambios.
+  - [x] C-228 y C-235: `git diff apps/web/src/index.html` solo en `:10` y `:11`, con el texto de la D-14.
+  - [x] C-194, C-229, C-230 y C-234: `git diff ai-workspace/docs/style-guide.md` solo en `:8`, `:17`, `:22` y `:48`, con el texto literal de la D-14.
+  - [x] C-193 y C-195: `git grep -n -- "--color-nav-hover" apps/web/src` da el token en `_tokens.scss` y su uso en `_shared.scss`; `git grep -n -- "--color-nav-hover" ai-workspace/docs/style-guide.md`, solo la línea «Menú».
+  - [x] Ninguna regla de `outline` en el `git diff` de `_shared.scss` (R-68, C-191).
+  - [x] Riesgo 16 (orden de parar; P-08, decisión 4): el nombre accesible de cada enlace del `<nav>` en el árbol de accesibilidad de Chrome y de Firefox es su texto, una sola vez («Clientes», no «Clientes Clientes»); si sale duplicado en alguno, la T-17 queda «Bloqueado», sin buscar otra solución. Por la Q-05 (a), con la variante del autor: en Chrome lo comprueba la sesión principal con `take_snapshot` del MCP de Chrome DevTools, y en Firefox el autor con las herramientas de accesibilidad; si el MCP no conecta, el autor lo hace en los dos. La evidencia va al registro de la sesión. El implementer no lo comprueba: la casilla se marca tras esa comprobación, antes de la aprobación del autor.
+  - [x] Riesgo 18: `npm run build` y, en el CSS de `dist/`, `--color-bg:` aparece una sola vez (Q-06 (a); se repite en la T-18).
+  - [x] De `apps/` solo cambian los cuatro ficheros de producción y `app.spec.ts` (`git status` y `git diff --stat`); `_customers.scss`, `_simulations.scss`, `_base.scss`, `_health.scss`, `simulations/`, `customers/` y `health/`, sin cambios. Si un retoque necesita otra línea de `index.html` o de `style-guide.md`, otra plantilla o `_base.scss`, o falla un test de otra spec fuera de la lista cerrada, la tarea para y lo devuelve (D-16).
+  - [x] `npm run verify` desde la raíz, en verde, con los recuentos de la raíz y de la web antes (913 + 322, según `MEMORY.md`) y después.
   - Puerta 6, a mano (no se marcan en esta tarea; regla común «Comprobación manual»): C-38 en las cuatro vistas, con el foco en cada enlace de la cabecera; C-55, C-63 y C-64; C-176 a C-192 y C-196 a C-199 (anchos a 320, 767, 768, 1248, 1280 y 1600 px, estilos calculados, hover forzado, Tab y movimiento reducido); C-184 a 768 px exactos con «Dólar estadounidense (USD)» (H-29: se anota si los enlaces caben en una línea o se parten en dos); C-233 y C-236; y Lighthouse de «Estado de la API» y del simulador, que cambian con `body { margin: 0; }` (riesgo 17), junto con las de la T-18.
+- Observaciones para el revisor (2026-11-25):
+  - `ng build` repite el aviso de presupuesto ya aceptado en la T-14 («Budget 500.00 kB was not met by 221.86 kB with a total of 721.86 kB»).
+  - El rojo del retorno del implementer traía los signos escapados en HTML y, según él mismo, la línea 471 del fragmento mal copiada; es un rojo de aserciones y lo repitió la sesión principal con `app.html` como en `HEAD` (copia en el scratchpad, devuelta y comprobada con `cmp`): fallan los dos tests nuevos, con la línea 471 `expect(links).toHaveLength(3);`. Salida literal en el registro de la sesión.
+  - Diff de `_shared.scss`: el `@use 'themes/tokens';` va entre los comentarios de `:2` y `:3` (desviación 1); la cabecera se reescribe entera según la D-14, con `align-items: flex-end` antes de `last baseline` como respaldo (desviación 4) y `outline` solo en comentarios. La sesión principal sacó el `git diff` literal y lo cruzó con la D-14.
+  - Riesgo 16: en Chrome, `take_snapshot` de la sesión principal en `/customers` da `link "Estado de la API"`, `link "Clientes"` y `link "Simulador"`, una sola vez cada uno; en Firefox lo comprobó el autor.
+- Aprobación del autor 2026-11-25 (literal): «Apruebo la T-17 con las desviaciones 1 a 5 aceptadas. Riesgo 16 comprobado en Chrome por la sesión principal y en Firefox por mí.» Desviaciones aceptadas: `@use` entre los comentarios de cabecera de `_shared.scss`, el comentario de `app.html:1` tocado y revertido (diff final limpio), los dos tests dentro del `describe` de la cabecera, `align-items: flex-end` como respaldo de `last baseline`, y los códigos ANSI quitados de las salidas. 2 tests nuevos; `npm run verify` en verde (913 + 324). Registro: `sessions/2026-11-25-11-004-customers.md`.
 
 ## T-18 · web: tarjetas, detalle y simulador en dos columnas (retoques visuales)
 - Origen: puerta 4 rehecha del 2026-11-25, paso 17 del plan (bloque 5), por las Decisiones 2026-11-25 #1 a #6 y la P-08 (b) del autor. Va antes de la puerta 6.
