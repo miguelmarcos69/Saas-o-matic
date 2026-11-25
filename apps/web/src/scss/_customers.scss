@@ -193,7 +193,7 @@
   margin: 0;
   font-weight: 700;
   color: var(--color-ink);
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   text-align: right;
   min-width: 0;
 }
