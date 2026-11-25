@@ -238,6 +238,8 @@ El proyecto se hizo con **Spec-Driven Development**: cada funcionalidad tiene un
 
 ### Criterios de evaluación ([§4](ai-workspace/docs/reto.md))
 
+Repaso con la evidencia de cada criterio: [evaluation.md](ai-workspace/docs/evaluation.md).
+
 | Criterio | Dónde verlo |
 |---|---|
 | 1. Planificación y diseño (35 %) | [Specs](ai-workspace/specs/README.md) y su `spec.md` y `plan.md`, [constitución](ai-workspace/docs/constitution.md), [arquitectura](ai-workspace/docs/architecture.md), [base de datos](ai-workspace/docs/database.md) |
