@@ -260,3 +260,145 @@ Reservas aceptadas por el autor (pendientes), con su motivo:
 - H-21: la columna «Requisito» está bien y renumerar 174 casos pesa más que la ayuda que da.
 
 Tras la cuarta vuelta del planner (H-18, H-19 y H-20 corregidos, sin otra ronda), `Estado:` pasa a `Aprobada`.
+
+## Ronda 3 (2026-11-25) · Veredicto: Conforme con reservas
+
+**Alcance:** spec.md (puerta 2), limitada a lo que cambiaron la Decisión 2026-11-25 #1 y las Decisiones 2026-11-25 #2 a #4. He podido leer entero el diff del scratchpad (`spec-004-p1p2.diff`, 580 líneas) y me he apoyado en él. También he leído:
+- de `spec.md`: las líneas 1-72 y 872-881, y por Grep cada `R-nn` y `C-nn` que cito;
+- `review.md` (rondas 1 y 2);
+- `reto.md` (§2.B) y la constitución;
+- `style-guide.md` entero, `apps/web/src/index.html` entero y el boceto entero;
+- de la spec 005: R-37 y C-30;
+- `templates/review.md` y `frontend-conventions/checklist.md`;
+- para comprobar si R-220 y R-226 se pueden cumplir: `apps/web/src/app/simulations/pages/simulation-page/simulation-page.html`.
+
+Recuentos hechos con Grep sobre el fichero:
+- 230 líneas `**R-nn.**` y 230 `- Origen:`;
+- 235 filas `| C-nn |`;
+- 44 filas `| Q-nn |`, las 44 en «Decidida» y ninguna «Abierta»;
+- 21 apariciones de `PENDIENTE`: 20 en textos «antes: …» de requisitos modificados (:629 a :836) y 1 en el literal de la #2 (:1178). Ninguna está activa.
+
+Los recuentos coinciden con los de la sesión principal. No cuento como hallazgo las reservas que el autor ya aceptó: H-04, H-10, H-14, H-15 y H-21 de esta spec, H-13 y H-14 de la 002, H-13 a H-15 de la 003, y H-05 y H-24 de la 005 en lo que deciden Q-15 y Q-16.
+
+### Hallazgos
+| ID | Gravedad | Archivo:línea | Requisito o regla | Hallazgo |
+|---|---|---|---|---|
+| H-22 | Menor | ai-workspace/specs/004-customers/spec.md:877, :878, :879, :880, :881 | Coherencia interna («nada contradice …»); «sin dudas abiertas» (sdd, puerta 2) | La sección 3 («Interfaz») se quedó como en la puerta 1 rehecha. (1) En :878 dice «Colores sin hover (Q-29: R-191), marca del enlace activo (Q-27: R-192), desplazamiento de los vecinos (Q-28: R-193) y fuente del peso 600 (Q-35: R-194), pendientes.». Las cuatro dudas están en «Decidida» y los cuatro requisitos ya tienen valor. (2) Remite a una Q-nn en lugar del valor decidido en «margen, Q-30; parcial, Q-31» (:877), «desde qué ancho, Q-32» y «por debajo del ancho, Q-33» (:878), «Q-36», «Q-37», «Q-39» y «Q-40/Q-41» (:879), y «Q-38» y «Q-42» (:880, :881). (3) «Proporciones y posición del enlace, Q-42 (R-222)» (:880): la posición del enlace es ahora R-227 y R-222 solo fija el mismo ancho. (4) No aparecen R-223 a R-225, R-226 y R-228 a R-230. La sección 6 y los requisitos dicen otra cosa que el resumen del contrato. |
+| H-23 | Menor | ai-workspace/specs/004-customers/spec.md:19, :57-61, :1157 | Coherencia interna; ajustes del ADR-016 anotados (precedente de las reservas H-14 de la 001, H-15 de la 002 y H-16 de la 003) | Hay resúmenes que las Decisiones 2026-11-25 #3 y #4 dejaron desfasados. (1) La línea :19 da los retoques como «(R-171 a R-222)». Dice también que la #2 «añade la carga del peso 600 de Montserrat en `index.html` y dos líneas de `style-guide.md` (Q-35 (a): R-223 a R-225)». Tras la #3 y la #4 son los pesos 500, 600, 700 y 800, tres líneas de la guía (`:8`, `:17` y `:48`, además de «Menú») y el comentario de `index.html:10` (R-228 a R-230). (2) La nota de la fila #26 (:1157) sigue diciendo «`index.html` con la carga del peso 600». (3) Los ajustes de la puerta 2 rehecha (:57-61) solo anotan la respuesta del autor a Q-26 a Q-42. Faltan Q-43 y Q-44 (#3 y #4) y las dos vueltas más del planner que esas decisiones piden («Relanza al planner»). La nota sobre fuentes (:36-38) sí está al día. |
+| H-24 | Menor | ai-workspace/specs/004-customers/spec.md:838, :841 frente a :1177; :724 frente a :1174 | Trazabilidad «Aplicada en» ↔ «Origen» (sdd, regla 2); el patrón de H-12 y H-19 | (1) R-226 y R-227 citan la Decisión 2026-11-25 #1 (cambios 9 y 10), pero el «Aplicada en» de la #1 termina en «R-171 a R-222». (2) R-228 cita la Decisión 2026-11-24 #43, cuyo «Aplicada en» solo lista R-169 y C-174. |
+| H-25 | Menor | ai-workspace/specs/004-customers/spec.md:930, :947, :955, :956, :958, :959, :993, :997; :489 | Lo sustituido o modificado conserva su número y su texto anterior (encargo, punto 1) | Los requisitos modificados guardan su texto anterior («Modificado por … (antes: «…»)»), y los casos sustituidos también (C-139 a C-141, «Antes: …»). Los casos modificados no: C-38, C-55, C-63, C-64, C-66, C-67, C-101 y C-105 solo llevan «(revisado por la Decisión …)». Sus textos anteriores (por ejemplo, C-55 «alineado a la derecha» y C-66 «Sin cambios») solo se recuperan con `git`. Además, R-64 dice «Revisado por» y los demás requisitos «Modificado por», sin que se vea una diferencia de sentido. |
+| H-26 | Menor | ai-workspace/specs/004-customers/spec.md:694, :698, :775 frente a :64-69 | Requisitos EARS (patrones de la sección 2) | R-191 y R-192 empiezan con «Sin hover ni foco, …», y R-206 con «Con las tarjetas de la misma altura (R-196), …». Ninguna de las tres frases sigue uno de los cinco patrones de :65-69, y las condiciones son de estado («Mientras …»). R-202 sí lo hace con la misma condición («Mientras el puntero no esté sobre él y no tenga el foco»). |
+| H-27 | Menor | ai-workspace/specs/004-customers/spec.md:496, :828, :834, :838 frente a :958 | Coherencia con los vecinos (R-66, R-220, C-66) | R-66 solo permite cambiar el simulador en la cabecera, en el contenedor (R-171) y en «las dos columnas de R-218 a R-220». R-222 (columnas del mismo ancho «de R-216 y de R-218») y R-226 (eyebrow y título encima de las columnas, también en el simulador) también cambian esa vista y no están en la excepción. Tampoco están en R-220, que lleva a `_simulations.scss` solo «las dos columnas de R-218 y R-219», ni en C-66, que en `_simulations.scss` acepta «solo las reglas de las dos columnas de R-218 a R-220». Leído al pie de la letra, las reglas de R-222 y R-226 en el simulador harían fallar C-66. Se pueden hacer solo con CSS: en `simulation-page.html:3-31`, el eyebrow, el `<h1>` y las dos `<section>` son hermanos. El problema es de texto, no de factibilidad. |
+| H-28 | Menor | ai-workspace/specs/004-customers/spec.md:656, :649, :702, :1226, :1070, :1077, :486 | Huecos a «Dudas abiertas» (CLAUDE.md; sdd, regla 3); R-38 | R-180 solo decide cómo van el `<nav>` y el selector entre sí a menos de 48 rem («uno encima de otro»). No dice cómo van los tres enlaces dentro del `<nav>`, y las cifras de la propia spec muestran que a 320 px no caben en una línea. Q-32 estima «unos 300 px» para los enlaces a 14 px. R-193 reserva el ancho de 17 px y 700, que es mayor. C-178 deja 272 px de contenido a 320 px. R-38 obliga a una solución: dos líneas, un enlace por línea, u otra. Cuál se elija, y cómo se aplica en cada línea el «alineados a la derecha» de R-178, es una decisión visual del mismo tipo que Q-26 a Q-42. El autor ha decidido todas esas. C-185 solo comprueba que no hay desplazamiento horizontal, y C-63 que los enlaces no se solapan. |
+| H-29 | Menor | ai-workspace/specs/004-customers/spec.md:1226, :1222, :702, :652, :1076 | Coherencia con los vecinos (R-179 frente a R-193) | Q-32 da por bueno que a 48 rem «cabe por poco» con el margen de Q-30 (a). Lo calcula con los enlaces a 14 px, y su contra dice «podría no caber con un enlace en hover (17 px), salvo Q-28 (a)». Pero Q-28 (a), ya en R-193, reserva siempre el ancho de 17 px y 700 en cada enlace. Así que no evita el problema: hace permanente el ancho mayor. Las cuentas de una línea a 768 px (720 px útiles, C-178) se hicieron sin esa reserva. C-184 pide justo el caso más justo: 768 px exactos con «Dólar estadounidense (USD)». Desde el fichero no puedo medir si cabe. Si no cabe, R-179 y R-193 chocan y saldría en la puerta 6 como cambio de requisitos. |
+| H-30 | Menor | ai-workspace/specs/004-customers/spec.md:748, :1095, :754, :272, :751, :930 | Punto D: criterio 1.4.10 de WCAG 2.2 (constitución, principio 7) | Que el recorte cumpla 1.4.10 depende de que la información completa siga disponible (ver «Punto D» en las checklists). Para el nombre está asegurado con R-199 y R-200. Para el identificador fiscal, no del todo. C-203 lo recorta precisamente a 320 px, pero R-200 solo protege el título del detalle, que es el nombre. Ningún requisito dice que la fila «Identificador fiscal» del detalle (R-35) lo muestre entero, sin recortar. C-38 solo comprueba que no haya desplazamiento horizontal. Quitando R-199 (en el DOM), nada asegura que se vea entero en algún sitio. |
+| H-31 | Menor | ai-workspace/specs/004-customers/spec.md:740, :745, :748, :775, :1094, :1095, :1098 | Punto D: criterios 1.4.4 y 1.4.12 de WCAG 2.2 (constitución, principio 7: nivel AA) | Los casos del recorte y de las tarjetas de la misma altura (C-201, C-202, C-203, C-206 y C-211) solo usan el texto por defecto. Ninguno amplía el texto al 200 % (1.4.4) ni aplica el espaciado de 1.4.12 (interlineado 1,5, letras 0,12 em, palabras 0,16 em, párrafos 2 em). Con ese espaciado, el recorte a 2 líneas y a 1 línea sigue siendo admisible si R-199 y R-200 se cumplen. Lo que puede fallar es lo de alrededor: que la fila de R-204 o las píldoras queden cortadas o se solapen dentro de una tarjeta de alto igualado (R-196, R-206). Las auditorías Lighthouse (R-69, R-70, R-146 y R-147) no comprueban ninguno de los dos criterios. |
+| H-32 | Menor | ai-workspace/specs/004-customers/spec.md:1118, :831, :1227; ai-workspace/specs/005-simulator/spec.md:419 | Una afirmación comprobable; límites en los casos | C-226 espera «spec 005: C-30 se cumple (sin barra horizontal; «Dólar estadounidense (USD)» comprobado a 320 px)». «Comprobado» no es un resultado: no dice qué debe verse. C-30 de la 005 pide «todo el contenido visible». Pero la propia spec recuerda la «limitación aceptada P-08 (a) de la 005 sin `base-select`» (Q-33): el control cerrado corta ese texto a 320 px. C-226 no dice si, en un navegador sin `base-select`, el texto cortado aprueba o falla en la puerta 6. |
+
+### Checklists
+
+**Comprobaciones de la puerta 2 (reviewer.md), sobre lo cambiado**
+
+| Comprobación | Resultado | Nota |
+|---|---|---|
+| Cada requisito tiene origen (§ o Decisión) | Cumple | 230 requisitos y 230 orígenes. R-171 a R-230 citan la Decisión 2026-11-25 #1, la #2, la #3 o la #4, y R-38 también cita §2.B. Las referencias a `style-guide.md`, al boceto y a `index.html` acompañan a la decisión, no la sustituyen. Trazabilidad inversa: H-24. |
+| Una sola afirmación comprobable por requisito | Cumple con reservas | Los requisitos nuevos compuestos (R-183, R-185, R-192, R-193, R-201 y R-214) siguen el patrón de la reserva H-14 y no los abro. C-226 no es comprobable (H-32). |
+| EARS | No cumple | H-26. |
+| Cada `R-nn` tiene al menos un caso | Cumple | Lo he comprobado fila a fila. R-171 a R-222 tienen C-176 a C-227 (desfase de 5), R-223 a R-225 tienen C-228 a C-230 y R-226 a R-230 tienen C-231 a C-235. La numeración sigue sin coincidir (reserva H-21). |
+| Límites en los casos | Cumple con reservas | Sí están: 48 rem exactos (768 px) y 767 px en C-184, C-185, C-187, C-221 a C-224 y C-227; los anchos 320, 768, 1248 y 1600 px en C-178, con las cifras recalculadas (320 − 48 = 272; 768 − 48 = 720; 1248 − 48 = 1200); el nombre de 200 caracteres con espacios y sin ellos (C-202); el identificador de 20 a 320 px (C-203); el borde transparente frente al de color (C-219); `prefers-reduced-motion` (C-192). Faltan 1.4.4 y 1.4.12 (H-31) y el resultado de C-226 (H-32). |
+| Ningún hueco rellenado con un valor «razonable» | Cumple con reservas | No he encontrado valores inventados. Los 24 px de `line-height` salen del literal del cambio 4 («line-height 24px»; en el chat, «line-height: 24»). Los 24 px de margen son de Q-30 (a), `--color-soft` en el borde de Q-26 (a), los 30 px de Q-36 (a), `--color-bg` en la separación de la lectura confirmada en la #2 y los 48 rem de la respuesta C. La Q-27 (b) se aplica por la condición literal del autor («si hay una opción que además ponga peso 700 al activo, esa»), anotada así en la fila. Queda un hueco sin Q-nn: H-28. |
+| Seis secciones, con `No aplica` donde corresponde | Cumple | Sin cambios. La sección 3 está desfasada (H-22). |
+| `§` citados como en CLAUDE.md | Cumple | En lo cambiado solo aparece §2.B (R-38). |
+| Nada contradice reto > constitución > spec | Cumple con reservas | Con el reto no hay choque, porque §2.B pide «Tarjetas responsive», y R-195 a R-217 lo concretan. Con la constitución tampoco, para el punto D (ver abajo). Dentro de la spec: H-22, H-23, H-27 y el riesgo de H-29. |
+| Lo sustituido o modificado conserva número y texto anterior | Cumple con reservas | R-38, R-55, R-64, R-66, R-67 (con cuatro «Modificado por»), R-101, R-105 y R-139 a R-141 lo cumplen, y C-139 a C-141 también. Los casos modificados no lo cumplen: H-25. |
+| `Estado:` encaja con la puerta | Cumple | `En clarificación` (:3), igual que en la fila 004 del README (:12). Hay `plan.md`, `tasks.md` y código de antes del cambio. Es lo que prevé sdd («Cambio de requisitos … vuelve al estado de la primera puerta afectada») con la respuesta A (a) de la #1. Ninguna duda abierta y ningún `PENDIENTE` activo. |
+| Ajustes del ADR-016 anotados | Cumple con reservas | :53-61. Faltan las vueltas de la #3 y la #4 (H-23). Lo que pasó en el chat no puedo comprobarlo en el fichero. |
+| Reservas de otras specs | No es hallazgo | Por instrucción del autor. |
+
+**Punto D: el recorte del cambio 6 frente a WCAG 2.2**
+
+| Criterio | Resultado | Nota |
+|---|---|---|
+| 1.4.10 Reflow | Cumple con reservas | El recorte no lo provoca el reflujo: R-197 y R-198 recortan a cualquier ancho. Tampoco crea desplazamiento en dos dimensiones, porque C-202 y C-203 piden «sin desplazamiento horizontal», y C-202 prueba el nombre sin espacios. El texto del criterio exige no perder información. Para el nombre no se pierde: está entero en el DOM y en el nombre accesible del enlace (R-199, C-204) y entero en el título del detalle (R-200, C-205), a una activación del enlace (R-105). Para el identificador falta asegurarlo (H-30). |
+| 1.4.4 Cambio de tamaño del texto | No cumple (sin caso) | H-31. |
+| 1.4.12 Espaciado del texto | No cumple (sin caso) | H-31. El interlineado fijado (30 px, R-201) es mayor que 1,5 × 16 px = 24 px, así que el ajuste de 1.4.12 lo reduce y el máximo de 60 px de C-206 se sigue cumpliendo. El riesgo está en las tarjetas de alto igualado (R-196, R-206). |
+| 2.5.3 Etiqueta en el nombre | Cumple | Los puntos suspensivos los pone el CSS y no son texto. El nombre accesible completo (C-204) contiene el texto visible recortado. |
+| 1.4.13 Contenido con hover o foco | No aplica | El hover y el foco solo cambian estilos (R-185, R-203, R-210) y no muestran contenido nuevo. |
+
+**Punto 3: límites de ficheros que fija la spec**
+
+| Fichero | Resultado | Nota |
+|---|---|---|
+| `style-guide.md` | Cumple | Solo permiten cambios: «Menú» (`:22`; R-189, R-190, C-194 y C-195), `:8` (R-225, C-230), `:17` (R-224, C-229) y `:48` (R-229, C-234). C-194 cierra la lista: «ninguna otra línea de `style-guide.md` cambia, salvo la `:8`, la `:17` y la `:48`». C-195 deja `--color-nav-hover` solo en «Menú». Ningún otro requisito obliga a tocar más. Los tokens nuevos de R-64 y C-64 van en `_tokens.scss` y no en la guía. `:11` y `:64` siguen siendo ciertas después del cambio. |
+| `index.html` | Cumple | R-67 y C-67 limitan los cambios al `<link>` (`:11`; R-223, C-228: `wght@500;600;700;800`, sin el 400) y a su comentario (`:10`; R-230, C-235), y C-67 dice «ninguna otra línea de `index.html` cambia». R-194 y R-228 dependen de ese `<link>` y no piden nada más. R-230 sigue el literal de la #4 («que nombre los cuatro pesos») y no añade el «y quién los usa» de la opción (a) de Q-44. |
+
+**Lista de revisión del frontend (`frontend-conventions/checklist.md`)**: en la puerta 2 no aplica, porque el cambio aún no tiene código. Solo comento lo que fija lo cambiado.
+
+| Casilla | Resultado | Nota |
+|---|---|---|
+| Carpetas por funcionalidad; página o componente = carpeta con `.ts`, `.html` y `.spec.ts` | No aplica | Sin cambios. |
+| Ninguna funcionalidad importa otra ni `apps/api` | No aplica | Sin cambios. |
+| `app.*` solo importa páginas y `shared` | No aplica | R-67 añade el contenedor común. |
+| `shared/` solo con lo que usan dos funcionalidades | No aplica | Sin cambios (#10 y #38). |
+| Kebab-case sin sufijos; idioma | No aplica | — |
+| Un concepto por archivo | No aplica | — |
+| Páginas inyectan servicios; componentes presentacionales | No aplica | Sin cambios. |
+| `HttpClient` solo en `services/` | No aplica | — |
+| `@Injectable({providedIn: 'root'})` e `inject()` | No aplica | — |
+| Sin lógica de negocio ni de tramos en páginas | No aplica | — |
+| Carga, error y vacío | No aplica | Sin cambios. |
+| Buscador cancela la anterior | No aplica | — |
+| Error en español visible | No aplica | — |
+| Tipos de cambio por Zod | No aplica | — |
+| API propia tipada, sin `any` | No aplica | La ausencia de Zod no es hallazgo (ADR-013). |
+| Sin `.scss` en componentes | No aplica | R-174 (`_shared.scss`) y R-220 (`_simulations.scss`). |
+| Colores y medidas con tokens, sin valores sueltos | No aplica | R-64 y C-64 lo llevan a los valores de la #1, y R-188 crea `--color-nav-hover`. |
+| Clases con prefijo | No aplica | Sin cambios (R-39). |
+| Teclado y foco visible | No aplica | R-186, R-203, R-211 y R-212 mantienen el contorno del navegador (R-68). La altura de línea de 24 px de R-183 da a los enlaces justo el mínimo de 24 px del criterio 2.5.8. |
+| Etiquetas, contraste, móvil | No aplica | `#666` sobre blanco da unos 5,7:1 (R-191). `#666` sobre `--color-soft` (`#e4e4fc`), recalculado, da unos 4,6:1: cumple AA por poco, si hay texto `--color-muted` en una tarjeta con énfasis. La etiqueta sigue asociada al control (C-186, C-187). Móvil: H-28, H-30 y H-31. |
+| Lighthouse sin fallos sin justificar | No aplica | R-221 repite las auditorías del simulador. Su resultado a 320 px, en H-32. |
+| Carga y error con `role="status"` y `role="alert"` | No aplica | — |
+| Reactive Forms tipados con `toSignal` | No aplica | — |
+| Cada campo con etiqueta y error | No aplica | — |
+| Angular 22 | No aplica | — |
+| Importes enteros; conversión solo para mostrar | No aplica | — |
+| Conversión en una única función pura | No aplica | — |
+| Sin `httpResource`; `LoadState<T>` | No aplica | — |
+| Tests de página, componente y servicio, con carga, error y vacío | No aplica | C-225: los tests del simulador no cambian. |
+| Sin repetir los límites de los tramos | No aplica | — |
+| Ningún test en rojo ni desactivado | No aplica | — |
+| Cada cambio cubre un `R-nn` | No aplica | Cada retoque tiene requisito (R-171 a R-230). |
+
+**Lista de revisión del backend (`backend-conventions/checklist.md`)**: no aplica. El cambio no toca `apps/api`, y las casillas (capas, Zod, DTO, `details[].code`, `input`, controlador, `handleError`, `CustomError`, `INTERNAL_ERROR`, JSON, SQL con parámetros, importes, redondeo, puertos, `SqliteError`, migraciones, tests de endpoint, tests unitarios e integración, tests en verde, origen, nombres) siguen como en la ronda 2.
+
+### Seguimiento de la ronda anterior
+
+| ID | Estado | Nota |
+|---|---|---|
+| H-18 | Resuelto | R-168 (:609) incluye `companyName` (obligatorio, no vacío, 200 como máximo tras recortar). Las simulaciones van aparte, en R-170. |
+| H-19 | Resuelto | La #28 incluye R-168 y R-170 en su «Aplicada en», y la #23 (:1154) ya no cita C-01. En lo nuevo vuelve a salir el mismo patrón: H-24. |
+| H-20 | Resuelto | R-43 (:361) y R-163 (:409) dicen «salvo con un id que R-128 rechaza (sin ninguna petición)». C-128 (:1020) comprueba que la vista no se queda en «Cargando cliente…». |
+| H-21 | Abierto (reserva aceptada por el autor) | Motivo del autor: «la columna «Requisito» está bien y renumerar 174 casos pesa más que la ayuda que da». Los casos nuevos siguen con otros desfases (C-176 a C-227 para R-171 a R-222, y C-228 a C-235 para R-223 a R-230). |
+| H-04 | Abierto (reserva aceptada por el autor) | Lo cambiado no le afecta. |
+| H-10 | Abierto (reserva aceptada por el autor) | Lo cambiado no le afecta. |
+| H-14 | Abierto (reserva aceptada por el autor) | Hay compuestos nuevos del mismo patrón (R-183, R-185, R-192, R-193, R-201 y R-214). Por el encargo, no los abro. |
+| H-15 | Abierto (reserva aceptada por el autor) | Lo cambiado no le afecta. |
+
+No hay ningún hallazgo Bloqueante ni Importante. H-22 a H-32 son Menores, y por el ADR-016, punto 1, no hacen falta más rondas: el autor decide si los acepta como reserva. En el punto D, el recorte no choca con el principio 7 en el texto de la spec. Las reservas son H-30 (falta asegurar que el identificador se ve entero en algún sitio) y H-31 (falta un caso de 1.4.4 y otro de 1.4.12). En el punto 3, los límites que fija la spec para `style-guide.md` e `index.html` son los pedidos. Siguen abiertas, como reservas ya aceptadas, H-04, H-10, H-14, H-15 y H-21.
+
+## Aprobación del autor (ronda 3, 2026-11-25)
+
+Texto literal del autor sobre la ronda 3 (condición de la aprobación, que sustituye a la anterior):
+
+> 2. Aprobación de la puerta 2, condicionada (sustituye a la anterior): si el diff acumulado de las vueltas #5 y #6 solo toca R-179, R-231, C-184, R-55, C-55, la sección 3 y las filas y notas de la #6 y de H-29, y spec.md queda con 0 PENDIENTE, 0 Q abiertas y los recuentos que den el fichero, apruebo la puerta 2 de la 004-customers con las reservas H-04, H-10, H-14, H-15, H-21 y H-29, cada una con su motivo. Si toca algo más, no apruebes y avísame.
+
+Texto literal del autor (aprobación):
+
+> 1. El paréntesis añadido en spec.md:19 cuenta como nota de la Decisión 2026-11-25 #6 (consecuencia directa): la condición de mi aprobación se cumple.
+> 2. Apruebo la puerta 2 de la 004-customers, con las reservas H-04, H-10, H-14, H-15, H-21 y H-29, cada una con su motivo (los de review.md; el de H-29: se mide en la puerta 6, y si los enlaces no caben se parten en dos líneas por la Decisión 2026-11-25 #6, sin cambio de requisitos).
+
+Reservas aceptadas por el autor (pendientes), con su motivo:
+- H-04, H-10, H-14, H-15 y H-21: los motivos de la aprobación de la ronda 2 (arriba).
+- H-29: se mide en la puerta 6, y si los enlaces no caben se parten en dos líneas por la Decisión 2026-11-25 #6, sin cambio de requisitos.
+
+H-22 a H-28 y H-30 a H-32, corregidos o decididos por el autor (Decisiones 2026-11-25 #5 y #6), sin otra ronda del revisor (ADR-016, punto 1). Recuento del fichero al aprobar: 232 requisitos, 239 casos y 44 dudas (0 abiertas), 0 PENDIENTE. `Estado:` pasa a `Aprobada`.
