@@ -402,3 +402,135 @@ Reservas aceptadas por el autor (pendientes), con su motivo:
 - H-29: se mide en la puerta 6, y si los enlaces no caben se parten en dos líneas por la Decisión 2026-11-25 #6, sin cambio de requisitos.
 
 H-22 a H-28 y H-30 a H-32, corregidos o decididos por el autor (Decisiones 2026-11-25 #5 y #6), sin otra ronda del revisor (ADR-016, punto 1). Recuento del fichero al aprobar: 232 requisitos, 239 casos y 44 dudas (0 abiertas), 0 PENDIENTE. `Estado:` pasa a `Aprobada`.
+
+## Ronda 4 (2026-11-25) · Veredicto: Conforme con reservas
+
+**Alcance:** tareas T-01 a T-18 y las dos correcciones del autor sobre la T-18, commits de `a561ea8` a `1e08acd` (27 commits). He leído el código de los 69 ficheros del `git diff --stat`: la API entera de la spec, la web (`customers/`, `app.*`, `shared/interfaces/`) y los cuatro parciales y `index.html`. También he leído `spec.md` (requisitos, casos y sección 1), `plan.md` (secciones 5 a 8 y D-14 por Grep), `tasks.md` (T-01 a T-18 con sus aprobaciones y observaciones, y la cobertura por Grep), `review.md` (rondas 1 a 3), las dos checklists y `style-guide.md` (`:8`, `:17`, `:22`, `:48` y `:64`). De las medidas he leído `measure-lines5.json`, `measure-cards.json` y `text-spacing.json`, y he buscado con Grep en `measure-all.json` y `measure-lines.json` (este último no estaba en «Rutas a leer», pero sí en la misma carpeta, y es el que da la medida de C-226). De las capturas he mirado `fase-7-004-p6-vista-simulador-320.png` y `fase-7-004-p6-lighthouse-detalle-movil.png`. Las reservas ya aceptadas (H-04, H-10, H-14, H-15 y H-21, y las dos desviaciones de R-204) no las abro como hallazgo nuevo.
+
+### Hallazgos
+| ID | Gravedad | Archivo:línea | Requisito o regla | Hallazgo |
+|---|---|---|---|---|
+| H-33 | Importante | apps/web/src/scss/_customers.scss:178-187; ai-workspace/specs/004-customers/spec.md:793, :1123 | R-206 y C-211 (la fila de R-204 al pie, «a la misma altura» que la de las tarjetas de su fila de la rejilla) | **Falta evidencia en el estado final, y el CSS apunta a que no se cumple.** `.customer-card__last` lleva `margin: auto 0 0`, `flex-wrap: wrap` y `border-top`. Con eso, el borde inferior de la fila queda al pie, pero el superior (la línea separadora de R-205) sube unos 38 px (una línea de 30 px más el `gap` de 8 px) cuando la fila se parte en dos. `measure-lines5.json` mide anchos mixtos: a 768 px (dos columnas, `cardW` 340.5) hay 2 de 10 tarjetas con la fila en dos líneas, y a 1024 px (tres columnas) hay 3 de 10. Si en una fila de la rejilla hay una tarjeta con la fila en una línea y otra con la fila en dos, las separadoras quedan a distinta altura. Ninguna medida del estado final da la posición de la separadora por fila de la rejilla. La única medida de ese dato es `lastRowTops` de `measure-cards.json`, que es de antes de `1e08acd` y ya daba dos valores (`[181,211]` a 768 y a 1280 px). El motivo del autor para la desviación de R-204 nombra la altura igual de las tarjetas, pero no la alineación de R-206. Si la medida confirma que las separadoras no se alinean, se incumple R-206 (Bloqueante). Si no, el autor decide si la reserva de R-204 lo cubre. No lo resuelvo. |
+| H-34 | Importante | ai-workspace/specs/004-customers/tasks.md:183 (desviación 7), :203 (desviación 9), :277 (C-33 con `click()`); plan.md:520 (riesgo 15); spec.md:980, :945, :1129 | R-68 (constitución, principio 7: uso con teclado), C-68, C-33 y C-217 | **Las comprobaciones de teclado que las tareas dejaron para la puerta 6 no traen evidencia completa.** El encargo trae el foco con Tab en los tres enlaces de la cabecera (`:focus-visible`, contorno `auto`) y, en un enlace de tarjeta, el fondo de `:focus-within`. Faltan cuatro cosas: (1) activar con Intro el nombre de una tarjeta y que se abra el detalle (C-33, que la T-13 probó con `click()` porque jsdom no convierte Intro en un clic); (2) recorrer con Tab el campo de búsqueda, el selector de divisa de la cabecera y los enlaces «Volver a Clientes» e «Ir al simulador», y activarlos (C-68: «todo control y enlace habilitado… se activa con el teclado»); (3) comprobar que el contorno de foco del enlace de la tarjeta se ve entero sobre `--color-soft` (C-217; riesgo 15: el `overflow: hidden` del `<a>` en `_customers.scss:140`); (4) el «Hecho cuando» de la T-08, la T-09 y la T-13 lo remite expresamente a esta puerta. Son elementos nativos (`<a routerLink>`, `<input>`, `<select>`) y lo previsible es que funcionen, pero lo que no veo no está comprobado. |
+| H-35 | Menor | ai-workspace/specs/004-customers/tasks.md:14 | Coherencia del estado de las tareas (sdd, puerta 6: «el `Estado:` … coincide con el trabajo real») | La línea dice «Estado de las tareas: pendientes de la aprobación del autor (puerta 4)», «T-16 pendiente de la aprobación del autor» y «T-17 y T-18 en `[ ]`, pendientes». Las dieciocho tareas están en `[x]` y cada una tiene su aprobación literal (`:36`, `:58` … `:391`). El `Estado:` de la spec (`spec.md:3`) y el README (`:12`) sí están al día (`En revisión`). |
+| H-36 | Menor | apps/web/src/app/customers/pages/customers-page/customers-page.html:1; components/customer-card/customer-card.html:1; pages/customer-detail-page/customer-detail-page.html:1; components/simulation-history/simulation-history.html:1; pages/customers-page/customers-page.spec.ts:23; pages/customer-detail-page/customer-detail-page.spec.ts:11; services/customers-api.spec.ts:201 | R-144 y C-144 («Toda cita de un requisito o una decisión lleva «spec NNN:»») | Es la observación de la T-12 (`tasks.md:253`), y se repite en más ficheros. Cada comentario abre con «spec 004:» y después cita requisitos en otro paréntesis sin calificar, por ejemplo «(R-33, R-105)», «(R-37)» y «(R-43, R-44, R-46)». Si «calificada» vale una vez por comentario, cumple. Si vale cita a cita, que es lo que dice C-144 al pie de la letra, no cumple. Lo pongo como Menor y no como Bloqueante porque cada línea nombra su spec y no hay ninguna ambigüedad sobre de qué spec son. La lectura de R-144 la decide el autor. |
+| H-37 | Menor | apps/web/src/scss/_customers.scss:172 (`padding: 6px 14px`), :44 (`17rem`); apps/web/src/scss/_shared.scss:104 (`min(100%, 18rem)`); ai-workspace/specs/004-customers/plan.md:342, :519 | `frontend-conventions/checklist.md:28` («Los colores y medidas salen de los tokens (`var(--…)`), sin valores sueltos en los parciales») frente a la D-14, la D-17 y el riesgo 14 de `plan.md` | Son tres medidas sin token. El plan aprobado las fija tal cual: el relleno de la píldora, copiado de `style-guide.md:64` (D-14, `plan.md:342`); los 17 rem de la rejilla (D-17, aprobados por el autor); y los 18 rem del selector por debajo de 48 rem (riesgo 14). El código sigue al plan, que en la jerarquía de CLAUDE.md está por encima de las convenciones, y por eso lo pongo como Menor. Aun así, la casilla de la checklist y el plan chocan en este punto, y lo tiene que decidir el autor. No cuento los `font-weight` literales (no son color ni medida, y hay precedente en `_simulations.scss` de la 005) ni el `1px` del anuncio visualmente oculto (`_customers.scss:64-65`), que es la técnica estándar. |
+| H-38 | Menor | ai-workspace/specs/004-customers/spec.md:39-66 | ADR-016 («cada spec anota qué ajustes aplicó»); el patrón de H-14 de la 001, H-15 de la 002, H-16 de la 003 y H-17 de la 005 | La sección 1 anota los ajustes de las puertas 1 y 2, y de las dos rehechas. No anota los de las puertas 3 y 4 (con las ampliadas de la T-16 y las rehechas de la T-17 y la T-18) ni los de la puerta 5: encargos del implementer sin enseñar (punto 4), y Sonnet 5.5 u Opus 5.5 según la tarea (punto 6). `tasks.md:8` sí anota los de la puerta 4 rehecha. |
+| H-39 | Menor | Medidas `measure-cards.json` y `text-spacing.json` (carpeta `…\2726afbf…\scratchpad\p6\`); apps/web/src/scss/_customers.scss:178-201 | C-238 y C-239 (la fila de R-204 y las píldoras, enteras, sin cortarse ni solaparse), y también C-201, C-209 y C-218 | **La evidencia de las tarjetas con el texto al 200 % y con el espaciado de 1.4.12 es de un CSS anterior al final.** `measure-cards.json` registra `"amountWrap":"break-word"`, que es el estado de `7b7d746`. `text-spacing.json` está en la misma carpeta. Ninguno de los dos refleja `1e08acd`, que cambió justo la fila que comprueban C-238 y C-239 (`flex-wrap`, `white-space: nowrap`, `flex-shrink: 0`). En el estado final, `measure-lines5.json` solo mide el texto por defecto. No puedo saber, por los ficheros, en qué estado se hicieron las capturas de Firefox de C-238. No afecta a la cabecera, al detalle ni al simulador: `_shared.scss`, `_simulations.scss` y las reglas del detalle no cambiaron en las correcciones, así que sus medidas siguen valiendo. |
+
+### Checklists
+
+**Comprobaciones de la puerta 6 (reviewer.md y sdd)**
+
+| Comprobación | Resultado | Nota |
+|---|---|---|
+| Cada `R-nn` tiene tarea | Cumple | La cobertura de `tasks.md` (Grep) cubre R-01 a R-232, incluidos los añadidos y los modificados. R-139 a R-141 están sustituidos. |
+| Cada `R-nn` tiene código y test | Cumple con reservas | Los requisitos de la API y la lógica de la web tienen test (lo he mirado en `routes.spec.ts`: C-03 a C-20, C-79 a C-94 y C-156 a C-167). Los retoques visuales tienen código en `_shared.scss` y `_customers.scss` y su prueba es manual (plan, sección 5). R-206 está en H-33 y R-68 en H-34. **R-204** no se cumple en dos puntos: la fila no va «en una misma fila» (`_customers.scss:181`, `flex-wrap: wrap`) y el importe no va «a la derecha» (`:182`, `justify-content: center`). C-209 tampoco se cumple. Son las dos desviaciones que el autor aceptó como reservas `Menor`, sin cambiar los requisitos y con la reescritura de R-204 prevista en el próximo cambio de requisitos. Sus motivos literales son: (1) ««Última simulación» y su importe no caben en una fila con el texto y el ancho de las tarjetas aprobados, y no se cambia el texto ni la rejilla. A cambio no hay palabras partidas, ni solapes, ni desplazamiento horizontal, y las tarjetas mantienen la misma altura. El requisito R-204 («misma fila») se reescribirá en el cambio de requisitos posterior (filas «etiqueta → valor»).»; (2) «Prefiero el importe centrado: con la fila partida en dos líneas, etiqueta e importe centrados se ven más ordenados que con el importe a un lado.». Por la escala de `templates/review.md`, incumplir un `R-nn` es Bloqueante. Lo anoto como reserva aceptada, porque así lo ha decidido el autor y así lo pide el encargo. |
+| Tests y build en verde, según su salida literal | Cumple | `npm run verify`: 36 ficheros y 913 tests en la raíz, y 18 ficheros y 324 tests en la web, todos `passed`. `ng build` termina, con el aviso de presupuesto de 723.38 kB frente a 500 kB, ya aceptado por el autor en la T-14. No hay `skip`, `todo`, `only` ni `xit` en `apps/` (Grep). |
+| `Estado:` coincide con el trabajo real | Cumple con reservas | `spec.md:3` y `README.md:12` dicen `En revisión`. Las 18 tareas están en `[x]` y la puerta 6 ha empezado. `tasks.md:14` está desfasada (H-35). |
+| Tareas de más de 5 archivos de producción con `Excepción de tamaño:` | Cumple | Ninguna pasa de 5. La T-15 tiene 5 (`seed.ts`, `seed-data.ts`, `run-seed.ts` y los dos `package.json`), la T-17 tiene 4 y la T-18 tiene 2. |
+| Ficheros del `git status` y del `git diff --stat` = los de las tareas | Cumple | Los 69 ficheros corresponden a T-01 a T-18. `CLAUDE.md` y los dos `package.json` son de la T-15, y `styles.scss` de la T-10. En `git status` solo quedan las 23 capturas de la puerta 6, sin seguimiento. |
+| Lighthouse (R-69, R-70, R-146, R-147) | Cumple | Hay ocho capturas. Según el encargo, accesibilidad 100 en las ocho. He mirado `lighthouse-detalle-movil.png`: 100, «Emulated Moto G Power», capturada el 25 de noviembre de 2026 a las 4:18 PM, después del `verify` de las 16:15. SEO 90 por `meta-description`, como dejó el autor en la 005. |
+| C-184 (reserva H-29) | Cumple | `measure-cards.json` (`headerUsd`) muestra que a 768 px, con «Dólar estadounidense (USD)», el `<nav>` ocupa dos líneas («Simulador» en y 56–80) y el selector queda a su derecha, en y 46–98, en la línea del último enlace y sin solaparse. «Divisa» va a la izquierda (x 380.5) y no hay desplazamiento horizontal. A 767 px, una línea con el selector debajo y la etiqueta encima. Por la Decisión 2026-11-25 #6, aprueba. |
+| C-226 | Cumple | En `measure-lines.json`, a 320 px con `base-select` y USD elegido: `scrollH` 108 = `clientH` 108, `noHScroll: true`. La medida sigue valiendo, porque `_simulations.scss` no cambió después. Sin `base-select`, las capturas de Firefox del autor muestran el corte de la limitación aceptada de la 005 (P-08 (a)), que C-226 no cuenta como fallo. |
+| C-38 a 320 px en las cuatro vistas | Cumple | Según el encargo y `measure-lines5.json`, `noHScroll` en todos los anchos. En el detalle, `taxClipped: false` y `titleClipped: false` (`measure-cards.json`). |
+| C-237 y R-200 | Cumple | El identificador de 20 caracteres aparece entero en dos líneas a 320 px (60 px de alto) y el título no está recortado. Las palabras partidas del título a 320 px no incumplen R-200 ni R-38. |
+
+**Lista de revisión del backend (`backend-conventions/checklist.md`)**
+
+| Casilla | Resultado | Nota |
+|---|---|---|
+| `domain` sin `data`, `infrastructure`, `presentation`, Express, SQLite ni `node:*` | Cumple | `customer-search.ts:1-2`, `search-customers.ts:1-4`, `get-customer.ts:1-4`, `list-customer-simulations.ts:1-4` y los dos DTO solo importan `domain` y Zod. |
+| `presentation` sin `infrastructure` ni `data`, salvo `routes.ts` | Cumple | `customers/routes.ts:2-4` compone. `controller.ts` solo importa `domain` y `middlewares`. |
+| `infrastructure` sin `presentation`; `data` solo el driver y `node:*` | Cumple | `sqlite-customer.datasource.ts:1-7`. |
+| `app.ts` y `config` | No aplica | No cambian. `seed.ts` importa `config`, `presentation` y `seed/`, como la fila de `architecture.md:76`. |
+| `packages/pricing` | Cumple | Sin diff. |
+| Todo dato externo por Zod | Cumple | `req.query` y `req.params` pasan por `SearchCustomersDto` y `CustomerIdDto` (`controller.ts:36`, `:52`, `:69`). |
+| DTO `[error, dto]` con `CustomError` `VALIDATION_ERROR` | Cumple | `customer-id.dto.ts:39-49`, `search-customers.dto.ts:34-38`. |
+| `details[].code` estables | Cumple | Solo `INVALID_TYPE`, `TOO_SMALL`, `TOO_BIG` y `UNKNOWN_FIELD`, a través de `toDetails`. |
+| El `input` no sale del traductor | Cumple | `reportInput` solo llega a `toDetails`, que no cambia. |
+| Controlador sin lógica; caso de uso por petición | Cumple | `controller.ts:42`, `:58`, `:75`. |
+| `handleError`; el middleware solo recoge lo que no llega a un controlador | Cumple | `notFoundHandler` (`error-handler.ts:54-57`) va montado después de las rutas (`routes.ts:26`), como `architecture.md:84`. |
+| `CustomError` sin HTTP | Cumple | La fila `NOT_FOUND: 404` está en `error-handler.ts:17`. |
+| Lo que no es `CustomError` → `INTERNAL_ERROR` | Cumple | `error-handler.ts:38`. Lo prueba C-11 en `controller.spec.ts`. |
+| JSON `camelCase`, mensajes en español | Cumple | C-07 y C-15 en `routes.spec.ts:464` y `:734`. |
+| SQL con parámetros | Cumple | `sqlite-customer.datasource.ts:107` y `:120` usan `?`. `:87-98` no recibe ningún valor. |
+| Importes enteros, sin recalcular | Cumple | Se leen tal cual (`toSimulationEntity`). Lo prueba C-06 con una fila escrita a mano. |
+| Un único punto de redondeo | No aplica | Las lecturas no redondean. |
+| Puertos con `Promise`; mapeo solo en el datasource | Cumple | `toEntity` y `toLastSimulation` reutilizan el `toEntity` de simulaciones (`:7`, `:45`). |
+| Traducción de `SqliteError` | Cumple | Las lecturas no tienen ninguna. `create` no cambia. |
+| Migraciones | Cumple | No hay ninguna nueva. `CREATE INDEX` solo está en `0002_simulations.sql`, según la comprobación de la sesión principal. |
+| Tests de cada endpoint con errores y límites | Cumple | `customers/routes.spec.ts:419-751` y C-14 en `routes.spec.ts`. |
+| Unitarios de `domain` sin base ni Express | Cumple | Los tres casos de uso usan un repositorio falso. |
+| Integración con `:memory:`, con las tablas vaciadas | Cumple | Patrón de la 002 y la 003. `DELETE FROM simulations` en el `beforeEach` (T-02, desviación 2). |
+| Ningún test en rojo ni desactivado | Cumple | 913 en verde. |
+| Cada cambio cubre un `R-nn` | Cumple | — |
+| Nombres y sufijos; una responsabilidad por archivo | Cumple | `customer-search.ts` es una regla pura dentro de `use-cases/customer/`, por la D-05. |
+
+**Lista de revisión del frontend (`frontend-conventions/checklist.md`)**
+
+| Casilla | Resultado | Nota |
+|---|---|---|
+| Carpetas por funcionalidad; página o componente con `.ts`, `.html` y `.spec.ts` | Cumple | `customers/{pages,components,interfaces,services}`. Las cinco carpetas de página y de componente tienen sus tres ficheros. |
+| Ninguna funcionalidad importa otra ni `apps/api` | Cumple | `customers/` solo importa `shared/`. |
+| `app.*` solo importa páginas y `shared` | Cumple | `app.ts:3-5` y `app.routes.ts:14-25`. La inyección de `CurrencySelection` la decidió el autor (P-01 (a)). |
+| `shared/` solo con lo que usan dos funcionalidades | No es hallazgo | `shared/interfaces/customer.ts` y `simulation.ts` los decidió el autor en la Decisión 2026-11-24 #10. |
+| Kebab-case sin sufijos; idioma | Cumple | — |
+| Un concepto por archivo | Cumple | — |
+| Páginas inyectan servicios; componentes presentacionales | Cumple | `CustomerCard`, `CustomerSearch` y `SimulationHistory` no inyectan nada. |
+| `HttpClient` solo en `services/` | Cumple | Solo en `customers-api.ts:1`, comprobado con `git grep` por la sesión principal. |
+| `@Injectable({providedIn: 'root'})` e `inject()` | Cumple | `customers-api.ts:32-34`. |
+| Sin lógica de negocio ni de tramos en páginas | Cumple | Los importes se formatean con `currency-conversion.ts`, sin `packages/pricing`. |
+| Carga, error y vacío | Cumple | `customers-page.html:17-37` y `customer-detail-page.html:17-54`. El vacío del historial está en `simulation-history.html:2-3`. |
+| El buscador da de baja la anterior | Cumple | `customers-api.ts:45`. |
+| Error visible en español | Cumple | Textos de R-122 y R-125. |
+| Tipos de cambio por Zod | Cumple | Pasan por `CurrencySelection` de la 005. |
+| API propia tipada, sin `any` | Cumple | Grep de `any` vacío. La ausencia de Zod no es hallazgo (ADR-013). |
+| Sin `.scss` ni `styles` en componentes | Cumple | — |
+| Colores y medidas con tokens | No cumple | H-37: el plan y la checklist chocan. |
+| Clases con prefijo | Cumple | Los selectores de elemento anfitrión (`app-customer-detail-page`, `app-simulation-page`) son del riesgo 19. |
+| Teclado y foco visible | Cumple con reservas | Hay evidencia parcial: H-34. Ninguna regla de `outline` (Grep). |
+| Etiquetas, contraste y móvil | Cumple | `customer-search.html:2-3` asocia la etiqueta con `for`/`id`. `#666` sobre `#e4e4fc` da 4,59:1 (riesgo 22). A 320 px no hay desplazamiento horizontal. |
+| Lighthouse sin fallos sin justificar | Cumple | 100 en las ocho auditorías. |
+| Carga y error con `role="status"` y `role="alert"` | Cumple | — |
+| Reactive Forms tipados con `toSignal` | Cumple | `FormControl<string>` con `nonNullable`. La plantilla no lee `value` ni `status`, así que no hace falta `toSignal`. Sin `markForCheck`. |
+| Cada campo con etiqueta y error | Cumple | El buscador no tiene validación que mostrar: sin `maxlength`, por la reserva H-10. |
+| Angular 22 (sin `standalone`, `changeDetection`, `ngClass`…) | Cumple | Grep vacío. |
+| Sin zone.js | Cumple | `app.config.ts` no cambia. |
+| Control flow nativo con `track` | Cumple | `track customer.id` y `track row.id`. |
+| Señales y `computed()`, sin `mutate` | Cumple | — |
+| Manejadores con nombre de acción; `protected` y `readonly` | Cumple | `runSearch` y `selectCurrency`. Las entradas y salidas son `readonly`. |
+| Importes enteros; conversión solo para mostrar | Cumple | — |
+| Conversión en una única función pura | Cumple | `toDisplayCents` y `formatCents` de `shared/` (ADR-017). |
+| Sin `httpResource`; `LoadState<T>` | Cumple | — |
+| Test de cada componente, página y servicio | Cumple | `customer-display`, `customer-id`, `customers-api`, las tres tarjetas o componentes, las dos páginas y `app.spec.ts`. |
+| Sin repetir los límites de los tramos | Cumple | C-73, según la regla común de `tasks.md:28`. |
+| Ningún test en rojo ni desactivado | Cumple | 324 en verde. |
+| Cada cambio cubre un `R-nn` | Cumple | — |
+
+**Observaciones de las tareas para el revisor (no son hallazgos)**
+- T-02 (citas «spec 004: R-80; plan D-06»): están calificadas.
+- T-03 (el tercer falso): lo autorizó el autor.
+- T-06 (fallo puntual de `ng test`): no se repite en la salida literal.
+- T-07 (`countryName` devuelve el código; la aserción de C-103 es frágil): lo aceptó el autor.
+- T-10: las líneas de `style-guide.md` que citan los tokens dicen lo citado, comprobado en `:55` y `:64` (Grep).
+- T-13 (`snapshot.paramMap`): lo decidió el autor. Con un id no válido se siguen pidiendo los tipos de cambio, y eso cumple R-57. C-128 solo exige que no haya peticiones a la API propia.
+- T-14 y T-16 («Clientes» marcado con `/customers?q=%20Acme%20`): sigue sin medirse. C-62 cumple con `?q=acme`.
+- T-17 y T-18 (signos escapados en los retornos): los diffs los sacó la sesión principal. Los ficheros tienen los signos reales.
+
+### Seguimiento de la ronda anterior
+
+| ID | Estado | Nota |
+|---|---|---|
+| H-04 | Abierto (reserva aceptada por el autor) | `customer-id.dto.ts:21-23` usa `Number()`, como dice la reserva. |
+| H-10 | Abierto (reserva aceptada por el autor) | `customer-search.html:3`, sin `maxlength`. |
+| H-14 | Abierto (reserva aceptada por el autor) | Sin cambios. |
+| H-15 | Abierto (reserva aceptada por el autor) | `database.md` sin diff. |
+| H-21 | Abierto (reserva aceptada por el autor) | Sin cambios. |
+| H-22 a H-28 | Resuelto | Corregidos en la puerta 2 (Decisión 2026-11-25 #5). El código de H-27 cumple: `_simulations.scss:7-20` solo trae las dos columnas, su mismo ancho y el eyebrow y el título a todo el ancho. El de H-28 también: R-231 en `_shared.scss:49-53`, medido a 320 px. |
+| H-29 | Resuelto | Medido en la puerta 6 (C-184): a 768 px exactos los enlaces se parten en dos líneas, con el selector a la derecha, en la línea del último enlace. Es lo que prevé la Decisión 2026-11-25 #6, sin cambio de requisitos. |
+| H-30 | Resuelto | R-232: `_customers.scss:250-257` con `overflow-wrap: anywhere`. Identificador entero a 320 px (`taxClipped: false`). |
+| H-31 | Resuelto en parte | C-238 y C-239 se hicieron, pero la evidencia de las tarjetas es anterior a `1e08acd` (H-39). |
+| H-32 | Resuelto | C-226 queda redactado con resultado y medido con `base-select` (`measure-lines.json`: 108 = 108) y sin él (capturas de Firefox). |
+
+No hay ningún Bloqueante abierto. H-33 y H-34 son Importantes y, por el ADR-016, punto 1, hace falta otra ronda limitada a ellos cuando estén corregidos o medidos. Si la medida de H-33 confirma que las separadoras no se alinean, el hallazgo pasa a Bloqueante (R-206), salvo que el autor extienda a R-206 la reserva de R-204. H-35 a H-39 son Menores, y el autor decide si los acepta como reserva. Siguen abiertas, como reservas aceptadas, H-04, H-10, H-14, H-15 y H-21, y las dos desviaciones de R-204.

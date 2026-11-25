@@ -178,9 +178,8 @@
 .customer-card__last {
   margin: auto 0 0;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: baseline;
+  flex-direction: column;
+  align-items: center;
   gap: var(--space-sm);
   border-top: var(--border-width-subtle) solid var(--color-bg);
   padding-top: var(--space-sm);
