@@ -10,6 +10,43 @@ app-currency-selector label {
   margin: var(--space-md) 0 var(--space-sm);
 }
 
+// Cabecera común (spec 004: R-63, R-64, R-138 a R-141; D-14). Sin reglas de `outline` (se mantiene el foco del navegador, R-68).
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+// Separa los enlaces entre sí (spec 004: R-63).
+.app-header__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.app-header__link {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-muted);
+  text-decoration: none;
+
+  &[aria-current='page'] {
+    color: var(--color-ink);
+  }
+}
+
+.app-header__currency {
+  flex: 0 1 18rem;
+}
+
+// Dentro de la cabecera, la etiqueta no lleva los 24 px de arriba de la regla de `app-currency-selector label`.
+.app-header app-currency-selector label {
+  margin-top: 0;
+}
+
 // El selector de divisa ocupa el ancho de su contenedor sin desbordarlo y lleva el mismo aspecto que el de país.
 .currency-selector__select {
   width: 100%;

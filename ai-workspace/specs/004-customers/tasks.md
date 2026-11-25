@@ -277,7 +277,7 @@ Reglas comunes de esta spec:
 ## T-14 · cabecera común con sus estilos (al final)
 - Cubre: R-28, R-52 a R-56, R-58 a R-71, R-77, R-78, R-130, R-131, R-135 a R-149 (C-63 a C-71, C-78, C-138 a C-141 y C-146 a C-148 en la puerta 6)
 - Depende de: T-09, T-13, T-16
-- Estado: [~] en curso
+- Estado: [x] hecha
 - Modelo: Sonnet 5.5, según la petición del autor («cabecera») y la Q-01 (a); `isActiveChange` en zoneless es el riesgo 9, con su regla de parada abajo.
 - Archivos de producción (3):
   - `app/app.html`: `<header class="app-header">` con el `<nav>` de tres enlaces y el `<app-currency-selector>` dentro de `@if (customersActive())`, como la D-13; el comentario de la línea 1 no cambia.
@@ -285,14 +285,19 @@ Reglas comunes de esta spec:
   - `scss/_shared.scss` (crece): `.app-header`, `.app-header__nav`, `.app-header__link` (con `[aria-current='page']`) y `.app-header__currency`, más la regla de la etiqueta dentro de la cabecera, sin cambiar la de `_shared.scss:10` ni ninguna de `outline` (D-14).
 - Tests (crece): `app/app.spec.ts` (D-13; P-03 (a)).
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] C-47 de la 005: `toHaveLength(3)` con «spec 004: R-142» y título «tres enlaces»; la aserción de selectores no cambia y el comentario de la línea 46 añade «spec 004: R-145: el selector de divisa solo se pinta en las vistas de clientes» (C-142, C-145).
-  - [ ] Tests nuevos en `app.spec.ts`: C-28, C-52, C-53, C-54, C-55 (orden en el DOM), C-56, C-58 a C-62, C-77, C-130, C-131, C-135, C-136, C-137 y C-149.
-  - [ ] C-143: `git diff` de `app.spec.ts` sin aserciones de la 000 quitadas ni desactivadas.
-  - [ ] C-66, C-67 y C-78: `git diff --stat HEAD -- apps/web/src/app/simulations/ apps/web/src/scss/_simulations.scss apps/web/src/app/app.config.ts` vacío; cada cambio de `app.*` sirve a la cabecera, a las rutas o a «Clientes».
-  - [ ] C-65: sin componente de cabecera (D-13); nada nuevo en `shared/components/`.
-  - [ ] Si `isActiveChange` no llega en la primera navegación y fallan C-55 o C-56, la tarea para y lo devuelve (riesgo 9).
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] C-47 de la 005: `toHaveLength(3)` con «spec 004: R-142» y título «tres enlaces»; la aserción de selectores no cambia y el comentario de la línea 46 añade «spec 004: R-145: el selector de divisa solo se pinta en las vistas de clientes» (C-142, C-145).
+  - [x] Tests nuevos en `app.spec.ts`: C-28, C-52, C-53, C-54, C-55 (orden en el DOM), C-56, C-58 a C-62, C-77, C-130, C-131, C-135, C-136, C-137 y C-149.
+  - [x] C-143: `git diff` de `app.spec.ts` sin aserciones de la 000 quitadas ni desactivadas.
+  - [x] C-66, C-67 y C-78: `git diff --stat HEAD -- apps/web/src/app/simulations/ apps/web/src/scss/_simulations.scss apps/web/src/app/app.config.ts` vacío; cada cambio de `app.*` sirve a la cabecera, a las rutas o a «Clientes».
+  - [x] C-65: sin componente de cabecera (D-13); nada nuevo en `shared/components/`.
+  - [x] Si `isActiveChange` no llega en la primera navegación y fallan C-55 o C-56, la tarea para y lo devuelve (riesgo 9).
+  - [x] `npm run verify` desde la raíz, en verde.
+- Observaciones para el revisor (2026-11-25):
+  - Aviso de presupuesto de `ng build`: `main` pasa de 270.18 kB a 709.99 kB frente a 500 kB (`maximumWarning`; `maximumError`, 1 MB), porque Zod entra en la carga inicial (`app.ts` → `CurrencySelection` → `ExchangeRatesApi` → `exchange-rates.ts`), consecuencia de la P-01 (a). Aceptado por el autor sin tocar código (opción (a)); mejora posible: cargar el selector en diferido.
+  - «Clientes» marcado con `/customers?q=%20Acme%20` sigue siendo una deducción: C-62 usa `?q=acme`, y C-56 y C-135 no cubren ese caso.
+  - En la segunda vuelta el implementer no pegó el `git diff` literal; la sesión principal lo comprobó idéntico a `t14.diff` (los cambios apartados de la primera vuelta).
+- Aprobación del autor 2026-11-25 (literal): «Apruebo la T-14 (cabecera común con sus estilos) con las desviaciones de la primera vuelta aceptadas. Aviso de presupuesto del build (main 710 kB frente a 500 kB, por Zod en la carga inicial, consecuencia de la P-01 (a)): opción (a), se acepta como observación para el revisor y se anota en MEMORY.md como mejora posible (cargar el selector en diferido), sin tocar código.» Primera vuelta (sesión 03): `Bloqueado` por el riesgo 9, con la fase roja; cambios apartados hasta la T-16. Segunda vuelta (sesión 06): cambios devueltos sin modificar, sin cambios de código; 19 tests nuevos; `npm run verify` en verde (905 + 322). Desviaciones aceptadas: `describe` anidado con sus ayudantes y un caso de más en C-131. Registros: `sessions/2026-11-25-03-004-customers.md` y `sessions/2026-11-25-06-004-customers.md`.
 
 ## T-15 · seed de demostración (al final)
 - Cubre: R-21, R-76, R-95, R-144, R-150 a R-153, R-161, R-162, R-168, R-170
