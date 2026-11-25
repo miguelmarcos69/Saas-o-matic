@@ -178,7 +178,8 @@
 .customer-card__last {
   margin: auto 0 0;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: baseline;
   gap: var(--space-sm);
   border-top: var(--border-width-subtle) solid var(--color-bg);
@@ -187,14 +188,15 @@
 
 .customer-card__term {
   color: var(--color-muted);
+  min-width: 0;
 }
 
 .customer-card__amount {
   margin: 0;
   font-weight: 700;
   color: var(--color-ink);
-  overflow-wrap: break-word;
-  text-align: right;
+  white-space: nowrap;
+  flex-shrink: 0;
   min-width: 0;
 }
 
