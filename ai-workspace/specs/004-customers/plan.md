@@ -3,7 +3,8 @@
 - **Spec:** `ai-workspace/specs/004-customers/spec.md` (`Estado: Aprobada`)
 - **Puerta:** 3 (plan). Solo plan y tareas; sin código.
 - **Estado del plan:** pendiente de aprobación del autor. Sin dudas abiertas: las P-01 a P-05 de la primera vuelta las decidió el autor en la segunda (D-17, sección 9). Puerta 3 ampliada del 2026-11-25: D-10 cambiada (nota tras la D-10), sin dudas abiertas (P-06 y P-07 decididas por el autor, sección 9), pendiente de aprobación del autor. Segunda puerta 3 ampliada del 2026-11-25: verificación de la D-10 para `/customers?q=%20Acme%20` cambiada (segunda nota tras la D-10), sin cambio de código ni dudas nuevas, pendiente de aprobación del autor.
-- **Formato:** «Temas + D-nn», breve (D-01). Los 170 requisitos van agrupados en pasos (sección 7) y la trazabilidad va por rangos (sección 10).
+- **Formato:** «Temas + D-nn», breve (D-01). Los 232 requisitos van agrupados en pasos (sección 7) y la trazabilidad va por rangos (sección 10).
+- **Puerta 3 rehecha del 2026-11-25** (tras el cambio de requisitos de las Decisiones 2026-11-25 #1 a #6; la spec queda con 232 requisitos y 239 casos): se rehacen solo la D-13, la D-14 y la D-16 y lo que depende de ellas. Cambian la sección 2 (filas de `app.html`, `app.spec.ts`, los parciales de `scss/`, `index.html` y `style-guide.md`), la sección 5 (filas de los casos de la cabecera y de las vistas, y las pruebas a mano de la puerta 6), la sección 7 (bloque 5, pasos 16 y 17), la sección 8 (riesgo 14 y riesgos 15 a 23) y la sección 10 (R-171 a R-232 y los modificados). Lo que cambia en cada decisión va anotado en ella con su Decisión 2026-11-25. El resto del plan no se toca, salvo las consecuencias directas de la segunda vuelta. Segunda vuelta: la P-08 (tamaño del paso nuevo frente a «la T-17») la decidió el autor, opción (b), con sus valores aprobados (sección 9); se aplican sus consecuencias directas (regla de la Decisión 2026-11-25 #4) en `:6`, en la sección 1 (fuentes de la spec y de `style-guide.md`) y en la sección 6. Sin dudas abiertas; **pendiente solo de la aprobación de la puerta 3 por el autor**. Ajustes del ADR-016 aplicados en esta vuelta: punto 2 (dudas en bloque, cada una con su recomendada), punto 4 (encargo del planner sin enseñar), punto 5 (rutas a leer acotadas: secciones 2, 5, 7, 8 y 10 y las D-13, D-14, D-16 y D-17 del plan; requisitos y casos de los retoques y los modificados) y punto 6 (planner con Opus 5.5). Regla del autor de la Decisión 2026-11-25 #4: los comentarios y textos de documentación de ficheros ya autorizados que cambian por consecuencia directa se aplican y se anotan (D-14 y D-16), sin abrir P-nn.
 
 ## 1. Contexto y fuentes
 
@@ -12,7 +13,7 @@ Este plan explica cómo se construye la spec 004 y no cambia ningún requisito. 
 Fuentes, por orden de la jerarquía (reto > constitución > spec > plan > convenciones):
 - Reto: §2.B (buscador y dashboard, detalle con tarjetas e historial), como cita la spec.
 - Constitución: principios 1 (cada fichero cubre un `R-nn`), 2 (la regla de búsqueda es pura y vive en `domain`), 3 (cada endpoint y cada regla con su test), 4 (sin dependencias nuevas, sección 4), 5 (parámetros validados con Zod en el borde), 6 (importes guardados, sin recalcular; un único redondeo de la conversión, ADR-017) y 7 (WCAG 2.2 AA; carga, error y vacío).
-- Spec 004: R-01 a R-170, C-01 a C-175 y #1 a #45.
+- Spec 004: R-01 a R-232, C-01 a C-239, Decisiones 2026-11-24 #1 a #45 y Decisiones 2026-11-25 #1 a #6 (puerta 3 rehecha; R-139 a R-141 y C-139 a C-141, sustituidos).
 - `review.md` de la 004, reservas aceptadas en la puerta 2. No se resuelven aquí, y el plan no las empeora:
   - H-04: `:id` se convierte con `Number()`, así que un decimal extremo (`0.99999999999999999`) se redondea antes de comprobar el rango, como ya aceptó el autor (D-04, riesgo 3).
   - H-10: la web no limita `q` a 200; con más, la API responde 400 y el buscador muestra su estado de error (D-10). No se añade `maxlength`.
@@ -21,7 +22,7 @@ Fuentes, por orden de la jerarquía (reto > constitución > spec > plan > conven
 - `architecture.md`: «Carpetas» (`:5-56`), «Capas» (`:59-64`), «Reglas de dependencia» (`:66-80`) y «Formato único de errores» (`:83-90`; el middleware recoge la ruta inexistente, `:84`).
 - `database.md`: tablas `customers` y `simulations` (`:10-35`), índice `idx_simulations_customer_created` (`:35`) y «Seed opcional» (`:42`). Sin migración ni índice nuevo (R-21, R-95).
 - `backend-conventions` y `frontend-conventions` (`SKILL.md`). La regla `shared/` de la web la decidió el autor (#10 y #38) y no se reabre.
-- `style-guide.md` (ADR-015): «Menú» (`:22`), colores (`:27-31`), radios (`:35`), CSS base (`:50-65`) y «Controles de formulario» (`:81-106`, sin cambios). Boceto `producto-final-boceto.html` (#11): cabecera, rejilla de tarjetas y detalle; sus datos son ilustrativos.
+- `style-guide.md` (ADR-015): «Menú» (`:22`), colores (`:27-31`), radios (`:35`), CSS base (`:50-65`) y «Controles de formulario» (`:81-106`, sin cambios). En la puerta 3 rehecha cambian solo `:8`, `:17`, `:22` («Menú») y `:48` (Decisiones 2026-11-25 #1 a #4; D-14). Boceto `producto-final-boceto.html` (#11): cabecera, rejilla de tarjetas y detalle; sus datos son ilustrativos.
 - Código leído para citar rutas reales: `apps/api/src` (los ficheros de la tabla de la sección 2), `apps/web/src/app` (`app.*`, `shared/`, `simulations/pages/simulation-page/`) y `apps/web/src/scss/`.
 
 Ajustes del ADR-016 aplicados en esta puerta: punto 2 (dudas en bloque, cada una con su recomendada), punto 4 (encargo del planner sin enseñar), punto 5 (rutas a leer acotadas) y punto 6 (planner con Opus 5.5).
@@ -89,28 +90,35 @@ Test nuevo: `src/seed/run-seed.spec.ts`. En la raíz, `package.json` gana el scr
 | `customers/pages/customers-page/` | nuevo: `CustomersPage` (`app-customers-page`) (D-10) | R-28, R-32, R-40 a R-42, R-47, R-97 a R-100, R-110, R-111, R-120 a R-123, R-159, R-165 a R-167 |
 | `customers/pages/customer-detail-page/` | nuevo: `CustomerDetailPage` (`app-customer-detail-page`) (D-11) | R-34, R-35, R-43 a R-46, R-77, R-114 a R-117, R-124 a R-129, R-154, R-155, R-160, R-163, R-164 |
 | `app.routes.ts` | rutas `customers` y `customers/:id` con `loadComponent` (D-13) | R-28, R-61, R-137 |
-| `app.html` | `<header>` con el `<nav>` de tres enlaces y el selector de divisa (D-13) | R-54 a R-56, R-58 a R-60, R-62, R-63 |
-| `app.ts` | `CurrencySelection` y la señal de «Clientes» activo (D-13, D-17) | R-53, R-55, R-56, R-130, R-131, R-136 |
-| `app.spec.ts` | C-47 con tres enlaces y tests nuevos de navegación y de la cabecera (D-13, D-17) | R-142, R-143, R-145, R-149 |
+| `app.html` | `<header>` con el `<nav>` de tres enlaces y el selector de divisa (D-13). Puerta 3 rehecha (Decisión 2026-11-25 #1, cambios 1 y 4): clase `app-container` en `<header>` y en `<main>`, y `data-label` en cada enlace, sin elementos nuevos (D-13) | R-54 a R-56, R-58 a R-60, R-62, R-63, R-67, R-171, R-175, R-176, R-193 |
+| `app.ts` | `CurrencySelection` y la señal de «Clientes» activo (D-13, D-17). No cambia en la puerta 3 rehecha | R-53, R-55, R-56, R-130, R-131, R-136 |
+| `app.spec.ts` | C-47 con tres enlaces y tests nuevos de navegación y de la cabecera (D-13, D-17). Puerta 3 rehecha: dos tests nuevos, la clase del contenedor y el `data-label` de cada enlace (D-13) | R-142, R-143, R-145, R-149, R-171, R-193 |
 | `app.config.ts` | no se toca | R-67 |
 
-Tests nuevos: uno `.spec.ts` junto a cada fichero o carpeta nuevos de la tabla. `simulations/` y `health/` no cambian (R-66).
+Tests nuevos: uno `.spec.ts` junto a cada fichero o carpeta nuevos de la tabla. `simulations/` y `health/` no cambian (R-66, R-220): ni plantillas, ni `.ts`, ni tests. Las plantillas de `customers/` tampoco cambian en la puerta 3 rehecha: los retoques de la tarjeta, del detalle y del simulador son solo CSS (D-14).
+
+### `apps/web/src/index.html` (puerta 3 rehecha; Decisiones 2026-11-25 #2 a #4)
+| Fichero | Cambio | Requisitos |
+|---|---|---|
+| `index.html` | solo dos líneas: el `<link>` de `:11` pide `wght@500;600;700;800` y el comentario de `:10` nombra los cuatro pesos (D-14) | R-67, R-194, R-223, R-228, R-230 |
 
 ### `apps/web/src/scss` y `styles.scss` (D-14)
 | Fichero | Cambio | Requisitos |
 |---|---|---|
-| `scss/_customers.scss` | nuevo: buscador, tarjetas, píldoras, detalle e historial | R-26, R-38, R-39, R-102, R-165, R-169 |
-| `scss/_shared.scss` | crece: cabecera, con sus reglas acotadas a `.app-header` | R-63, R-64, R-138 a R-141 |
-| `scss/themes/_tokens.scss` | tres tokens nuevos de la guía, cada uno con su línea de `style-guide.md` | R-39, R-169 |
+| `scss/_customers.scss` | nuevo: buscador, tarjetas, píldoras, detalle e historial. Puerta 3 rehecha: rejilla de filas iguales, tarjeta como el boceto con recortes, énfasis y fila al pie, eyebrows pegados y detalle en dos columnas (D-14) | R-26, R-38, R-39, R-101, R-102, R-105, R-165, R-169, R-195 a R-217, R-222, R-226, R-227, R-232 |
+| `scss/_shared.scss` | crece: cabecera, con sus reglas acotadas a `.app-header`. Puerta 3 rehecha: contenedor común, cabecera blanca, menú y divisa a la derecha y enlaces del cambio 4 (D-14) | R-38, R-55, R-63, R-64, R-138, R-171 a R-187, R-191 a R-193, R-231 (R-139 a R-141, sustituidos) |
+| `scss/_simulations.scss` | puerta 3 rehecha: solo las dos columnas del simulador, su mismo ancho y el eyebrow y el título encima (D-14) | R-66, R-218 a R-220, R-222, R-226 |
+| `scss/themes/_tokens.scss` | tres tokens nuevos de la guía, cada uno con su línea de `style-guide.md`. Puerta 3 rehecha: los valores de la Decisión 2026-11-25 #1 como tokens (D-14) | R-39, R-64, R-169, R-171, R-177, R-183 a R-185, R-188, R-214 |
 | `styles.scss` | `@use 'scss/customers';` después de `health` | R-26 |
 
-`_simulations.scss`, `_health.scss` y `_base.scss` no cambian (R-66).
+`_health.scss` y `_base.scss` no cambian. `_simulations.scss` solo cambia en lo que permiten R-66 y R-220 (antes no cambiaba: Decisión 2026-11-25 #1, cambio 10, y #5, H-27).
 
 ### Documentación (no cuenta como producción)
 | Fichero | Cambio |
 |---|---|
 | `CLAUDE.md` | «Comandos»: `seed` en la lista de scripts de la raíz (R-162, #38) |
-| `ai-workspace/docs/architecture.md` | autorizado por el autor (D-17, P-04 (a)): `seed.ts` y `seed/` en «Carpetas» y su fila en «Reglas de dependencia»; se cambia en el paso 15 (D-15) |
+| `ai-workspace/docs/architecture.md` | autorizado por el autor (D-17, P-04 (a)): `seed.ts` y `seed/` en «Carpetas» y su fila en «Reglas de dependencia»; se cambia en el paso 15 (D-15). La puerta 3 rehecha no crea carpetas ni ficheros: «Carpetas» (`:32-38`) no cambia |
+| `ai-workspace/docs/style-guide.md` | puerta 3 rehecha, solo las cuatro líneas autorizadas: «Menú» (`:22`), `:8`, `:17` y `:48` (D-14; Decisiones 2026-11-25 #1 a #4) |
 
 ## 3. Decisiones del plan
 
@@ -270,24 +278,28 @@ Tests nuevos: uno `.spec.ts` junto a cada fichero o carpeta nuevos de la tabla. 
 - Textos dentro de cada página, como `simulation-page.html:13-18`: `<p role="status">` con «Cargando tipos de cambio…» mientras cargan (R-133) y `<p role="alert">` con el mensaje del estado en el error (R-134).
 - La divisa es la de `CurrencySelection`, de `root`: la misma que en el simulador (R-53, R-135).
 
-**D-13 · Cabecera común en `app.html` (R-54 a R-56, R-58 a R-63, R-67, R-130, R-131, R-136, R-142 a R-145, R-149; #6: «el plan elige»).**
+**D-13 · Cabecera común en `app.html` (R-54 a R-56, R-58 a R-63, R-67, R-130, R-131, R-136, R-142 a R-145, R-149, R-171, R-175, R-176, R-193; #6: «el plan elige»).**
+- Cambio de la puerta 3 rehecha (Decisión 2026-11-25 #1, cambios 1, 2 y 4; respuesta B (a); Decisión 2026-11-25 #2, Q-28 (a)): `<header>` y `<main>` llevan la clase `app-container` del contenedor común (R-171) y cada enlace un `data-label` con su mismo texto, para reservar el ancho del énfasis (R-193, D-14). No se añade ningún elemento: el contenedor es la propia caja de `<header>` y de `<main>` (D-14), así que siguen ciertas, sin tocarlas, las aserciones de C-55 (`selector.parentElement` y `nav.parentElement` son el `<header>`; `app.spec.ts:263-264`), de C-48 de la 005 y de selectores de C-47 (`:85-88`). Sin logo ni migas (R-176): la plantilla no los tiene y no se añaden. Lo demás de esta decisión sigue igual.
 - Elección: la cabecera queda en `app.html` y no pasa a componente, confirmado por el autor (D-17). Por qué:
   - la usa solo la carcasa;
   - R-67 pide lo imprescindible en `app.*`;
   - no crea carpeta ni selector nuevos, así que la aserción de selectores de C-47 sigue siendo cierta sin cambiarla (R-145, C-145: «si no hay selectores nuevos, sigue igual»; ver P-03).
 - Alternativa descartada: `shared/components/app-header/` (selector `app-app-header` o similar), con `currency`, `currencyDisabled` y `showCurrency` por `input()` y `currencyChange` por `output()` (D-02). Suma tres ficheros y cambia la aserción de selectores de C-47.
-- `app.html`, sin cambiar el comentario de la línea 1:
+- `app.html`, sin cambiar el comentario de la línea 1 (en la puerta 3 rehecha solo cambian los atributos `class` de `<header>` y `<main>` y los tres `data-label`):
   ```html
-  <header class="app-header">
+  <header class="app-header app-container">
     <nav class="app-header__nav" aria-label="Navegación principal">
-      <a class="app-header__link" routerLink="/" routerLinkActive ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{ exact: true }">Estado de la API</a>
-      <a class="app-header__link" routerLink="/customers" routerLinkActive ariaCurrentWhenActive="page" (isActiveChange)="customersActive.set($event)">Clientes</a>
-      <a class="app-header__link" routerLink="/simulator" routerLinkActive ariaCurrentWhenActive="page">Simulador</a>
+      <a class="app-header__link" data-label="Estado de la API" routerLink="/" routerLinkActive ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{ exact: true }">Estado de la API</a>
+      <a class="app-header__link" data-label="Clientes" routerLink="/customers" routerLinkActive ariaCurrentWhenActive="page" (isActiveChange)="customersActive.set($event)">Clientes</a>
+      <a class="app-header__link" data-label="Simulador" routerLink="/simulator" routerLinkActive ariaCurrentWhenActive="page">Simulador</a>
     </nav>
     @if (customersActive()) {
       <app-currency-selector class="app-header__currency" [value]="displayCurrency()" [disabled]="currencyDisabled()" (valueChange)="selectCurrency($event)" />
     }
   </header>
+  <main class="app-container">
+    <router-outlet />
+  </main>
   ```
   «Clientes», sin `exact`, queda activo en `/customers`, `/customers?q=…` y `/customers/1` (R-62). El `<nav>` sigue antes de `<main>` y fuera de él (spec 005: C-48).
 - `app.ts`: `CurrencySelector` en `imports`; inyecta `CurrencySelection` (P-01 (a), D-17) y expone `displayCurrency`, `currencyDisabled = computed(() => state().status !== 'data')` (R-130, R-131, R-136) y `selectCurrency`; `customersActive = signal(false)`. La línea 4 dice además que la carcasa lleva el selector de divisa de las vistas de clientes, con «spec 004:».
@@ -296,14 +308,34 @@ Tests nuevos: uno `.spec.ts` junto a cada fichero o carpeta nuevos de la tabla. 
   - C-47: `toHaveLength(2)` pasa a `toHaveLength(3)`, con el comentario «spec 004: R-142» (R-142). Con la P-03 (a) (D-17): el título pasa a «tres enlaces», con «spec 004: R-142»; la aserción de selectores no cambia, y el comentario de la línea 46 añade «spec 004: R-145: el selector de divisa solo se pinta en las vistas de clientes».
   - Los dos tests de la spec 000 no cambian (R-143).
   - Tests nuevos, con `RouterTestingHarness` o `Router` y `HttpTestingController`: C-28, C-52, C-54 a C-56, C-58 a C-62, C-77, C-130, C-131, C-135 a C-137 y C-149.
+  - Puerta 3 rehecha, dos tests nuevos, con «spec 004:» en el título: «C-176: `<header>` y `<main>` llevan la clase del contenedor común» (R-171; la parte de la plantilla de C-176) y «R-193: cada enlace del `<nav>` lleva `data-label` con su mismo texto» (lo que el CSS de la reserva necesita; C-198 se mide a mano). Los dos fallan con `app.html` como en `HEAD`: son la fase roja del paso 16. Ninguna aserción existente cambia.
 - `app.routes.ts`: `customers` → `CustomersPage` y `customers/:id` → `CustomerDetailPage`, con `loadComponent`, después de `simulator`. `app.config.ts` no cambia: las páginas leen la ruta con `ActivatedRoute`, sin `withComponentInputBinding`.
 
-**D-14 · Estilos (R-26, R-38, R-39, R-63, R-64, R-102, R-138 a R-141, R-165, R-169).**
-- `_shared.scss`, cabecera (R-138), sin `outline` (se mantiene el foco del navegador, R-68):
-  - `.app-header`: `display: flex`, `flex-wrap: wrap`, `align-items: flex-end`, `justify-content: space-between`, `gap: var(--space-md)` y `margin-bottom: var(--space-lg)`; sin fondo, logo ni migas (R-141).
-  - `.app-header__nav`: `display: flex`, `flex-wrap: wrap` y `gap: var(--space-md)`, que separa los enlaces (R-63).
-  - `.app-header__link`: `font-size: var(--font-size-base)` (16 px), `font-weight: 700` (`style-guide.md:22`, R-139), `color: var(--color-muted)` y `text-decoration: none`; con `[aria-current='page']`, `color: var(--color-ink)` (R-140). `#666666` sobre `#eef0f6` da unos 5,0:1 (Q-13).
-  - `.app-header__currency`: `flex: 0 1 18rem`; y `.app-header app-currency-selector label { margin-top: 0; }`, que anula dentro de la cabecera los 24 px de `_shared.scss:10`, sin cambiar esa regla de la 005.
+**D-14 · Estilos (R-26, R-38, R-39, R-55, R-63, R-64, R-66, R-101, R-102, R-105, R-138, R-165, R-169, R-171 a R-232).**
+- Cambio de la puerta 3 rehecha (Decisiones 2026-11-25 #1 a #6): la cabecera de `_shared.scss` se reescribe entera (R-139 a R-141, sustituidos), `_customers.scss` crece con los retoques de la tarjeta, de los eyebrows y del detalle, `_simulations.scss` gana las dos columnas, `_tokens.scss` gana los valores de la #1 como tokens (R-64), e `index.html` y `style-guide.md` cambian solo en las líneas autorizadas. Lo que sigue valiendo de la D-14 aprobada se conserva abajo; lo que cambia lleva la Decisión que lo cambia. Criterio para lo que la spec no fija (rellenos y separaciones): tokens de espaciado que ya existen (`--space-sm`, `--space-md`, `--space-lg`), como en la D-14 aprobada, sin números nuevos; se listan al final como valores del planner.
+- Mobile first: las reglas sin media query son las de menos de 48 rem; desde 48 rem, `@media (min-width: tokens.$breakpoint-wide)`. `min-width: 48rem` incluye los 768 px exactos (C-184, C-221, C-223, C-227) y deja fuera los 767 px (C-185, C-187, C-222, C-224). Las media queries no leen variables CSS, así que el umbral es una variable de Sass en `_tokens.scss` (R-64: el valor de R-179 como token), que `_shared.scss`, `_customers.scss` y `_simulations.scss` cargan con `@use 'themes/tokens';` (riesgo 18).
+- `_tokens.scss` (Decisión 2026-11-25 #1, respuesta C; R-64, C-64), cada token con su origen en un comentario:
+  - `--container-max-width: 75rem` (R-171; `style-guide.md:44`);
+  - `--border-width-subtle: 1px` (R-177, R-205, R-214; `style-guide.md:36`);
+  - `--font-size-nav: 14px`, `--line-height-nav: 24px` y `--font-weight-nav: 600` (R-183);
+  - `--font-size-nav-emphasis: 17px` y `--font-weight-nav-emphasis: 700` (R-185; el 700 fijo del activo, R-192, usa el mismo token);
+  - `--color-nav-hover: #000` (R-188; C-193);
+  - `--transition-nav: 0.3s ease-out` (R-184);
+  - `$breakpoint-wide: 48rem`, variable de Sass (R-179, R-216, R-218; respuesta C de la #1: «48 rem exactos»).
+  El comentario de la línea 2 de `_tokens.scss` es la reserva H-22 de la 005 (pasada del miércoles) y no se toca.
+- `_shared.scss`, contenedor común (R-171 a R-174; C-179: sus reglas solo aquí), sin `outline` (R-68):
+  - `body { margin: 0; }`: sin él, el margen de 8 px del navegador impide la cabecera de borde a borde (R-175) y las cuentas de C-178 (272 px de contenido a 320 px = 320 − 2 × 24).
+  - `.app-container`: `box-sizing: border-box` y `padding-inline: max(var(--space-md), (100% - var(--container-max-width)) / 2)`. Da 75 rem de contenido como máximo (R-171), centrado (R-172), con 24 px a cada lado fuera de los 75 rem (R-173): 272 px a 320, 720 px a 768 y 1200 px a 1248 y a 1600 (C-178). Va en `<header>` y en `<main>` (D-13), así que el fondo de `<header>` llega de borde a borde y su contenido queda dentro del contenedor (R-175).
+- `_shared.scss`, cabecera (R-138), sin `outline` (R-68). Sustituye a las reglas de la D-14 aprobada (`.app-header` sin fondo, R-141; enlaces a 16 px y 700, R-139; colores, R-140, que siguen en R-191):
+  - `.app-header`: `background: var(--color-white)` (R-175), `border-bottom: var(--border-width-subtle) solid var(--color-soft)` y `box-shadow: none` (R-177), `display: flex`, `flex-direction: column`, `align-items: flex-end` (selector debajo del `<nav>` y los dos a la derecha: R-178, R-180), `gap: var(--space-md)`, `padding-block: var(--space-sm)` y `margin-bottom: var(--space-lg)` (se conserva de la D-14 aprobada). Desde 48 rem: `flex-direction: row`, `justify-content: flex-end` y `align-items: flex-end` seguido de `align-items: last baseline` (respaldo por cascada), para que el selector quede a la derecha del `<nav>` y en la línea de su último enlace (R-55, R-179; riesgo 20).
+  - `.app-header__nav`: `display: flex`, `flex-wrap: wrap`, `justify-content: flex-end` y `gap: var(--space-md)` (R-63, R-178, R-231); desde 48 rem, `flex: 0 1 auto` y `min-width: 0`, para que el `<nav>` encoja y parta sus enlaces en dos líneas antes que desbordar (R-179, R-231; H-29, que se mide en la puerta 6).
+  - `.app-header__link`: `display: inline-flex`, `flex-direction: column`, `align-items: center`, `font-size: var(--font-size-nav)`, `line-height: var(--line-height-nav)`, `font-weight: var(--font-weight-nav)` (R-183), `color: var(--color-muted)` (R-191), `text-decoration: none` y `transition: var(--transition-nav)` (R-184).
+    - `&[aria-current='page']`: `color: var(--color-ink)` y `font-weight: var(--font-weight-nav-emphasis)`, a 14 px (R-191, R-192).
+    - `&:hover, &:focus-visible`, después de la anterior para que gane también en el activo: `font-size: var(--font-size-nav-emphasis)`, `font-weight: var(--font-weight-nav-emphasis)` y `color: var(--color-nav-hover)` (R-185, R-186, R-188). Sin regla de `outline` (C-191).
+    - `&::after`: `content: attr(data-label)` y, debajo, `content: attr(data-label) / ''` (texto alternativo vacío donde se admita), `height: 0`, `overflow: hidden`, `visibility: hidden`, `font-size: var(--font-size-nav-emphasis)` y `font-weight: var(--font-weight-nav-emphasis)`. El `::after` invisible mide el texto con el énfasis y da al enlace ese ancho siempre, así que el hover o el foco no mueven a los vecinos (R-193, C-198). La altura no cambia porque la línea es de 24 px fijos (riesgo 16).
+    - `@media (prefers-reduced-motion: reduce)`: `.app-header__link { transition: none; }` (R-187).
+  - `.app-header__currency`: por debajo de 48 rem, `width: min(100%, 18rem)` (el 18 rem de la D-14 aprobada, antes como `flex: 0 1 18rem`), con «Divisa» encima del control, como hoy (R-180, R-182). Desde 48 rem: `width: auto`, `flex: none`, `display: flex`, `align-items: center` y `gap: var(--space-sm)`, con `.app-header app-currency-selector label { margin: 0; }` (antes solo `margin-top: 0`, que se conserva por debajo de 48 rem) y `.app-header .currency-selector__select { width: auto; }`, para que «Divisa» quede a la izquierda del control y en su línea (R-181) y el control tome el ancho de su texto (riesgo 21). La regla de `app-currency-selector label` de la 005 (`_shared.scss:6-11`) no cambia.
+  - El comentario de `_shared.scss:13` pasa a citar los requisitos vigentes («spec 004: R-63, R-64, R-138, R-171 a R-187, R-191 a R-193, R-231; D-14»), sin R-139 a R-141: consecuencia directa, regla de la Decisión 2026-11-25 #4.
 - `_customers.scss`:
   - eyebrow y título de las dos páginas con los mismos tokens que `_simulations.scss:7-19`, y tarjetas como `.card` de la guía (`--color-white`, `--radius-lg`, `--space-lg`), igual que el simulador (R-39);
   - `.customers-page__grid`: lista sin viñetas, `display: grid`, `gap: var(--space-md)` y `grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr))`. 17 rem lo propuso el planner (la guía no lo fija, y el boceto, con 170 px, no deja sitio para el relleno de 32 px) y lo aprobó el autor (D-17);
@@ -311,8 +343,28 @@ Tests nuevos: uno `.spec.ts` junto a cada fichero o carpeta nuevos de la tabla. 
   - `overflow-wrap: anywhere` y `min-width: 0` en nombre, identificador, email y título, para el nombre de 200 caracteres y el email de 254 a 320 px (R-38, C-38);
   - `.customers-page__announcement`: oculto visualmente (`position: absolute`, `width` y `height` de 1 px, `overflow: hidden`, `clip-path: inset(50%)`, `white-space: nowrap`) (R-165);
   - filas `dt`/`dd` del detalle y del historial con los tokens de espaciado que ya existen.
-- `_tokens.scss`, tres tokens nuevos, cada uno con su línea: `--color-soft: #e4e4fc` (`style-guide.md:53`, también `:31`), `--radius-pill: 9999px` (`:55`, también `:35`) y `--font-size-pill: 13px` (`:64`).
-- `styles.scss`: `@use 'scss/customers';` después de `@use 'scss/health';`. Ningún `.scss` en `customers/` (R-26).
+- `_customers.scss`, puerta 3 rehecha (Decisión 2026-11-25 #1, cambios 5 a 9; #2, Q-36 a Q-42; #5, H-30). Las plantillas no cambian: `customer-card.html:2-12` ya pone el identificador en su propia línea y las píldoras debajo (R-209), y la fila «Última simulación» es su `<dl>`:
+  - eyebrows pegados: `.customers-page__eyebrow, .customer-detail-page__eyebrow { margin-bottom: 0; }` y `.customers-page__title, .customer-detail-page__title { margin-top: 0; }` (R-207, R-208);
+  - rejilla: se conservan `repeat(auto-fill, minmax(min(100%, 17rem), 1fr))`, que da columnas del mismo ancho (R-195), y se añade `grid-auto-rows: 1fr`, filas de la misma altura, también entre filas (R-196); `.customers-page__item { display: flex; }` y `.customer-card { flex: 1; }`, para que la tarjeta llene su celda;
+  - `.customer-card`: `display: flex`, `flex-direction: column`, `box-sizing: border-box` y `border: var(--border-width-subtle) solid transparent` siempre (R-214), así que el énfasis no cambia su tamaño (R-213);
+  - `.customer-card:hover, .customer-card:focus-within`: `border-color: var(--color-brand)` y `background: var(--color-soft)` (R-210, R-211), y sus `.customer-card__pill`, `background: var(--color-white)` (R-215). El foco sigue en el enlace del nombre, la única parada (R-105): la tarjeta no gana `tabindex`;
+  - `.customer-card__title`: `font-size: var(--font-size-base)`, `line-height: var(--line-height-base)` y `font-weight: 700` (R-201; 16 px y 30 px, frente a los 24 px del `<h2>` por defecto de antes); deja de llevar `overflow-wrap`, que pasa al enlace;
+  - `.customer-card__link`: `color: inherit`, `text-decoration: none` (R-202) y, con `&:hover, &:focus`, `text-decoration: underline` (R-203: «o este tenga el foco»); recorte a 2 líneas en el propio enlace: `display: -webkit-box`, `-webkit-box-orient: vertical`, `-webkit-line-clamp: 2`, `line-clamp: 2`, `overflow: hidden` y `overflow-wrap: anywhere` (R-197; 60 px como máximo, C-206). El recorte va en el `<a>` y no en el `<h2>`: el `overflow` de un elemento no recorta su propio contorno de foco, y el del `<h2>` sí lo recortaría (R-212, riesgo 15);
+  - `.customer-card__tax-id`: `white-space: nowrap`, `overflow: hidden` y `text-overflow: ellipsis` en lugar de `overflow-wrap: anywhere` (R-198, R-209). El texto completo sigue en el DOM porque el recorte es solo CSS (R-199);
+  - `.customer-card__last` (la fila de R-204): `display: flex`, `justify-content: space-between`, `align-items: baseline`, `gap: var(--space-sm)`, `margin-top: auto` (al pie y alineada con las de su fila: R-206), `border-top: var(--border-width-subtle) solid var(--color-bg)` (R-205) y `padding-top: var(--space-sm)`; `.customer-card__amount` con `text-align: right` y `min-width: 0` (R-204);
+  - detalle sin recortes: `.customer-detail-page__title` y `.customer-detail-page__value` conservan `overflow-wrap: anywhere` y no llevan `overflow` ni `line-clamp`, así que el nombre del título y el identificador de «Datos» se ven enteros, partidos en líneas si hace falta (R-200, R-232);
+  - detalle en dos columnas, desde 48 rem (R-216, R-222, R-226, R-227): `app-customer-detail-page { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-lg); }` y `app-customer-detail-page > :not(.customer-detail-page__card) { grid-column: 1 / -1; }`. Las dos `<section class="customer-detail-page__card">` (`customer-detail-page.html:30-50`) quedan una al lado de otra, «Datos» a la izquierda por orden del DOM; el eyebrow, el título y los estados van antes a todo el ancho, y el enlace «Ir al simulador» (`:52`) después, debajo de las dos. Por debajo de 48 rem, sin regla: una columna, «Datos» encima (R-217). Las tarjetas se estiran a la altura de la fila, como la rejilla `.g` del boceto. El selector es el del elemento anfitrión, sin clase nueva y sin tocar la plantilla (riesgo 19);
+  - el comentario de `_customers.scss:1` añade «R-195 a R-217, R-222, R-226, R-227, R-232»: consecuencia directa, regla de la Decisión 2026-11-25 #4.
+- `_simulations.scss`, puerta 3 rehecha, solo lo que permiten R-66, R-220 y C-66 (Decisión 2026-11-25 #1, cambio 10; #5, H-27): `@use 'themes/tokens';` tras los comentarios de cabecera y, con un comentario «spec 004: R-218 a R-220, R-222, R-226», desde 48 rem, `app-simulation-page { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-lg); }` y `.simulation-page__eyebrow, .simulation-page__title { grid-column: 1 / -1; }`. En `simulation-page.html:3-21` el eyebrow, el `<h1>` y las dos `<section>` son hermanos: el formulario, con el selector de divisa, queda a la izquierda y el resultado a la derecha (R-218), del mismo ancho (R-222) y con el eyebrow y el título encima (R-226); por debajo de 48 rem, una columna con el formulario encima (R-219). Ninguna otra regla de `_simulations.scss` cambia y `simulations/` no se toca (C-225).
+- `index.html` (Decisiones 2026-11-25 #2 a #4): `:11` pasa a `family=Montserrat:wght@500;600;700;800&display=swap` (R-223; C-228) y el comentario de `:10`, a «Montserrat desde Google Fonts (ADR-015): pesos 500, 600, 700 y 800.» (R-230; C-235). Con el `<link>`, el 600 de los enlaces (R-194) y el 700 de las píldoras, del nombre, del activo y del hover (R-228) usan su cara real. Ninguna otra línea cambia (C-67).
+- `style-guide.md`, solo cuatro líneas (Decisión 2026-11-25 #1, «solo para esa línea», y #2 a #4; C-194):
+  - `:22` («Menú»), con la tipografía de R-183 y R-185 y el token de R-188 (R-189, R-190): «- Menú: 14px / line-height 24px / 600, con transición de 0.3s ease-out (sin ella con movimiento reducido); con hover y con foco visible, 17px / 700 en `#000` (`--color-nav-hover`); el activo en negro y con 700, y el resto en gris.»;
+  - `:8` (ajuste 3): «3. `.pill` usa el peso 500 o el 700.» (R-225; C-230);
+  - `:17`: «- Fuente única: Montserrat (Google Fonts), pesos 500, 600, 700 y 800.» (R-224; C-229);
+  - `:48`: «/* Montserrat (500, 600, 700 y 800) se carga con <link> de Google Fonts en index.html, no con @import (ajuste 4). */» (R-229; C-234).
+- `_tokens.scss`, tres tokens nuevos, cada uno con su línea: `--color-soft: #e4e4fc` (`style-guide.md:53`, también `:31`), `--radius-pill: 9999px` (`:55`, también `:35`) y `--font-size-pill: 13px` (`:64`). En la puerta 3 rehecha, más los de la #1 (arriba).
+- `styles.scss`: `@use 'scss/customers';` después de `@use 'scss/health';`. Ningún `.scss` en `customers/` (R-26). No cambia en la puerta 3 rehecha.
+- Valores del planner en la puerta 3 rehecha, con tokens que ya existen, aprobados por el autor en la segunda vuelta (P-08, decisión 4: «Aprobados los valores del planner: body { margin: 0 } (riesgo 17), $breakpoint-wide, --space-sm, --space-lg, width: auto desde 48 rem y min(100%, 18rem) por debajo, column-gap: var(--space-lg) y el ::after con data-label»), junto con `body { margin: 0; }`, `$breakpoint-wide` y el `::after` con `data-label` de arriba: `padding-block: var(--space-sm)` de la cabecera; el selector de la cabecera con `width: auto` desde 48 rem y `min(100%, 18rem)` por debajo; `gap: var(--space-sm)` entre «Divisa» y el control; `column-gap: var(--space-lg)` de las dos columnas del detalle y del simulador (la separación que ya tienen sus tarjetas en vertical); `padding-top: var(--space-sm)` y `gap: var(--space-sm)` de la fila de la tarjeta.
 
 **D-15 · Seed (R-76, R-150 a R-153, R-161, R-162, R-168, R-170), con la P-04 (a) y (ii) (D-17).**
 - `src/seed.ts`, entrada como `app.ts` (importa solo `config` y `presentation`): `readEnvs()` → `new Server({ port: 0, databasePath })` → `start()` → `runSeed(\`http://127.0.0.1:${port}\`)` → `console.log` con «Seed: N customers inserted.», con N el número de clientes insertados (R-161; P-04 (ii), en inglés como `app.ts:11`) → `stop()`. Ante un error, mensaje y `process.exit(1)`, como `app.ts:14-17`. El arranque de la API (`app.ts`) no lo llama (R-150).
@@ -326,14 +378,18 @@ Tests nuevos: uno `.spec.ts` junto a cada fichero o carpeta nuevos de la tabla. 
 - `CLAUDE.md`, «Comandos»: `seed` en la lista de scripts de la raíz (R-162).
 - `architecture.md`, autorizado por el autor (D-17): en «Carpetas», `seed.ts` y `seed/` bajo `apps/api/src`; en «Reglas de dependencia», la fila `seed` (`seed.ts` puede importar `config` y `presentation`; `seed/` no importa ninguna capa de la API, solo usa HTTP). Se cambia en el paso 15, en la puerta 5, como documentación.
 
-**D-16 · Citas y regla de parada (R-01, R-143, R-144).**
+**D-16 · Citas y regla de parada (R-01, R-66, R-67, R-143, R-144, R-189, R-190, R-220).**
+- Cambio de la puerta 3 rehecha (Decisiones 2026-11-25 #1 a #5): la lista cerrada gana `_simulations.scss` (spec 005), `index.html` (spec 000) y `style-guide.md` (ADR-015, documentación), cada uno acotado a lo que su decisión autoriza, y la regla de parada cubre también lo que se salga de esas líneas. Lo demás sigue igual.
 - Toda cita que la 004 cree o toque en el código lleva su spec: las propias también («spec 004: R-16»).
 - Lista cerrada de ficheros de otras specs que cambian. Fuera de ella no se toca nada:
   - spec 002: los de `customers` de las tablas de la sección 2 (D-03) y sus tests `customers/routes.spec.ts`, `customers/controller.spec.ts` y `sqlite-customer.datasource.spec.ts`, que solo ganan tests; `create-customer.spec.ts:28` y `customers/controller.spec.ts:23`, con la P-02 (a) (D-17): solo ganan las tres lecturas, que lanzan si se llaman, con un comentario «spec 004: …»;
   - spec 003: `sqlite-simulation.datasource.ts:6` y `:20` (solo `export`);
   - specs 000 a 003: `presentation/routes.ts`, `error-handler.ts` y sus tests, que solo ganan tests;
-  - specs 000 y 005: `app.html`, `app.ts`, `app.routes.ts`, `app.spec.ts`, `_shared.scss`, `_tokens.scss` y `styles.scss`.
-- Ninguna aserción se borra ni se desactiva. Si al implementar falla un test de otra spec que no está en esta lista, la tarea para y lo devuelve (mismo criterio que la spec 003: D-16 y la spec 005: D-17).
+  - specs 000 y 005: `app.html`, `app.ts`, `app.routes.ts`, `app.spec.ts`, `_shared.scss`, `_tokens.scss` y `styles.scss`;
+  - spec 005, puerta 3 rehecha: `_simulations.scss`, solo el `@use` y las reglas de las dos columnas, de su mismo ancho y del eyebrow y el título encima (R-66, R-220, C-66); `simulations/` (plantillas, `.ts` y tests) no cambia (C-225);
+  - spec 000, puerta 3 rehecha: `index.html`, solo `:10` y `:11` (R-67, C-67);
+  - documentación, puerta 3 rehecha: `style-guide.md`, solo `:8`, `:17`, `:22` («Menú») y `:48` (C-194), con `--color-nav-hover` solo en «Menú» (C-195).
+- Ninguna aserción se borra ni se desactiva. Si al implementar falla un test de otra spec que no está en esta lista, o un retoque necesita cambiar otra línea de `_simulations.scss`, `index.html` o `style-guide.md`, una plantilla de `simulations/` o de `customers/`, o `_base.scss`, la tarea para y lo devuelve (mismo criterio que la spec 003: D-16 y la spec 005: D-17).
 
 ### Decididas por el autor (puerta 3, segunda vuelta)
 
@@ -369,10 +425,24 @@ Tipos: **Auto** (test), **Verif.** (comando de la tarea, con su salida en la ses
 | C-33 a C-37, C-43 a C-46, C-106 a C-109, C-114 a C-117, C-124 a C-129, C-154, C-155, C-160, C-168, C-169 | R-33 a R-37, R-43 a R-46, R-106 a R-109, R-114 a R-117, R-124 a R-129, R-154, R-155, R-160, R-163, R-164 | `customer-detail-page.spec.ts`, `simulation-history.spec.ts`, `customer-display.spec.ts` (C-108 con `'Europe/Madrid'`), `customer-id.spec.ts` (C-128) y `customers-api.spec.ts` | Auto |
 | C-48 a C-51, C-132 a C-134, C-57 | R-48 a R-51, R-57, R-132 a R-134 | tests de las páginas; formato esperado sacado de `formatCents`, no de un literal; C-57 cuenta las peticiones a `open.er-api.com` al pasar del buscador al detalle | Auto |
 | C-28, C-52 a C-56, C-58 a C-62, C-77, C-130, C-131, C-135 a C-137, C-142, C-145, C-149 | R-28, R-52 a R-56, R-58 a R-62, R-77, R-130, R-131, R-135 a R-137, R-142, R-145, R-149 | `app.spec.ts` (D-13) | Auto |
-| C-143, C-144, C-66, C-67, C-78 | R-66, R-67, R-78, R-143, R-144 | `git diff` de `app.*`, `simulations/` y `_simulations.scss`; revisión de citas | Verif. + Manual |
-| C-38, C-39, C-63, C-64, C-68, C-102, C-138 a C-141, C-170, C-174 | R-38, R-39, R-63, R-64, R-68, R-102, R-138 a R-141, R-165, R-169 | navegador a 320 px y en escritorio, DevTools (estilo calculado), teclado; revisión de `_customers.scss` y `_shared.scss` | Manual |
+| C-143, C-144, C-66, C-67, C-78 | R-66, R-67, R-78, R-143, R-144 | `git diff` de `app.*`, `index.html`, `simulations/` y `_simulations.scss` (en `index.html`, solo `:10` y `:11`; en `_simulations.scss`, solo lo de la D-14); revisión de citas | Verif. + Manual |
+| C-38, C-39, C-63, C-64, C-68, C-102, C-138, C-170, C-174 | R-38, R-39, R-63, R-64, R-68, R-102, R-138, R-165, R-169 | navegador a 320 px y en escritorio, DevTools (estilo calculado), teclado; revisión de `_customers.scss`, `_shared.scss` y `_tokens.scss`. C-38, también en «Estado de la API» y en el simulador, con el foco en cada enlace (Decisión 2026-11-25 #2) | Manual |
+| C-139 a C-141 | R-139 a R-141 | sustituidos (Decisión 2026-11-25 #1): se comprueban C-180 a C-182, C-188, C-190, C-191, C-196 y C-197 | — |
 | C-65 | R-65 | no aplica con D-13 (sin componente); el revisor lo comprueba en el árbol | Manual |
-| C-69 a C-71, C-146 a C-148 | R-69 a R-71, R-146 a R-148 | Lighthouse en móvil y escritorio en las cuatro vistas, con captura | Manual |
+| C-69 a C-71, C-146 a C-148 | R-69 a R-71, R-146 a R-148 | Lighthouse en móvil y escritorio en las cuatro vistas, con captura, después de los pasos 16 y 17 (la del simulador es la de C-226) | Manual |
+| C-176 (plantilla), C-198 (atributos) | R-171, R-193 | `app.spec.ts`: `<header>` y `<main>` con `app-container`; cada `nav a` con `data-label` igual a su texto (D-13) | Auto |
+| C-55, C-176 a C-187, C-236 | R-55, R-171 a R-182, R-231 | navegador con la barra de dispositivos de DevTools a 320, 767, 768, 1248, 1280 y 1600 px en las cuatro vistas: anchos del contenido (`getBoundingClientRect`), fondo y borde calculados de `<header>`, posición del selector y de «Divisa», número de líneas del `<nav>` y `scrollWidth === clientWidth`. C-55, además del test de la T-14 | Manual |
+| C-184 | R-179 (H-29) | puerta 6: a 768 px exactos con «Dólar estadounidense (USD)», se anota si los enlaces caben en una línea o se parten en dos; las dos aprueban si el selector queda a la derecha, en la línea del último enlace, sin solaparse ni desbordar (Decisión 2026-11-25 #6). El resultado va al informe del revisor | Manual |
+| C-188 a C-192, C-196 a C-198 | R-183 a R-187, R-191 a R-193 | estilo calculado de cada enlace sin hover, con `:hover` forzado en DevTools y con Tab; `prefers-reduced-motion` emulado en DevTools («Rendering»); C-198 con `getBoundingClientRect` de los tres enlaces antes y durante el hover y el foco de cada uno | Manual |
+| C-193, C-195 | R-188, R-190 | `git grep -n -- "--color-nav-hover"` en `apps/web/src` y en `ai-workspace/docs/style-guide.md` | Verif. |
+| C-194, C-229, C-230, C-234 | R-189, R-224, R-225, R-229 | `git diff ai-workspace/docs/style-guide.md`: solo `:8`, `:17`, `:22` y `:48` | Verif. |
+| C-199, C-228, C-233, C-235 | R-194, R-223, R-228, R-230 | `git diff apps/web/src/index.html`; en el navegador, `document.fonts` (caras 500, 600, 700 y 800 en `loaded`, ninguna de 400) y la cara usada en la pestaña «Fuentes» del panel de estilos | Verif. + Manual |
+| C-101, C-105, C-200 a C-220, C-237 | R-101, R-105, R-195 a R-215, R-232 | buscador y detalle con clientes de nombre de 200 caracteres (con y sin espacios) y de identificador de 20 (el seed no los trae: se crean con `POST /customers` en una base del scratchpad), a 320, 768 y 1280 px: anchos y altos de las tarjetas, recortes, `textContent`, hover forzado y Tab (contorno visible sobre `--color-soft`) | Manual |
+| C-221 a C-224, C-227, C-231, C-232 | R-216 a R-219, R-222, R-226, R-227 | detalle y simulador a 320, 767, 768 y 1280 px: columnas, su ancho y lo que queda encima y debajo | Manual |
+| C-225 | R-220 | `git diff --stat apps/web/src/app/simulations` vacío, `git diff` de `_simulations.scss` y `npm run verify` en verde | Verif. |
+| C-226 | R-221 | puerta 6, simulador a 320 px en Chrome (con `appearance: base-select`) y en Firefox (sin él): con `base-select`, «Dólar estadounidense (USD)» entero; sin él, la limitación aceptada de la spec 005: P-08 (a) no cuenta como fallo; sin barra horizontal en los dos. Lighthouse en móvil y escritorio, con captura (C-146 a C-148) | Manual |
+| C-238 | R-38, R-196 a R-198, R-200, R-206, R-232 | puerta 6, sin automatizar (WCAG 1.4.4): en Firefox, «Ver → Zoom → Ampliar solo el texto» al 200 %, buscador con las tarjetas de C-202 y C-203 y detalle de ese cliente; la fila de R-204 y las píldoras, enteras y sin solaparse | Manual |
+| C-239 | R-38, R-196 a R-198, R-200, R-206, R-232 | puerta 6, sin automatizar (WCAG 1.4.12): en DevTools se añade a la página la hoja `* { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; } p { margin-bottom: 2em !important; }` (sin dependencias) y se revisan las vistas de C-238 | Manual |
 | C-72 a C-74 | R-72 a R-74 | revisión de los `routes.spec.ts` y de los tests de `customers/` | Manual |
 | C-76, C-150 a C-153, C-161, C-173, C-175 | R-76, R-150 a R-153, R-161, R-168, R-170 | `seed/run-seed.spec.ts`: `Server` con `:memory:` y puerto 0; `GET /customers` → `[]` antes del seed (C-150); `runSeed` da la longitud de `seed-data.ts` (todos con 201: C-151, C-173, C-175); importes iguales a los de `packages/pricing` (C-152); segunda vuelta → 0 y mismas filas (C-153, C-161) | Auto |
 | C-162 | R-162 | `git grep -n "seed" CLAUDE.md` | Verif. |
@@ -394,6 +464,7 @@ Sin choques con fuentes superiores:
 - `architecture.md:84`: la ruta inexistente va en el middleware (D-08).
 - `database.md`: sin cambios (H-15).
 - Dos puntos de lectura, decididos por el autor (D-17): que la carcasa inyecte `CurrencySelection` no choca con `frontend-conventions` (P-01 (a)), y la estructura del seed, que `architecture.md` recogerá con su autorización (P-04 (a)).
+- Puerta 3 rehecha: el choque entre la Decisión 2026-11-25 #1 («la T-17») y `templates/tasks.md:3` («Si no cabe, se parte») lo decidió el autor en la P-08, opción (b): dos tareas, T-17 y T-18 (sección 7).
 
 ## 7. Orden de construcción
 Por valor, como pide el autor; la puerta 4 lo parte en tareas. Cada paso deja la suite en verde y toca como máximo 5 ficheros de producción.
@@ -424,6 +495,13 @@ Por valor, como pide el autor; la puerta 4 lo parte en tareas. Cada paso deja la
 14. Cabecera: `app.html`, `app.ts` y `_shared.scss` (3), con `app.spec.ts`. D-13, D-14. Hasta este paso, las vistas de clientes se abren por URL y el `<nav>` sigue con dos enlaces.
 15. Seed: `seed.ts`, `seed/seed-data.ts`, `seed/run-seed.ts` y los dos `package.json` (5), con `CLAUDE.md` y `architecture.md` (autorizado por el autor, D-17) como documentación. D-15.
 
+**Bloque 5 · Retoques visuales (puerta 3 rehecha; Decisiones 2026-11-25 #1 a #6)**
+
+Después del paso 15 y antes de la puerta 6. Sin cambios en `.ts` ni en plantillas salvo `app.html` (D-13). Dos pasos y dos tareas, sin renumerar y las dos con Sonnet 5.5, por la P-08 (b) del autor (sección 9).
+
+16. **T-17** (Sonnet 5.5) · Contenedor, cabecera y fuentes: `app.html`, `_shared.scss`, `_tokens.scss` e `index.html` (4), con `app.spec.ts` (dos tests nuevos, D-13) y `style-guide.md` como documentación. D-13, D-14, D-16. Fase roja: los dos tests de `app.spec.ts`. Orden de parar del riesgo 16. Deja los tokens (`--border-width-subtle`, `$breakpoint-wide`) y los pesos de Montserrat que usa el paso 17.
+17. **T-18** (Sonnet 5.5) · Tarjetas, detalle y simulador: `_customers.scss` y `_simulations.scss` (2), sin tests nuevos ni fase roja (solo CSS, como el paso 10; sus casos se comprueban a mano y con `git diff`, sección 5). Depende de la T-17. D-14, D-16. Tras él, en la puerta 6, las pruebas a mano de la sección 5 (C-38, C-184, C-226, C-238, C-239 y Lighthouse de las cuatro vistas).
+
 ## 8. Riesgos y verificaciones
 1. **Puertos que crecen**: `SqliteCustomerDatasource implements CustomerDatasource` y `CustomerRepositoryImp implements CustomerRepository` no compilan si el puerto gana métodos que la clase no tiene. Por eso el paso 2 va antes que el 3 y el repositorio entra en el 3. La plantilla de `tasks.md` pide una tarea por capa para un recurso nuevo; aquí el recurso existe, y si la puerta 4 lo ve como excepción, lo justifica en una línea.
 2. **Falsos tipados de la 002**: Vitest no comprueba tipos y `tsconfig.build.json:8` excluye los `.spec.ts`, así que `npm run verify` seguiría en verde aunque los falsos no cumplieran el puerto; `tsc -p apps/api/tsconfig.json`, que incluye los tests, sí fallaría. Con la P-02 (a) (D-17), los dos falsos ganan las tres lecturas en el paso 3.
@@ -438,11 +516,20 @@ Por valor, como pide el autor; la puerta 4 lo parte en tareas. Cada paso deja la
 11. **Zona horaria en los tests**: `formatSimulationDate` recibe `'Europe/Madrid'` en el test; en producción, sin zona, usa la del navegador (R-108).
 12. **Seed y red local**: el seed abre la API en el puerto 0. En Windows, el cortafuegos puede preguntar la primera vez si Node escucha en todas las interfaces; `npm run dev` ya lo hace en el 3000.
 13. **`+` en la búsqueda**: `HttpParams` lo codifica como `%2B`, y el analizador `simple` no lo lee como espacio. Lo cubre un test de `customers-api.spec.ts` con «100%+».
-14. **320 px**: la rejilla con `min(100%, 17rem)` y `overflow-wrap: anywhere` evitan el desplazamiento horizontal con el nombre de 200 caracteres y el email de 254 (C-38). Se mide en la puerta 6.
+14. **320 px**: la rejilla con `min(100%, 17rem)` y `overflow-wrap: anywhere` evitan el desplazamiento horizontal con el nombre de 200 caracteres y el email de 254 (C-38). Se mide en la puerta 6. Puerta 3 rehecha (Decisiones 2026-11-25 #1, #2 y #5): a 320 px el contenido mide 272 px; el nombre de la tarjeta se recorta en el enlace, el identificador con `text-overflow`, y en el detalle los dos siguen con `overflow-wrap: anywhere`; en la cabecera, los enlaces se parten en dos líneas (R-231) y el selector va debajo con `min(100%, 18rem)`. C-38 se repite en «Estado de la API» y en el simulador.
+15. **Contorno de foco y recorte** (R-212, C-217): `overflow: hidden` recorta lo que hay dentro de la caja, no el contorno del propio elemento. Por eso el `line-clamp` va en el `<a>` y no en el `<h2>`. Si al mirarlo con Tab el contorno sale cortado en algún navegador, la tarea lo devuelve; no se añade ninguna regla de `outline` (R-68).
+16. **Reserva del ancho con `::after`** (R-193, C-198): el texto del `data-label` es contenido generado y podría entrar en el nombre accesible del enlace («Clientes Clientes»). Lo evitan `visibility: hidden` y, donde se admite, el texto alternativo vacío (`/ ''`); la declaración sin `/ ''` va antes como respaldo, porque un navegador que no la entienda descarta la segunda. Es una verificación con orden de parar en el paso 16 (T-17; P-08, decisión 4 del autor): la tarea mira el nombre accesible de cada enlace en el árbol de accesibilidad de Chrome y de Firefox y, si sale duplicado, para y lo devuelve. En la puerta 6 se repite con Lighthouse (`label-content-name-mismatch`).
+17. **`body { margin: 0; }` en `_shared.scss`**: cambia también «Estado de la API» y el simulador, que pierden los 8 px del navegador y entran en el contenedor (R-171). Va en `_shared.scss` y no en `_base.scss` porque C-179 deja las reglas del contenedor solo en `_shared.scss` y sin él no salen las cuentas de C-178. Se repiten sus Lighthouse (R-146, R-147).
+18. **`@use 'themes/tokens'` en tres parciales**: Sass carga cada módulo una sola vez por compilación, así que el `:root` de `_tokens.scss` no se repite. Se comprueba en el paso 16 con `npm run build` y contando en el CSS de `dist/` las apariciones de `--color-bg:` (una). En `_simulations.scss`, el `@use` existe solo por el umbral de las dos columnas (R-218), lo que C-66 permite. Dart Sass deja `max()` con `var()` como CSS, sin calcularlo; si no fuera así, el build fallaría en el paso 16.
+19. **Selector de elemento anfitrión** (`app-customer-detail-page`, `app-simulation-page`): R-220 no deja tocar la plantilla del simulador, y el detalle sigue el mismo patrón. Es un nombre único, como el `app-currency-selector label` que ya existe en `_shared.scss:6`. Los hijos que no son tarjeta van a todo el ancho con `:not(.customer-detail-page__card)`; si una tarea posterior añade un hijo al detalle, también irá a todo el ancho.
+20. **`align-items: last baseline`**: alinea el selector con la última línea del `<nav>` (R-55). Donde no se admita, queda `flex-end` (el borde inferior), que también lo pone en la línea del último enlace. Se mira en la puerta 6 a 768 y a 1280 px.
+21. **Ancho del selector desde 48 rem** (`width: auto`): con la lista nativa, el control toma el ancho de su opción más larga; con `appearance: base-select`, el ancho puede depender de la opción elegida (no comprobado aquí: el planner no ejecuta código). C-184 lo mide con «Dólar estadounidense (USD)» elegido, el caso más ancho (H-29).
+22. **Contraste con el énfasis de la tarjeta**: «Última simulación» va en `--color-muted` (`#666`) y, sobre `--color-soft`, da unos 4,6:1 (ronda 3 del revisor), AA por poco. Lighthouse no audita el estado con hover: se mide a mano en la puerta 6 con el selector de color de DevTools.
+23. **Tests sin diseño**: los tests de `ng test` no miden anchos, estilos calculados ni media queries. Por eso casi todos los casos de los retoques son manuales o con `git diff` (sección 5), y la fase roja del bloque 5 sale solo de los dos tests de `app.spec.ts` del paso 16.
 
-## 9. Dudas del plan (P-nn), decididas
+## 9. Dudas del plan (P-nn)
 
-Las P-01 a P-05 de la primera vuelta las decidió el autor el 2026-11-24, en la segunda vuelta (D-17). Se conservan abajo tal como se le presentaron. Las P-06 y P-07, de la puerta 3 ampliada del 2026-11-25 (cambio de la D-10), las decidió el autor el mismo día; también se conservan tal como se le presentaron.
+Las P-01 a P-05 de la primera vuelta las decidió el autor el 2026-11-24, en la segunda vuelta (D-17). Se conservan abajo tal como se le presentaron. Las P-06 y P-07, de la puerta 3 ampliada del 2026-11-25 (cambio de la D-10), las decidió el autor el mismo día; también se conservan tal como se le presentaron. La P-08, de la puerta 3 rehecha del 2026-11-25, la decidió el autor el mismo día, en la segunda vuelta (al final de esta sección).
 
 | P | Duda | Decisión del autor |
 |---|---|---|
@@ -453,6 +540,7 @@ Las P-01 a P-05 de la primera vuelta las decidió el autor el 2026-11-24, en la 
 | P-05 | «Al final cabecera con estilos» | (a) |
 | P-06 | Otros parámetros o `q` repetido al comparar la URL (D-10, 2026-11-25) | (a): «P-06 (a), comparar solo get('q')» |
 | P-07 | Riesgo 9 tras el diagnóstico de la T-14 (2026-11-25) | (b): «P-07 (b), añadir al final del riesgo 9 la línea sobre la causa real de la T-14» |
+| P-08 | Tamaño del paso de los retoques frente a «la T-17» (puerta 3 rehecha, 2026-11-25) | (b): «P-08: opción (b). Dos tareas, T-17 (contenedor, cabecera y fuentes: 4 ficheros, con fase roja) y T-18 (tarjetas, detalle y simulador: 2 ficheros, sin fase roja), sin renumerar, las dos con Sonnet 5.5, después de la T-15 y antes de la puerta 6.» |
 
 **P-01 (decidida: (a), D-17) · La carcasa inyecta `CurrencySelection`.** R-55 pide el selector en la cabecera común, y el selector necesita el estado de los tipos y la divisa elegida. Con la cabecera en `app.html` (D-13) o como componente (D-02), quien los lee es `App`. `frontend-conventions` dice «Componentes: … No inyectan servicios propios» y «Páginas: inyectan servicios», y `architecture.md:77` deja a `app` importar `shared`.
 - (a) `App` es la carcasa, ni página ni componente de una funcionalidad: inyecta `CurrencySelection` de `shared/` y se lo pasa a `<app-currency-selector>`. No es un choque. Pros: cumple R-55 con lo que ya existe; una sola inyección. Contras: la carcasa deja de ser solo plantilla.
@@ -496,6 +584,14 @@ Las P-01 a P-05 de la primera vuelta las decidió el autor el 2026-11-24, en la 
 - (b) Se añade al final del riesgo 9: «En la T-14 (2026-11-25) falló por otra causa: la `runSearch` del constructor de `CustomersPage` navegaba a la misma URL durante la activación, cancelaba la navegación que abría la página y ninguna terminaba. La evita la D-10 cambiada (nota tras la D-10).» Pros: el riesgo dice lo que pasó. Contras: una línea más en un riesgo ya aprobado.
 - Recomendada: **(b)**.
 
+**P-08 (decidida: (b), 2026-11-25) · Tamaño del paso de los retoques frente a «la T-17».** Se conserva como se le presentó al autor, con la cita corregida por su decisión 2 (se quita una frase que se atribuyó al autor y no era suya). Choque entre dos fuentes. La Decisión 2026-11-25 #1 (spec) dice: «luego puertas 3 y 4 ampliadas con la T-17 (Sonnet 5.5, sin renumerar, después de la T-15 y antes de la puerta 6)». `templates/tasks.md:3` (método, skill `sdd`) dice «Si no cabe, se parte» y solo admite `Excepción de tamaño:` si la tarea «no se puede dividir». Los retoques necesitan 6 ficheros de producción: `app.html`, `_shared.scss`, `_tokens.scss`, `index.html`, `_customers.scss` y `_simulations.scss`, y se pueden dividir. Ningún fichero sobra: R-188 pide `_tokens.scss`, R-220 `_simulations.scss`, R-223 `index.html` y R-193 el `data-label` de `app.html`.
+- (a) Un solo paso 16 y una sola T-17 con los 6 ficheros y una línea `Excepción de tamaño:`, con este motivo: la Decisión 2026-11-25 #1 pide una tarea, y los pesos de `index.html` deben llegar con los estilos que los usan. Pros: la letra de la #1; un commit y una ronda del implementer. Contras: el motivo no es que no se pueda dividir, como pide la plantilla, y el revisor lo comprueba.
+- (b) Dos pasos, 16 (contenedor, cabecera y fuentes: 4 ficheros) y 17 (tarjetas, detalle y simulador: 2), y dos tareas nuevas, T-17 y T-18, sin renumerar y las dos con Sonnet 5.5 después de la T-15. Pros: cumple la regla de tamaño sin excepción; cada paso deja algo que se puede mirar (la cabecera completa y, después, las vistas); el paso 17 no tiene fase roja, como el 10. Contras: va más allá de la letra «la T-17»: son dos tareas y dos commits.
+- (c) Dos pasos y una sola T-17 con dos commits. Pros: un solo número de tarea. Contras: rompe «Cada tarea cabe en un solo commit».
+- Recomendada: **(b)**. Con ella se cumplen lo que la #1 fija sobre la tarea (después de la T-15, antes de la puerta 6, Sonnet 5.5 y sin renumerar) y la regla de tamaño, que pide partir lo que se puede dividir; lo que se pierde es solo el número único.
+- Decisión del autor (2026-11-25, segunda vuelta de la puerta 3 rehecha). Texto literal: «1. P-08: opción (b). Dos tareas, T-17 (contenedor, cabecera y fuentes: 4 ficheros, con fase roja) y T-18 (tarjetas, detalle y simulador: 2 ficheros, sin fase roja), sin renumerar, las dos con Sonnet 5.5, después de la T-15 y antes de la puerta 6. 2. La cita de la P-08 se corrige: solo la Decisión 2026-11-25 #1 («la T-17») y templates/tasks.md:3 («Si no cabe, se parte»). La frase «pueda ser una sola tarea de un commit…» no es mía y se quita. 3. Se aplican, como consecuencias directas de mis decisiones (regla de la #4), sin abrir dudas: plan.md:6 («Los 232 requisitos»), sección 1 :16 (con las Decisiones 2026-11-25 y los R-nn y C-nn actuales) y :25 (con las líneas :8, :17 y :48 de style-guide.md), y sección 6 (mención de la P-08 decidida). 4. Aprobados los valores del planner: body { margin: 0 } (riesgo 17), $breakpoint-wide, --space-sm, --space-lg, width: auto desde 48 rem y min(100%, 18rem) por debajo, column-gap: var(--space-lg) y el ::after con data-label. El riesgo 16 queda como verificación con orden de parar en el paso 16.»
+- Cómo se aplica: sección 7, bloque 5, con los pasos 16 (T-17) y 17 (T-18); D-14, valores del planner aprobados; riesgo 16, con orden de parar en el paso 16; consecuencias directas en `:6`, en la sección 1 (`:16` y `:25`) y en la sección 6.
+
 ## 10. Trazabilidad
 | Requisitos | Ficheros (D-nn) | Casos | Paso |
 |---|---|---|---|
@@ -515,18 +611,37 @@ Las P-01 a P-05 de la primera vuelta las decidió el autor el 2026-11-24, en la 
 | R-22, R-29, R-112 | `customer-search/` (D-10) | C-22, C-29, C-112 | 8 |
 | R-23 a R-27 | estructura de `customers/` y `shared/interfaces/` (D-09 a D-11, D-14) | C-23 a C-27 | 6 a 13 |
 | R-28, R-61, R-137 | `app.routes.ts` (D-13) | C-28, C-61, C-137 | 9, 13 |
-| R-30 a R-33, R-101 a R-105, R-113, R-119, R-169 | `customer-card/`, `_customers.scss` (D-11, D-14) | C-30 a C-33, C-101 a C-105, C-113, C-119, C-174 | 7, 10 |
+| R-30 a R-33, R-101 a R-105, R-113, R-119, R-169 | `customer-card/`, `_customers.scss` (D-11, D-14); R-101 y R-105 modificados por la Decisión 2026-11-25 #1, en `_customers.scss` (D-14) | C-30 a C-33, C-101 a C-105, C-113, C-119, C-174 | 7, 10, 17 |
 | R-32, R-40 a R-42, R-47, R-96 a R-100, R-110, R-111, R-120 a R-123, R-159, R-165 a R-167 | `customers-page/`, `customers-api.ts` (D-09, D-10) | C-32, C-40 a C-42, C-47, C-96 a C-100, C-110, C-111, C-120 a C-123, C-159, C-170 a C-172 | 6, 9, 10 |
 | R-34 a R-37, R-106 a R-109, R-114 a R-117 | `customer-detail-page/`, `simulation-history/`, `customer-display.ts` (D-11) | C-34 a C-37, C-106 a C-109, C-114 a C-117 | 7, 12, 13 |
-| R-38, R-39 | `_customers.scss`, `_tokens.scss` (D-14) | C-38, C-39 | 10, 13 |
+| R-38 (modificado por la Decisión 2026-11-25 #2) | `_customers.scss`, `_shared.scss`, `_simulations.scss` (D-14) | C-38, C-238, C-239 | 10, 13, 16, 17, puerta 6 |
+| R-39 | `_customers.scss`, `_tokens.scss` (D-14) | C-39 | 10, 13 |
 | R-43 a R-46, R-124 a R-129, R-160, R-163, R-164 | `customers-api.ts`, `customer-id.ts`, `customer-detail.ts`, `customer-detail-page/` (D-09, D-11) | C-43 a C-46, C-124 a C-129, C-160, C-168, C-169 | 11, 13 |
 | R-48 a R-53, R-57, R-132 a R-135 | páginas, tarjeta e historial con `shared/` (D-12) | C-48 a C-53, C-57, C-132 a C-135 | 7, 9, 12, 13, 14 |
-| R-54 a R-56, R-130, R-131, R-136 | `app.html`, `app.ts` (D-13, D-17) | C-54 a C-56, C-130, C-131, C-136 | 14 |
-| R-58 a R-60, R-62, R-67, R-142 a R-145, R-149 | `app.html`, `app.ts`, `app.spec.ts` (D-13, D-17) | C-58 a C-60, C-62, C-67, C-142 a C-145, C-149 | 14 |
-| R-63, R-64, R-138 a R-141 | `_shared.scss` (D-14) | C-63, C-64, C-138 a C-141 | 14 |
+| R-54, R-56, R-130, R-131, R-136 | `app.html`, `app.ts` (D-13, D-17) | C-54, C-56, C-130, C-131, C-136 | 14 |
+| R-55 (modificado por las Decisiones 2026-11-25 #1 y #6) | `app.html`, `app.ts` (D-13); posición en `_shared.scss` (D-14) | C-55 | 14, 16 |
+| R-58 a R-60, R-62, R-142 a R-145, R-149 | `app.html`, `app.ts`, `app.spec.ts` (D-13, D-17) | C-58 a C-60, C-62, C-142 a C-145, C-149 | 14 |
+| R-67 (modificado por las Decisiones 2026-11-25 #1 a #4) | `app.html`, `app.ts`, `app.routes.ts`, `index.html` (D-13, D-14, D-16) | C-67 | 9, 13, 14, 16 |
+| R-63, R-138 | `_shared.scss` (D-14) | C-63, C-138 | 14, 16 |
+| R-64 (modificado por la Decisión 2026-11-25 #1) | `_shared.scss`, `_tokens.scss` (D-14) | C-64 | 14, 16 |
+| R-139 a R-141 | sustituidos por R-175 a R-177 y R-183 a R-194 (Decisión 2026-11-25 #1) | C-139 a C-141 (sustituidos) | — |
 | R-65 | ninguno con la D-13 (sin componente) | C-65 | 14 |
-| R-66, R-78 | ninguno: `simulations/` no cambia | C-66, C-78 | — |
+| R-66 (modificado por las Decisiones 2026-11-25 #1 y #5) | `_simulations.scss`, solo las dos columnas (D-14, D-16); `simulations/` no cambia | C-66 | 17 |
+| R-78 | ninguno: `simulations/` no cambia | C-78 | — |
 | R-68 a R-71, R-146 a R-148 | todas las vistas y la cabecera (D-13, D-14) | C-68 a C-71, C-146 a C-148 | puerta 6 |
+| R-171 a R-175, R-177 | `app.html` (clase `app-container`), `_shared.scss`, `_tokens.scss` (D-13, D-14) | C-176 a C-180, C-182 | 16 |
+| R-176 | ninguno: `app.html` no tiene logo ni migas y no los gana (D-13) | C-181 | 16 |
+| R-178 a R-182, R-231 | `_shared.scss` (D-14) | C-183 a C-187, C-236 | 16 |
+| R-183 a R-188, R-191 a R-193 | `_shared.scss`, `_tokens.scss`, `app.html` (`data-label`) (D-13, D-14) | C-188 a C-193, C-196 a C-198 | 16 |
+| R-189, R-190, R-224, R-225, R-229 | `style-guide.md`, solo `:8`, `:17`, `:22` y `:48` (D-14, D-16) | C-194, C-195, C-229, C-230, C-234 | 16 |
+| R-194, R-223, R-228, R-230 | `index.html`, solo `:10` y `:11` (D-14, D-16) | C-199, C-228, C-233, C-235 | 16 |
+| R-195 a R-199, R-201 a R-206, R-209 a R-215 | `_customers.scss` (D-14) | C-200 a C-204, C-206 a C-211, C-214 a C-220 | 17 |
+| R-200, R-232 | `_customers.scss`, sin recorte en el detalle (D-14) | C-205, C-237 | 13, 17 |
+| R-207, R-208 | `_customers.scss` (D-14) | C-212, C-213 | 17 |
+| R-216, R-217, R-227 | `_customers.scss`, rejilla de `app-customer-detail-page` (D-14) | C-221, C-222, C-232 | 17 |
+| R-218 a R-220 | `_simulations.scss` (D-14, D-16) | C-223 a C-225 | 17 |
+| R-222, R-226 | `_customers.scss`, `_simulations.scss` (D-14) | C-227, C-231 | 17 |
+| R-221 | ninguno: pruebas a mano de la puerta 6 (sección 5) | C-226 | puerta 6 |
 | R-72 a R-75 | tests de la API y de `customers/` | C-72 a C-75 | 5, 6 a 13 |
 | R-76, R-150 a R-153, R-161, R-168, R-170 | `seed.ts`, `seed/` y `package.json` (D-15, D-17) | C-76, C-150 a C-153, C-161, C-173, C-175 | 15 |
 | R-77, R-154, R-155 | `customer-detail-page/` (D-11) | C-77, C-154, C-155 | 13, 14 |

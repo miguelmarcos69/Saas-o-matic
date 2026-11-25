@@ -5,27 +5,29 @@ Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo
 Hay quince tareas, T-01 a T-15: una por paso del «Orden de construcción» de `plan.md` (sección 7), en el mismo orden y sin agrupar ni partir ninguno. Petición literal del autor: «Para la puerta 4: tareas a partir de los 15 pasos del plan, en el orden por valor (pasos 1 a 5, API de lectura; 6 a 10, buscador y dashboard; 11 a 13, detalle con historial; 14 y 15, cabecera con estilos y seed), una tarea por paso salvo que el planner justifique agrupar. Marca en tasks.md cuáles son el mínimo imprescindible (los pasos 1 a 13) y cuáles van al final (14 y 15). Opus 5.5 para lo que tenga lógica (DTOs, regla de búsqueda, datasources, casos de uso, servicio y detalle) y Sonnet 5.5 para lo sencillo (tarjetas, estilos, cabecera, seed), como en la 005. Antes de enseñarme el retorno, cuenta en el fichero las tareas y las dudas y dame los números. Dudas en bloque, cada una con una recomendada.»
 - **Puerta 4 ampliada del 2026-11-25** (cambio de la D-10, sin cambio de requisitos; spec en `En implementación`): una tarea nueva, T-16, añadida sin renumerar, así que hay dieciséis, T-01 a T-16. Va al final del fichero por su número, pero se hace antes de la T-14, que depende de ella. Cambia el código del paso 9 (nota tras la D-10 de `plan.md`).
 - **Segunda puerta 4 ampliada del 2026-11-25** (cambio de la verificación de la D-10 para `/customers?q=%20Acme%20`, sin cambio de requisitos ni de código; segunda nota tras la D-10 de `plan.md`): ninguna tarea nueva; en la T-16 cambian la casilla del test de `%20Acme%20` (que añade que `customers-page.ts` no cambia en la relanzada) y su regla de parada, y se añade una observación para el revisor. Siguen siendo dieciséis, T-01 a T-16.
+- **Puerta 4 rehecha del 2026-11-25** (tras el cambio de requisitos de las Decisiones 2026-11-25 #1 a #6 y la puerta 3 rehecha, pasos 16 y 17 del plan; P-08 (b) del autor; spec en `Aprobada`): dos tareas nuevas, T-17 (paso 16) y T-18 (paso 17), añadidas sin renumerar y sin reabrir ninguna tarea `[x]`, así que hay dieciocho, T-01 a T-18. Van después de la T-15 y antes de la puerta 6, las dos con Sonnet 5.5. Petición literal del autor: «2. Puerta 4 rehecha, planner Opus 5.5, encargo sin enseñar, solo tasks.md: se añaden la T-17 (contenedor, cabecera y fuentes: app.html, _shared.scss, _tokens.scss, index.html; con fase roja y la orden de parar del riesgo 16) y la T-18 (tarjetas, detalle y simulador: _customers.scss y _simulations.scss; sin fase roja; depende de la T-17), las dos con Sonnet 5.5, sin renumerar y sin reabrir ninguna tarea [x]. 3. Cada tarea lleva su «Hecho cuando» con los casos que cubre (C-176 a C-239), los tests nuevos de app.spec.ts de la T-17 y las pruebas manuales de la puerta 6 (C-184 a 768 px, C-226, C-238, C-239, C-38 en las cuatro vistas y Lighthouse), con los comandos de siempre (npm run verify) y la regla de que style-guide.md solo cambia en :8, :17, :22 y :48, e index.html solo en :10 y :11. 4. Regla del autor (#4): las consecuencias directas en comentarios o documentación ya autorizados se aplican y se anotan, sin abrir dudas Q-nn. Las dudas reales, en bloque, con recomendada; ninguna decisión de valores se rellena sola.» Consecuencias directas en este fichero (regla de la Decisión 2026-11-25 #4): la regla común de «Ficheros» (`_simulations.scss` cambia en la T-18), las de «Fase roja» y «Comprobación manual», la línea de rutas y la «Cobertura» (R-38, R-55, R-63, R-64, R-66 a R-71, R-101, R-105, R-138, R-144 y R-146 a R-148 ganan T-17 o T-18; R-139 a R-141, sustituidos). Ajustes del ADR-016 aplicados: punto 2 (dudas en bloque, cada una con su recomendada), punto 4 (encargo del planner sin enseñar), punto 5 (rutas a leer acotadas) y punto 6 (planner con Opus 5.5; implementer con Sonnet 5.5 en las dos tareas, como fija el autor).
 - **Mínimo imprescindible** (pasos 1 a 13, según la petición del autor): T-01 a T-13, y la T-16, que corrige el paso 9. Bloque 1, API de lectura: T-01 a T-05. Bloque 2, buscador y dashboard: T-06 a T-10 y T-16. Bloque 3, detalle con historial: T-11 a T-13.
 - **Al final** (pasos 14 y 15): T-14 (cabecera con estilos) y T-15 (seed). Cubren requisitos de la spec (cabecera, navegación, seed y Lighthouse), así que la spec no se cierra sin ellas. «Al final» indica el orden, no que sean opcionales.
-- Ninguna pasa de 5 archivos de producción (`package.json` cuenta; el lockfile no, y ninguna tarea lo cambia), así que ninguna lleva `Excepción de tamaño:`. La T-15 tiene justo 5. `CLAUDE.md` y `architecture.md` son documentación y no cuentan (plan, sección 2).
-- Las rutas son de `apps/api/src/` en T-01 a T-05, de `apps/web/src/` en T-06 a T-14 y en la T-16, y las que indica la T-15.
-- Estado de las tareas: pendientes de la aprobación del autor (puerta 4). Dudas de esta puerta: Q-01 a Q-03, decididas por el autor en la segunda vuelta (las tres en (a)), al final del fichero. Puerta 4 ampliada del 2026-11-25: T-16 pendiente de la aprobación del autor; la Q-04, decidida por el autor en (a) (al final del fichero). Desde otro fichero se citan como «tasks.md Q-01».
+- **Bloque 5, retoques visuales** (pasos 16 y 17, puerta 4 rehecha): T-17 (contenedor, cabecera y fuentes) y T-18 (tarjetas, detalle y simulador), después de la T-15 y antes de la puerta 6; la T-18 depende de la T-17. Cubren requisitos de la spec (R-171 a R-232 y los modificados), así que la spec tampoco se cierra sin ellas.
+- Ninguna pasa de 5 archivos de producción (`package.json` cuenta; el lockfile no, y ninguna tarea lo cambia), así que ninguna lleva `Excepción de tamaño:`. La T-15 tiene justo 5; la T-17, 4, y la T-18, 2 (P-08 (b)). `CLAUDE.md`, `architecture.md` y `style-guide.md` son documentación y no cuentan (plan, sección 2).
+- Las rutas son de `apps/api/src/` en T-01 a T-05, de `apps/web/src/` en T-06 a T-14 y en T-16 a T-18 (`index.html` es `apps/web/src/index.html`), y las que indica la T-15; `style-guide.md` es `ai-workspace/docs/style-guide.md`.
+- Estado de las tareas: pendientes de la aprobación del autor (puerta 4). Dudas: Q-01 a Q-04, decididas por el autor (Q-01 a Q-03 en la segunda vuelta de la puerta 4, las tres en (a); la Q-04 en la puerta 4 ampliada del 2026-11-25, en (a)), al final del fichero. Puerta 4 ampliada del 2026-11-25: T-16 pendiente de la aprobación del autor. Puerta 4 rehecha del 2026-11-25: T-17 y T-18 en `[ ]`, pendientes de la aprobación del autor; Q-05 y Q-06, decididas por el autor en la segunda vuelta (las dos en (a), la Q-05 con una variante), al final del fichero. Sin dudas abiertas. Desde otro fichero se citan como «tasks.md Q-01».
 
 Reglas comunes de esta spec:
 - **Fase roja** en cada tarea con tests nuevos o cambiados de comportamiento nuevo:
   - Los tests se escriben antes que el código de producción y fallan porque ese código no existe.
   - El implementer da en su retorno la salida íntegra del rojo, sin reescribir ninguna línea. La sesión principal la copia al registro de la sesión en el momento.
-  - La T-03 (puertos y falsos) y la T-10 (solo `.scss`) no traen tests de comportamiento nuevo. Su «Hecho cuando» lo dice y no tienen fase roja.
+  - La T-03 (puertos y falsos), la T-10 y la T-18 (solo `.scss`) no traen tests de comportamiento nuevo. Su «Hecho cuando» lo dice y no tienen fase roja.
 - **Cierre:** cada tarea se cierra con `npm run verify` desde la raíz (`build` y `test`, principio 3), en verde. El implementer da los recuentos de la raíz y de la web, antes y después (antes de la T-01: 766 + 180, según `MEMORY.md`).
 - **Dependencias:** ninguna tarea instala nada (plan, sección 4; principio 4).
-- **Ficheros:** de `apps/` y `packages/` solo cambian los que nombra cada tarea (`git status` y `git diff --stat`). `packages/pricing`, `apps/api/migrations/`, `database.md`, `simulations/`, `health/`, `_simulations.scss`, `_health.scss`, `_base.scss` y `app.config.ts` no cambian en ninguna (R-21, R-66, R-67, R-95; plan, D-16 y H-15).
+- **Ficheros:** de `apps/` y `packages/` solo cambian los que nombra cada tarea (`git status` y `git diff --stat`). `packages/pricing`, `apps/api/migrations/`, `database.md`, `simulations/`, `health/`, `_simulations.scss`, `_health.scss`, `_base.scss` y `app.config.ts` no cambian en ninguna (R-21, R-66, R-67, R-95; plan, D-16 y H-15), salvo `_simulations.scss` en la T-18, solo con lo que permiten R-66, R-220 y C-66 (plan, D-14 y D-16, puerta 3 rehecha). `index.html` solo cambia en la T-17, en `:10` y `:11`, y `style-guide.md` solo en la T-17, en `:8`, `:17`, `:22` («Menú») y `:48` (D-16).
 - **Regla de parada (plan, D-16):** ninguna aserción de otra spec se borra ni se desactiva (sin `skip`, `todo`, `xit` ni `expect` comentado). Si falla un test de otra spec que no está en la lista cerrada de la D-16, o hace falta tocar un fichero fuera de ella, la tarea para y lo devuelve.
 - **Reservas aceptadas** (H-04, H-10, H-14, H-15 y H-21): no se resuelven aquí y ninguna tarea las empeora. `:id` se convierte con `Number()` (H-04, riesgo 3), la web no pone `maxlength` en el buscador (H-10) y `database.md` no se toca (H-15).
 - **Citas** (R-144, D-16): toda cita de un requisito o una decisión que la tarea cree o toque en el código lleva su spec («spec 004: R-16»).
 - **Textos literales** de la spec (etiquetas, títulos, estados, anuncios y mensajes de error de D-08) se comparan en los tests con `toBe`.
 - **Importes en la web:** formato esperado sacado de `formatCents` y `toDisplayCents` (`shared/services/currency-conversion.ts`), no de un literal escrito a mano (plan, sección 5). Ningún test de `customers/` prueba límites de los tramos (R-73) ni importa `packages/pricing`.
 - **Tests de `customers/`:** rutas definidas en el propio test, solo con páginas de `customers/`, sin importar `app.routes` (R-75).
-- **Comprobación manual:** lo que el plan marca como «Manual» (sección 5) lo comprueba el revisor o el autor en la puerta 6 y no se marca en ninguna tarea: C-02, C-23, C-24, C-27, C-38, C-39, C-63 a C-65, C-68 a C-74, C-78, C-102 (estilo), C-138 a C-141, C-144, C-146 a C-148, C-170 y C-174. Las tareas dejan el `git diff` que esa revisión necesita.
+- **Comprobación manual:** lo que el plan marca como «Manual» (sección 5) lo comprueba el revisor o el autor en la puerta 6 y no se marca en ninguna tarea: C-02, C-23, C-24, C-27, C-38, C-39, C-63 a C-65, C-68 a C-74, C-78, C-102 (estilo), C-138 a C-141, C-144, C-146 a C-148, C-170 y C-174. De la puerta 3 rehecha: C-38 en las cuatro vistas, C-55 (posición), C-63, C-64, C-101, C-105, C-176 a C-192 y C-196 a C-224 (salvo la parte automática de C-176 y C-198, que va en la T-17), C-226, C-227, C-231 a C-233 y C-236 a C-239, y las Lighthouse de las cuatro vistas tras la T-18 (C-69 a C-71 y C-146 a C-148; plan, sección 5 y riesgo 17). Las tareas dejan el `git diff` que esa revisión necesita.
 - **Modelo del implementer** (ADR-016, punto 6): va en cada tarea, según la petición del autor y, en las que no encajaban claramente en ella, según la Q-01 (a), decidida por el autor. El autor lo confirma al aprobar la puerta.
 
 ## T-01 · domain: DTO de consulta, regla de búsqueda y entidad
@@ -347,6 +349,56 @@ Reglas comunes de esta spec:
 - Observación para el revisor (segunda puerta 4 ampliada del 2026-11-25): que «Clientes» quede marcado con `/customers?q=%20Acme%20` es una deducción de la sesión principal (`RouterLinkActive` actualiza en cada `NavigationEnd` y usa `subsetMatchOptions` sin `exact`), no probada con la cabecera, hasta C-56 y C-135 de la T-14. Registro de sesión de este cambio: `sessions/2026-11-25-04-004-customers.md`.
 - Aprobación del autor 2026-11-25 (literal): «Apruebo la T-16 (el buscador solo navega si cambia el q) con la desviación aceptada (el test de %20Acme% exige exactamente dos NavigationStart). Anota en el registro que el rojo del test de %20Acme% no es atribuible a sus propias aserciones (cae en cascada tras el primer fallo) y que la prueba del rojo la da el test de abrir /customers, como pide la Q-04 (a).» Primera vuelta del implementer: `Bloqueado` por la regla de parada (con `/customers?q=%20Acme%20` la navegación que abre la página se cancela); diagnóstico de la sesión principal y segundas puertas 3 y 4 ampliadas (sesión 04); segunda vuelta: solo las aserciones del test de `%20Acme%20`. Tres tests nuevos; `npm run verify` en verde (905 + 303). Registros: `sessions/2026-11-25-04-004-customers.md` y `sessions/2026-11-25-05-004-customers.md`.
 
+## T-17 · web: contenedor común, cabecera blanca y pesos de Montserrat (retoques visuales)
+- Origen: puerta 4 rehecha del 2026-11-25, paso 16 del plan (bloque 5), por las Decisiones 2026-11-25 #1 a #6 y la P-08 (b) del autor. Va después de la T-15 y antes de la puerta 6.
+- Cubre: R-38 (parte de la cabecera), R-55, R-63, R-64, R-67, R-68, R-138, R-144, R-171 a R-194, R-223 a R-225, R-228 a R-231 (C-176 y C-198 en parte con test; el resto, con `git diff`, `git grep` o en la puerta 6)
+- Depende de: T-14 (cabecera); va después de la T-15 (Decisión 2026-11-25 #1 y P-08 (b))
+- Estado: [ ] pendiente
+- Modelo: Sonnet 5.5, por la petición del autor y la P-08 (b).
+- Convenciones a leer: `.claude/skills/frontend-conventions/SKILL.md` (estilos solo en `src/scss`, tokens en `themes/_tokens.scss`, clases con prefijo de componente, tests con Vitest).
+- Archivos de producción (4):
+  - `app/app.html`: solo la clase `app-container` en `<header>` y en `<main>` y un `data-label` con su mismo texto en cada uno de los tres enlaces, como la D-13; sin elementos nuevos (sin logo ni migas, R-176) y sin cambiar el comentario de la línea 1.
+  - `scss/_shared.scss`: `@use 'themes/tokens';`, `body { margin: 0; }` (riesgo 17), `.app-container` y la cabecera reescrita (`.app-header`, `__nav`, `__link` con `[aria-current='page']`, `:hover`, `:focus-visible`, `::after` con `data-label` y `prefers-reduced-motion`, y `__currency` por debajo y desde 48 rem), como la D-14; la regla de `app-currency-selector label` de `:6-11` no cambia, y el comentario de `:13` pasa a citar los requisitos vigentes (D-14; consecuencia directa, regla de la Decisión 2026-11-25 #4).
+  - `scss/themes/_tokens.scss`: los tokens de la D-14 (`--container-max-width`, `--border-width-subtle`, `--font-size-nav`, `--line-height-nav`, `--font-weight-nav`, `--font-size-nav-emphasis`, `--font-weight-nav-emphasis`, `--color-nav-hover`, `--transition-nav` y la variable de Sass `$breakpoint-wide`), cada uno con su origen en un comentario; el comentario de la línea 2 no se toca (H-22 de la 005).
+  - `index.html`: solo `:10` (comentario) y `:11` (`<link>` con `wght@500;600;700;800`), con el texto de la D-14.
+- Documentación (no cuenta): `style-guide.md`, solo `:8`, `:17`, `:22` («Menú») y `:48`, con el texto literal de la D-14 (C-194).
+- Tests (crece): `app/app.spec.ts`, dos tests nuevos con «spec 004:» en el título (D-13): «C-176: `<header>` y `<main>` llevan la clase del contenedor común» y «R-193: cada enlace del `<nav>` lleva `data-label` con su mismo texto».
+- Hecho cuando:
+  - [ ] Fase roja: los dos tests nuevos se escriben antes del cambio y, con `app.html` como en `HEAD`, fallan los dos; salida íntegra en el registro de la sesión. Es un rojo de aserciones (la plantilla existe, pero no lleva la clase ni los atributos). Si alguno no falla con `app.html` como en `HEAD`, la tarea para y lo devuelve.
+  - [ ] C-176 (plantilla) y C-198 (atributos): los dos tests nuevos en verde.
+  - [ ] Ninguna aserción existente de `app.spec.ts` cambia ni se desactiva (C-55, C-47 y C-48 de la 005, y los dos tests de la 000): `git diff` de `app.spec.ts` solo con líneas añadidas.
+  - [ ] C-67 y C-181: `git diff` de `app.html` solo con los dos `class` y los tres `data-label`; `app.ts`, `app.routes.ts` y `app.config.ts`, sin cambios.
+  - [ ] C-228 y C-235: `git diff apps/web/src/index.html` solo en `:10` y `:11`, con el texto de la D-14.
+  - [ ] C-194, C-229, C-230 y C-234: `git diff ai-workspace/docs/style-guide.md` solo en `:8`, `:17`, `:22` y `:48`, con el texto literal de la D-14.
+  - [ ] C-193 y C-195: `git grep -n -- "--color-nav-hover" apps/web/src` da el token en `_tokens.scss` y su uso en `_shared.scss`; `git grep -n -- "--color-nav-hover" ai-workspace/docs/style-guide.md`, solo la línea «Menú».
+  - [ ] Ninguna regla de `outline` en el `git diff` de `_shared.scss` (R-68, C-191).
+  - [ ] Riesgo 16 (orden de parar; P-08, decisión 4): el nombre accesible de cada enlace del `<nav>` en el árbol de accesibilidad de Chrome y de Firefox es su texto, una sola vez («Clientes», no «Clientes Clientes»); si sale duplicado en alguno, la T-17 queda «Bloqueado», sin buscar otra solución. Por la Q-05 (a), con la variante del autor: en Chrome lo comprueba la sesión principal con `take_snapshot` del MCP de Chrome DevTools, y en Firefox el autor con las herramientas de accesibilidad; si el MCP no conecta, el autor lo hace en los dos. La evidencia va al registro de la sesión. El implementer no lo comprueba: la casilla se marca tras esa comprobación, antes de la aprobación del autor.
+  - [ ] Riesgo 18: `npm run build` y, en el CSS de `dist/`, `--color-bg:` aparece una sola vez (Q-06 (a); se repite en la T-18).
+  - [ ] De `apps/` solo cambian los cuatro ficheros de producción y `app.spec.ts` (`git status` y `git diff --stat`); `_customers.scss`, `_simulations.scss`, `_base.scss`, `_health.scss`, `simulations/`, `customers/` y `health/`, sin cambios. Si un retoque necesita otra línea de `index.html` o de `style-guide.md`, otra plantilla o `_base.scss`, o falla un test de otra spec fuera de la lista cerrada, la tarea para y lo devuelve (D-16).
+  - [ ] `npm run verify` desde la raíz, en verde, con los recuentos de la raíz y de la web antes (913 + 322, según `MEMORY.md`) y después.
+  - Puerta 6, a mano (no se marcan en esta tarea; regla común «Comprobación manual»): C-38 en las cuatro vistas, con el foco en cada enlace de la cabecera; C-55, C-63 y C-64; C-176 a C-192 y C-196 a C-199 (anchos a 320, 767, 768, 1248, 1280 y 1600 px, estilos calculados, hover forzado, Tab y movimiento reducido); C-184 a 768 px exactos con «Dólar estadounidense (USD)» (H-29: se anota si los enlaces caben en una línea o se parten en dos); C-233 y C-236; y Lighthouse de «Estado de la API» y del simulador, que cambian con `body { margin: 0; }` (riesgo 17), junto con las de la T-18.
+
+## T-18 · web: tarjetas, detalle y simulador en dos columnas (retoques visuales)
+- Origen: puerta 4 rehecha del 2026-11-25, paso 17 del plan (bloque 5), por las Decisiones 2026-11-25 #1 a #6 y la P-08 (b) del autor. Va antes de la puerta 6.
+- Cubre: R-38 (parte de las vistas), R-66, R-68, R-101, R-105, R-144, R-195 a R-222, R-226, R-227, R-232 (R-221 en la puerta 6, C-226; el resto, con `git diff` o en la puerta 6)
+- Depende de: T-17 (tokens `--border-width-subtle` y `$breakpoint-wide` y pesos de Montserrat)
+- Estado: [ ] pendiente
+- Modelo: Sonnet 5.5, por la petición del autor y la P-08 (b).
+- Convenciones a leer: `.claude/skills/frontend-conventions/SKILL.md` (estilos solo en `src/scss`, tokens en `themes/_tokens.scss`, clases con prefijo de componente).
+- Archivos de producción (2):
+  - `scss/_customers.scss`: `@use 'themes/tokens';` y las reglas de la D-14 (puerta 3 rehecha): eyebrows pegados, `grid-auto-rows: 1fr` con `.customers-page__item` y `.customer-card` que llenan la celda, borde transparente de 1 px siempre, énfasis con `:hover` y `:focus-within` (y píldoras en `--color-white`), nombre a 16 px / 30 px / 700 con recorte a 2 líneas en el `<a>`, identificador en 1 línea con `text-overflow`, fila `.customer-card__last` al pie con su línea en `--color-bg`, detalle sin recortes y detalle en dos columnas desde 48 rem con el selector `app-customer-detail-page`. El comentario de `:1` añade «R-195 a R-217, R-222, R-226, R-227, R-232» (D-14; consecuencia directa, regla de la Decisión 2026-11-25 #4).
+  - `scss/_simulations.scss`: solo `@use 'themes/tokens';` tras los comentarios de cabecera y, con un comentario «spec 004: R-218 a R-220, R-222, R-226», las reglas de las dos columnas desde 48 rem y del eyebrow y el título a todo el ancho, como la D-14; ninguna otra regla cambia.
+- Tests: ninguno nuevo ni cambiado (solo `.scss`). Por eso no hay fase roja, como en la T-10.
+- Hecho cuando:
+  - [ ] Sin tests nuevos: no hay fase roja (regla común).
+  - [ ] C-66 y C-225: `git diff --stat HEAD -- apps/web/src/app/simulations/` vacío; `git diff` de `_simulations.scss` solo con el `@use`, el comentario y las reglas de las dos columnas, de su mismo ancho y del eyebrow y el título encima (R-66, R-220).
+  - [ ] Plantillas sin cambios: `git diff --stat HEAD -- apps/web/src/app/customers/` vacío (D-14: las plantillas no cambian; R-209 ya lo cumple `customer-card.html`).
+  - [ ] Ninguna regla de `outline` en el `git diff` de `_customers.scss` ni de `_simulations.scss` (R-68, R-212, C-217); la tarjeta no gana `tabindex` (R-105).
+  - [ ] Riesgo 18, repetido (Q-06 (a)): `npm run build` y, en el CSS de `dist/`, `--color-bg:` aparece una sola vez con los tres `@use 'themes/tokens';`.
+  - [ ] De `apps/` solo cambian `_customers.scss` y `_simulations.scss` (`git status` y `git diff --stat`); `_shared.scss`, `_tokens.scss`, `index.html`, `app.*`, `_base.scss` y `_health.scss`, sin cambios. Si un retoque necesita otra línea de `_simulations.scss`, una plantilla de `simulations/` o de `customers/`, o `_base.scss`, o falla un test de otra spec, la tarea para y lo devuelve (D-16).
+  - [ ] `npm run verify` desde la raíz, en verde, con los recuentos antes y después (iguales: sin tests nuevos).
+  - Puerta 6, a mano (no se marcan en esta tarea; regla común «Comprobación manual»): C-38 en las cuatro vistas (con una tarjeta con el énfasis de R-211); C-101, C-105, C-200 a C-224, C-227, C-231, C-232 y C-237, a 320, 767, 768 y 1280 px, con clientes de nombre de 200 caracteres (con y sin espacios) y de identificador de 20 creados con `POST /customers` en una base del scratchpad (plan, sección 5); C-217 con Tab (riesgo 15: si el contorno sale cortado, se devuelve, sin reglas de `outline`); contraste de «Última simulación» sobre `--color-soft` con hover (riesgo 22); C-226 (simulador a 320 px con y sin `base-select`); C-238 (WCAG 1.4.4, texto al 200 % en Firefox) y C-239 (WCAG 1.4.12, con la hoja de la sección 5 del plan); C-233 (caras 700 del nombre y de las píldoras); y Lighthouse en móvil y escritorio de las cuatro vistas, con captura (C-69 a C-71 y C-146 a C-148; la del simulador es la de C-226).
+
 ## Cobertura
 Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobación final es manual (plan, sección 5). R-144 (citas calificadas) aplica a todas las tareas (regla común).
 
@@ -383,7 +435,8 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-34, R-35 | T-13 |
 | R-36 | T-12, T-13 |
 | R-37 | T-12 |
-| R-38, R-39 | T-10, T-13 (C-38 y C-39 en la puerta 6) |
+| R-38 (modificado por la Decisión 2026-11-25 #2) | T-10, T-13, T-17, T-18 (C-38 en las cuatro vistas, C-238 y C-239 en la puerta 6) |
+| R-39 | T-10, T-13 (C-39 en la puerta 6) |
 | R-40, R-41, R-42 | T-06, T-09 |
 | R-43, R-44 | T-11, T-13 |
 | R-45 | T-12, T-13 |
@@ -391,17 +444,19 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-47 | T-09, T-13 |
 | R-48, R-49, R-50, R-51 | T-07, T-09, T-12, T-13 |
 | R-52, R-53 | T-09, T-13, T-14 |
-| R-54, R-55, R-56 | T-14 |
+| R-54, R-56 | T-14 |
+| R-55 (modificado por las Decisiones 2026-11-25 #1 y #6) | T-14, T-17 (posición de C-55 en la puerta 6) |
 | R-57 | T-09, T-13, T-16 |
 | R-58, R-59, R-60 | T-14 |
 | R-61 | T-09, T-14 |
 | R-62 | T-14 |
-| R-63, R-64 | T-14 (C-63 y C-64 en la puerta 6) |
+| R-63 | T-14, T-17 (C-63 en la puerta 6) |
+| R-64 (modificado por la Decisión 2026-11-25 #1) | T-14, T-17 (C-64 en la puerta 6) |
 | R-65 | T-14 (C-65 en la puerta 6) |
-| R-66 | T-14 (regla común de ficheros) |
-| R-67 | T-09, T-13, T-14 |
-| R-68 | T-07, T-08, T-09, T-10, T-13, T-14 (C-68 en la puerta 6) |
-| R-69, R-70, R-71 | T-14 (C-69 a C-71 en la puerta 6) |
+| R-66 (modificado por las Decisiones 2026-11-25 #1 y #5) | T-14 (regla común de ficheros), T-18 (C-66 con `git diff`) |
+| R-67 (modificado por las Decisiones 2026-11-25 #1 a #4) | T-09, T-13, T-14, T-17 (C-67 con `git diff`) |
+| R-68 | T-07, T-08, T-09, T-10, T-13, T-14, T-17, T-18 (C-68 en la puerta 6) |
+| R-69, R-70, R-71 | T-14, T-17, T-18 (C-69 a C-71 en la puerta 6, tras la T-18) |
 | R-72 | T-05 |
 | R-73 | T-07, T-09, T-12, T-13 |
 | R-74 | T-09, T-12, T-13 |
@@ -419,9 +474,10 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-96 | T-06, T-09 |
 | R-97, R-98 | T-09, T-16 |
 | R-99, R-100 | T-07, T-09 |
-| R-101 | T-07 |
+| R-101 (modificado por la Decisión 2026-11-25 #1) | T-07, T-18 (recortes: C-101 en la puerta 6) |
 | R-102 | T-07, T-10 (estilo en la puerta 6) |
-| R-103, R-104, R-105 | T-07 |
+| R-103, R-104 | T-07 |
+| R-105 (modificado por la Decisión 2026-11-25 #1) | T-07, T-18 (C-105 en la puerta 6) |
 | R-106, R-107, R-108 | T-07, T-12 |
 | R-109 | T-12 |
 | R-110, R-111 | T-09 |
@@ -443,11 +499,12 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-132, R-133, R-134 | T-09, T-13 |
 | R-135, R-136 | T-14 |
 | R-137 | T-13, T-14 |
-| R-138, R-139, R-140, R-141 | T-14 (C-138 a C-141 en la puerta 6) |
+| R-138 | T-14, T-17 (C-138 en la puerta 6) |
+| R-139, R-140, R-141 | Sustituidos por la Decisión 2026-11-25 #1 (por R-175 a R-177 y R-183 a R-194; C-139 a C-141, sustituidos): sin tarea. Los cubría la T-14 antes del cambio; lo que los sustituye va en la T-17 |
 | R-142, R-143 | T-14 |
-| R-144 | T-01 a T-16 (C-144 en la puerta 6) |
+| R-144 | T-01 a T-18 (C-144 en la puerta 6) |
 | R-145 | T-14 |
-| R-146, R-147, R-148 | T-14 (C-146 a C-148 en la puerta 6) |
+| R-146, R-147, R-148 | T-14, T-17, T-18 (C-146 a C-148 en la puerta 6, tras la T-18) |
 | R-149 | T-14 |
 | R-150, R-151, R-152, R-153 | T-15 |
 | R-154, R-155 | T-13 |
@@ -462,6 +519,23 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-168 | T-15 |
 | R-169 | T-07, T-10 (C-174 en la puerta 6) |
 | R-170 | T-15 |
+| R-171 a R-175, R-177 | T-17 (C-176, plantilla, con test; C-176 a C-180 y C-182 en la puerta 6) |
+| R-176 | T-17 (`app.html` no gana logo ni migas; C-181 con `git diff` y en la puerta 6) |
+| R-178 a R-182, R-231 | T-17 (C-183 a C-187 y C-236 en la puerta 6; C-184 a 768 px exactos, H-29) |
+| R-183 a R-187, R-191, R-192 | T-17 (C-188 a C-192, C-196 y C-197 en la puerta 6) |
+| R-188, R-190 | T-17 (C-193 y C-195 con `git grep`) |
+| R-189, R-224, R-225, R-229 | T-17 (`style-guide.md`, documentación; C-194, C-229, C-230 y C-234 con `git diff`) |
+| R-193 | T-17 (C-198: atributos con test; posiciones en la puerta 6) |
+| R-194, R-228 | T-17 (C-199 y C-233 en la puerta 6) |
+| R-223, R-230 | T-17 (C-228 y C-235 con `git diff`) |
+| R-195 a R-199, R-201 a R-206, R-209 a R-215 | T-18 (C-200 a C-204, C-206 a C-211 y C-214 a C-220 en la puerta 6) |
+| R-200, R-232 | T-13, T-18 (C-205 y C-237 en la puerta 6) |
+| R-207, R-208 | T-18 (C-212 y C-213 en la puerta 6) |
+| R-216, R-217, R-227 | T-18 (C-221, C-222 y C-232 en la puerta 6) |
+| R-218, R-219 | T-18 (C-223 y C-224 en la puerta 6) |
+| R-220 | T-18 (C-225 con `git diff` y `npm run verify`) |
+| R-221 | T-18 (C-226 en la puerta 6) |
+| R-222, R-226 | T-18 (C-227 y C-231 en la puerta 6) |
 
 ## Dudas de la puerta 4 (Q-nn), decididas
 Tres dudas, presentadas en bloque, cada una con una recomendada. Ninguna es un hueco del reto ni un choque entre fuentes: son de cómo se ejecutan las tareas. Las decidió el autor en la segunda vuelta y se conservan abajo tal como se le presentaron. Sin dudas abiertas.
@@ -504,4 +578,28 @@ Una duda, de cómo se ejecuta la T-16. No es un hueco del reto. La decidió el a
 - (a) Los dos tests de C-98 no se tocan. El rojo sale de los tests nuevos, y el de abrir desde otra ruta lleva «C-98» y «D-10» en su título, porque es C-98 abierto desde otra página. Pros: cumple la D-10 al pie de la letra y el rojo es demostrable (el diagnóstico de la T-14 vio `NavigationCancel` y `NavigationSkipped` al llegar a `/customers` desde otra ruta). Contras: el rojo «de C-98» es un test nuevo y no los dos que ya existen.
 - (b) Se añaden a los dos tests de C-98 las aserciones de navegación terminada. Pros: se ajusta a la letra de «el rojo es C-98». Contras: choca con la D-10, que pide no cambiar sus aserciones, así que haría falta otra puerta 3 ampliada; y, como C-98 abre el buscador como primera navegación, no está comprobado que falle en `HEAD` (en el navegador, la primera navegación a `/customers` sí terminaba).
 - (c) Como (a), pero el test nuevo no menciona C-98 en su título. Solo se dice que C-98 sigue en verde. Pros: no se mezcla un caso de la spec con un test nuevo. Contras: deja fuera la mención del autor a C-98 en el rojo.
+- Recomendada: **(a)**.
+
+## Dudas de la puerta 4 rehecha del 2026-11-25 (Q-nn), decididas
+Dos dudas, presentadas en bloque, cada una con una recomendada. Ninguna es un hueco del reto ni una decisión de valores: son de cómo se ejecutan dos verificaciones que el plan pone en el paso 16. Las decidió el autor en la segunda vuelta y se conservan abajo tal como se le presentaron. Sin dudas abiertas.
+- Texto literal del autor (2026-11-25): «1. Q-05: opción (a), con esta variante: el riesgo 16 (nombre accesible de los enlaces del <nav> con el ::after de data-label) lo comprueba la sesión principal en Chrome con take_snapshot del MCP de Chrome DevTools, y yo en Firefox con las herramientas de accesibilidad; si el MCP no conecta, lo hago yo en los dos. Si el nombre sale duplicado, la T-17 queda «Bloqueado». La evidencia va al registro de la sesión. 2. Q-06: opción (a). Se cuenta --color-bg: en el CSS de dist/ en la T-17 (una sola vez) y se repite en la T-18, con los tres @use.»
+- Cómo se aplica:
+  - Q-05 (a), con la variante: casilla del riesgo 16 de la T-17 (Chrome por la sesión principal con `take_snapshot`; Firefox por el autor; si el MCP no conecta, el autor en los dos; si sale duplicado, «Bloqueado»; evidencia en el registro de la sesión). La casilla se marca tras esa comprobación, antes de la aprobación del autor, porque el implementer no la hace.
+  - Q-06 (a): casilla del riesgo 18 en la T-17 (una sola vez) y en la T-18 (repetida, con los tres `@use`).
+
+| Q | Duda | Decisión del autor |
+|---|---|---|
+| Q-05 | Quién comprueba el riesgo 16 en la T-17 y con qué evidencia | (a), con variante: Chrome por la sesión principal con `take_snapshot` del MCP de Chrome DevTools y Firefox por el autor; si el MCP no conecta, el autor en los dos |
+| Q-06 | En qué tarea se cuenta `--color-bg:` en el CSS compilado (riesgo 18) | (a) |
+
+**Q-05 (decidida: (a), 2026-11-25) · Quién comprueba el riesgo 16 en la T-17.** El riesgo 16 (plan, sección 8; P-08, decisión 4) es «una verificación con orden de parar en el paso 16: la tarea mira el nombre accesible de cada enlace en el árbol de accesibilidad de Chrome y de Firefox y, si sale duplicado, para y lo devuelve». El implementer trabaja con comandos y no está comprobado que pueda abrir Chrome y Firefox y leer su árbol de accesibilidad, y `ng test` no calcula el contenido generado por `::after` (riesgo 23: los tests no miden estilos).
+- (a) Lo comprueba el autor en Chrome y en Firefox con `npm run dev`, tras el retorno del implementer y antes de aprobar la T-17; el nombre accesible de los tres enlaces queda escrito en el registro de la sesión. Si sale duplicado en alguno, la T-17 no se aprueba y se trata como `Bloqueado` por el riesgo 16, sin buscar otra solución. Pros: cumple «en el paso 16» con quien puede hacerlo; la orden de parar sigue en la tarea. Contras: un paso a mano del autor antes de aprobar, como el `npm run seed` de la Q-03.
+- (b) Lo intenta el implementer con las herramientas que tenga y, si no puede abrir los dos navegadores, lo dice en su retorno y lo hace el autor como en (a). Pros: no presupone qué herramientas tiene el implementer. Contras: si no puede, se llega a (a) con una vuelta más.
+- (c) Pasa a la puerta 6, con Lighthouse (`label-content-name-mismatch`), como la repetición que ya prevé el riesgo 16. Pros: un solo momento de pruebas a mano. Contras: se aparta de la P-08, decisión 4 («con orden de parar en el paso 16»), así que cambiaría el plan (puerta 3).
+- Recomendada: **(a)**.
+
+**Q-06 (decidida: (a), 2026-11-25) · En qué tarea se cuenta `--color-bg:` (riesgo 18).** El riesgo 18 dice que «se comprueba en el paso 16 con `npm run build` y contando en el CSS de `dist/` las apariciones de `--color-bg:` (una)», porque `_shared.scss`, `_customers.scss` y `_simulations.scss` cargan `themes/tokens`. Pero en el paso 16 solo `_shared.scss` gana el `@use` (la T-17 no toca los otros dos); `_customers.scss` y `_simulations.scss` lo ganan en el paso 17 (T-18, D-14).
+- (a) Se cuenta en la T-17, como dice el plan, y se repite en la T-18, cuando ya están los tres `@use`. Pros: cumple el plan y comprueba el caso completo que describe el riesgo. Contras: una casilla más en la T-18, que el plan no pone en el paso 17.
+- (b) Solo en la T-17, a la letra del plan. Pros: sin apartarse del plan. Contras: el caso de tres `@use` no se comprueba hasta la puerta 6, y solo si alguien lo mira.
+- (c) Solo en la T-18. Pros: una sola comprobación, con los tres `@use`. Contras: se aparta de «en el paso 16».
 - Recomendada: **(a)**.
