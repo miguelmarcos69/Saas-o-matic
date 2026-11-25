@@ -3,11 +3,12 @@
 Cada tarea cabe en un solo commit, tiene una responsabilidad y toca como máximo 5 archivos de producción, sin contar sus tests (`*.spec.ts`) ni los ficheros generados (solo el lockfile). Las migraciones son SQL escrito a mano y cuentan como producción. Si no cabe, se parte. Un recurso nuevo se divide por capa: en la API, una tarea por capa (`domain`, `infrastructure` y `presentation`); en la web, una tarea por servicio con su interfaz y una por página o componente (cuentan `.ts` y `.html`). Si una tarea necesita más de 5 archivos y no se puede dividir, lo justifica por escrito en una línea `Excepción de tamaño:` y el revisor lo comprueba. El test va dentro de la tarea que lo exige. Al cerrar una tarea: MEMORY.md, diff y commit propuesto.
 
 Hay quince tareas, T-01 a T-15: una por paso del «Orden de construcción» de `plan.md` (sección 7), en el mismo orden y sin agrupar ni partir ninguno. Petición literal del autor: «Para la puerta 4: tareas a partir de los 15 pasos del plan, en el orden por valor (pasos 1 a 5, API de lectura; 6 a 10, buscador y dashboard; 11 a 13, detalle con historial; 14 y 15, cabecera con estilos y seed), una tarea por paso salvo que el planner justifique agrupar. Marca en tasks.md cuáles son el mínimo imprescindible (los pasos 1 a 13) y cuáles van al final (14 y 15). Opus 5.5 para lo que tenga lógica (DTOs, regla de búsqueda, datasources, casos de uso, servicio y detalle) y Sonnet 5.5 para lo sencillo (tarjetas, estilos, cabecera, seed), como en la 005. Antes de enseñarme el retorno, cuenta en el fichero las tareas y las dudas y dame los números. Dudas en bloque, cada una con una recomendada.»
-- **Mínimo imprescindible** (pasos 1 a 13, según la petición del autor): T-01 a T-13. Bloque 1, API de lectura: T-01 a T-05. Bloque 2, buscador y dashboard: T-06 a T-10. Bloque 3, detalle con historial: T-11 a T-13.
+- **Puerta 4 ampliada del 2026-11-25** (cambio de la D-10, sin cambio de requisitos; spec en `En implementación`): una tarea nueva, T-16, añadida sin renumerar, así que hay dieciséis, T-01 a T-16. Va al final del fichero por su número, pero se hace antes de la T-14, que depende de ella. Cambia el código del paso 9 (nota tras la D-10 de `plan.md`).
+- **Mínimo imprescindible** (pasos 1 a 13, según la petición del autor): T-01 a T-13, y la T-16, que corrige el paso 9. Bloque 1, API de lectura: T-01 a T-05. Bloque 2, buscador y dashboard: T-06 a T-10 y T-16. Bloque 3, detalle con historial: T-11 a T-13.
 - **Al final** (pasos 14 y 15): T-14 (cabecera con estilos) y T-15 (seed). Cubren requisitos de la spec (cabecera, navegación, seed y Lighthouse), así que la spec no se cierra sin ellas. «Al final» indica el orden, no que sean opcionales.
 - Ninguna pasa de 5 archivos de producción (`package.json` cuenta; el lockfile no, y ninguna tarea lo cambia), así que ninguna lleva `Excepción de tamaño:`. La T-15 tiene justo 5. `CLAUDE.md` y `architecture.md` son documentación y no cuentan (plan, sección 2).
-- Las rutas son de `apps/api/src/` en T-01 a T-05, de `apps/web/src/` en T-06 a T-14, y las que indica la T-15.
-- Estado de las tareas: pendientes de la aprobación del autor (puerta 4). Dudas de esta puerta: Q-01 a Q-03, decididas por el autor en la segunda vuelta (las tres en (a)), al final del fichero; sin dudas abiertas. Desde otro fichero se citan como «tasks.md Q-01».
+- Las rutas son de `apps/api/src/` en T-01 a T-05, de `apps/web/src/` en T-06 a T-14 y en la T-16, y las que indica la T-15.
+- Estado de las tareas: pendientes de la aprobación del autor (puerta 4). Dudas de esta puerta: Q-01 a Q-03, decididas por el autor en la segunda vuelta (las tres en (a)), al final del fichero. Puerta 4 ampliada del 2026-11-25: T-16 pendiente de la aprobación del autor; la Q-04, decidida por el autor en (a) (al final del fichero). Desde otro fichero se citan como «tasks.md Q-01».
 
 Reglas comunes de esta spec:
 - **Fase roja** en cada tarea con tests nuevos o cambiados de comportamiento nuevo:
@@ -274,8 +275,8 @@ Reglas comunes de esta spec:
 
 ## T-14 · cabecera común con sus estilos (al final)
 - Cubre: R-28, R-52 a R-56, R-58 a R-71, R-77, R-78, R-130, R-131, R-135 a R-149 (C-63 a C-71, C-78, C-138 a C-141 y C-146 a C-148 en la puerta 6)
-- Depende de: T-09, T-13
-- Estado: [ ] pendiente
+- Depende de: T-09, T-13, T-16
+- Estado: [~] en curso
 - Modelo: Sonnet 5.5, según la petición del autor («cabecera») y la Q-01 (a); `isActiveChange` en zoneless es el riesgo 9, con su regla de parada abajo.
 - Archivos de producción (3):
   - `app/app.html`: `<header class="app-header">` con el `<nav>` de tres enlaces y el `<app-currency-selector>` dentro de `@if (customersActive())`, como la D-13; el comentario de la línea 1 no cambia.
@@ -314,6 +315,23 @@ Reglas comunes de esta spec:
   - [ ] `npm run seed` lanzado dos veces con `DATABASE_PATH` en un fichero del scratchpad (nunca la base por defecto), con la salida literal en el registro de la sesión: la primera, «Seed: N customers inserted.» con N la longitud de los clientes de `seed-data.ts`; la segunda, «Seed: 0 customers inserted.» (Q-03 (a); C-76 y C-161 de punta a punta).
   - [ ] C-162: `git grep -n "seed" CLAUDE.md` muestra la línea de «Comandos».
   - [ ] C-21 y C-95: sin migración ni `CREATE INDEX` nuevos.
+  - [ ] `npm run verify` desde la raíz, en verde.
+
+## T-16 · web: el buscador solo navega si cambia el `q` (cambio de la D-10)
+- Origen: puerta 4 ampliada del 2026-11-25, por el cambio de la D-10 de la puerta 3 ampliada (nota tras la D-10 de `plan.md`; P-06 (a)), sin cambio de requisitos. Se hace antes de la T-14, que depende de ella. Petición del autor (literal, en dos mensajes): «2. Puerta 4 ampliada: tarea nueva T-16 (customers-page.ts y customers-page.spec.ts, con un test de abrir /customers desde otra ruta sin navegar de más, y C-172 en verde), Opus 5.5, añadida sin renumerar; la T-14 pasa a depender de ella.» y «Lanza la puerta 4 ampliada: tarea nueva T-16 (customers-page.ts y customers-page.spec.ts), Opus 5.5, añadida sin renumerar, con la T-14 dependiendo de ella; sus «Hecho cuando» salen de la «Verificación del cambio» de la D-10, incluida la orden de parar si no se cumple lo de la segunda petición de tipos, y el rojo es el que falla hoy (C-98 y el test de abrir /customers desde otra ruta sin navegar de más).» Registro de sesión: `sessions/2026-11-25-03-004-customers.md`.
+- Cubre: R-57, R-97, R-98, R-144, R-166, R-167 (parte de la página; D-10 cambiada)
+- Depende de: T-09, T-13 (las rutas de `customers-page.spec.ts` ya traen `customers/:id` desde la T-13)
+- Estado: [ ] pendiente
+- Modelo: Opus 5.5, por la petición del autor.
+- Archivos de producción (1): `app/customers/pages/customers-page/customers-page.ts`: `runSearch` compara el `q` recortado que pide la URL (`null` si queda vacío) con `route.snapshot.queryParamMap.get('q')` y solo si son distintos navega, con `replaceUrl: true`; en los dos casos, después, `customersApi.search(q, destroyRef)`. Se compara solo `get('q')` (D-10; P-06 (a)). El comentario de `runSearch` cita «spec 004: … D-10».
+- Tests (crece): `customers-page.spec.ts`, con las rutas propias del test (solo páginas de `customers/`, R-75): la «otra ruta» desde la que se abre el buscador es una página de `customers/` (`customers/:id`). Los tests nuevos leen `Router.events`.
+- Hecho cuando:
+  - [ ] Fase roja: los tests nuevos se escriben antes del cambio y, con `customers-page.ts` como en `HEAD`, falla al menos el de abrir `/customers` desde otra ruta sin navegar de más; salida íntegra en el registro de la sesión. Es un rojo de aserciones: el código existe, pero la `runSearch` de `HEAD` navega siempre. Por la Q-04 (a), el rojo sale del test nuevo de abrir `/customers` desde otra ruta, con «C-98» y «D-10» en su título, y los dos tests de C-98 no se tocan. Si ese test nuevo no falla con `customers-page.ts` como en `HEAD` al abrir desde `/customers/:id`, el implementer para y lo devuelve (no hay rojo posible).
+  - [ ] Test nuevo, abrir desde otra ruta: con la página en `/customers/:id`, ir a `/customers` y, aparte, a `/customers?q=Acme`: `runSearch` no navega y la navegación que abre la página termina (`NavigationEnd` con esa URL, sin `NavigationCancel` ni `NavigationSkipped`); se pide la búsqueda vacía en el primero y `GET /customers?q=Acme` en el segundo (D-10, «Verificación del cambio»).
+  - [ ] Test nuevo, `/customers?q=%20Acme%20`: la URL queda en `/customers?q=Acme`, esa navegación termina (`NavigationEnd`, sin `NavigationCancel` ni `NavigationSkipped`), y hay una sola petición de tipos (R-57) y una sola de búsqueda, con `q=Acme` (D-10, «Verificación del cambio»).
+  - [ ] Regla de parada (D-10, «Verificación del cambio»): si con `/customers?q=%20Acme%20` hay una segunda petición de tipos (R-57) o la navegación no termina, o si no se cumple cualquier otro punto de esa verificación, la tarea para y lo devuelve, sin buscar otra solución.
+  - [ ] C-97, C-98, C-171 y C-172 en verde sin cambiar sus aserciones: `git diff` de `customers-page.spec.ts` sin ninguna línea quitada ni cambiada dentro de esos tests, solo añadidas fuera de ellos. La decisión (10) de la T-09 sigue cierta: la primera `runSearch`, con la misma URL, no deja entrada en `urlChanges` (ahora porque no navega).
+  - [ ] De `apps/` solo cambian `customers-page.ts` y `customers-page.spec.ts` (`git status` y `git diff --stat`); `customers-page.html`, `app.routes.ts` y los ficheros de la T-14 (apartados fuera del árbol) no cambian.
   - [ ] `npm run verify` desde la raíz, en verde.
 
 ## Cobertura
@@ -361,7 +379,7 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-48, R-49, R-50, R-51 | T-07, T-09, T-12, T-13 |
 | R-52, R-53 | T-09, T-13, T-14 |
 | R-54, R-55, R-56 | T-14 |
-| R-57 | T-09, T-13 |
+| R-57 | T-09, T-13, T-16 |
 | R-58, R-59, R-60 | T-14 |
 | R-61 | T-09, T-14 |
 | R-62 | T-14 |
@@ -386,7 +404,7 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-91, R-92, R-93, R-94 | T-01, T-05 |
 | R-95 | T-05, T-15 |
 | R-96 | T-06, T-09 |
-| R-97, R-98 | T-09 |
+| R-97, R-98 | T-09, T-16 |
 | R-99, R-100 | T-07, T-09 |
 | R-101 | T-07 |
 | R-102 | T-07, T-10 (estilo en la puerta 6) |
@@ -414,7 +432,7 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-137 | T-13, T-14 |
 | R-138, R-139, R-140, R-141 | T-14 (C-138 a C-141 en la puerta 6) |
 | R-142, R-143 | T-14 |
-| R-144 | T-01 a T-15 (C-144 en la puerta 6) |
+| R-144 | T-01 a T-16 (C-144 en la puerta 6) |
 | R-145 | T-14 |
 | R-146, R-147, R-148 | T-14 (C-146 a C-148 en la puerta 6) |
 | R-149 | T-14 |
@@ -427,7 +445,7 @@ Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobaci
 | R-161, R-162 | T-15 |
 | R-163, R-164 | T-11, T-13 |
 | R-165 | T-09, T-10 (C-170 en la puerta 6) |
-| R-166, R-167 | T-09 |
+| R-166, R-167 | T-09, T-16 |
 | R-168 | T-15 |
 | R-169 | T-07, T-10 (C-174 en la puerta 6) |
 | R-170 | T-15 |
@@ -462,4 +480,15 @@ Tres dudas, presentadas en bloque, cada una con una recomendada. Ninguna es un h
 **Q-03 (decidida: (a)) · Mensaje del seed (R-161) y `npm run seed` de verdad en la T-15.** `run-seed.spec.ts` prueba el número que devuelve `runSeed`, pero no el mensaje de `seed.ts` ni el script `npm run seed` (C-76, C-161).
 - (a) La T-15 añade a «Hecho cuando» lanzar `npm run seed` dos veces con `DATABASE_PATH` apuntando a un fichero del scratchpad (nunca la base por defecto), con la salida literal en el registro de la sesión: la primera, «Seed: N customers inserted.» con N la longitud de `seed-data.ts`; la segunda, «Seed: 0 customers inserted.». Pros: prueba el script, el mensaje y la base configurada de punta a punta. Contras: un paso manual más; el cortafuegos de Windows puede preguntar (riesgo 12).
 - (b) Solo el test de `runSeed`; el mensaje lo mira el revisor en el código. Pros: todo automático. Contras: el script y el mensaje no se ejecutan antes de la puerta 6.
+- Recomendada: **(a)**.
+
+## Dudas de la puerta 4 ampliada del 2026-11-25 (Q-nn), decididas
+Una duda, de cómo se ejecuta la T-16. No es un hueco del reto. La decidió el autor en la segunda vuelta y se conserva abajo tal como se le presentó. Sin dudas abiertas.
+- Texto literal del autor (2026-11-25): «Decisión Q-04: (a). Los dos tests de C-98 no se tocan; el rojo sale del test nuevo de abrir /customers desde otra ruta, que lleva «C-98» y «D-10» en el título. La T-16 se queda dentro del «Mínimo imprescindible».»
+- Cómo se aplica: casilla de la fase roja de la T-16, con la orden de parar si el test nuevo no falla en `HEAD`; la T-16 sigue en el «Mínimo imprescindible» de la cabecera.
+
+**Q-04 (decidida: (a), 2026-11-25) · El rojo de C-98 en la T-16.** La petición dice que el rojo es «el que falla hoy (C-98 y el test de abrir /customers desde otra ruta sin navegar de más)». Los dos tests de C-98 de `customers-page.spec.ts:270-286` abren el buscador como primera navegación del arnés y solo comprueban el campo, la petición de búsqueda y las tarjetas, sin mirar si la navegación termina. Con el código de `HEAD` pasan: `npm run verify` salió en verde al cerrar la T-13 (905 + 300) y `customers-page.ts` no ha cambiado desde entonces. Para que C-98 falle hoy haría falta una aserción nueva (navegación terminada, sin navegar de más), y eso choca con «C-97, C-98, C-171 y C-172 siguen en verde sin cambiar sus aserciones» (D-10, «Verificación del cambio»).
+- (a) Los dos tests de C-98 no se tocan. El rojo sale de los tests nuevos, y el de abrir desde otra ruta lleva «C-98» y «D-10» en su título, porque es C-98 abierto desde otra página. Pros: cumple la D-10 al pie de la letra y el rojo es demostrable (el diagnóstico de la T-14 vio `NavigationCancel` y `NavigationSkipped` al llegar a `/customers` desde otra ruta). Contras: el rojo «de C-98» es un test nuevo y no los dos que ya existen.
+- (b) Se añaden a los dos tests de C-98 las aserciones de navegación terminada. Pros: se ajusta a la letra de «el rojo es C-98». Contras: choca con la D-10, que pide no cambiar sus aserciones, así que haría falta otra puerta 3 ampliada; y, como C-98 abre el buscador como primera navegación, no está comprobado que falle en `HEAD` (en el navegador, la primera navegación a `/customers` sí terminaba).
+- (c) Como (a), pero el test nuevo no menciona C-98 en su título. Solo se dice que C-98 sigue en verde. Pros: no se mezcla un caso de la spec con un test nuevo. Contras: deja fuera la mención del autor a C-98 en el rojo.
 - Recomendada: **(a)**.

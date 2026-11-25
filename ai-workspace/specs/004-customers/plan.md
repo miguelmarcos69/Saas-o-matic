@@ -2,7 +2,7 @@
 
 - **Spec:** `ai-workspace/specs/004-customers/spec.md` (`Estado: Aprobada`)
 - **Puerta:** 3 (plan). Solo plan y tareas; sin código.
-- **Estado del plan:** pendiente de aprobación del autor. Sin dudas abiertas: las P-01 a P-05 de la primera vuelta las decidió el autor en la segunda (D-17, sección 9).
+- **Estado del plan:** pendiente de aprobación del autor. Sin dudas abiertas: las P-01 a P-05 de la primera vuelta las decidió el autor en la segunda (D-17, sección 9). Puerta 3 ampliada del 2026-11-25: D-10 cambiada (nota tras la D-10), sin dudas abiertas (P-06 y P-07 decididas por el autor, sección 9), pendiente de aprobación del autor.
 - **Formato:** «Temas + D-nn», breve (D-01). Los 170 requisitos van agrupados en pasos (sección 7) y la trazabilidad va por rangos (sección 10).
 
 ## 1. Contexto y fuentes
@@ -205,13 +205,23 @@ Tests nuevos: uno `.spec.ts` junto a cada fichero o carpeta nuevos de la tabla. 
   - `search = outputFromObservable(control.valueChanges.pipe(debounceTime(300)))` (R-22). Emite el texto tal cual; la página lo recorta.
 - `CustomersPage` (inyecta `CustomersApi`, `CurrencySelection`, `Router`, `ActivatedRoute` y `DestroyRef`):
   - Al abrir: lee `q` de `queryParamMap` (instantánea), lo pasa a `initialQuery` y lanza `runSearch(q)` sin espera (R-98). Llama a `currencySelection.load(destroyRef)` (D-12).
-  - `runSearch(texto)`: `q = texto.trim()`; `router.navigate([], { relativeTo: route, queryParams: { q: q === '' ? null : q }, replaceUrl: true })` (R-97, R-166, R-167); después `customersApi.search(q, destroyRef)`. La página solo lee la URL al abrir, así que reescribirla no lanza otra búsqueda.
+  - `runSearch(texto)`: `q = texto.trim()`; el `q` que pide la URL es `q === '' ? null : q`, y el actual, `route.snapshot.queryParamMap.get('q')` (`null` si la URL no trae `q`). Solo si son distintos, `router.navigate([], { relativeTo: route, queryParams: { q: q === '' ? null : q }, replaceUrl: true })` (R-97, R-166, R-167); si son iguales, la URL ya es la correcta y no navega. En los dos casos, después, `customersApi.search(q, destroyRef)` (R-20, R-98). La comparación distingue la URL sin `q` (`null`) de `q` vacío (`''`): `/customers?q=` y `/customers?q=%20%20` navegan a `/customers` (R-166). Se compara solo `get('q')`: si coincide, los demás parámetros de la URL y los `q` repetidos se quedan como estaban (P-06 (a)). La página solo lee la URL al abrir, así que reescribirla no lanza otra búsqueda.
+  - Verificación del cambio (2026-11-25): al abrir `/customers` y `/customers?q=Acme`, `runSearch` no navega y la navegación que abre la página termina (`NavigationEnd`, sin `NavigationCancel` ni `NavigationSkipped`); al abrir `/customers?q=%20Acme%20`, la URL queda en `/customers?q=Acme`, esa navegación termina y hay una sola petición de tipos (R-57) y una sola de búsqueda; C-97, C-98, C-171 y C-172 siguen en verde sin cambiar sus aserciones. Si algo de esto no se cumple, la tarea para y lo devuelve.
   - Plantilla: eyebrow `<p>` «Panel comercial» y `<h1>` «Buscador de clientes» (R-110, R-111); el buscador; los textos de los tipos de cambio (D-12); según `searchState`:
     - carga: `<p role="status">Cargando clientes…</p>` (R-40, R-47, R-121);
     - error: `<p role="alert">` con el mensaje (R-41, R-120, R-122);
     - datos vacíos: `<p>Ningún cliente coincide con la búsqueda.</p>` (R-42, R-123), fuera de toda región viva, para que no se anuncie dos veces con R-159;
     - datos: `<ul class="customers-page__grid">` con un `<li>` y una `<app-customer-card>` por cliente (R-30, R-32).
   - Anuncio (R-99, R-100, R-159, R-165): `<p role="status" class="customers-page__announcement">`, siempre en el DOM y visualmente oculto, con `resultsAnnouncement(n)` solo cuando hay datos.
+
+> **Nota · cambio de la D-10 (2026-11-25, puerta 3 ampliada, sin cambio de requisitos; spec en `En implementación`).**
+> - Qué cambia: solo la línea de `runSearch` (navega solo si el `q` cambia) y la verificación que la sigue. El resto de la D-10 queda como se aprobó.
+> - Motivo: en la T-14, la primera `runSearch` del constructor lanzaba `router.navigate` durante la activación de la navegación que abre la página. Esa navegación cancelaba la que estaba en curso y después se ignoraba por ser la misma URL, así que ninguna terminaba y `RouterLinkActive` no se actualizaba (diagnóstico de la sesión principal en `ai-workspace/sessions/2026-11-25-03-004-customers.md`).
+> - Petición del autor (literal): «Elijo la (A): runSearch solo navega cuando el q recortado es distinto del q actual de la URL.»
+> - Decisión (10) de la T-09 (`tasks.md`, desviaciones aceptadas, literal): «la primera `runSearch`, con la misma URL, no deja entrada en `urlChanges`». Sigue siendo cierta, ahora porque esa `runSearch` no navega.
+> - Ficheros: `customers-page.ts` y `customers-page.spec.ts` (paso 9). La tarea la fija la puerta 4 ampliada.
+> - Dudas de la ampliación, decididas por el autor el 2026-11-25 (sección 9): P-06 (a), comparar solo `get('q')`, y P-07 (b), línea añadida al final del riesgo 9.
+> - Registro de sesión: `sessions/2026-11-25-03-004-customers.md`.
 
 **D-11 · Tarjeta, historial, detalle y formato (R-30, R-31, R-33 a R-37, R-77, R-101 a R-109, R-113 a R-119, R-124 a R-129, R-154, R-155, R-160).**
 - `customer-display.ts`, funciones puras:
@@ -401,7 +411,7 @@ Por valor, como pide el autor; la puerta 4 lo parte en tareas. Cada paso deja la
 6. **Plegado**: `\p{M}` quita las marcas combinantes que deja `NFD` (tildes, `~` de la `ñ`, cedilla). Para los nombres de ES, PT, FR e IT da lo que piden C-91 y C-18. Lo confirma `customer-search.spec.ts`.
 7. **`forkJoin` y el 404 del detalle**: sin `catchError` por petición, el primer error cancela la otra y R-164 falla. C-169 lo prueba con el historial en 500 antes del 404 del cliente.
 8. **Selector duplicado**: `currency-selector.html:1-3` usa un `id` fijo. La cabecera solo lo pinta en las vistas de clientes y el simulador lleva el suyo en su página, así que nunca están los dos. Si un día coincidieran, habría `id` repetidos.
-9. **`isActiveChange` en zoneless**: la señal `customersActive` se fija desde la salida de `routerLinkActive`. Si no llega en la primera navegación, C-55 y C-56 fallan en el paso 14 y la tarea lo devuelve; la alternativa (`Router.events` en `app.ts`) añade otra inyección en la carcasa.
+9. **`isActiveChange` en zoneless**: la señal `customersActive` se fija desde la salida de `routerLinkActive`. Si no llega en la primera navegación, C-55 y C-56 fallan en el paso 14 y la tarea lo devuelve; la alternativa (`Router.events` en `app.ts`) añade otra inyección en la carcasa. En la T-14 (2026-11-25) falló por otra causa: la `runSearch` del constructor de `CustomersPage` navegaba a la misma URL durante la activación, cancelaba la navegación que abría la página y ninguna terminaba. La evita la D-10 cambiada (nota tras la D-10).
 10. **Temporizadores falsos**: `debounceTime` usa `setTimeout`; C-22 y C-96 avanzan el reloj con los temporizadores falsos de Vitest. Si el ejecutor de Angular no los admite (como pasó con `vi.mock` en la spec 005: riesgo 2), la tarea para y lo devuelve.
 11. **Zona horaria en los tests**: `formatSimulationDate` recibe `'Europe/Madrid'` en el test; en producción, sin zona, usa la del navegador (R-108).
 12. **Seed y red local**: el seed abre la API en el puerto 0. En Windows, el cortafuegos puede preguntar la primera vez si Node escucha en todas las interfaces; `npm run dev` ya lo hace en el 3000.
@@ -410,7 +420,7 @@ Por valor, como pide el autor; la puerta 4 lo parte en tareas. Cada paso deja la
 
 ## 9. Dudas del plan (P-nn), decididas
 
-Sin dudas abiertas. Las P-01 a P-05 de la primera vuelta las decidió el autor el 2026-11-24, en la segunda vuelta (D-17). Se conservan abajo tal como se le presentaron.
+Las P-01 a P-05 de la primera vuelta las decidió el autor el 2026-11-24, en la segunda vuelta (D-17). Se conservan abajo tal como se le presentaron. Las P-06 y P-07, de la puerta 3 ampliada del 2026-11-25 (cambio de la D-10), las decidió el autor el mismo día; también se conservan tal como se le presentaron.
 
 | P | Duda | Decisión del autor |
 |---|---|---|
@@ -419,6 +429,8 @@ Sin dudas abiertas. Las P-01 a P-05 de la primera vuelta las decidió el autor e
 | P-03 | C-47 de la 005 en `app.spec.ts` | (a) |
 | P-04 | Dónde vive el seed y su mensaje | (a) con (ii): «P-04 (a) con (ii), y autorizo añadir el seed a architecture.md» |
 | P-05 | «Al final cabecera con estilos» | (a) |
+| P-06 | Otros parámetros o `q` repetido al comparar la URL (D-10, 2026-11-25) | (a): «P-06 (a), comparar solo get('q')» |
+| P-07 | Riesgo 9 tras el diagnóstico de la T-14 (2026-11-25) | (b): «P-07 (b), añadir al final del riesgo 9 la línea sobre la causa real de la T-14» |
 
 **P-01 (decidida: (a), D-17) · La carcasa inyecta `CurrencySelection`.** R-55 pide el selector en la cabecera común, y el selector necesita el estado de los tipos y la divisa elegida. Con la cabecera en `app.html` (D-13) o como componente (D-02), quien los lee es `App`. `frontend-conventions` dice «Componentes: … No inyectan servicios propios» y «Páginas: inyectan servicios», y `architecture.md:77` deja a `app` importar `shared`.
 - (a) `App` es la carcasa, ni página ni componente de una funcionalidad: inyecta `CurrencySelection` de `shared/` y se lo pasa a `<app-currency-selector>`. No es un choque. Pros: cumple R-55 con lo que ya existe; una sola inyección. Contras: la carcasa deja de ser solo plantilla.
@@ -451,6 +463,16 @@ Sin dudas abiertas. Las P-01 a P-05 de la primera vuelta las decidió el autor e
 - (a) «Con estilos» son los de la cabecera (`_shared.scss`), y `_customers.scss` va con cada vista (pasos 10 y 13). Pros: cada vista llega usable y se puede mirar a 320 px al cerrarla. Contras: `_customers.scss` cambia en dos pasos.
 - (b) Todos los estilos de la 004 van al final, en el bloque 4. Pros: un solo paso de estilos. Contras: las vistas llegan sin estilos hasta el final.
 - Recomendada: **(a)**. La sección 7 está escrita para (a); con (b), los pasos 10 y la parte de estilos del 13 pasan al bloque 4.
+
+**P-06 (decidida: (a), 2026-11-25) · Otros parámetros o `q` repetido al comparar la URL.** La petición del autor compara solo `q`. Con la D-10 aprobada, `navigate` con `queryParams: { q }` dejaba la URL solo con `q`: `/customers?q=Acme&x=1` quedaba en `/customers?q=Acme` y `/customers?q=a&q=b`, en `/customers?q=a`. Con la D-10 nueva, si el `q` coincide no se navega y esos parámetros se quedan. Solo pasa con una URL escrita a mano; ningún R ni C lo nombra (R-97 pide el texto recortado en `q`, y lo lleva).
+- (a) Se compara solo `get('q')`, como dice la petición. Pros: la letra de la petición; una sola comparación; R-97, R-166 y R-167 se cumplen. Contras: `?q=Acme&x=1` y `?q=a&q=b` se quedan tal cual (el segundo, con dos `q`).
+- (b) Se navega salvo que la consulta sea exactamente la pedida: sin parámetros si el `q` es vacío, o un único `q` igual al recortado (`queryParamMap.keys` y `getAll('q')`). Pros: las URL finales son las mismas que con la D-10 aprobada; solo desaparece la navegación que no cambiaba nada. Contras: va más allá de la letra de la petición; dos comprobaciones y un test más.
+- Recomendada: **(a)**: es la letra de la petición, ningún requisito la contradice y el caso solo aparece con URL escritas a mano.
+
+**P-07 (decidida: (b), 2026-11-25) · Riesgo 9 tras el diagnóstico de la T-14.** El riesgo 9 atribuye el fallo posible de C-55 y C-56 a `isActiveChange` en zoneless y propone como alternativa `Router.events`. La causa vista en la T-14 fue otra (la navegación cancelada y luego ignorada), que la alternativa tampoco arreglaba. El cruce con R-97, R-98, R-166, R-167 y sus casos no obliga a cambiarlo.
+- (a) No se toca; la causa queda en la nota de la D-10. Pros: el plan cambia lo mínimo. Contras: quien lea el riesgo 9 en la puerta 6 no ve la causa real.
+- (b) Se añade al final del riesgo 9: «En la T-14 (2026-11-25) falló por otra causa: la `runSearch` del constructor de `CustomersPage` navegaba a la misma URL durante la activación, cancelaba la navegación que abría la página y ninguna terminaba. La evita la D-10 cambiada (nota tras la D-10).» Pros: el riesgo dice lo que pasó. Contras: una línea más en un riesgo ya aprobado.
+- Recomendada: **(b)**.
 
 ## 10. Trazabilidad
 | Requisitos | Ficheros (D-nn) | Casos | Paso |
