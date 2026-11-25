@@ -56,5 +56,5 @@ reto.md > constitución > spec > plan > convenciones. Constitución: @ai-workspa
 
 ## Comandos
 - Tras clonar: `npm install` y `npm run dev`; API en http://localhost:3000 y web en http://localhost:4200, sin copiar ficheros ni crear carpetas a mano.
-- Scripts de la raíz: `dev` (compila `pricing` y arranca API y web), `build` (compila `pricing` y las apps), `test` (compila `pricing` y lanza todos los tests), `verify` (`build` y `test`) y `build:pricing` (solo `packages/pricing`).
+- Scripts de la raíz: `dev` (compila `pricing` y arranca API y web), `build` (compila `pricing` y las apps), `test` (compila `pricing` y lanza todos los tests), `verify` (`build` y `test`), `build:pricing` (solo `packages/pricing`) y `seed` (datos de ejemplo).
 - `apps/api/env.example` es opcional: documenta `PORT` y `DATABASE_PATH` con sus valores por defecto, y la API arranca sin copiarlo.

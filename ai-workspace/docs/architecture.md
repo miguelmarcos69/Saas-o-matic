@@ -9,6 +9,8 @@ apps/api/
 ├─ migrations/                     # SQL del esquema (database.md)
 └─ src/
    ├─ app.ts                       # entrada: arranca Server
+   ├─ seed.ts                      # entrada del seed (`npm run seed`): arranca Server y llama a seed/
+   ├─ seed/                        # run-seed.ts · seed-data.ts: datos de ejemplo por HTTP
    ├─ config/envs.ts               # process.env validado con Zod
    ├─ data/sqlite/index.ts         # conexión better-sqlite3
    ├─ domain/
@@ -71,6 +73,7 @@ Clean Architecture en la API, sin capa `application` (decisión del autor): los 
 | infrastructure | domain, data | presentation |
 | presentation | domain | infrastructure y data, salvo `routes.ts` y `<recurso>/routes.ts` (infrastructure, solo para componer) |
 | app.ts | config, presentation | — |
+| seed (`seed.ts`, `seed/`) | `seed.ts`: config, presentation y `seed/`; `seed/`: ninguna capa de la API (solo usa HTTP) | el resto |
 | config | Zod | el resto |
 | web: funcionalidad | shared, packages/pricing | otra funcionalidad, apps/api |
 | web: shared | packages/pricing | las funcionalidades |

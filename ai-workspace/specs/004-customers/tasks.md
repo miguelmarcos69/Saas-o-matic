@@ -302,7 +302,7 @@ Reglas comunes de esta spec:
 ## T-15 · seed de demostración (al final)
 - Cubre: R-21, R-76, R-95, R-144, R-150 a R-153, R-161, R-162, R-168, R-170
 - Depende de: T-05
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Sonnet 5.5 (seed, según la petición del autor).
 - Archivos de producción (5):
   - `apps/api/src/seed.ts` (nuevo): entrada como `app.ts` (`config` y `presentation`), con «Seed: N customers inserted.» y `process.exit(1)` ante un error (D-15; P-04 (ii)).
@@ -313,15 +313,20 @@ Reglas comunes de esta spec:
 - Documentación (no cuenta): `CLAUDE.md`, «Comandos», con `seed` en la lista de scripts de la raíz (R-162); `ai-workspace/docs/architecture.md`, `seed.ts` y `seed/` en «Carpetas» y la fila `seed` en «Reglas de dependencia» (autorizado por el autor: D-15, D-17).
 - Tests (nuevo): `apps/api/src/seed/run-seed.spec.ts`, con `Server` sobre `:memory:` y puerto 0.
 - Hecho cuando:
-  - [ ] Fase roja: salida íntegra en el registro de la sesión.
-  - [ ] C-150: `GET /customers` → `[]` antes del seed, y `app.ts` no llama al seed.
-  - [ ] C-76, C-151, C-173 y C-175: `runSeed` devuelve la longitud de los clientes de `seed-data.ts` (todos con 201).
-  - [ ] C-152: los importes leídos de cada simulación coinciden con los de `packages/pricing` para sus usuarios y el país de su cliente.
-  - [ ] C-153 y C-161: una segunda vuelta devuelve 0 y no cambia el número de filas de `customers` ni de `simulations`.
-  - [ ] `npm run seed` lanzado dos veces con `DATABASE_PATH` en un fichero del scratchpad (nunca la base por defecto), con la salida literal en el registro de la sesión: la primera, «Seed: N customers inserted.» con N la longitud de los clientes de `seed-data.ts`; la segunda, «Seed: 0 customers inserted.» (Q-03 (a); C-76 y C-161 de punta a punta).
-  - [ ] C-162: `git grep -n "seed" CLAUDE.md` muestra la línea de «Comandos».
-  - [ ] C-21 y C-95: sin migración ni `CREATE INDEX` nuevos.
-  - [ ] `npm run verify` desde la raíz, en verde.
+  - [x] Fase roja: salida íntegra en el registro de la sesión.
+  - [x] C-150: `GET /customers` → `[]` antes del seed, y `app.ts` no llama al seed.
+  - [x] C-76, C-151, C-173 y C-175: `runSeed` devuelve la longitud de los clientes de `seed-data.ts` (todos con 201).
+  - [x] C-152: los importes leídos de cada simulación coinciden con los de `packages/pricing` para sus usuarios y el país de su cliente.
+  - [x] C-153 y C-161: una segunda vuelta devuelve 0 y no cambia el número de filas de `customers` ni de `simulations`.
+  - [x] `npm run seed` lanzado dos veces con `DATABASE_PATH` en un fichero del scratchpad (nunca la base por defecto), con la salida literal en el registro de la sesión: la primera, «Seed: N customers inserted.» con N la longitud de los clientes de `seed-data.ts`; la segunda, «Seed: 0 customers inserted.» (Q-03 (a); C-76 y C-161 de punta a punta).
+  - [x] C-162: `git grep -n "seed" CLAUDE.md` muestra la línea de «Comandos».
+  - [x] C-21 y C-95: sin migración ni `CREATE INDEX` nuevos.
+  - [x] `npm run verify` desde la raíz, en verde.
+- Observaciones para el revisor (2026-11-25):
+  - El implementer no pegó el `git diff` literal ni el contenido de los ficheros nuevos; la sesión principal los sacó con `git diff` y los leyó.
+  - El rojo es de módulo inexistente (`Cannot find module './run-seed.js'`), no de aserciones, y no se repitió en la sesión principal.
+  - `npm run seed` dos veces lo lanzó la sesión principal sobre una base nueva del scratchpad: «Seed: 8 customers inserted.» y «Seed: 0 customers inserted.», ambas con `exit=0`.
+- Aprobación del autor 2026-11-25 (literal): «Apruebo la T-15 (seed de demostración) con las desviaciones 2 a 5 aceptadas. Para CLAUDE.md elijo la (b): la línea queda con `seed` (datos de ejemplo), sin más explicación; recórtala y comprueba con git grep -n "seed" CLAUDE.md (C-162) y con git diff que solo cambia esa línea. Anota para el revisor que el implementer no pegó el diff literal ni los ficheros nuevos y que la sesión principal los sacó y leyó. Rojo de módulo inexistente sin repetir.» Desviaciones aceptadas: dos tests de más (409 parcial y respuesta 500), `try/finally` en `seed.ts` para llamar a `stop()` también ante un error, `seed.ts` importa `seed/` (fila `seed` de `architecture.md`) y el texto «[~] en curso» de la casilla. La desviación 1 (paréntesis de `CLAUDE.md`) se recortó a la opción (b). 8 tests nuevos; `npm run verify` en verde (913 + 322). Registro: `sessions/2026-11-25-07-004-customers.md`.
 
 ## T-16 · web: el buscador solo navega si cambia el `q` (cambio de la D-10)
 - Origen: puerta 4 ampliada del 2026-11-25, por el cambio de la D-10 de la puerta 3 ampliada (nota tras la D-10 de `plan.md`; P-06 (a)), sin cambio de requisitos. Se hace antes de la T-14, que depende de ella. Petición del autor (literal, en dos mensajes): «2. Puerta 4 ampliada: tarea nueva T-16 (customers-page.ts y customers-page.spec.ts, con un test de abrir /customers desde otra ruta sin navegar de más, y C-172 en verde), Opus 5.5, añadida sin renumerar; la T-14 pasa a depender de ella.» y «Lanza la puerta 4 ampliada: tarea nueva T-16 (customers-page.ts y customers-page.spec.ts), Opus 5.5, añadida sin renumerar, con la T-14 dependiendo de ella; sus «Hecho cuando» salen de la «Verificación del cambio» de la D-10, incluida la orden de parar si no se cumple lo de la segunda petición de tipos, y el rojo es el que falla hoy (C-98 y el test de abrir /customers desde otra ruta sin navegar de más).» Registro de sesión: `sessions/2026-11-25-03-004-customers.md`.

@@ -11,6 +11,7 @@
     "build": "npm run build:pricing && npm run build --workspaces --if-present",
     "test": "npm run build:pricing && vitest run && npm run test --workspaces --if-present",
     "dev": "npm run build:pricing && concurrently -n api,web --kill-others-on-fail \"npm run dev -w apps/api\" \"npm run start -w apps/web\"",
+    "seed": "npm run build:pricing && npm run seed -w apps/api",
     "verify": "npm run build && npm run test"
   },
   "devDependencies": {
