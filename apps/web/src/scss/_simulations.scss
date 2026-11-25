@@ -2,6 +2,22 @@
 // Sin selectores para el <nav> ni sus enlaces (R-90).
 // Sin reglas de `outline` (el contorno del navegador se mantiene, R-36).
 // La lista redondeada (`option`, `::picker`) solo va dentro de `@supports (appearance: base-select)`; fuera, la lista es la nativa.
+@use 'themes/tokens';
+
+// spec 004: R-218 a R-220, R-222, R-226. Desde 48 rem, formulario y resultado en dos columnas del mismo ancho, con el
+// eyebrow y el título encima; por debajo, una columna con el formulario encima.
+@media (min-width: tokens.$breakpoint-wide) {
+  app-simulation-page {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-lg);
+  }
+
+  .simulation-page__eyebrow,
+  .simulation-page__title {
+    grid-column: 1 / -1;
+  }
+}
 
 // Etiqueta sobre el título: azul de marca, 14 px, peso 500 (style-guide.md:23).
 .simulation-page__eyebrow {

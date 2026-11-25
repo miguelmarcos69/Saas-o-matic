@@ -388,7 +388,7 @@ Reglas comunes de esta spec:
 - Origen: puerta 4 rehecha del 2026-11-25, paso 17 del plan (bloque 5), por las Decisiones 2026-11-25 #1 a #6 y la P-08 (b) del autor. Va antes de la puerta 6.
 - Cubre: R-38 (parte de las vistas), R-66, R-68, R-101, R-105, R-144, R-195 a R-222, R-226, R-227, R-232 (R-221 en la puerta 6, C-226; el resto, con `git diff` o en la puerta 6)
 - Depende de: T-17 (tokens `--border-width-subtle` y `$breakpoint-wide` y pesos de Montserrat)
-- Estado: [ ] pendiente
+- Estado: [x] hecha
 - Modelo: Sonnet 5.5, por la petición del autor y la P-08 (b).
 - Convenciones a leer: `.claude/skills/frontend-conventions/SKILL.md` (estilos solo en `src/scss`, tokens en `themes/_tokens.scss`, clases con prefijo de componente).
 - Archivos de producción (2):
@@ -396,14 +396,19 @@ Reglas comunes de esta spec:
   - `scss/_simulations.scss`: solo `@use 'themes/tokens';` tras los comentarios de cabecera y, con un comentario «spec 004: R-218 a R-220, R-222, R-226», las reglas de las dos columnas desde 48 rem y del eyebrow y el título a todo el ancho, como la D-14; ninguna otra regla cambia.
 - Tests: ninguno nuevo ni cambiado (solo `.scss`). Por eso no hay fase roja, como en la T-10.
 - Hecho cuando:
-  - [ ] Sin tests nuevos: no hay fase roja (regla común).
-  - [ ] C-66 y C-225: `git diff --stat HEAD -- apps/web/src/app/simulations/` vacío; `git diff` de `_simulations.scss` solo con el `@use`, el comentario y las reglas de las dos columnas, de su mismo ancho y del eyebrow y el título encima (R-66, R-220).
-  - [ ] Plantillas sin cambios: `git diff --stat HEAD -- apps/web/src/app/customers/` vacío (D-14: las plantillas no cambian; R-209 ya lo cumple `customer-card.html`).
-  - [ ] Ninguna regla de `outline` en el `git diff` de `_customers.scss` ni de `_simulations.scss` (R-68, R-212, C-217); la tarjeta no gana `tabindex` (R-105).
-  - [ ] Riesgo 18, repetido (Q-06 (a)): `npm run build` y, en el CSS de `dist/`, `--color-bg:` aparece una sola vez con los tres `@use 'themes/tokens';`.
-  - [ ] De `apps/` solo cambian `_customers.scss` y `_simulations.scss` (`git status` y `git diff --stat`); `_shared.scss`, `_tokens.scss`, `index.html`, `app.*`, `_base.scss` y `_health.scss`, sin cambios. Si un retoque necesita otra línea de `_simulations.scss`, una plantilla de `simulations/` o de `customers/`, o `_base.scss`, o falla un test de otra spec, la tarea para y lo devuelve (D-16).
-  - [ ] `npm run verify` desde la raíz, en verde, con los recuentos antes y después (iguales: sin tests nuevos).
+  - [x] Sin tests nuevos: no hay fase roja (regla común).
+  - [x] C-66 y C-225: `git diff --stat HEAD -- apps/web/src/app/simulations/` vacío; `git diff` de `_simulations.scss` solo con el `@use`, el comentario y las reglas de las dos columnas, de su mismo ancho y del eyebrow y el título encima (R-66, R-220).
+  - [x] Plantillas sin cambios: `git diff --stat HEAD -- apps/web/src/app/customers/` vacío (D-14: las plantillas no cambian; R-209 ya lo cumple `customer-card.html`).
+  - [x] Ninguna regla de `outline` en el `git diff` de `_customers.scss` ni de `_simulations.scss` (R-68, R-212, C-217); la tarjeta no gana `tabindex` (R-105).
+  - [x] Riesgo 18, repetido (Q-06 (a)): `npm run build` y, en el CSS de `dist/`, `--color-bg:` aparece una sola vez con los tres `@use 'themes/tokens';`.
+  - [x] De `apps/` solo cambian `_customers.scss` y `_simulations.scss` (`git status` y `git diff --stat`); `_shared.scss`, `_tokens.scss`, `index.html`, `app.*`, `_base.scss` y `_health.scss`, sin cambios. Si un retoque necesita otra línea de `_simulations.scss`, una plantilla de `simulations/` o de `customers/`, o `_base.scss`, o falla un test de otra spec, la tarea para y lo devuelve (D-16).
+  - [x] `npm run verify` desde la raíz, en verde, con los recuentos antes y después (iguales: sin tests nuevos).
   - Puerta 6, a mano (no se marcan en esta tarea; regla común «Comprobación manual»): C-38 en las cuatro vistas (con una tarjeta con el énfasis de R-211); C-101, C-105, C-200 a C-224, C-227, C-231, C-232 y C-237, a 320, 767, 768 y 1280 px, con clientes de nombre de 200 caracteres (con y sin espacios) y de identificador de 20 creados con `POST /customers` en una base del scratchpad (plan, sección 5); C-217 con Tab (riesgo 15: si el contorno sale cortado, se devuelve, sin reglas de `outline`); contraste de «Última simulación» sobre `--color-soft` con hover (riesgo 22); C-226 (simulador a 320 px con y sin `base-select`); C-238 (WCAG 1.4.4, texto al 200 % en Firefox) y C-239 (WCAG 1.4.12, con la hoja de la sección 5 del plan); C-233 (caras 700 del nombre y de las píldoras); y Lighthouse en móvil y escritorio de las cuatro vistas, con captura (C-69 a C-71 y C-146 a C-148; la del simulador es la de C-226).
+- Observaciones para el revisor (2026-11-25):
+  - `ng build` repite el aviso de presupuesto ya aceptado en la T-14; con la T-18, «total of 723.30 kB» (antes, 721.86 kB).
+  - El diff de `_simulations.scss` del retorno del implementer estaba escrito en parte de memoria (dos líneas que no son del `git diff` real, avisadas por él) y el de `_customers.scss` traía los signos escapados en HTML; la sesión principal sacó los dos con `git diff` y comprobó que en los ficheros los signos son los reales (`<h2>`, `&:hover`, `>`).
+  - Desde 48 rem, `app-customer-detail-page` y `app-simulation-page` pasan a `display: grid`: los márgenes del eyebrow y del título ya no se colapsan entre sí (separación vertical, a medir en la puerta 6 con C-212, C-213 y C-218 a C-226); en el detalle, el `<p role="status">` vacío de los tipos de cambio ocupa también una fila a todo el ancho.
+- Aprobación del autor 2026-11-25 (literal): «Apruebo la T-18 con las desviaciones 2 a 4 y las observaciones». Desviaciones aceptadas: los eyebrows pegados en dos bloques nuevos junto a los existentes, el énfasis con `.customer-card:hover, .customer-card:focus-within` y `.customer-card__pill` anidado en Sass, y los tres `@use 'themes/tokens';` con un solo `--color-bg:` en `dist/`. Sin tests nuevos; `npm run verify` en verde (913 + 324). Registro: `sessions/2026-11-25-12-004-customers.md`.
 
 ## Cobertura
 Cada `R-nn` aparece en al menos una tarea. «Puerta 6» indica que la comprobación final es manual (plan, sección 5). R-144 (citas calificadas) aplica a todas las tareas (regla común).
