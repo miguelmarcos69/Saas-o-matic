@@ -17,7 +17,9 @@ Herramienta interna para que el equipo comercial simule y presupueste suscripcio
 ## Requisitos
 
 - **Node.js 24 y npm.** Comprobado con Node.js 24.17.0 y npm 11.1.0 en Windows 11.
-- Solo se ha probado en Windows 11; no se ha probado en macOS ni en Linux.
+- También probado en Windows 10 con Node 24.22.3 y npm 9.3.0, sin Git (descargando el ZIP), con `npm ci` en unos segundos y la web funcionando con los datos de `npm run seed`.
+- Comprueba `node -v`. Con una versión anterior a 24 (probado con Node 18.13), `npm ci` avisa de «Unsupported engine» y `npm run dev` falla con «yargs parser supports a minimum Node.js version of 20»: instala Node 24.
+- Solo se ha probado en Windows 11 y Windows 10; no se ha probado en macOS ni en Linux.
 - **Sin herramientas de compilación.** El `.npmrc` de la raíz instala con `ignore-scripts=true` ([ADR-014](ai-workspace/docs/decisions.md)), así que ningún paquete ejecuta scripts de instalación. Comprobado en un clon limpio: `npm ci` terminó sin errores (367 paquetes, 0 vulnerabilidades) en una máquina sin `cl`, `gcc`, `make` ni `node-gyp`.
 - **Red**, para instalar y para dos recursos de la web: los tipos de cambio y la fuente Montserrat (ver [La web](#la-web)).
 
@@ -30,9 +32,12 @@ npm ci
 npm run dev
 ```
 
+Sin Git: en GitHub, `Code → Download ZIP`, descomprime y ejecuta `npm ci` y `npm run dev` dentro de la carpeta `Saas-o-matic-main`.
+
 - API: http://localhost:3000 (consola: `API listening on http://localhost:3000`).
 - Web: http://localhost:4200, que habla con la API por el proxy `/api`.
 - No hay que copiar ficheros ni crear carpetas: la base `apps/api/data/saas-o-matic.db` se crea y se migra al arrancar.
+- Para parar: `Ctrl + C`. En el `cmd` de Windows pregunta `¿Desea terminar el trabajo por lotes (S/N)?`: responde `S`.
 
 Datos de ejemplo (opcional):
 
